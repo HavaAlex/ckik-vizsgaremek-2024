@@ -3,7 +3,7 @@
 
 <template>
   <main>
-    <h1>Tanló</h1>
+    <h1>orarends</h1>
     <RouterView>
       
     </RouterView>

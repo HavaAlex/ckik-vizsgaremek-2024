@@ -1,17 +1,41 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import AdminView from '../views/AdminView.vue'
-import HazikView from '../views/HazikView.vue'
-import HianyzasokView from '../views/HianyzasokView.vue'
-import HianyzasokLayout from '../layout/HianyzasokLayout.vue'
 import HomeView from '../views/HomeView.vue'
-import JegyekView from '../views/JegyekView.vue'
 import Jogosultsagok from '../views/Jogosultsagok.vue'
-import OrarendView from '../views/OrarendView.vue'
 import OsztalyokView from '../views/OsztalyokView.vue'
 import SzuloView from '../views/SzuloView.vue'
 import TanarView from '../views/TanarView.vue'
 import TanuloView from '../views/TanuloView.vue'
+
+import HazikView from '../views/HazikView.vue'
+import HianyzasokView from '../views/HianyzasokView.vue'
+import JegyekView from '../views/JegyekView.vue'
+import OrarendView from '../views/OrarendView.vue'
 import UzenetekView from '../views/UzenetekView.vue'
+
+// Gyerek komponens importálása
+import HazikLayoutGyerek from '../layout/gyerek/HazikLayout.vue'
+import HianyzasokLayoutGyerek from '../layout/gyerek/HianyzasokLayout.vue'
+import JegyekLayoutGyerek from '../layout/gyerek/JegyekLayout.vue'
+import OrarendLayoutGyerek from '../layout/gyerek/OrarendLayout.vue'
+import UzenetekLayoutGyerek from '../layout/gyerek/UzenetekLayout.vue'
+
+// Szulo komponens importálása
+import HazikLayoutSzulo from '../layout/szulo/HazikLayout.vue'
+import HianyzasokLayoutSzulo from '../layout/szulo/HianyzasokLayout.vue'
+import JegyekLayoutSzulo from '../layout/szulo/JegyekLayout.vue'
+import OrarendLayoutSzulo from '../layout/szulo/OrarendLayout.vue'
+import UzenetekLayoutSzulo from '../layout/szulo/UzenetekLayout.vue'
+
+// Tanar komponens importálása
+import HazikLayoutTanar from '../layout/tanar/HazikLayout.vue'
+import HianyzasokLayoutTanar from '../layout/tanar/HianyzasokLayout.vue'
+import JegyekLayoutTanar from '../layout/tanar/JegyekLayout.vue'
+import OrarendLayoutTanar from '../layout/tanar/OrarendLayout.vue'
+import UzenetekLayoutTanar from '../layout/tanar/UzenetekLayout.vue'
+
+
+
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -26,40 +50,142 @@ const router = createRouter({
       name: 'admin',
       component: AdminView,
     },
+
     {
-        path: '/hazik',
-        name: 'hazik',
-        component: HazikView,
+      path: '/hazik',
+      name: 'hazik',
+      component: HazikView, 
+      children: [
+          { 
+              path: 'gyerekhazik',
+              name: 'gyerekhazik',
+              component: HazikLayoutGyerek
+          },
+          { 
+              path: 'szulohazik',
+              name: 'szulohazik',
+              component: HazikLayoutSzulo
+          },
+          { 
+              path: 'tanarhazik',
+              name: 'tanarhazik',
+              component: HazikLayoutTanar
+          },
+      ]
     },
+  
     {
         path: '/hianyzasok',
         name: 'hianyzasok',
-        component: HianyzasokLayout,children:[
-          {path: 'tanulo',
-            name: 'tanulo',
-            component: HianyzasokView
+        component: HianyzasokView,children:[
+          {path: 'gyerekhianyzasok',
+            name: 'gyerekhianyzasok',
+            component: HianyzasokLayoutGyerek
           },
-          {path: 'kaki',
-            name: 'kaki',
-            component: JegyekView
+          {path: 'szulohianyzasok',
+            name: 'szulohianyzasok',
+            component: HianyzasokLayoutSzulo
+          },
+          {path: 'tanarhianyzasok',
+            name: 'tanarhianyzasok',
+            component: HianyzasokLayoutTanar
           },
         ]
     },
     {
-        path: '/jegyek',
-        name: 'jegyek',
-        component: JegyekView,
+      path: '/jegyek',
+      name: 'jegyek',
+      component: JegyekView, 
+      children: [
+          { 
+              path: 'gyerekjegyek',
+              name: 'gyerekjegyek',
+              component: JegyekLayoutGyerek
+          },
+          { 
+              path: 'szulojegyek',
+              name: 'szulojegyek',
+              component: JegyekLayoutSzulo
+          },
+          { 
+              path: 'tanarjegyek',
+              name: 'tanarjegyek',
+              component: JegyekLayoutTanar
+          },
+      ]
+    },
+    {
+      path: '/orarend',
+      name: 'orarend',
+      component: OrarendView, 
+      children: [
+          { 
+              path: 'gyerekorarend',
+              name: 'gyerekorarend',
+              component: OrarendLayoutGyerek
+          },
+          { 
+              path: 'szuloorarend',
+              name: 'szuloorarend',
+              component: OrarendLayoutSzulo
+          },
+          { 
+              path: 'tanarorarend',
+              name: 'tanarorarend',
+              component: OrarendLayoutTanar
+          },
+      ]
+    } ,
+    {
+      path: '/uzenetek',
+      name: 'uzenetek',
+      component: UzenetekView, 
+      children: [
+          { 
+              path: 'gyerekuzenetek',
+              name: 'gyerekuzenetek',
+              component: UzenetekLayoutGyerek
+          },
+          { 
+              path: 'szulouzenetek',
+              name: 'szulouzenetek',
+              component: UzenetekLayoutSzulo
+          },
+          { 
+              path: 'tanaruzenetek',
+              name: 'tanaruzenetek',
+              component: UzenetekLayoutTanar
+          },
+      ]
+    },  
+    {
+      path: '/uzenetek',
+      name: 'uzenetek',
+      component: UzenetekView, 
+      children: [
+          { 
+              path: 'gyerekuzenetek',
+              name: 'gyerekuzenetek',
+              component: UzenetekLayoutGyerek
+          },
+          { 
+              path: 'szulouzenetek',
+              name: 'szulouzenetek',
+              component: UzenetekLayoutSzulo
+          },
+          { 
+              path: 'tanaruzenetek',
+              name: 'tanaruzenetek',
+              component: UzenetekLayoutTanar
+          },
+      ]
     },
     {
         path: '/jogosultsagok',
         name: 'jogosultsagok',
         component: Jogosultsagok,
     },
-    {
-        path: '/orarend',
-        name: 'orarend',
-        component: OrarendView,
-    },
+
     {
         path: '/osztalyok',
         name: 'osztalyok',
@@ -79,11 +205,6 @@ const router = createRouter({
         path: '/tanulo',
         name: 'tanulo',
         component: TanuloView,
-    },
-    {
-        path: '/uzenetek',
-        name: 'uzenetek',
-        component: UzenetekView
     },
   ],
 })

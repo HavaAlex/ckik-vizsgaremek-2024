@@ -3,9 +3,7 @@
 
 <template>
   <main>
-    <h1>Tanló</h1>
-    <RouterView>
-      
-    </RouterView>
+    <h1>tanarnezet</h1>
   </main>
 </template>
+ 
