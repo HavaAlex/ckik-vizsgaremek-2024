@@ -3,7 +3,7 @@
 
 <template>
   <main>
-    <h1>jegyek</h1>
+    <h1>jegyek layout</h1>
     <RouterView>
       
     </RouterView>

@@ -13,26 +13,28 @@ import JegyekView from '../views/JegyekView.vue'
 import OrarendView from '../views/OrarendView.vue'
 import UzenetekView from '../views/UzenetekView.vue'
 
+import HeaderFooterLayout from '@/layout/HeaderFooterLayout.vue'
+
 // Gyerek komponens importálása
-import HazikLayoutGyerek from '../layout/gyerek/HazikLayout.vue'
-import HianyzasokLayoutGyerek from '../layout/gyerek/HianyzasokLayout.vue'
-import JegyekLayoutGyerek from '../layout/gyerek/JegyekLayout.vue'
-import OrarendLayoutGyerek from '../layout/gyerek/OrarendLayout.vue'
-import UzenetekLayoutGyerek from '../layout/gyerek/UzenetekLayout.vue'
+import HazikViewGyerek from '../views/tanulo/HazikLayout.vue'
+import HianyzasokViewGyerek from '../views/tanulo/HianyzasokLayout.vue'
+import JegyekViewGyerek from '../views/tanulo/JegyekLayout.vue'
+import OrarendViewGyerek from '../views/tanulo/OrarendLayout.vue'
+import UzenetekViewGyerek from '../views/tanulo/UzenetekLayout.vue'
 
 // Szulo komponens importálása
-import HazikLayoutSzulo from '../layout/szulo/HazikLayout.vue'
-import HianyzasokLayoutSzulo from '../layout/szulo/HianyzasokLayout.vue'
-import JegyekLayoutSzulo from '../layout/szulo/JegyekLayout.vue'
-import OrarendLayoutSzulo from '../layout/szulo/OrarendLayout.vue'
-import UzenetekLayoutSzulo from '../layout/szulo/UzenetekLayout.vue'
+import HazikViewSzulo from '../views/szulo/HazikLayout.vue'
+import HianyzasokViewSzulo from '../views/szulo/HianyzasokLayout.vue'
+import JegyekViewSzulo from '../views/szulo/JegyekLayout.vue'
+import OrarendViewSzulo from '../views/szulo/OrarendLayout.vue'
+import UzenetekViewSzulo from '../views/szulo/UzenetekLayout.vue'
 
 // Tanar komponens importálása
-import HazikLayoutTanar from '../layout/tanar/HazikLayout.vue'
-import HianyzasokLayoutTanar from '../layout/tanar/HianyzasokLayout.vue'
-import JegyekLayoutTanar from '../layout/tanar/JegyekLayout.vue'
-import OrarendLayoutTanar from '../layout/tanar/OrarendLayout.vue'
-import UzenetekLayoutTanar from '../layout/tanar/UzenetekLayout.vue'
+import HazikViewTanar from '../views/tanar/HazikLayout.vue'
+import HianyzasokViewTanar from '../views/tanar/HianyzasokLayout.vue'
+import JegyekViewTanar from '../views/tanar/JegyekLayout.vue'
+import OrarendViewTanar from '../views/tanar/OrarendLayout.vue'
+import UzenetekViewTanar from '../views/tanar/UzenetekLayout.vue'
 
 
 
@@ -46,6 +48,11 @@ const router = createRouter({
       component: HomeView,
     },
     {
+      path: '/teszt',
+      name: 'teszt',
+      component: HeaderFooterLayout,
+    },
+    {
       path: '/admin',
       name: 'admin',
       component: AdminView,
@@ -57,19 +64,19 @@ const router = createRouter({
       component: HazikView, 
       children: [
           { 
-              path: 'gyerekhazik',
-              name: 'gyerekhazik',
-              component: HazikLayoutGyerek
+              path: 'tanulo',
+              name: 'tanulohazik',
+              component: HazikViewGyerek
           },
           { 
-              path: 'szulohazik',
+              path: 'szulo',
               name: 'szulohazik',
-              component: HazikLayoutSzulo
+              component: HazikViewSzulo
           },
           { 
-              path: 'tanarhazik',
+              path: 'tanar',
               name: 'tanarhazik',
-              component: HazikLayoutTanar
+              component: HazikViewTanar
           },
       ]
     },
@@ -78,17 +85,17 @@ const router = createRouter({
         path: '/hianyzasok',
         name: 'hianyzasok',
         component: HianyzasokView,children:[
-          {path: 'gyerekhianyzasok',
-            name: 'gyerekhianyzasok',
-            component: HianyzasokLayoutGyerek
+          {path: 'tanulo',
+            name: 'tanulohianyzasok',
+            component: HianyzasokViewGyerek
           },
-          {path: 'szulohianyzasok',
+          {path: 'szulo',
             name: 'szulohianyzasok',
-            component: HianyzasokLayoutSzulo
+            component: HianyzasokViewSzulo
           },
-          {path: 'tanarhianyzasok',
+          {path: 'tanar',
             name: 'tanarhianyzasok',
-            component: HianyzasokLayoutTanar
+            component: HianyzasokViewTanar
           },
         ]
     },
@@ -98,19 +105,19 @@ const router = createRouter({
       component: JegyekView, 
       children: [
           { 
-              path: 'gyerekjegyek',
-              name: 'gyerekjegyek',
-              component: JegyekLayoutGyerek
+              path: 'tanulo',
+              name: 'tanulojegyek',
+              component: JegyekViewGyerek
           },
           { 
-              path: 'szulojegyek',
+              path: 'szulo',
               name: 'szulojegyek',
-              component: JegyekLayoutSzulo
+              component: JegyekViewSzulo
           },
           { 
-              path: 'tanarjegyek',
+              path: 'tanar',
               name: 'tanarjegyek',
-              component: JegyekLayoutTanar
+              component: JegyekViewTanar
           },
       ]
     },
@@ -120,63 +127,41 @@ const router = createRouter({
       component: OrarendView, 
       children: [
           { 
-              path: 'gyerekorarend',
-              name: 'gyerekorarend',
-              component: OrarendLayoutGyerek
+              path: 'tanulo',
+              name: 'tanuloorarend',
+              component: OrarendViewGyerek
           },
           { 
-              path: 'szuloorarend',
+              path: 'szulo',
               name: 'szuloorarend',
-              component: OrarendLayoutSzulo
+              component: OrarendViewSzulo
           },
           { 
-              path: 'tanarorarend',
+              path: 'tanar',
               name: 'tanarorarend',
-              component: OrarendLayoutTanar
+              component: OrarendViewTanar
           },
       ]
-    } ,
+    } , 
     {
       path: '/uzenetek',
       name: 'uzenetek',
       component: UzenetekView, 
       children: [
           { 
-              path: 'gyerekuzenetek',
-              name: 'gyerekuzenetek',
-              component: UzenetekLayoutGyerek
+              path: 'tanulo',
+              name: 'tanulouzenetek',
+              component: UzenetekViewGyerek
           },
           { 
-              path: 'szulouzenetek',
+              path: 'szulo',
               name: 'szulouzenetek',
-              component: UzenetekLayoutSzulo
+              component: UzenetekViewSzulo
           },
           { 
-              path: 'tanaruzenetek',
+              path: 'tanar',
               name: 'tanaruzenetek',
-              component: UzenetekLayoutTanar
-          },
-      ]
-    },  
-    {
-      path: '/uzenetek',
-      name: 'uzenetek',
-      component: UzenetekView, 
-      children: [
-          { 
-              path: 'gyerekuzenetek',
-              name: 'gyerekuzenetek',
-              component: UzenetekLayoutGyerek
-          },
-          { 
-              path: 'szulouzenetek',
-              name: 'szulouzenetek',
-              component: UzenetekLayoutSzulo
-          },
-          { 
-              path: 'tanaruzenetek',
-              name: 'tanaruzenetek',
-              component: UzenetekLayoutTanar
+              component: UzenetekViewTanar
           },
       ]
     },
