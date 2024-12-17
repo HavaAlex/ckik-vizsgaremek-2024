@@ -1,6 +1,6 @@
 const toyService = require("../services/toyService");
 
-exports.getAllToys = async (req, res, next) =>
+exports.getAllOsztalytagok = async (req, res, next) =>
 {
 
     res.status(200).json("todo");
