@@ -1,0 +1,12 @@
+/login --POST (vissza kapja a tokent) |tanar|szulo|diak
+/orarend/:token --GET (tanárnál osztályonként/csoportonként/személyenként megnézheti) |tanar|szulo|diak
+/jegyek/:token --GET (tanárnál osztályonként/csoportonként/személyenként megnézheti) |tanar|szulo|diak
+/hianyzasokTanulo/:token --GET |diak
+/hianyzasokSzulo/:token --GET |szulo
+/hianyzasokSzulo/:token --POST |szulo
+/hianyzasokOsztaly/:token --GET (lekéri egy órán lévő emberek hiányzásait |tanar
+/hianyzasokOsztaly/:token --POST (felküldi a hiányzónak/nem hiányzónak beállított személyeket |tanar
+/useradatok/:token --GET |tanar|szulo|diak (profil ablak infok, adminnál lekérdezi az összes usert)
+/orarendModositas/:token --POST |admin
+/osztalyModositas/:token --POST |admin
+/fiokModositas/:token --POST |admin
