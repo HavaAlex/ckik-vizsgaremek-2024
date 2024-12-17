@@ -1,9 +1,10 @@
 const toyService = require("../services/toyService");
 
-exports.getAllOsztalytagok = async (req, res, next) =>
+exports.getOrarend = async (req, res, next) =>
 {
-
-    res.status(200).json("todo");
+    let fiokInfo = tokenKeres(params.token)
+    if (fiokInfo.token)
+    res.status(200).json("Sikeres");
 }
 
 exports.createToy = async (req, res, next) =>
