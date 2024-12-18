@@ -1,9 +1,6 @@
 <script lang="ts" setup>
-import { ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
- 
-
-
+import {setUserStatusToLocalStorage, getUserStatusFromLocalStorage} from '@/localstorage/localStorageManagment.ts';
 const { push } = useRouter()
 const {back} = useRouter()
 </script>
@@ -17,21 +14,22 @@ const {back} = useRouter()
         flat
       >
   
-      <v-btn @click="push({name:'password-reset-email'})">
+      <v-btn @click="push({name:getUserStatusFromLocalStorage()+'orarend'})">
                 Órarend
       </v-btn>
-      <v-btn @click="push({name:'password-reset-email'})">
+      <v-btn @click="push({name:getUserStatusFromLocalStorage()+'hazik'})">
                 Házifeladatok/beadandók
       </v-btn>
-      <v-btn @click="push({name:'password-reset-email'})">
+      <v-btn @click="push({name:getUserStatusFromLocalStorage()+'jegyek'})">
                 Osztályzatok
       </v-btn>
-      <v-btn @click="push({name:'password-reset-email'})">
+      <v-btn @click="push({name:getUserStatusFromLocalStorage()+'hianyzasok'})">
                 Mulasztások/Hiányzások
       </v-btn>
-      <v-btn @click="push({name:'password-reset-email'})">
+      <v-btn @click="push({name:getUserStatusFromLocalStorage()+'uzenetek'})">
                 Üzenetek
       </v-btn>
+
       <v-spacer></v-spacer>
       <v-btn @click="push({name:'home'})">
                 Kilépés
