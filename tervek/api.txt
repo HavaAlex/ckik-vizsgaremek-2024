@@ -4,11 +4,11 @@
 /jegyek/:token --POST 
 /hianyzasok/:token --GET |diak|szulo|tanar
 /hianyzasok/:token --POST |szulo|tanar
-/hianyzasokOsztaly/:token --GET (lekéri egy órán lévő emberek hiányzásait |tanar
-/hianyzasokOsztaly/:token --POST (felküldi a hiányzónak/nem hiányzónak beállított személyeket |tanar
+/hianyzasokOsztaly/:token --GET (lekéri egy órán lévő emberek hiányzásait) |tanar
+/hianyzasokOsztaly/:token --POST (felküldi a hiányzónak/nem hiányzónak beállított személyeket) |tanar
 /fiokadatok/:token --GET |tanar|szulo|diak (profil ablak infok, adminnál lekérdezi az összes usert)
 /fiokadatok/:token --POST |admin
 /orarendModositas/:token --POST |admin
 /osztalyModositas/:token --POST |admin
-/forum/:token --GET |diak|szulo|tanar (forum posztokat lelehessen majd limitálni egyes osztályokra/szerepekre)
-/forum/:token --POST |diak|szulo|tanar
+/uzenetek/:token --GET |diak|szulo|tanar (forum posztokat lelehessen majd limitálni egyes osztályokra/szerepekre)
+/uzenetek/:token --POST |diak|szulo|tanar

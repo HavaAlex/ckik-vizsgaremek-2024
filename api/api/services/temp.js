@@ -2,28 +2,33 @@ const toyRepository = require("../repositories/toyRepository");
 
 const shopRepository = require("../repositories/shopRepository");
 
-class ToyService
+class PaholyService
 {
-    async updateToy(name, toy)
+    async GETfiokInfoTOKEN(token)
     {
-        
+        //megkeresi token alapján az usert
     }
     
-    async deleteToy(name)
+    async GETfiokInfoID(fiok_id)
+    {
+        //megkeresi id alapján az usert
+    }
+
+    async GETorarendOsztaly(id_object) //{id,csoportE}
+    {
+        //orarend Osztaly/csoport alapján
+    }
+
+    async GETorarendSzemely(fiok_id)
+    {
+        //orarend Szemely alapján
+    }
+
+    async GETuzenet(uzenet_id)
     {
         
+        //uzenete id alapján
     }
-
-    async getToy(name)
-    {
-        
-    }
-
-    async getToys()
-    {
-
-    }
-         
     
     async createToy(toy)
     {
@@ -58,4 +63,4 @@ class ToyService
     }
 }
 
-module.exports = new ToyService();
+module.exports = new PaholyService();

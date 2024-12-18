@@ -6,7 +6,7 @@ const paholyController = require("../controllers/paholyController");
 
 router.post("/login", paholyController);
 
-router.get("/orarend/:token", paholyController);
+router.get("/orarend/:token", paholyController.getOrarend);
 
 router.get("/jegyek/:token", paholyController);
 
@@ -28,8 +28,8 @@ router.post("/orarendModositas/:token", paholyController);
 
 router.post("/osztalyModositas/:token", paholyController);
 
-router.get("/forum/:token", paholyController);
+router.get("/uzenetek/:token", paholyController);
 
-router.post("/forum/:token", paholyController);
+router.post("/uzenetek/:token", paholyController);
 
 module.exports = router;

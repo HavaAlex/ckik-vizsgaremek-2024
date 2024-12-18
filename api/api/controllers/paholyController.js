@@ -1,10 +1,10 @@
-const toyService = require("../services/toyService");
+const paholyService = require("../services/paholyService");
 
 exports.getOrarend = async (req, res, next) =>
 {
-    let fiokInfo = tokenKeres(params.token)
+    let fiokInfo = paholyService.GETfiokInfoTOKEN(params.token)
     if (fiokInfo.token)
-    res.status(200).json("Sikeres");
+        res.status(200).json("Sikeres");
 }
 
 exports.createToy = async (req, res, next) =>
