@@ -3,10 +3,7 @@
 
 <template>
   <main>
-    <h1>jegyek</h1>
-    <RouterView>
-      
-    </RouterView>
+    <h1>Szulonezet</h1>
   </main>
 </template>
  

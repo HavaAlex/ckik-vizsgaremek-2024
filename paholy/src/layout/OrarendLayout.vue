@@ -3,7 +3,7 @@
 
 <template>
   <main>
-    <h1>Órarend laayout</h1>
+    <h1>Órarend</h1>
     <RouterView>
       
     </RouterView>
