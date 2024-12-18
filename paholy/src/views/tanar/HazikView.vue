@@ -3,7 +3,7 @@
 
 <template>
   <main>
-    <h1>tanarnezet</h1>
+
+    <v-btn theme="dark">Feladat kitúzése</v-btn>
   </main>
 </template>
- 

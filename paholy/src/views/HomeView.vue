@@ -1,27 +1,20 @@
 <script setup lang="ts">
 //import TheWelcome from '../components/TheWelcome.vue'
-import { useRoute, useRouter } from 'vue-router';
-import {setUserStatusToLocalStorage, getUserStatusFromLocalStorage} from '@/localstorage/localStorageManagment.ts';
+import {useRouter } from 'vue-router';
+import {setUserStatusToLocalStorage} from '@/localstorage/localStorageManagment.ts';
 const { push } = useRouter()
-const {back} = useRouter()
-
-
-
-
-
-
 </script>
 
 <template>
   <main>
     <h1>A páholy megérkezett</h1>
-    <v-btn @click="push({name:'applayout'});setUserStatusToLocalStorage('tanar')">
+    <v-btn @click="push({name:'tanarorarend'});setUserStatusToLocalStorage('tanar')">
                 Tanár
       </v-btn>
-      <v-btn @click="push({name:'applayout'});setUserStatusToLocalStorage('diak')">
+      <v-btn @click="push({name:'tanuloorarend'});setUserStatusToLocalStorage('tanulo')">
                 Diák
       </v-btn>
-      <v-btn @click="push({name:'applayout'});setUserStatusToLocalStorage('szulo')">
+      <v-btn @click="push({name:'szuloorarend'});setUserStatusToLocalStorage('szulo')">
                 Szülő
       </v-btn>
       <v-btn @click="push({name:'applayout'});setUserStatusToLocalStorage('admin')">

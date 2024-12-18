@@ -3,10 +3,9 @@
 
 <template>
   <main>
-    <h1>Hianyzas layout</h1>
+    <h1>hianyzas</h1>
     <RouterView>
       
     </RouterView>
   </main>
 </template>
- 

@@ -10,3 +10,7 @@ export function getUserStatusFromLocalStorage()
         return localStorage.getItem("userStatus");
 }
 
+export function deleteUserStatusFromLocalStorage(){
+    localStorage.removeItem("userStatus");
+}
+

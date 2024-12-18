@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import { useRoute, useRouter } from 'vue-router';
-import {setUserStatusToLocalStorage, getUserStatusFromLocalStorage} from '@/localstorage/localStorageManagment.ts';
+import { getUserStatusFromLocalStorage, deleteUserStatusFromLocalStorage} from '@/localstorage/localStorageManagment.ts';
 const { push } = useRouter()
-const {back} = useRouter()
+
 </script>
 
 <template>
@@ -31,7 +31,7 @@ const {back} = useRouter()
       </v-btn>
 
       <v-spacer></v-spacer>
-      <v-btn @click="push({name:'home'})">
+      <v-btn @click="deleteUserStatusFromLocalStorage() ; push({name:'home'})">
                 Kilépés
       </v-btn>
     </v-app-bar>
@@ -43,7 +43,13 @@ const {back} = useRouter()
       height="48"
       location="bottom"
       flat
-    ></v-app-bar>
+    >
+
+
+      <v-col class="text-center mt-4" cols="12">
+        {{ new Date().getFullYear() }} - <strong>Páholy</strong>
+      </v-col>
+    </v-app-bar>
   
       <v-main class="d-flex align-center justify-center fill-height">
         <RouterView></RouterView>
