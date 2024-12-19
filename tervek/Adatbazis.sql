@@ -1,3 +1,25 @@
+CREATE TABLE `follows` (
+  `following_user_id` integer,
+  `followed_user_id` integer,
+  `created_at` timestamp
+);
+
+CREATE TABLE `users` (
+  `id` integer PRIMARY KEY,
+  `username` varchar(255),
+  `role` varchar(255),
+  `created_at` timestamp
+);
+
+CREATE TABLE `posts` (
+  `id` integer PRIMARY KEY,
+  `title` varchar(255),
+  `body` text COMMENT 'Content of the post',
+  `user_id` integer,
+  `status` varchar(255),
+  `created_at` timestamp
+);
+
 CREATE TABLE `user` (
   `id` integer PRIMARY KEY,
   `nev` integer,
@@ -48,18 +70,11 @@ CREATE TABLE `Hianyzasok` (
   `uzenet` varchar(255)
 );
 
-ALTER TABLE `Ora` ADD FOREIGN KEY (`id`) REFERENCES `Orarend` (`ora_ID`);
-
 CREATE TABLE `Orarend_user` (
   `Orarend_user_ID` integer,
   `user_id` integer,
   PRIMARY KEY (`Orarend_user_ID`, `user_id`)
 );
-
-ALTER TABLE `Orarend_user` ADD FOREIGN KEY (`Orarend_user_ID`) REFERENCES `Orarend` (`user_ID`);
-
-ALTER TABLE `Orarend_user` ADD FOREIGN KEY (`user_id`) REFERENCES `user` (`id`);
-
 
 CREATE TABLE `Hianyzasok_Ora` (
   `Hianyzasok_ora_ID` integer,
@@ -67,21 +82,44 @@ CREATE TABLE `Hianyzasok_Ora` (
   PRIMARY KEY (`Hianyzasok_ora_ID`, `Ora_id`)
 );
 
-ALTER TABLE `Hianyzasok_Ora` ADD FOREIGN KEY (`Hianyzasok_ora_ID`) REFERENCES `Hianyzasok` (`ora_ID`);
-
-ALTER TABLE `Hianyzasok_Ora` ADD FOREIGN KEY (`Ora_id`) REFERENCES `Ora` (`id`);
-
-
 CREATE TABLE `Tagsag_user` (
   `Tagsag_user_ID` integer,
   `user_id` integer,
   PRIMARY KEY (`Tagsag_user_ID`, `user_id`)
 );
 
+CREATE TABLE `Uzenetek` (
+  `id` integer PRIMARY KEY,
+  `Sender_ID` integer,
+  `reciever_ID` integer,
+  `reciever_type` string
+);
+
+ALTER TABLE `posts` ADD FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
+
+ALTER TABLE `follows` ADD FOREIGN KEY (`following_user_id`) REFERENCES `users` (`id`);
+
+ALTER TABLE `follows` ADD FOREIGN KEY (`followed_user_id`) REFERENCES `users` (`id`);
+
+ALTER TABLE `user` ADD FOREIGN KEY (`id`) REFERENCES `Uzenetek` (`Sender_ID`);
+
+ALTER TABLE `user` ADD FOREIGN KEY (`id`) REFERENCES `Uzenetek` (`reciever_ID`);
+
+ALTER TABLE `user` ADD FOREIGN KEY (`role`) REFERENCES `Uzenetek` (`reciever_type`);
+
+ALTER TABLE `Ora` ADD FOREIGN KEY (`id`) REFERENCES `Orarend` (`ora_ID`);
+
+ALTER TABLE `Orarend_user` ADD FOREIGN KEY (`Orarend_user_ID`) REFERENCES `Orarend` (`user_ID`);
+
+ALTER TABLE `Orarend_user` ADD FOREIGN KEY (`user_id`) REFERENCES `user` (`id`);
+
+ALTER TABLE `Hianyzasok_Ora` ADD FOREIGN KEY (`Hianyzasok_ora_ID`) REFERENCES `Hianyzasok` (`ora_ID`);
+
+ALTER TABLE `Hianyzasok_Ora` ADD FOREIGN KEY (`Ora_id`) REFERENCES `Ora` (`id`);
+
 ALTER TABLE `Tagsag_user` ADD FOREIGN KEY (`Tagsag_user_ID`) REFERENCES `Tagsag` (`user_ID`);
 
 ALTER TABLE `Tagsag_user` ADD FOREIGN KEY (`user_id`) REFERENCES `user` (`id`);
-
 
 ALTER TABLE `Osztaly` ADD FOREIGN KEY (`id`) REFERENCES `Tagsag` (`osztaly_ID`);
 

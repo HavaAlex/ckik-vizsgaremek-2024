@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { useRoute, useRouter } from 'vue-router';
 import { getUserStatusFromLocalStorage, deleteUserStatusFromLocalStorage} from '@/localstorage/localStorageManagment.ts';
+import Jogosultsagok from '@/views/admin/Jogosultsagok.vue';
 const { push } = useRouter()
 
 </script>
@@ -28,6 +29,10 @@ const { push } = useRouter()
       </v-btn>
       <v-btn @click="push({name:getUserStatusFromLocalStorage()+'uzenetek'})">
                 Üzenetek
+      </v-btn>
+      
+      <v-btn @click="push({name:'jogosultsagok'})" v-if="getUserStatusFromLocalStorage()=='admin'">
+                Jogosultsagok kezelése
       </v-btn>
 
       <v-spacer></v-spacer>

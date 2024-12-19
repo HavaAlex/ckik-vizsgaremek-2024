@@ -1,11 +1,13 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import AdminView from '../views/AdminView.vue'
 import HomeView from '../views/HomeView.vue'
-import Jogosultsagok from '../views/Jogosultsagok.vue'
-import OsztalyokView from '../views/OsztalyokView.vue'
-import SzuloView from '../views/SzuloView.vue'
-import TanarView from '../views/TanarView.vue'
-import TanuloView from '../views/TanuloView.vue'
+
+// Admin komponens importálása
+import HazikViewAdmin from '../views/admin/HazikView.vue'
+import HianyzasokViewAdmin from '../views/admin/HianyzasokView.vue'
+import JegyekViewAdmin from '../views/admin/HazikView.vue'
+import OrarendViewAdmin from '../views/admin/OrarendView.vue'
+import UzenetekViewAdmin from '../views/admin/UzenetekView.vue'
+import JogosultsagokView from '../views/admin/Jogosultsagok.vue'
 
 // Gyerek komponens importálása
 import HazikViewTanulo from '../views/tanulo/HazikView.vue'
@@ -28,7 +30,7 @@ import JegyekViewTanar from '../views/tanar/JegyekView.vue'
 import OrarendViewTanar from '../views/tanar/OrarendView.vue'
 import UzenetekViewTanar from '../views/tanar/UzenetekView.vue'
 
-
+//layoutok
 import UzenetekLayout from '../layout/UzenetekLayout.vue'
 import HazikLayout from '../layout/HazikLayout.vue'
 import OrarendLayout from '../layout/OrarendLayout.vue'
@@ -36,6 +38,7 @@ import JegyekLayout from '../layout/JegyekLayout.vue'
 import HianyzasokLayout from '../layout/HianyzasokLayout.vue' 
 
 import AppLayout from '@/layout/AppLayout.vue'
+import Jogosultsagok from '../views/admin/Jogosultsagok.vue'
 
 
 
@@ -48,6 +51,11 @@ const router = createRouter({
       name: 'applayout',
       component: AppLayout,
       children: [
+        {
+          path: '/jogosultsagok',
+          name: 'jogosultsagok',
+          component: Jogosultsagok,
+        },
         {
           path: '/hazik',
           name: 'hazik',
@@ -68,6 +76,11 @@ const router = createRouter({
                   name: 'tanarhazik',
                   component: HazikViewTanar
               },
+              { 
+                path: 'adminhazik',
+                name: 'adminhazik',
+                component: HazikViewAdmin
+              },
           ]
         },
       
@@ -86,6 +99,11 @@ const router = createRouter({
               {path: 'tanarhianyzasok',
                 name: 'tanarhianyzasok',
                 component: HianyzasokViewTanar
+              },
+              { 
+                path: 'adminhianyzasok',
+                name: 'adminhianyzasok',
+                component: HianyzasokViewAdmin
               },
             ]
         },
@@ -109,6 +127,11 @@ const router = createRouter({
                   name: 'tanarjegyek',
                   component: JegyekViewTanar
               },
+              { 
+                path: 'adminjegyek',
+                name: 'adminjegyek',
+                component: JegyekViewAdmin
+              },
           ]
         },
         {
@@ -130,6 +153,11 @@ const router = createRouter({
                   path: 'tanarorarend',
                   name: 'tanarorarend',
                   component: OrarendViewTanar
+              },
+              { 
+                path: 'adminorarend',
+                name: 'adminorarend',
+                component: OrarendViewAdmin
               },
           ]
         } ,
@@ -153,6 +181,11 @@ const router = createRouter({
                   name: 'tanaruzenetek',
                   component: UzenetekViewTanar
               },
+              { 
+                path: 'adminuzenetek',
+                name: 'adminuzenetek',
+                component: UzenetekViewAdmin
+            },
           ]
         }, 
       ]
@@ -162,40 +195,8 @@ const router = createRouter({
       name: 'home',
       component: HomeView,
     },
-    {
-        path: '/jogosultsagok',
-        name: 'jogosultsagok',
-        component: Jogosultsagok,
-    },
 
 
-    {
-        path: '/osztalyok',
-        name: 'osztalyok',
-        component: OsztalyokView,
-    },
-    {
-        path: '/szulo',
-        name: 'szulo',
-        component: SzuloView,
-    },
-    {
-        path: '/tanar',
-        name: 'tanar',
-        component: TanarView,
-    },
-    {
-        path: '/tanulo',
-        name: 'tanulo',
-        component: TanuloView,
-    },
-
-    {    
-      path: '/admin',
-      name: 'admin',
-      component: AdminView,
-
-    },
   ],
 })
 

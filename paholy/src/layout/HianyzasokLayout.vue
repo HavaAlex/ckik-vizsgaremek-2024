@@ -3,8 +3,7 @@
 
 <template>
   <main>
-    <h1>hianyzas</h1>
-    <RouterView>
+    <RouterView> 
       
     </RouterView>
   </main>

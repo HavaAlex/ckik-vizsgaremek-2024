@@ -3,6 +3,5 @@
 
 <template>
   <main>
-    <h1>tanarnezet</h1>
   </main>
 </template>

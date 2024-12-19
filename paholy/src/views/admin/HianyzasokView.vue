@@ -4,6 +4,7 @@
 <template>
   <main>
     <div>
+      <h1>Kiosztott osztályzatok</h1>
 
       <v-navigation-drawer theme="dark">
         <v-list-item title="Szűrési szempontok: "></v-list-item>

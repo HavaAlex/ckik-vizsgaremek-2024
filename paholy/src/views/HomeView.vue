@@ -6,8 +6,8 @@ const { push } = useRouter()
 </script>
 
 <template>
-  <main>
-    <h1>A páholy megérkezett</h1>
+  <main style="text-align: center;">
+    <h1 >A páholy megérkezett</h1>
     <v-btn @click="push({name:'tanarorarend'});setUserStatusToLocalStorage('tanar')">
                 Tanár
       </v-btn>
