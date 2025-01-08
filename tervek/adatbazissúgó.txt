@@ -1,0 +1,132 @@
+az ora táblában minden óra  bent van ami egy héten van
+azaz benne lesz külön óraként a szerdai majd a pénteki matek
+annak indkiálására, hogy ismétlődik e van egy nemIsmetlodik nevű bool
+
+
+// Use DBML to define your database structure
+// Docs: https://dbml.dbdiagram.io/docs
+
+
+
+Table "tanulo" {
+  "id" integer [pk]
+  "nev" varchar(255)
+  "szuldatum" date
+  "OM_ID" varchar(255)
+  "lakcim" varchar(255)
+  "nem" bool
+  "osztalyfonokID" integer
+}
+
+Table "tanar" {
+  "id" integer [pk]
+  "nev" varchar(255)
+  "szuldatum" date
+  "OM_ID" varchar(255)
+  "lakcim" varchar(255)
+  "nem" bool
+}
+
+Table "szulo" {
+  "id" integer [pk]
+  "nev" varchar(255)
+  "szuldatum" date
+  "lakcim" varchar(255)
+  "nem" bool
+  "role" varchar(255)
+}
+table "csalad"{
+  "tanuloId" integer
+  "szuloId" integer
+}
+Table "admin" {
+  "id" integer [pk]
+  "nev" varchar(255)
+  "szuldatum" date
+  "OM_ID" varchar(255)
+  "lakcim" varchar(255)
+  "nem" bool
+}
+
+Table "Csoport" {
+  "id" integer [pk]
+  "name" varchar(255)
+  "orarend_ID" integer
+}
+Ref:"Csoport"."orarend_ID" < "Orarend"."orarend_ID"
+Ref:"Csoport"."id" < "CsoportTagsag"."csoport_ID"
+
+
+Table "CsoportTagsag" {
+  "csoport_ID" integer
+  "user_ID" integer
+}
+
+
+
+
+
+Table "Ora" {
+  "id" integer [pk]
+  "tantargy_ID" integer
+  "tanar_ID" integer
+  "helyettesitotanar_ID" integer
+  "ido" date
+  "hossz" integer
+  "fakultativ" bool
+  "elmaradt" bool
+}
+
+Table "tantargy" {
+  "id" integer [pk]
+  "nev" varchar(255)
+}
+
+Table "Orarend" {
+  "orarend_ID" integer
+  "ora_ID" integer
+
+}
+
+Table "Hianyzasok" {
+  "id" integer [pk]
+  "user_ID" integer
+  "kiado_ID" integer
+  "leigazolo_ID" integer
+  "ora_ID" integer
+  "uzenet" varchar(255)
+}
+
+
+Table "Hianyzasok_Ora" {
+  "Hianyzasok_ora_ID" integer
+  "Ora_id" integer
+
+  Indexes {
+    (Hianyzasok_ora_ID, Ora_id) [pk]
+  }
+}
+
+
+
+Table "Uzenetek" {
+  "id" integer [pk]
+  "Sender_ID" integer
+  "reciever_ID" integer
+  "reciever_type" varchar(255)
+}
+
+
+
+
+Ref:"Orarend"."ora_ID" < "Ora"."id"
+
+Ref:"Hianyzasok"."ora_ID" < "Hianyzasok_Ora"."Hianyzasok_ora_ID"
+
+Ref:"Ora"."id" < "Hianyzasok_Ora"."Ora_id"
+
+
+
+Ref:"tantargy"."id" < "Ora"."tantargy_ID"
+
+
