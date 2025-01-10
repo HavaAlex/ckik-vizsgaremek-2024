@@ -1,17 +1,23 @@
-const toyRepository = require("../repositories/toyRepository");
-
-const shopRepository = require("../repositories/shopRepository");
+const orarendRepository  = require("../repositories/orarendRepository");
 
 class OrarendService
 {
-    async GETfiokInfoTOKEN(token)
+    async createOra()
     {
-        //megkeresi token alapján az usert
+
     }
     
-    async GETfiokInfoID(fiok_id)
+    async createOrarend()
     {
-        //megkeresi id alapján az usert
+
+    }
+    async getOra()
+    {
+
+    }
+    async getOrarend()
+    {
+
     }
 }
 
