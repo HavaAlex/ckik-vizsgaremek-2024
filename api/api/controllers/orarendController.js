@@ -1,5 +1,10 @@
 const paholyService = require("../services/paholyService");
 
+exports.login = async (req, res, next) =>
+{
+    const {orarendID,}
+}
+
 exports.createToy = async (req, res, next) =>
 {
     let {name, price, company, shopID} = req.body;
