@@ -1,10 +1,14 @@
 const express = require("express");
 
 const router = express.Router();
+console.log("teszt3")
 
 const paholyController = require("../controllers/paholyController");
 
+
 router.get("/", [ userAuth.verifyToken ], userController.getUsers);
+
+router.post("/login", userController.loginUser);
 
 router.get("/orarend/:token", paholyController.getOrarend);
 

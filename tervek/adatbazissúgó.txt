@@ -1,3 +1,8 @@
+az ora táblában minden óra  bent van ami egy héten van
+azaz benne lesz külön óraként a szerdai majd a pénteki matek
+annak indkiálására, hogy ismétlődik e van egy nemIsmetlodik nevű bool
+
+
 // Use DBML to define your database structure
 // Docs: https://dbml.dbdiagram.io/docs
 

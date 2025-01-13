@@ -9,7 +9,7 @@ export type SetPasswordData = {
 }
 
 export type LoginData = {
-    username:string,
+    email:string,
     password:string
 }
 export type LoginResponse = {

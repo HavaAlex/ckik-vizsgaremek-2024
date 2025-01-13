@@ -39,7 +39,6 @@ import HianyzasokLayout from '../layout/HianyzasokLayout.vue'
 
 import AppLayout from '@/layout/AppLayout.vue'
 import Jogosultsagok from '../views/admin/Jogosultsagok.vue'
-import Login from '../views/auth/LoginView.vue'
 
 
 
@@ -47,11 +46,6 @@ import Login from '../views/auth/LoginView.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
-    {
-      path: '/login',
-      name: 'login',
-      component: Login,
-    },
     {
       path: '/',
       name: 'applayout',
