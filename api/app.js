@@ -4,6 +4,8 @@ const app = express();
 
 const paholyRoutes = require("./api/routes/paholyRoutes");
 
+const adminRoutes = require("./api/routes/adminRoutes")
+
 const errorHandler = require("./api/middlewares/errorHandler");
 
 app.use(express.json());
@@ -11,6 +13,8 @@ app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
 app.use("/paholy", paholyRoutes);
+
+app.use("/admin", adminRoutes);
 
 app.use(errorHandler.notFoundError);
 

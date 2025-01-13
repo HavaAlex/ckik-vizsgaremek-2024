@@ -4,7 +4,9 @@ const router = express.Router();
 
 const paholyController = require("../controllers/paholyController");
 
-router.post("/login", paholyController);
+router.get("/", [ userAuth.verifyToken ], userController.getUsers);
+
+router.post("/login", userController.loginUser);
 
 router.get("/orarend/:token", paholyController.getOrarend);
 
@@ -24,9 +26,9 @@ router.get("/fiokadatok/:token", paholyController);
 
 router.post("/fiokadatok/:token", paholyController);
 
-router.post("/orarendModositas/:token", paholyController);
+router.post("admin/orarendModositas/:token", paholyController);
 
-router.post("/osztalyModositas/:token", paholyController);
+router.post("admin/osztalyModositas/:token", paholyController);
 
 router.get("/uzenetek/:token", paholyController);
 
