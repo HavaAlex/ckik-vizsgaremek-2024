@@ -5,24 +5,24 @@ import { ref } from 'vue';
 import { useRouter } from 'vue-router';
  
 const LoginDataRef = ref<LoginData>({
-    email: '',
+    username: '',
     password:''
 })
 
 const { push } = useRouter()
-const { mutate: registration, isPending} = useLogin()
+const { mutate: Login, isPending} = useLogin()
 const {back} = useRouter()
 </script>
 <template>
     <v-card>
         <v-card-title>Login</v-card-title>
         <v-card-text>
-            <v-text-field v-model="LoginDataRef.email" label="Email" variant="outlined"></v-text-field>
-            <v-text-field v-model="LoginDataRef.password" label="Password" type="password" variant="outlined"></v-text-field>
+            <v-text-field v-model="LoginDataRef.username" label="Felhasználónév" variant="outlined"></v-text-field>
+            <v-text-field v-model="LoginDataRef.password" label="Jelszó" type="password" variant="outlined"></v-text-field>
         </v-card-text>
         <v-card-actions>
             <v-btn @click="() => {
-                registration(LoginDataRef)
+                Login(LoginDataRef)
             }" :loading="isPending">
                 Login
             </v-btn>

@@ -3,6 +3,7 @@ import { useRoute, useRouter } from 'vue-router';
 import { getUserStatusFromLocalStorage, deleteUserStatusFromLocalStorage} from '@/localstorage/localStorageManagment.ts';
 import Jogosultsagok from '@/views/admin/Jogosultsagok.vue';
 const { push } = useRouter()
+import { useLogout } from '@/api/auth/authQuery';
 
 </script>
 
