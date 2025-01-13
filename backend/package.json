@@ -10,7 +10,19 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+<<<<<<< HEAD
     "express": "^4.21.2",
     "jest": "^29.7.0"
+=======
+    "bcrypt": "^5.1.1",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1",
+    "jest": "^29.7.0",
+    "jsonwebtoken": "^9.0.2",
+    "mysql2": "^3.11.4",
+    "nodemon": "^3.1.7",
+    "sequelize": "^6.37.5",
+    "supertest": "^7.0.0"
+>>>>>>> 06c947dadab9077a2caf580ad205e8493aff9b31
   }
 }
