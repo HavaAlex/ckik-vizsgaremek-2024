@@ -6,8 +6,6 @@ const paholyController = require("../controllers/paholyController");
 
 router.get("/", [ userAuth.verifyToken ], userController.getUsers);
 
-router.post("/login", userController.loginUser);
-
 router.get("/orarend/:token", paholyController.getOrarend);
 
 router.get("/jegyek/:token", paholyController);
