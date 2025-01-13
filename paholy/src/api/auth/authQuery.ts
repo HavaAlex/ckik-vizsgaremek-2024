@@ -3,6 +3,7 @@ import type { LoginData, LoginResponse, ResetPasswordData, SetPasswordData, SetP
 import { useMutation, useQuery } from "@tanstack/vue-query"
 import { useRoute, useRouter } from "vue-router"
 import { QUERY_KEYS } from "@/utils/QueryKeys"
+import { getUserStatusFromLocalStorage, deleteUserStatusFromLocalStorage} from '@/localstorage/localStorageManagment.ts';
 
 
 
@@ -34,7 +35,7 @@ export const usePutSetPassword = () => {
             },
         }
     )
-}
+} 
 const Login = async (data: LoginData) : Promise<LoginResponse> => {
     const response = await axiosClient.post('http://172.22.1.219/api/v1/login', data)
     return response.data.data
@@ -45,7 +46,7 @@ export const useLogin = () => {
         mutationFn:Login,
         onSuccess(data){
             localStorage.token = data.token
-            push({name:'projects'})
+            push({name:'orarend/'+getUserStatusFromLocalStorage()+'orarend'})
         }
     })
 }
@@ -103,6 +104,7 @@ export const useLogout = () => {
         mutationFn:Logout,
         onSuccess(data){
             localStorage.removeItem("token")
+            localStorage.removeItem("userStatus")
             push({name: "home"})
         }
     })
