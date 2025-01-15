@@ -5,15 +5,13 @@ import { useRoute, useRouter } from "vue-router"
 import { QUERY_KEYS } from "@/utils/QueryKeys"
 
 
-
-
 const getSetPassword = async (): Promise<SetPasswordResponse> => {
     const {params} = useRoute()
     const response = await axiosClient.get(`http://172.22.1.219/api/v1/set-password/${params.token}`)//megnemlyóóóóóó
     return response.data
 }
 export const useGetSetPassword = () => {
-    return useQuery(
+    return useQuery( 
         {
             queryKey: [QUERY_KEYS.setPassword],  //setPassword
             queryFn: getSetPassword,
@@ -45,7 +43,7 @@ export const useLogin = () => {
         mutationFn:Login,
         onSuccess(data){
             localStorage.token = data.token
-            push({name:'projects'})
+            push({name:'orarend'})
         }
     })
 }
