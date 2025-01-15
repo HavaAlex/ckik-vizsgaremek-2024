@@ -12,10 +12,7 @@ const sequelize = new Sequelize
         host: process.env.DB_HOST,
         dialect: process.env.DB_DIALECT,
         logging: false,
-        dialect: 'mysql',
-        dialectOptions: {
-          // Your mysql2 options here
-        },
+
     
     }
 )
@@ -37,9 +34,17 @@ db.Sequelize = Sequelize;
 
 db.sequelize = sequelize;
 
-const { User } = require("../models")(sequelize, DataTypes);
+const { User,Student,Guardian,Admin, Teacher } = require("../models")(sequelize, DataTypes);
 
 db.user = User;
+
+db.student = Student;
+
+db.guardian = Guardian;
+
+db.admin = Admin;
+
+db.teacher = Teacher;
 
 db.sequelize.sync({ alter: true });
 
