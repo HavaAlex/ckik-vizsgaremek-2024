@@ -36,7 +36,14 @@ exports.createUser = async (req, res, next) =>
 
 exports.loginUser = async (req, res, next) =>
 {
+    console.log("LOGIN KÉRELEM")
     const { name, password } = req.body;
+
+    if(name == undefined || password == undefined)
+    {
+        res.status(400).send("Nincs megadva az egyik paraméter!");
+        return
+    }
 
     const user = await userService.getUser(name);
 

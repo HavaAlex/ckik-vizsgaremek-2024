@@ -4,7 +4,8 @@ class UserRepository
 {
     constructor(db)
     {
-        this.Users = db.users;
+        this.Users = db.user;
+        console.log(this.Users)
     }
 
     async createUser(user)
