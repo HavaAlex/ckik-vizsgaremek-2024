@@ -40,7 +40,9 @@ exports.loginUser = async (req, res, next) =>
 
     const user = await userService.getUser(name);
 
-    if(await bcrypt.compare(password, user.password))
+    const hashPassword = await bcrypt.hash(password, salt)
+
+    if(await bcrypt.compare(hashPassword, user.password))
     {
         const token = jwt.sign({ user }, process.env.JWT_KEY, { expiresIn: "30m" });
 

@@ -1,5 +1,4 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
 
 // Admin komponens importálása
 import HazikViewAdmin from '../views/admin/HazikView.vue'
@@ -39,6 +38,8 @@ import HianyzasokLayout from '../layout/HianyzasokLayout.vue'
 
 import AppLayout from '@/layout/AppLayout.vue'
 import Jogosultsagok from '../views/admin/Jogosultsagok.vue'
+
+import LoginView from '../views/auth/LoginView.vue'
 
 
 
@@ -191,9 +192,9 @@ const router = createRouter({
       ]
     },
     {
-      path: '/home',
-      name: 'home',
-      component: HomeView,
+      path: '/login',
+      name: 'login',
+      component: LoginView,
     },
 
 

@@ -7,7 +7,7 @@ import { QUERY_KEYS } from "@/utils/QueryKeys"
 
 const getSetPassword = async (): Promise<SetPasswordResponse> => {
     const {params} = useRoute()
-    const response = await axiosClient.get(`http://172.22.1.219/api/v1/set-password/${params.token}`)//megnemlyóóóóóó
+    const response = await axiosClient.get(`localhost:3000/login/${params.token}`)//megnemlyóóóóóó
     return response.data
 }
 export const useGetSetPassword = () => {
@@ -34,7 +34,7 @@ export const usePutSetPassword = () => {
     )
 }
 const Login = async (data: LoginData) : Promise<LoginResponse> => {
-    const response = await axiosClient.post('http://172.22.1.219/api/v1/login', data)
+    const response = await axiosClient.post('localhost:3000/login/', data)
     return response.data.data
 }
 export const useLogin = () => {

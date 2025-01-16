@@ -1,4 +1,4 @@
-const paholyService = require("../services/paholyService");
+
 
 exports.getOrarend = async (req, res, next) =>
 {
@@ -54,31 +54,6 @@ exports.createOra = async (req, res, next) =>
         newOra = await orarendService.createOra(newOra);
 
         res.status(201).json(newOra);
-    }
-    catch(error)
-    {
-        next(error);
-    }
-}
-
-exports.getToy = (req, res, next) =>
-{
-    const {index} = req.params;
-
-    const toy = toys[index];
-
-    try
-    {
-        if(!toy)
-        {
-            const error = new Error("Toy not found!");
-    
-            error.status = 404;
-    
-            throw error;
-        }
-
-        res.status(200).json(toy);
     }
     catch(error)
     {

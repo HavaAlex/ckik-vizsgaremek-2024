@@ -1,4 +1,4 @@
-const db = require("../database/dbContext");
+const db = require("../db/dbContext");
 
 class UserRepository
 {

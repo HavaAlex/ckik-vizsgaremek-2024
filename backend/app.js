@@ -2,22 +2,26 @@ const express = require("express");
 
 const app = express();
 
-// const paholyRoutes = require("./api/routes/paholyRoutes");
+const paholyRoutes = require("./api/routes/paholyRoutes");
 
-// const adminRoutes = require("./api/routes/adminRoutes")
+const adminRoutes = require("./api/routes/adminRoutes")
 
-// const errorHandler = require("./api/middlewares/errorHandler");
+const loginRoutes = require("./api/routes/loginRoutes")
 
-// app.use(express.json());
+const errorHandler = require("./api/middlewares/errorHandler");
 
-// app.use(express.urlencoded({extended: true}));
+app.use(express.json());
 
-// app.use("/paholy", paholyRoutes);
+app.use(express.urlencoded({extended: true}));
 
-// app.use("/admin", adminRoutes);
+app.use("/login",loginRoutes)
 
-// app.use(errorHandler.notFoundError);
+app.use("/paholy", paholyRoutes);
 
-// app.use(errorHandler.showError);
+app.use("/admin", adminRoutes);
+
+app.use(errorHandler.notFoundError);
+
+app.use(errorHandler.showError);
 
 module.exports = app;
