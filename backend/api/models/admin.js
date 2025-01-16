@@ -2,9 +2,9 @@ const { Model } = require("sequelize");
 
 module.exports = (sequelize, DataTypes) =>
 {
-    class User extends Model {};
+    class Admin extends Model {};
 
-    User.init
+    Admin.init
     (
         {
             ID:
@@ -15,7 +15,13 @@ module.exports = (sequelize, DataTypes) =>
                 allowNull: false,
             },
 
-            username:
+            phone:
+            {
+                type: DataTypes.STRING(60),
+                allowNull: false,
+            },
+            
+            email:
             {
                 type: DataTypes.STRING(60),
                 allowNull: false,
@@ -27,29 +33,15 @@ module.exports = (sequelize, DataTypes) =>
                 allowNull: false,
             },
 
-            password:
-            {
-                type: DataTypes.STRING(60),
-                allowNull: false,
-            },
 
-            role: {
-                type: DataTypes.ENUM('student', 'teacher', 'parent', 'admin'),
-                allowNull: false,
-            },
-
-            roleID:{
-                type: DataTypes.INTEGER,
-                allowNull: false,
-            }
         },
 
         {
             sequelize,
-            modelName: "User",
+            modelName: "Admin",
             timestamps: false,
         }
     )
 
-    return User;
+    return Admin;
 }
