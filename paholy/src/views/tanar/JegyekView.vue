@@ -1,4 +1,19 @@
 <script setup lang="ts">
+import type { NewMark, MarkAttribute } from '@/api/jegyek/jegyek';
+import { useAddMark, useGetMarks } from '@/api/jegyek/jegyekQuery';
+import { ref } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+const NewMarkRef = ref<NewMark>({
+    StudentId: '',
+    subject: '',
+    mark: 0,
+    markmultiplier: 0, 
+})
+const {data} = useGetMarks()
+const {push} = useRouter()
+const {back} = useRouter()
+const {mutate, isPending} = useAddMark()
+
 </script>
 
 <template>

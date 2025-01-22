@@ -1,3 +1,10 @@
+export type MarkAttribute = {
+    StudentId: string,
+    subject:string,
+    mark: number,
+    markmultiplier:  number,
+}
+
 export type MarksInSubject = {
     StudentId: string,
     subject:string,
@@ -5,9 +12,9 @@ export type MarksInSubject = {
     marks: []
 }
 
-export type NewMark = {
+export type NewMark = { 
     StudentId: string,
     subject: string,
     mark: number,
-    mark: multiplier
+    markmultiplier:  number
 }

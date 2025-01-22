@@ -8,7 +8,13 @@ const AUTH_KEYS = {
     passwordReset:'passwordReset'
 }
 
+const MARKS_KEYS = {
+    getMarks: 'getMarks',
+    
+}
+
 export const QUERY_KEYS = {
     ...USER_KEYS,
     ...AUTH_KEYS,
-} as const
+    ...MARKS_KEYS,
+} as const 
