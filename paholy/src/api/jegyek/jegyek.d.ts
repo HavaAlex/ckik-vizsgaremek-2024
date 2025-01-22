@@ -17,4 +17,4 @@ export type NewMark = {
     subject: string,
     mark: number,
     markmultiplier:  number
-}
+}   

@@ -1,0 +1,126 @@
+Jegyeknél lekérés kell:
+[
+ {
+  class
+  StudentName
+  [
+      {
+      subject:""
+      marks:{} (tömbben legyen értéke és mindegyik mellet legyen a multiplier)
+      }
+  ]
+ }
+]
+
+
+Jegy beírás:
+StudentId
+Subject
+mark
+multiplier
+
+
+Jegy delete/modifiy
+MarkId
+
+
+órarend:
+StudentId
+AlapOrarend
+[
+ {
+	nap
+	kezdésidő (óra perc)
+	hossz
+	tanar
+	oraId
+	feladatId
+	
+ }
+]
+Kivételorarend
+[
+ {
+	datum (datetime) ! PERCRE PONTOS
+	hossz
+	tanar
+	feladatId
+ }
+]
+
+
+
+Házifeladat:
+student/parent oldal
+[
+{
+	HaziId
+	StudentId
+	Határidő
+	Tantargy
+	FeladoTanár
+	Cím
+	leírás
+}
+]
+
+
+tanar/admin oldal:
+
+[
+{
+	HaziId
+	classId
+	Határidő
+	Tantargy
+	Cím
+	leírás
+}
+]
+
+
+HIAnyzás:
+tanar/admin
+
+[
+{
+
+Tanulo
+dátum
+kezdésidő
+Igazolás statusz
+keses
+}
+]
+
+szulo/tanulo
+[
+{
+dátum
+kezdésidő
+Igazolás statusz
+tantárgynév
+keses
+}
+]
+
+
+üzenetek:
+felado
+címzettek[]
+targy
+szöveg
+
+
+
+
+
+
+
+
+
+
+
+
+
+
