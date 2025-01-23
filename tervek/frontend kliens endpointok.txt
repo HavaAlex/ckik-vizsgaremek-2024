@@ -67,7 +67,7 @@ student/parent oldal
 
 tanar/admin oldal:
 
-[
+[ex
 {
 	HaziId
 	classId

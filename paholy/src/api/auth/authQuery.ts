@@ -3,7 +3,7 @@ import type { LoginData, LoginResponse, ResetPasswordData, SetPasswordData, SetP
 import { useMutation, useQuery } from "@tanstack/vue-query"
 import { useRoute, useRouter } from "vue-router"
 import { QUERY_KEYS } from "@/utils/QueryKeys"
-
+import { getUserStatusFromLocalStorage, deleteUserStatusFromLocalStorage} from '@/localstorage/localStorageManagment.ts';
 
 const getSetPassword = async (): Promise<SetPasswordResponse> => {
     const {params} = useRoute()
@@ -32,7 +32,7 @@ export const usePutSetPassword = () => {
             },
         }
     )
-}
+} 
 const Login = async (data: LoginData) : Promise<LoginResponse> => {
     console.log("login elküldve")
     const response = await axiosClient.post('http://localhost:3000/login/', data)
@@ -46,7 +46,7 @@ export const useLogin = () => {
             localStorage.token = data.token
             console.log("Token elmentve!")
             console.log(data.token)
-            push({name:'orarend'})
+            push({name:'orarend/'+getUserStatusFromLocalStorage()+'orarend'})
         }
     })
 }
