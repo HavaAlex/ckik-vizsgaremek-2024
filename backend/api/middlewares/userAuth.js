@@ -10,16 +10,18 @@ exports.verifyToken = (req, res, next) =>
 
         return;
     }
-
+    var decodedGlobal
     jwt.verify(token, process.env.JWT_KEY, function(error, decoded)
     {
+        print(decoded)
         if(!decoded)
         {
             res.status(400).send("Invalid token");
 
             return;
         }
+        decodedGlobal = decoded
     });
 
-    next();
+    next(decodedGlobal);
 }

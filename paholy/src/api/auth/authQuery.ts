@@ -47,6 +47,11 @@ export const useLogin = () => {
             console.log("Token elmentve!")
             console.log(data.token)
             push({name:'orarend'})
+        },
+        onError(error)
+        {
+            console.log(error)
+            
         }
     })
 }
