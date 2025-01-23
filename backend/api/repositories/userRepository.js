@@ -22,14 +22,14 @@ class UserRepository
         return await this.Users.findAll();
     }
 
-    async getUser(name)
+    async getUser(username)
     {
         return await this.Users.findOne
         (
             {
                 where:
                 {
-                    name: name,
+                    username: username,
                 }
             }
         )

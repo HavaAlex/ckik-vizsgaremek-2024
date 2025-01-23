@@ -36,8 +36,9 @@ export const usePutSetPassword = () => {
 const Login = async (data: LoginData) : Promise<LoginResponse> => {
     console.log("login elküldve")
     const response = await axiosClient.post('http://localhost:3000/login/', data)
-    return response.data.data
-}
+    console.log("eljut ide return elött")
+    return response.data
+} 
 export const useLogin = () => {
     const {push} = useRouter()
     return useMutation({
@@ -46,7 +47,12 @@ export const useLogin = () => {
             localStorage.token = data.token
             console.log("Token elmentve!")
             console.log(data.token)
-            push({name:'orarend/'+getUserStatusFromLocalStorage()+'orarend'})
+            push({name:getUserStatusFromLocalStorage()+'orarend'})
+        },
+        onError(error)
+        {
+            console.log(error)
+            
         }
     })
 }

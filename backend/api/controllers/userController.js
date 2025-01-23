@@ -37,19 +37,18 @@ exports.createUser = async (req, res, next) =>
 exports.loginUser = async (req, res, next) =>
 {
     console.log("LOGIN KÉRELEM")
-    const { name, password } = req.body;
+    const { username, password } = req.body;
 
-    if(name == undefined || password == undefined)
+    if(username == undefined || password == undefined)
     {
         res.status(400).send("Nincs megadva az egyik paraméter!");
         return
     }
-
-    const user = await userService.getUser(name);
-
-    const hashPassword = await bcrypt.hash(password, salt)
-
-    if(await bcrypt.compare(hashPassword, user.password))
+    console.log(password);
+    
+    const user = await userService.getUser(username);
+    console.log(user)
+    if(await bcrypt.compare(password, user.password))
     {
         const token = jwt.sign({ user }, process.env.JWT_KEY, { expiresIn: "30m" });
 

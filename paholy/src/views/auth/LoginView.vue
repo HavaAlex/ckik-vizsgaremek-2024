@@ -5,7 +5,7 @@ import { ref } from 'vue';
 import { useRouter } from 'vue-router';
  
 const LoginDataRef = ref<LoginData>({
-    email: '',
+    username: '',
     password:''
 })
 
@@ -17,13 +17,13 @@ const {back} = useRouter()
     <v-card>
         <v-card-title>Login</v-card-title>
         <v-card-text>
-            <v-text-field v-model="LoginDataRef.email" label="Email" variant="outlined"></v-text-field>
+            <v-text-field v-model="LoginDataRef.username" label="Username" variant="outlined"></v-text-field>
             <v-text-field v-model="LoginDataRef.password" label="Password" type="password" variant="outlined"></v-text-field>
         </v-card-text>
         <v-card-actions>
             <v-btn @click="() => {
                 login(LoginDataRef)
-            }" :loading="isPending">
+            }" :loading="isPending"> 
                 Login
             </v-btn>
             <v-btn @click="push({name:'password-reset-email'})">

@@ -12,9 +12,9 @@ class UserService
         return await userRepository.getUsers();
     }
 
-    async getUser(name)
+    async getUser(username)
     {
-        return await userRepository.getUser(name);
+        return await userRepository.getUser(username);
     }
 }
 
