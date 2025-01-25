@@ -9,11 +9,11 @@ import UzenetekViewAdmin from '../views/admin/UzenetekView.vue'
 import JogosultsagokView from '../views/admin/Jogosultsagok.vue'
 
 // Gyerek komponens importálása
-import HazikViewTanulo from '../views/tanulo/HazikView.vue'
-import HianyzasokViewTanulo from '../views/tanulo/HianyzasokView.vue'
-import JegyekViewTanulo from '../views/tanulo/HazikView.vue'
-import OrarendViewTanulo from '../views/tanulo/OrarendView.vue'
-import UzenetekViewTanulo from '../views/tanulo/UzenetekView.vue'
+import HazikViewTanulo from '../views/diak/HazikView.vue'
+import HianyzasokViewTanulo from '../views/diak/HianyzasokView.vue'
+import JegyekViewTanulo from '../views/diak/HazikView.vue'
+import OrarendViewTanulo from '../views/diak/OrarendView.vue'
+import UzenetekViewTanulo from '../views/diak/UzenetekView.vue'
 
 // Szulo komponens importálása
 import HazikViewSzulo from '../views/szulo/HazikView.vue'
@@ -63,8 +63,8 @@ const router = createRouter({
           component: HazikLayout, 
           children: [
               { 
-                  path: 'tanulohazik',
-                  name: 'tanulohazik',
+                  path: 'diakhazik',
+                  name: 'diakhazik',
                   component: HazikViewTanulo
               },
               { 
@@ -89,8 +89,8 @@ const router = createRouter({
             path: '/hianyzasok',
             name: 'hianyzasok',
             component: HianyzasokLayout,children:[
-              {path: 'tanulohianyzasok',
-                name: 'tanulohianyzasok',
+              {path: 'diakhianyzasok',
+                name: 'diakhianyzasok',
                 component: HianyzasokViewTanulo
               },
               {path: 'szulohianyzasok',
@@ -114,8 +114,8 @@ const router = createRouter({
           component: JegyekLayout, 
           children: [
               { 
-                  path: 'tanulojegyek',
-                  name: 'tanulojegyek',
+                  path: 'diakjegyek',
+                  name: 'diakjegyek',
                   component: JegyekViewTanulo
               },
               { 
@@ -141,8 +141,8 @@ const router = createRouter({
           component: OrarendLayout, 
           children: [
               { 
-                  path: 'tanuloorarend',
-                  name: 'tanuloorarend',
+                  path: 'diakorarend',
+                  name: 'diakorarend',
                   component: OrarendViewTanulo
               },
               { 
@@ -168,8 +168,8 @@ const router = createRouter({
           component: UzenetekLayout, 
           children: [
               { 
-                  path: 'tanulouzenetek',
-                  name: 'tanulouzenetek',
+                  path: 'diakuzenetek',
+                  name: 'diakuzenetek',
                   component: UzenetekViewTanulo
               },
               { 

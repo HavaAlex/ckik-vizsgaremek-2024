@@ -3,7 +3,8 @@ import type { LoginData, LoginResponse, ResetPasswordData, SetPasswordData, SetP
 import { useMutation, useQuery } from "@tanstack/vue-query"
 import { useRoute, useRouter } from "vue-router"
 import { QUERY_KEYS } from "@/utils/QueryKeys"
-import { getUserStatusFromLocalStorage, deleteUserStatusFromLocalStorage} from '@/localstorage/localStorageManagment.ts';
+import { jwtDecode } from "jwt-decode";
+import { getUserStatusFromLocalStorage, setUserStatusToLocalStorage} from '@/localstorage/localStorageManagment.ts';
 
 const getSetPassword = async (): Promise<SetPasswordResponse> => {
     const {params} = useRoute()
@@ -33,7 +34,7 @@ export const usePutSetPassword = () => {
         }
     )
 } 
-const Login = async (data: LoginData) : Promise<LoginResponse> => {
+const Login = async (data: LoginData) : Promise<string> => {
     console.log("login elküldve")
     const response = await axiosClient.post('http://localhost:3000/login/', data)
     console.log("eljut ide return elött")
@@ -44,10 +45,14 @@ export const useLogin = () => {
     return useMutation({
         mutationFn:Login,
         onSuccess(data){
-            localStorage.token = data.token
+            localStorage.token = data
             console.log("Token elmentve!")
-            console.log(data.token)
-            push({name:getUserStatusFromLocalStorage()+'orarend'})
+            console.log(data)
+            const decoded = jwtDecode(data)
+            console.log(decoded)
+            //setUserStatusToLocalStorage()
+            console.log(decoded.userData)
+            push({name:decoded.userData.role+'orarend'})
         },
         onError(error)
         {

@@ -48,9 +48,15 @@ exports.loginUser = async (req, res, next) =>
     
     const user = await userService.getUser(username);
     console.log(user)
+
+    const userData = {
+        userID:user.ID,
+        username:user.username,
+        role:user.role
+    }
     if(await bcrypt.compare(password, user.password))
     {
-        const token = jwt.sign({ user }, process.env.JWT_KEY, { expiresIn: "30m" });
+        const token = jwt.sign({ userData }, process.env.JWT_KEY, { expiresIn: "30m" });
 
         res.status(200).json(token);
     }
