@@ -45,12 +45,11 @@ export const useLogin = () => {
     return useMutation({
         mutationFn:Login,
         onSuccess(data){
-            localStorage.token = data
+            document.cookie = data
             console.log("Token elmentve!")
             console.log(data)
             const decoded = jwtDecode(data)
             console.log(decoded)
-            //setUserStatusToLocalStorage()
             console.log(decoded.userData)
             push({name:decoded.userData.role+'orarend'})
         },

@@ -2,7 +2,20 @@
 import { useRoute, useRouter } from 'vue-router';
 import { getUserStatusFromLocalStorage, deleteUserStatusFromLocalStorage} from '@/localstorage/localStorageManagment.ts';
 import Jogosultsagok from '@/views/admin/Jogosultsagok.vue';
+import { useCookieHandler } from '@/stores/cookieHandler';
+import { jwtDecode } from 'jwt-decode';
 const { push } = useRouter()
+
+const {hasValidCookie} = useCookieHandler()
+
+const cookieStatus = hasValidCookie()
+if (cookieStatus == true){
+  const decoded = jwtDecode(document.cookie)
+  push({name:decoded.userData.role+'orarend'})
+}
+else{
+  push({name:"login"})
+}
 
 </script>
 
