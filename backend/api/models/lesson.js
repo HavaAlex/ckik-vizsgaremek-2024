@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) =>
                 allowNull: false,
             },
             
-            Subject_id:
+            Subject_ID:
             {
                 type: DataTypes.INTEGER,
                 allowNull: false,

@@ -21,11 +21,6 @@ module.exports = (sequelize, DataTypes) =>
                 allowNull: false,
             },
 
-            username:
-            {
-                type: DataTypes.STRING(60),
-                allowNull: false,
-            },
 
             password:
             {
@@ -41,7 +36,12 @@ module.exports = (sequelize, DataTypes) =>
             roleID:{
                 type: DataTypes.INTEGER,
                 allowNull: false,
-            }
+            },
+            Group_ID:
+            {
+                type: DataTypes.INTEGER,
+                allowNull: true,
+            },
         },
 
         {
