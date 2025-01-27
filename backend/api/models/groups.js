@@ -2,29 +2,40 @@ const { Model } = require("sequelize");
 
 module.exports = (sequelize, DataTypes) =>
 {
-    class Timetable extends Model {};
+    class Groups extends Model {};
 
-    Timetable.init
+    Groups.init
     (
         {
+            ID:
+            {
+                type: DataTypes.INTEGER,
+                primaryKey: true,
+                autoIncrement: true,
+                allowNull: false,
+            },
+            
+            name:
+            {
+                type: DataTypes.STRING(60),
+                allowNull: false,
+            },
+
             Timetable_ID:
             {
                 type: DataTypes.INTEGER,
                 allowNull: false,
             },
-            Lesson_ID:
-            {
-                type: DataTypes.INTEGER,
-                allowNull: false,
-            },
-        }, 
+
+
+        },
 
         {
             sequelize,
-            modelName: "Timetable",
+            modelName: "Groups",
             timestamps: false,
         }
     )
 
-    return Timetable;
+    return Groups;
 }
