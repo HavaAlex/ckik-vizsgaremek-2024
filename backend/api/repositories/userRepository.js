@@ -1,10 +1,17 @@
 const db = require("../db/dbContext");
+const adminRepository = require("./adminRepository")
+const studentRepository = require("./studentRepository")
+const teacherRepository = require("./teacherRepository")
+const guardianRepository = require("./guardianRepository")
 
 class UserRepository
 {
     constructor(db)
     {
         this.Users = db.user;
+        this.Admins = db.admin;
+        this.Guardians = db.guardian;
+        this.Teachers = db.teachers;
         console.log(this.Users)
     }
 
@@ -33,6 +40,22 @@ class UserRepository
                 }
             }
         )
+    }
+
+    async getUserRole(user)
+    {
+        if(user.role == "diak"){
+            return await studentRepository.getRoleByUserID(userID)
+        }
+        else if (user.role == "tanar"){
+            return await teacherRepository.getRoleByUserID(userID)
+        }
+        else if (user.role == "admin"){
+            return await adminRepository.getRoleByUserID(userID)
+        }
+        else if (user.role == "szulo"){
+            return await guardianRepository.getRoleByUserID(userID)
+        }
     }
 }
 
