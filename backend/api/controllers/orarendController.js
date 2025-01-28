@@ -1,8 +1,9 @@
-
+const userService = require("../services/userService")
 
 exports.getOrarend = async (req, res, next) =>
 {
-    
+    const userRole = 
+    console.log(next)
 }
 
 exports.modifyOrarend = async (req, res, next) =>

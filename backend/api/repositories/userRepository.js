@@ -11,7 +11,8 @@ class UserRepository
         this.Users = db.user;
         this.Admins = db.admin;
         this.Guardians = db.guardian;
-        this.Teachers = db.teachers;
+        this.Teachers = db.teacher;
+        this.Students = db.student
         console.log(this.Users)
     }
 
@@ -42,19 +43,19 @@ class UserRepository
         )
     }
 
-    async getUserRole(user)
+    async getRole(user)
     {
         if(user.role == "diak"){
-            return await studentRepository.getRoleByUserID(userID)
+            return await studentRepository.getRoleByUserID(user.ID)
         }
         else if (user.role == "tanar"){
-            return await teacherRepository.getRoleByUserID(userID)
+            return await teacherRepository.getRoleByUserID(user.ID)
         }
         else if (user.role == "admin"){
-            return await adminRepository.getRoleByUserID(userID)
+            return await adminRepository.getRoleByUserID(user.ID)
         }
         else if (user.role == "szulo"){
-            return await guardianRepository.getRoleByUserID(userID)
+            return await guardianRepository.getRoleByUserID(user.ID)
         }
     }
 }

@@ -8,13 +8,19 @@ const AUTH_KEYS = {
     passwordReset:'passwordReset'
 }
 
-const MARKS_KEYS = {
-    getMarks: 'getMarks',
+const ORAREND_KEYS = {
+    getOrarend: 'getOrarend',
+    
+}
+
+const UZENETEK_KEYS = {
+    getUzenetek: 'getUzenetek',
     
 }
 
 export const QUERY_KEYS = {
     ...USER_KEYS,
     ...AUTH_KEYS,
-    ...MARKS_KEYS,
+    ...ORAREND_KEYS,
+    ...UZENETEK_KEYS
 } as const 

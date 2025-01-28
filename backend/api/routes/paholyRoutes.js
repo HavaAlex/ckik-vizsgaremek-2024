@@ -9,7 +9,7 @@ const orarendController = require("../controllers/orarendController");
 
 const userController = require("../controllers/userController")
 
-router.get("/", [ userAuth.verifyToken ], userController.getUsers);
+router.get("/", [ userAuth.verifyToken ]);
 
 router.get("/orarend/:token",orarendController.getOrarend);
 
