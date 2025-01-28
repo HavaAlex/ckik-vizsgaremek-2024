@@ -17,16 +17,6 @@ const sequelize = new Sequelize
     }
 )
 
-try
-{
-    sequelize.authenticate();
-
-    console.log("Database Connected");
-}
-catch(err)
-{
-    console.error("Error connecting to the database");
-}
 
 const db = {};
 
@@ -54,7 +44,20 @@ db.timetable = Timetable;
 
 db.subject = Subject;
 
-db.sequelize.sync({ alter: true });
+sequelize.sync({ force: true })
+    .then(() => {
+        console.log("Database & tables created!");
+    })
+    .catch(err => {
+        console.error("Error creating database & tables:", err);
+    });
+
+try {
+    sequelize.authenticate();
+    console.log("Database Connected");
+} catch (err) {
+    console.error("Error connecting to the database:", err);
+}
 
 module.exports = db;
 

@@ -7,6 +7,13 @@ module.exports = (sequelize, DataTypes) =>
     Timetable.init
     (
         {
+            ID:
+            {
+                type: DataTypes.INTEGER,
+                primaryKey: true,
+                autoIncrement: true,
+                allowNull: false,
+            },
             Timetable_ID:
             {
                 type: DataTypes.INTEGER,
