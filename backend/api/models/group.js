@@ -2,9 +2,9 @@ const { Model } = require("sequelize");
 
 module.exports = (sequelize, DataTypes) =>
 {
-    class Groups extends Model {};
+    class Group extends Model {};
 
-    Groups.init
+    Group.init
     (
         {
             ID:
@@ -32,10 +32,10 @@ module.exports = (sequelize, DataTypes) =>
 
         {
             sequelize,
-            modelName: "Groups",
+            modelName: "Group",
             timestamps: false,
         }
     )
 
-    return Groups;
+    return Group;
 }
