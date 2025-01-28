@@ -2,7 +2,9 @@ const uzenetService = require("../services/uzenetService")
 
 exports.getUzenetek = async (req, res, next) =>
 {
-    return await uzenetService.getUzenetek(next.ID)
+    const uzenetek = await uzenetService.getUzenetek(next.ID)
+    console.log(uzenetek)
+    return uzenetek
 }
 
 exports.modifyUzenet = async (req, res, next) =>
@@ -11,23 +13,21 @@ exports.modifyUzenet = async (req, res, next) =>
 }
 exports.createUzenet = async (req, res, next) =>
 {
-    let {oraIDk} = req.body;
-
-    price = Number(price);
+    let {ID,senderUserID,message,date} = req.body;
 
     try
     {
-        var newToy =
+        var newUzenet =
         {
-            name: name,
-            price: price,
-            company: company,
-            shopID: shopID,
+            ID: ID,
+            senderUserID: senderUserID,
+            message: message,
+            date: date,
         }
 
-        newToy = await toyService.createToy(newToy);
+        newUzenet = await uzenetService.createUzenet(newUzenet);
 
-        res.status(201).json(newToy);
+        res.status(201).json(newUzenet);
     }
     catch(error)
     {

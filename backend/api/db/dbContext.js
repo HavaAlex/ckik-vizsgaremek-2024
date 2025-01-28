@@ -24,7 +24,7 @@ db.Sequelize = Sequelize;
 
 db.sequelize = sequelize;
 
-const { User,Student,Guardian,Admin, Teacher, Lesson, Groups, Timetable, Subject} = require("../models")(sequelize, DataTypes);
+const { User,Student,Guardian,Admin, Teacher, Lesson, Group, Timetable, Subject} = require("../models")(sequelize, DataTypes);
 
 db.user = User;
 
@@ -38,7 +38,7 @@ db.teacher = Teacher;
 
 db.lesson = Lesson;
 
-db.groups = Groups;
+db.group = Group;
 
 db.timetable = Timetable;
 

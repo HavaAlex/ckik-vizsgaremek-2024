@@ -8,7 +8,7 @@ import type { Message } from "./uzenetek";
 
 const getUzenetek = async (): Promise<Message> => {
     const response = await axiosClient.get(`localhost:3000/uzenetek/`+document.cookie)
-    return response.data
+    return response.data.data
 }
 export const useGetUzenetek = () => {
     return useQuery( 

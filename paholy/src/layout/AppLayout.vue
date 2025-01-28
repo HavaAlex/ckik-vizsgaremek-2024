@@ -9,11 +9,13 @@ const { push } = useRouter()
 const {hasValidCookie} = useCookieHandler()
 
 const cookieStatus = hasValidCookie()
-const role: string = ''
+let role: string = ''
 if (cookieStatus == true){
   const decoded = jwtDecode(document.cookie)
   role = decoded.userData.role
-  push({name:decoded.userData.role+'orarend'})
+  console.log(decoded)
+  console.log(role)
+  push({name:role+'orarend'})
 }
 else{
   push({name:"login"})
