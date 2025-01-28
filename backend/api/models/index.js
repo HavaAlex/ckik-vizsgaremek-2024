@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
     const Teacher = require("../models/teacher")(sequelize, DataTypes);
     const Message = require("../models/message")(sequelize, DataTypes);
     const Receiver = require("../models/receiver")(sequelize, DataTypes);
-
+    const Marks = require("../models/marks")(sequelize, DataTypes);
 
     const Timetable = require("../models/timetable")(sequelize, DataTypes);
     const Group = require("./group")(sequelize, DataTypes);
@@ -59,6 +59,12 @@ module.exports = (sequelize, DataTypes) => {
     Subject.hasMany(Lesson, {foreignKey: 'Subject_ID'});
     Lesson.belongsTo(Subject, { foreignKey: 'Subject_ID' });
 
+    Marks.belongsTo(Subject, {foreignKey: 'Subject_ID'});
+    Subject.hasMany(Marks, {foreignKey: 'Subject_ID'});
+    Marks.belongsTo(Teacher, {foreignKey: 'Teacher_ID'});
+    Teacher.hasMany(Marks, {foreignKey: 'Teacher_ID'});
+    Marks.belongsTo(Student, {foreignKey: 'Student_ID'});
+    Student.hasMany(Marks, {foreignKey: 'Student_ID'});
 
     return { User, Admin, Guardian, Student, Teacher, Message, Receiver, Timetable, Group, Lesson ,Subject, GuardianStudent, MessageReceiver, GroupTimetable, LessonTimetable };
 } 
