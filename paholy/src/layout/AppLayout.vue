@@ -9,8 +9,10 @@ const { push } = useRouter()
 const {hasValidCookie} = useCookieHandler()
 
 const cookieStatus = hasValidCookie()
+const role: string = ''
 if (cookieStatus == true){
   const decoded = jwtDecode(document.cookie)
+  role = decoded.userData.role
   push({name:decoded.userData.role+'orarend'})
 }
 else{
@@ -28,28 +30,28 @@ else{
         flat
       >
   
-      <v-btn @click="push({name:getUserStatusFromLocalStorage()+'orarend'})">
+      <v-btn @click="push({name:role+'orarend'})">
                 Órarend
       </v-btn>
-      <v-btn @click="push({name:getUserStatusFromLocalStorage()+'hazik'})">
+      <v-btn @click="push({name:role+'hazik'})">
                 Házifeladatok/beadandók
       </v-btn>
-      <v-btn @click="push({name:getUserStatusFromLocalStorage()+'jegyek'})">
+      <v-btn @click="push({name:role+'jegyek'})">
                 Osztályzatok
       </v-btn>
-      <v-btn @click="push({name:getUserStatusFromLocalStorage()+'hianyzasok'})">
+      <v-btn @click="push({name:role+'hianyzasok'})">
                 Mulasztások/Hiányzások
       </v-btn>
-      <v-btn @click="push({name:getUserStatusFromLocalStorage()+'uzenetek'})">
+      <v-btn @click="push({name:role+'uzenetek'})">
                 Üzenetek
       </v-btn>
       
-      <v-btn @click="push({name:'jogosultsagok'})" v-if="getUserStatusFromLocalStorage()=='admin'">
+      <v-btn @click="push({name:'jogosultsagok'})" v-if="role=='admin'">
                 Jogosultsagok kezelése
       </v-btn>
 
       <v-spacer></v-spacer>
-      <v-btn @click="deleteUserStatusFromLocalStorage() ; push({name:'home'})">
+      <v-btn @click="deleteUserStatusFromLocalStorage() ; push({name:'login'})">
                 Kilépés
       </v-btn>
     </v-app-bar>

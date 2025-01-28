@@ -9,6 +9,8 @@ const orarendController = require("../controllers/orarendController");
 
 const userController = require("../controllers/userController")
 
+const uzenetController = require("../controllers/uzenetController")
+
 router.get("/", [ userAuth.verifyToken ]);
 
 router.get("/orarend/:token",orarendController.getOrarend);
@@ -33,7 +35,7 @@ router.post("admin/orarendModositas/:token", orarendController.getOrarend);
 
 router.post("admin/osztalyModositas/:token", orarendController.getOrarend);
 
-router.get("/uzenetek/:token", orarendController.getOrarend);
+router.get("/uzenetek/:token", uzenetController.getUzenetek);
 
 router.post("/uzenetek/:token", orarendController.getOrarend);
 

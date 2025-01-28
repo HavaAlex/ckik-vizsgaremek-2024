@@ -1,8 +1,8 @@
-
+const uzenetService = require("../services/uzenetService")
 
 exports.getUzenetek = async (req, res, next) =>
 {
-    console.log(next)
+    return await uzenetService.getUzenetek(next.ID)
 }
 
 exports.modifyUzenet = async (req, res, next) =>
