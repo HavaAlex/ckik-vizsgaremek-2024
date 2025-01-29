@@ -51,10 +51,10 @@ module.exports = (sequelize, DataTypes) =>
                 allowNull: false,
             },
 
-            Group_ID:
-            {
+            userId: {
                 type: DataTypes.INTEGER,
-                allowNull: true,
+                allowNull: false,
+                unique: true,
             },
             
         },

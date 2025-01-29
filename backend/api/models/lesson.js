@@ -31,7 +31,7 @@ module.exports = (sequelize, DataTypes) =>
                 type: DataTypes.INTEGER,
                 allowNull: false
             },
-            start_Minue:
+            start_Minute:
             {
                 type: DataTypes.INTEGER,
                 allowNull: false
@@ -39,6 +39,11 @@ module.exports = (sequelize, DataTypes) =>
             length:
             {
                 type: DataTypes.INTEGER,
+                allowNull: false
+            },
+            subjectName:
+            {
+                type: DataTypes.STRING,
                 allowNull: false
             },
 

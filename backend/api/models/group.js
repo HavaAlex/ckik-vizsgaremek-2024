@@ -27,6 +27,12 @@ module.exports = (sequelize, DataTypes) =>
                 allowNull: false,
             },
 
+            Lesson_ID:
+            {
+                type: DataTypes.INTEGER,
+                allowNull: false,
+            },
+
 
         },
 
