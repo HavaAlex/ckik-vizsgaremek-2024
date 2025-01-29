@@ -12,17 +12,22 @@ exports.verifyToken = (req, res, next) =>
         return;
     }
     console.log(token.substring(0,token.length-1))//Annyira szeretem bármelyik rendszer is felel azért HOGY VAN EGY KIBEBASZOTT ; A TOKENBEN MIÉRT IS LEGYEN EGYSZERŰ AZ EMBER ÉLETE
-    jwt.verify(token.substring(0,token.length-1), process.env.JWT_KEY, function(error, decoded)
+    const decoded = jwt.verify(token, process.env.JWT_KEY, (error, decoded)=>
     {
-        console.log(decoded)
-        if(!decoded)
+        if(error)
         {
-            res.status(400).send("Invalid token");
-
-            return;
+            return error;
         }
-        req.decoded = decoded
+        return decoded.userData
     });
+    if(!decoded|| decoded == undefined || typeof(decoded) == jwt.JsonWebTokenError){
+        console.log("BAJ VAN A BUGYIBAN")
+        res.status(400).send("Invalid token");
+        return;
+    }
+    req.decoded = decoded
+    console.log(decoded)
     console.log("KÉRÉS")
+    next()
     //next(decodedGlobal);
 }

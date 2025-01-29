@@ -56,7 +56,7 @@ exports.loginUser = async (req, res, next) =>
     }
 
     const userData = {
-        userID:user.ID,
+        ID:user.ID,
         username:user.username,
         role:user.role
     }

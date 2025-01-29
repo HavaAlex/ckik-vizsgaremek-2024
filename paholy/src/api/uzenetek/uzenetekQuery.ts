@@ -14,7 +14,7 @@ const getUzenetek = async (): Promise<Message> => {
     //console.log(`localhost:3000/uzenetek/${document.cookie}`)
     const response = await axiosClient.get(`http://localhost:3000/paholy/uzenetek`,config) // ${document.cookie}
     console.log(response)
-    return response.data.data
+    return response.data
 }
 export const useGetUzenetek = () => {
     return useQuery( 
