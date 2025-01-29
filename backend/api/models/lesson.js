@@ -31,7 +31,7 @@ module.exports = (sequelize, DataTypes) =>
                 type: DataTypes.INTEGER,
                 allowNull: false
             },
-            start_Minue:
+            start_Minute:
             {
                 type: DataTypes.INTEGER,
                 allowNull: false
