@@ -1,7 +1,7 @@
 exports.notFoundError = (req, res, next) =>
 {
     const error = new Error("Not found");
-
+    console.log("HIBA!")
     error.status = 404;
 
     next(error);

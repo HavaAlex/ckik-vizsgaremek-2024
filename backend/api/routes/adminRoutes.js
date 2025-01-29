@@ -6,7 +6,7 @@ const userAuth = require("../middlewares/userAuth")
 
 const userController = require("../controllers/userController");
 
-router.get("/", [ userAuth.verifyToken ], userController.getUsers);
+router.all("/", [ userAuth.verifyToken ], userController.getUsers);
 
 router.post("/register/:token", userController.createUser);
 

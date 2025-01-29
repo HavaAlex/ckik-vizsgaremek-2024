@@ -2,9 +2,12 @@ const uzenetService = require("../services/uzenetService")
 
 exports.getUzenetek = async (req, res, next) =>
 {
-    const uzenetek = await uzenetService.getUzenetek(next.ID)
+    console.log("FINGO1")
+    console.log(req.decoded)
+    const uzenetek = await uzenetService.getUzenetek(req.decoded.ID)
     console.log(uzenetek)
-    return uzenetek
+    console.log("FINGO2")
+    res.status(201).json(uzenetek);
 }
 
 exports.modifyUzenet = async (req, res, next) =>

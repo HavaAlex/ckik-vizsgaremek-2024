@@ -24,7 +24,7 @@ db.Sequelize = Sequelize;
 
 db.sequelize = sequelize;
 
-const { User,Student,Guardian,Admin, Teacher, Lesson, Group, Timetable, Subject, Mark} = require("../models")(sequelize, DataTypes);
+const { User,Student,Guardian,Admin, Teacher, Lesson, Group, Timetable, Subject, Mark,Message} = require("../models")(sequelize, DataTypes);
 
 db.user = User;
 
@@ -46,7 +46,9 @@ db.subject = Subject;
 
 db.mark = Mark;
 
-sequelize.sync({ force: true })
+db.message = Message
+
+sequelize.sync({ force: false })
     .then(() => {
         console.log("Database & tables created!");
     })

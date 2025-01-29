@@ -7,7 +7,7 @@ import type { AlapOrarend } from "./orarend"
 import { useCookieHandler } from "@/stores/cookieHandler";
 
 const getOrarend = async (): Promise<AlapOrarend> => {
-    const response = await axiosClient.get(`localhost:3000/orarend/`+document.cookie)
+    const response = await axiosClient.get(`http://localhost:3000/orarend/`+document.cookie)
     return response.data
 }
 export const useGetOrarend = () => {

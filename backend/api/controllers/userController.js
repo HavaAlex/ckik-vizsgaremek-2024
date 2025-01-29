@@ -44,10 +44,10 @@ exports.loginUser = async (req, res, next) =>
         res.status(400).send("Nincs megadva az egyik paraméter!");
         return
     }
-    console.log(password);
+    //console.log(password);
     
     const user = await userService.getUser(username);
-    console.log(user)
+    //console.log(user)
 
     if(user == undefined)
     {
