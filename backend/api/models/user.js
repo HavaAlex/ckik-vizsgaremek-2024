@@ -33,11 +33,6 @@ module.exports = (sequelize, DataTypes) =>
                 allowNull: false,
             },
 
-            roleID:{
-                type: DataTypes.INTEGER,
-                allowNull: false,
-            },
-
         },
 
         {

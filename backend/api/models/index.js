@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
     const Group = require("../models/group")(sequelize, DataTypes);
     const Lesson = require("../models/lesson")(sequelize, DataTypes);
 
-    
+
     // több a többhöz kapcsolatok
     const GuardianStudent = sequelize.define('GuardianStudent', {}, { timestamps: false });
     const MessageReceiver = sequelize.define('MessageReceiver', {}, { timestamps: false });
@@ -51,8 +51,18 @@ module.exports = (sequelize, DataTypes) => {
     Mark.belongsTo(Student, {foreignKey: 'Student_ID'});
     Student.hasMany(Mark, {foreignKey: 'Student_ID'});
 
-    //todo nem kell userid a userben, elég ha az id-t használjuk.
-    //todo orarend
+    Student.belongsTo(User, { foreignKey: 'userId' });
+    User.hasOne(Student, { foreignKey: 'userId' });
+
+    Admin.belongsTo(User, { foreignKey: 'userId' });
+    User.hasOne(Admin, { foreignKey: 'userId' });
+
+    Teacher.belongsTo(User, { foreignKey: 'userId' });
+    User.hasOne(Teacher, { foreignKey: 'userId' });
+
+    Guardian.belongsTo(User, { foreignKey: 'userId' });
+    User.hasOne(Guardian, { foreignKey: 'userId' });
+
 
 
     return { User, Admin, Guardian, Student, Teacher, Message, Receiver, Group, Lesson, Mark, GuardianStudent, MessageReceiver, StudentGroup};

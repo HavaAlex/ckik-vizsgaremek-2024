@@ -50,6 +50,12 @@ module.exports = (sequelize, DataTypes) =>
                 type: DataTypes.STRING(60),
                 allowNull: false,
             },
+
+            userId: {
+                type: DataTypes.INTEGER,
+                allowNull: false,
+                unique: true,
+            },
             
         },
 
