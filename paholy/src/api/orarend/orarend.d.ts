@@ -13,7 +13,7 @@ export type Lesson = {
     nap: string,
     startTime: Date,
     length: number,
-    teacher: string,
+    teacher: string, 
     subject: string,
     feladatId: []
 }
