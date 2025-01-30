@@ -39,6 +39,20 @@ class OrarendRepository
             }
         )
     }
+
+    async getDisruptionsForCurrentWeek() {
+        const today = moment();
+        const startOfWeek = today.startOf('week').toDate();
+        const endOfWeek = today.endOf('week').toDate();
+
+        return await ClassDisruption.findAll({
+            where: {
+                date: {
+                    [Op.between]: [startOfWeek, endOfWeek]
+                }
+            }
+        });
+    }
 }
 
 module.exports = new OrarendRepository(db);
