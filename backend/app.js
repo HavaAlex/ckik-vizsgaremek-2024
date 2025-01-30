@@ -17,6 +17,8 @@ const adminRoutes = require("./api/routes/adminRoutes")
 
 const loginRoutes = require("./api/routes/loginRoutes")
 
+const orarendRoutes = require("./api/routes/orarendRoutes");
+
 const errorHandler = require("./api/middlewares/errorHandler");
 
 app.use(express.json());

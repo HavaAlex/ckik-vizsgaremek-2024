@@ -1,29 +1,29 @@
-const db = require("../database/dbContext");
+const db = require("../db/dbContext");
 
 class OrarendRepository
 {
     constructor(db)
     {
-        this.Orarendek = db.orarendek;
+        this.Group = db.group;
     }
 
-    async createOrarend(orarend)
+    async createGroup(orarend)
     {
-        const newOrarend = await this.Orarendek.build(orarend);
+        const newGroup = await this.Orarendek.build(orarend);
 
-        await newOrarend.save();
+        await newGroup.save();
         
-        return newOrarend;
+        return newGroup;
     }
 
-    async getOrarend(csoport_id)
+    async getGroup(ID)//megkeresi az összes üzenetet egy felhasználótól
     {
-        return await this.Orarendek.findOne
+        return await this.Group.findAll
         (
             {
                 where:
                 {
-                    csoport_id: csoport_id,
+                    ID: ID,
                 }
             }
         )

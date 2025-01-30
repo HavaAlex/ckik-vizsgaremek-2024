@@ -42,8 +42,6 @@ db.group = Group;
 
 db.message = Message;
 
-db.timetable = Timetable;
-
 db.mark = Mark;
 
 db.message = Message;
@@ -54,7 +52,7 @@ db.messagereceiver = MessageReceiver;
 
 db.studentgroup = StudentGroup;
 
-sequelize.sync({ force: false })
+sequelize.sync({ force: true })
     .then(() => {
         console.log("Database & tables created!");
     })
