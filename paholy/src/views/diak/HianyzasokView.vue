@@ -18,9 +18,9 @@ console.log(data)
           </tr>
       </thead>
       <tbody>
-        <tr v-for="hianyzas in data?.data">
-          <td>{{ hianyzas.date }}</td>
-          <td>{{ hianyzas.excused }}</td>
+        <tr v-for="elem in data?.data">
+          <td>{{ elem.hianyzas.date }}</td>
+          <td>{{ elem.hianyzas.excused }}</td>
         </tr>
       </tbody>
     </v-table>
