@@ -29,3 +29,8 @@ export type CustomLesson = {
     teacher: string,
     feladatId: []
 }
+
+export type Group = {
+    ID: number,
+    name: string
+}

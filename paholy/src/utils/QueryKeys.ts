@@ -10,12 +10,10 @@ const AUTH_KEYS = {
 
 const ORAREND_KEYS = {
     getOrarend: 'getOrarend',
-    
 }
 
 const UZENETEK_KEYS = {
     getUzenetek: 'getUzenetek',
-    
 }
 
 export const QUERY_KEYS = {

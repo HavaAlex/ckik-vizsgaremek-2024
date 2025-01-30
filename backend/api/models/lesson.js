@@ -19,11 +19,6 @@ module.exports = (sequelize, DataTypes) =>
                 type: DataTypes.INTEGER,
                 allowNull: false
             },
-            subjectID:
-            {
-                type: DataTypes.INTEGER,
-                allowNull: false,
-            },
             teacherID:
             {
                 type: DataTypes.INTEGER,
@@ -42,6 +37,11 @@ module.exports = (sequelize, DataTypes) =>
             length:
             {
                 type: DataTypes.INTEGER,
+                allowNull: false
+            },
+            day:
+            {
+                type: DataTypes.ENUM('Hétfő', 'Kedd', 'Szerda', 'Csütörtök', 'Péntek', 'Szombat', 'Vasárnap'),
                 allowNull: false
             },
             subjectName:
