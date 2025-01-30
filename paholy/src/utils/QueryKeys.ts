@@ -16,9 +16,14 @@ const UZENETEK_KEYS = {
     getUzenetek: 'getUzenetek',
 }
 
+const HIANYZASOK_KEYS = {
+    getHianyzasok: 'getHianyzasok',
+}
+
 export const QUERY_KEYS = {
     ...USER_KEYS,
     ...AUTH_KEYS,
     ...ORAREND_KEYS,
-    ...UZENETEK_KEYS
+    ...UZENETEK_KEYS,
+    ...HIANYZASOK_KEYS
 } as const 

@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { useGetHianyzasok } from '@/api/hianyzasok/hianyzasokQuery';
+const data = useGetHianyzasok()
+console.log(data)
 </script>
 
 <template>

@@ -20,7 +20,13 @@ class OrarendService
     getLessonOnDate(lessons,date)
     {
         const napok = ['vasarnap','hetfo', 'kedd', 'szerda', 'csutortok', 'pentek', 'szombat']//W3schoolson vasárnappal kezd, de ez lehet nem jó
-        return lessons.find((x)=>x.day == napok[date.getDay()]&& x.start_Hour == date.getHours()&&x.start_Minute == date.getMinutes())
+        console.log(date.getHours())
+        console.log(date.getMinutes())
+        console.log(napok[date.getDay()])
+        console.log(lessons[0].day == napok[date.getDay()])
+        console.log(lessons[0].start_Hour == date.getHours()-1)
+        console.log(lessons[0].start_Minute == date.getMinutes())
+        return lessons.find((x)=>x.day == napok[date.getDay()]&& x.start_Hour == date.getHours()-1&&x.start_Minute == date.getMinutes())
     }
 
 
