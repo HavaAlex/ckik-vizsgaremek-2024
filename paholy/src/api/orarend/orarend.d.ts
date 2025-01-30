@@ -1,34 +1,14 @@
-export type LessonAttributes = {
-    subject: string,
-    teacher: string,
-    startDate: Date,
-    length: number
-}
-
-
-export type AlapOrarend = {
-    lessons: []
-}
 export type Lesson = {
-    nap: string,
-    startTime: Date,
+    ID: number,
+    groupID: number,
+    teacherID: number,
+    start_Hour: number,
+    start_Minute: number,
     length: number,
-    teacher: string, 
-    subject: string,
-    feladatId: []
+    day: string,
+    subjectName: string
 }
 
-export type CustomOrarend = {
-    lessons: []
-}
-
-export type CustomLesson = {
-    datum: Date,
-    length: number,
-    subject: string,
-    teacher: string,
-    feladatId: []
-}
 
 export type Group = {
     ID: number,
