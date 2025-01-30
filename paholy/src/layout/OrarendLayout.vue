@@ -1,10 +1,13 @@
 <script setup lang="ts">
-import { getUserStatusFromLocalStorage} from '@/localstorage/localStorageManagment.ts';
+import type { AlapOrarend, Lesson, CustomOrarend,CustomLesson } from '@/api/orarend/orarend';
+import { useGetOrarend } from '@/api/orarend/orarendQuery';
+import { ref } from 'vue';
+
+const { data } = useGetOrarend();
 </script>
-<template>
+<template> 
   <main>
-    <h1 v-if="getUserStatusFromLocalStorage()=='szulo'">Gyermeke orarendje: </h1>
-    <h1 v-else>Órarened:</h1>
+    
       <v-table theme="dark" height="30vw" fixed-header style="border-radius: 5%;">
         <thead>
           <tr>

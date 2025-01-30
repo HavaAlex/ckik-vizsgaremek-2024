@@ -1,5 +1,6 @@
 export type LessonAttributes = {
     subject: string,
+    teacher: string,
     startDate: Date,
     length: number
 }
@@ -13,7 +14,7 @@ export type Lesson = {
     startTime: Date,
     length: number,
     teacher: string,
-    oraId: number,
+    subject: string,
     feladatId: []
 }
 
@@ -24,6 +25,7 @@ export type CustomOrarend = {
 export type CustomLesson = {
     datum: Date,
     length: number,
+    subject: string,
     teacher: string,
     feladatId: []
 }
