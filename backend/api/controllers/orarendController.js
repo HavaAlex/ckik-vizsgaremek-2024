@@ -1,8 +1,13 @@
-const userService = require("../services/userService")
+const orarendService = require("../services/orarendService")
 
 exports.getOrarend = async (req, res, next) =>
 {
-    console.log(next)
+        console.log("FINGO1")
+        console.log(req.decoded)
+        const group = await orarendService.getGroup(req.decoded.ID)
+        console.log(group)
+        console.log("FINGO2")
+        res.status(201).json(group);
 }
 
 exports.modifyOrarend = async (req, res, next) =>
@@ -37,23 +42,19 @@ exports.createOrarend = async (req, res, next) =>
 
 exports.createGroup = async (req, res, next) =>
 {
-    let {tantargyID,} = req.body;
-
-    price = Number(price);
+    let {ID, name} = req.body;
 
     try
     {
-        var newOra =
+        var newGroup =
         {
+            ID: ID,
             name: name,
-            price: price,
-            company: company,
-            shopID: shopID,
         }
 
-        newOra = await orarendService.createOra(newOra);
+        newGroup = await orarendService.createGroup(newGroup);
 
-        res.status(201).json(newOra);
+        res.status(201).json(newGroup);
     }
     catch(error)
     {
