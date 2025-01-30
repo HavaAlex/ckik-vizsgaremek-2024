@@ -27,7 +27,7 @@ const openDialog = (uzenet: Message) => {
         </tr>
       </thead>
       <tbody>
-        <tr v-for="uzenet in data" :key="uzenet.id">
+        <tr v-for="uzenet in data" ><!--:key="uzenet.id"-->
           <td style="width: 15vw;">{{ uzenet.senderUserID }}</td>
           <td style="width: 15vw;">{{ uzenet.date }}</td>
           <td id="szoveg">{{ uzenet.message }}</td>

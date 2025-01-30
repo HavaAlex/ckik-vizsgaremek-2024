@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { useGetHianyzasok } from '@/api/hianyzasok/hianyzasokQuery';
-const data = useGetHianyzasok()
+import { ref } from 'vue';
+const {data} = useGetHianyzasok()
+console.log("hianyzasok újra")
 console.log(data)
 </script>
 
@@ -10,15 +12,16 @@ console.log(data)
       <h1>Hiányzások:</h1>
       <v-table theme="dark" height="40vw">
       <thead>
-        <tr>
-            <th class="text-center">Tanuló</th>
-            <th class="text-center">Nap</th>
-            <th class="text-center">Óra</th>
+          <tr>
+            <th class="text-center">időpont</th>
             <th class="text-center">Igazolás státusza</th>
-            <th class="text-center">Késés</th>
           </tr>
       </thead>
       <tbody>
+        <tr v-for="hianyzas in data?.data">
+          <td>{{ hianyzas.date }}</td>
+          <td>{{ hianyzas.excused }}</td>
+        </tr>
       </tbody>
     </v-table>
     </div>

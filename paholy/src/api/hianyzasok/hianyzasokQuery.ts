@@ -15,6 +15,7 @@ const getHianyzasok = async (): Promise<HianyzasValasz> => {
     };
     //console.log(`localhost:3000/uzenetek/${document.cookie}`)
     const response = await axiosClient.get(`http://localhost:3000/paholy/hianyzasok`,config) // ${document.cookie}
+    console.log("hianyzasok:")
     console.log(response)
     console.log(response.data)  
     return response
