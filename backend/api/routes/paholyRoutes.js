@@ -11,6 +11,9 @@ const userController = require("../controllers/userController")
 
 const uzenetController = require("../controllers/uzenetController")
 
+const hianyzasController = require("../controllers/hianyzasController")
+
+
 router.use(userAuth.verifyToken);
 
 router.get("/uzenetek", uzenetController.getUzenetek);
@@ -23,7 +26,7 @@ router.get("/jegyek",orarendController.getOrarend);
 
 router.post("/jegyek", orarendController.getOrarend);
 
-router.get("/hianyzasok", orarendController.getOrarend);
+router.get("/hianyzasok", hianyzasController.getHianyzasokDiak);
 
 router.post("/hianyzasok", orarendController.getOrarend);
 

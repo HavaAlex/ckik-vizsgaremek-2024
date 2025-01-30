@@ -18,7 +18,7 @@ class OrarendRepository
         return newGroup;
     }
 
-    async getGroup(ID)//Megkeresi az összes óráját az adott embernek
+    async getGroup(ID)//Megkeresi az összes csoportját az adott embernek
     {
         return await this.StudentGroups.findAll
         (

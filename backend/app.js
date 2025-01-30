@@ -29,6 +29,8 @@ app.use("/login",loginRoutes)
 
 app.use("/paholy", paholyRoutes);
 
+app.use("/orarend", orarendRoutes);
+
 app.use("/admin", adminRoutes);
 
 app.use(errorHandler.notFoundError);
