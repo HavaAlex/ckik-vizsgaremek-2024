@@ -12,6 +12,7 @@ module.exports = (sequelize, DataTypes) => {
 
     const Group = require("../models/group")(sequelize, DataTypes);
     const Lesson = require("../models/lesson")(sequelize, DataTypes);
+    const Absence = require("../models/absence")(sequelize, DataTypes);
 
 
     // több a többhöz kapcsolatok
@@ -63,7 +64,10 @@ module.exports = (sequelize, DataTypes) => {
     Guardian.belongsTo(User, { foreignKey: 'userId' });
     User.hasOne(Guardian, { foreignKey: 'userId' });
 
+    Absence.belongsTo(Student, {foreignKey: 'studentID'});
+    Student.hasMany(Absence, {foreignKey: 'studentID'});
 
 
-    return { User, Admin, Guardian, Student, Teacher, Message, Receiver, Group, Lesson, Mark, GuardianStudent, MessageReceiver, StudentGroup};
+
+    return { User, Admin, Guardian, Student, Teacher, Message, Receiver, Group, Lesson, Mark, GuardianStudent, MessageReceiver, StudentGroup, Absence};
 } 
