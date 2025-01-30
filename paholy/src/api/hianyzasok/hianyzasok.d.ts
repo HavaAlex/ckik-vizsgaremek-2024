@@ -8,8 +8,11 @@ export type Hianyzasiro = {
 
 export type Hianyzaskapo ={
     Datum: Date,
-    KezdesIdo: Date,
+    KezdesIdo: Date, 
     IgazolasStatusza: string,
     Subject:string,
     keses: number,
+}
+export type Hianyas ={
+    
 }
