@@ -1,4 +1,4 @@
-const userRepository  = require("../repositories/userRepository");
+const userRepository  = require("../repositories/userRepository"); 
 
 class UserService
 {
@@ -15,6 +15,15 @@ class UserService
     async getUser(username)
     {
         return await userRepository.getUser(username);
+    }
+    async getUserByID(ID)
+    {
+        return await userRepository.getUser(ID);
+    }
+
+    async getUserChildren(ID)
+    {
+        
     }
 }
 

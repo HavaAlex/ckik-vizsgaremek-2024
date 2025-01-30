@@ -17,22 +17,18 @@ router.get("/uzenetek", uzenetController.getUzenetek);
 
 router.post("/uzenetek", orarendController.getOrarend);
 
-router.get("/orarend/:token",orarendController.getOrarend);
+router.get("/orarend",orarendController.getOrarend);
 
-router.get("/jegyek/:token",orarendController.getOrarend);
+router.get("/jegyek",orarendController.getOrarend);
 
-router.post("/jegyek/:token", orarendController.getOrarend);
+router.post("/jegyek", orarendController.getOrarend);
 
-router.get("/hianyzasok/:token", orarendController.getOrarend);
+router.get("/hianyzasok", orarendController.getOrarend);
 
-router.post("/hianyzasok/:token", orarendController.getOrarend);
+router.post("/hianyzasok", orarendController.getOrarend);
 
-router.get("/hianyzasokOsztaly/:token", orarendController.getOrarend);
+router.get("/fiokadatok", userController.getUser);
 
-router.post("/hianyzasokOsztaly/:token", orarendController.getOrarend);
-
-router.get("/fiokadatok/:token", orarendController.getOrarend);
-
-router.post("/fiokadatok/:token", orarendController.getOrarend);
+router.post("/fiokadatok", orarendController.getOrarend);
 
 module.exports = router;

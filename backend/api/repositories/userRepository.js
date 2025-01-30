@@ -43,6 +43,19 @@ class UserRepository
         )
     }
 
+    async getUserByID(ID)
+    {
+        return await this.Users.findOne
+        (
+            {
+                where:
+                {
+                    ID: ID,
+                }
+            }
+        )
+    }
+
     async getRole(user)
     {
         if(user.role == "diak"){

@@ -1,5 +1,4 @@
 const db = require("../db/dbContext");
-const userRepository = require("./userRepository")
 
 class GuardianRepository
 {

@@ -1,17 +1,10 @@
-const toyRepository = require("../repositories/toyRepository");
-
-const shopRepository = require("../repositories/shopRepository");
+const markRepository = require("../repositories/markRepository");
 
 class JegyService
 {
-    async GETJegySzemely(fiok_id,tantargy_Id)
+    async getJegyek(ID)
     {
-        //adott tantágyból visszaküldi a fiok jegyeit
-    }
-    
-    async GETfiokInfoID(fiok_id)
-    {
-        //megkeresi id alapján az usert
+        
     }
 }
 
