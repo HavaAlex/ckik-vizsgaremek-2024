@@ -1,5 +1,3 @@
-const lesson = require("../models/lesson");
-
 module.exports = (sequelize, DataTypes) => {
     const User = require("../models/user")(sequelize, DataTypes);
     const Admin = require("../models/admin")(sequelize, DataTypes);
@@ -9,7 +7,7 @@ module.exports = (sequelize, DataTypes) => {
     const Message = require("../models/message")(sequelize, DataTypes);
     const Receiver = require("../models/receiver")(sequelize, DataTypes);
     const Mark = require("../models/mark")(sequelize, DataTypes);
-
+    const ClassDistruption = require("../models/classDisruption")(sequelize, DataTypes);
     const Group = require("../models/group")(sequelize, DataTypes);
     const Lesson = require("../models/lesson")(sequelize, DataTypes);
     const Absence = require("../models/absence")(sequelize, DataTypes);
@@ -66,8 +64,11 @@ module.exports = (sequelize, DataTypes) => {
 
     Absence.belongsTo(Student, {foreignKey: 'studentID'});
     Student.hasMany(Absence, {foreignKey: 'studentID'});
+    
+    ClassDistruption.belongsTo(Teacher, {foreignKey: 'teacherID'});
+    Teacher.hasMany(ClassDistruption, {foreignKey: 'teacherID'});
 
 
 
-    return { User, Admin, Guardian, Student, Teacher, Message, Receiver, Group, Lesson, Mark, GuardianStudent, MessageReceiver, StudentGroup, Absence};
+    return { User, Admin, Guardian, Student, Teacher, Message, Receiver, Group, Lesson, Mark, GuardianStudent, MessageReceiver, StudentGroup, Absence, ClassDistruption };
 } 

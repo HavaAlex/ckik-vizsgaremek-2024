@@ -24,7 +24,7 @@ db.Sequelize = Sequelize;
 
 db.sequelize = sequelize;
 
-const { User,Student,Guardian, Admin, Teacher, Lesson, Group, Mark, Message, Absence, GuardianStudent,MessageReceiver,StudentGroup} = require("../models")(sequelize, DataTypes);
+const { User,Student,Guardian, Admin, Teacher, Lesson, Group, Mark, Message, Absence, ClassDistruption, GuardianStudent,MessageReceiver,StudentGroup} = require("../models")(sequelize, DataTypes);
 
 db.user = User;
 
@@ -53,6 +53,8 @@ db.messagereceiver = MessageReceiver;
 db.studentgroup = StudentGroup;
 
 db.absence = Absence;
+
+db.classdistruption = ClassDistruption;
 
 sequelize.sync({ force: false })
     .then(() => {
