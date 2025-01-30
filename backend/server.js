@@ -1,9 +1,9 @@
 require('dotenv').config()
 
-
 const dbContext = require("./api/db/dbContext")
 
 const app = require("./app");
 
-console.log("teszt2")
-app.listen(3000);
+console.log("Server is running on port: ", process.env.PORT);
+
+app.listen(process.env.PORT);
