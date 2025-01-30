@@ -17,6 +17,12 @@ class OrarendService
 
     }
 
+    getLessonOnDate(lessons,date)
+    {
+        const napok = ['vasarnap','hetfo', 'kedd', 'szerda', 'csutortok', 'pentek', 'szombat']//W3schoolson vasárnappal kezd, de ez lehet nem jó
+        return lessons.find((x)=>x.day == napok[date.getDay()]&& x.start_Hour == date.getHours()&&x.start_Minute == date.getMinutes())
+    }
+
 
     async createOra()
     {
