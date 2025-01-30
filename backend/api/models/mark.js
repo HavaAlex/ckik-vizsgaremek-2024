@@ -15,18 +15,18 @@ module.exports = (sequelize, DataTypes) =>
                 allowNull: false,
             },
             
-            Subject_ID:
+            subjectID:
             {
                 type: DataTypes.INTEGER,
                 allowNull: false,
             },
 
-            Teacher_ID:
+            teacherID:
             {
                 type: DataTypes.INTEGER,
                 allowNull: false,
             },
-            Student_ID:
+            studentID:
             {
                 type: DataTypes.INTEGER,
                 allowNull: false

@@ -39,17 +39,17 @@ module.exports = (sequelize, DataTypes) => {
     User.hasMany(Receiver, {foreignKey: 'receiverUserID'})
     Receiver.belongsTo(User, { foreignKey: 'receiverUserID' });
 
-    Teacher.hasMany(Lesson, {foreignKey: 'Teacher_ID'})
-    Lesson.belongsTo(Teacher, { foreignKey: 'Teacher_ID' });
+    Teacher.hasMany(Lesson, {foreignKey: 'teacherID'})
+    Lesson.belongsTo(Teacher, { foreignKey: 'teacherID' });
 
-    Group.belongsTo(Lesson, {foreignKey: 'Lesson_ID'});
-    Lesson.hasMany(Group, {foreignKey: 'Lesson_ID'});
+    Lesson.belongsTo(Group, {foreignKey: 'groupID'});
+    Group.hasMany(Lesson, {foreignKey: 'groupID'});
 
-    Mark.belongsTo(Teacher, {foreignKey: 'Teacher_ID'});
-    Teacher.hasMany(Mark, {foreignKey: 'Teacher_ID'});
+    Mark.belongsTo(Teacher, {foreignKey: 'teacherID'});
+    Teacher.hasMany(Mark, {foreignKey: 'teacherID'});
 
-    Mark.belongsTo(Student, {foreignKey: 'Student_ID'});
-    Student.hasMany(Mark, {foreignKey: 'Student_ID'});
+    Mark.belongsTo(Student, {foreignKey: 'studentID'});
+    Student.hasMany(Mark, {foreignKey: 'studentID'});
 
     Student.belongsTo(User, { foreignKey: 'userId' });
     User.hasOne(Student, { foreignKey: 'userId' });

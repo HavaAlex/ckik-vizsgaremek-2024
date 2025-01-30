@@ -20,20 +20,6 @@ module.exports = (sequelize, DataTypes) =>
                 type: DataTypes.STRING(60),
                 allowNull: false,
             },
-
-            Timetable_ID:
-            {
-                type: DataTypes.INTEGER,
-                allowNull: false,
-            },
-
-            Lesson_ID:
-            {
-                type: DataTypes.INTEGER,
-                allowNull: false,
-            },
-
-
         },
 
         {

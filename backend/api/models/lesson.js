@@ -14,14 +14,17 @@ module.exports = (sequelize, DataTypes) =>
                 autoIncrement: true,
                 allowNull: false,
             },
-            
-            Subject_ID:
+            groupID:
+            {
+                type: DataTypes.INTEGER,
+                allowNull: false
+            },
+            subjectID:
             {
                 type: DataTypes.INTEGER,
                 allowNull: false,
             },
-
-            Teacher_ID:
+            teacherID:
             {
                 type: DataTypes.INTEGER,
                 allowNull: false,
@@ -45,10 +48,7 @@ module.exports = (sequelize, DataTypes) =>
             {
                 type: DataTypes.STRING,
                 allowNull: false
-            },
-
-
-
+            }
         },
 
         {

@@ -35,7 +35,7 @@ exports.createOrarend = async (req, res, next) =>
     }
 }
 
-exports.createOra = async (req, res, next) =>
+exports.createGroup = async (req, res, next) =>
 {
     let {tantargyID,} = req.body;
 
