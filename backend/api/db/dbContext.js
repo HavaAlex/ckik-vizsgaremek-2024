@@ -24,7 +24,7 @@ db.Sequelize = Sequelize;
 
 db.sequelize = sequelize;
 
-const { User,Student,Guardian, Admin, Teacher, Lesson, Group, Timetable, Mark,Message,GuardianStudent,MessageReceiver,StudentGroup} = require("../models")(sequelize, DataTypes);
+const { User,Student,Guardian, Admin, Teacher, Lesson, Group, Mark, Message, Absence, GuardianStudent,MessageReceiver,StudentGroup} = require("../models")(sequelize, DataTypes);
 
 db.user = User;
 
@@ -52,6 +52,8 @@ db.messagereceiver = MessageReceiver;
 
 db.studentgroup = StudentGroup;
 
+db.absence = Absence;
+
 sequelize.sync({ force: false })
     .then(() => {
         console.log("Database & tables created!");
@@ -68,5 +70,3 @@ try {
 }
 
 module.exports = db;
-
-console.log("teszt");
