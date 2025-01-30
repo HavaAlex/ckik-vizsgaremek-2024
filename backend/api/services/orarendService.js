@@ -11,6 +11,12 @@ class OrarendService
         return await orarendRepository.getGroup(ID)
     }
 
+    async getLessons(groups)
+    {
+        return await orarendRepository.getLessons(groups)
+
+    }
+
 
     async createOra()
     {

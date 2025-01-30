@@ -5,6 +5,8 @@ class OrarendRepository
     constructor(db)
     {
         this.Group = db.group;
+        this.StudentGroups = db.studentgroup;
+        this.Lesson = db.lesson;
     }
 
     async createGroup(orarend)
@@ -16,15 +18,24 @@ class OrarendRepository
         return newGroup;
     }
 
-    async getGroup(ID)//megkeresi az összes üzenetet egy felhasználótól
+    async getGroup(ID)//Megkeresi az összes óráját az adott embernek
     {
-        return await this.Group.findAll
+        return await this.StudentGroups.findAll
         (
             {
-                where:
-                {
-                    ID: ID,
-                }
+                where: {StudentID: ID},
+            }
+        )
+    }
+
+    async getLessons(groups)//Megkeresi az összes óráját az adott embernek
+    {
+        groups = groups.map(group => group.GroupID);
+        console.log(groups);
+        return await this.Lesson.findAll
+        (
+            {
+                where: {groupID: groups},
             }
         )
     }

@@ -41,7 +41,7 @@ module.exports = (sequelize, DataTypes) =>
             },
             day:
             {
-                type: DataTypes.ENUM('Hétfő', 'Kedd', 'Szerda', 'Csütörtök', 'Péntek', 'Szombat', 'Vasárnap'),
+                type: DataTypes.ENUM('hetfo', 'kedd', 'szerda', 'csutortok', 'pentek', 'szombat', 'vasarnap'),
                 allowNull: false
             },
             subjectName:
