@@ -31,9 +31,15 @@ function orarendfeltolt(lessons: Lesson[]) {
       if (
         lessonDayIndex !== -1 &&
         index >= lesson.start_Minute &&
-        index < lesson.start_Minute + lesson.length
+        index <= lesson.start_Minute + lesson.length
       ) {
-        row.lessons[lessonDayIndex] = lesson.subjectName;
+        if(row.lessons[lessonDayIndex-1] != lesson.subjectName){
+          row.lessons[lessonDayIndex] = lesson.subjectName;
+        }
+        else{
+          
+        }
+
       }
     });
 
@@ -53,6 +59,7 @@ watch(data, (newData) => {
 </script>
 
 <template>
+  
   <main>
     <v-table theme="dark" height="30vw" fixed-header style="border-radius: 5%;">
       <thead>
@@ -72,10 +79,13 @@ watch(data, (newData) => {
     </v-table>
     <RouterView></RouterView>
   </main>
+
 </template>
 
 <style lang="css">
 main {
-  width: 60vw;
+  width: 80vw;
+
 }
+
 </style>

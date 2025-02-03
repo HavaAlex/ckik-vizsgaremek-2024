@@ -4,7 +4,7 @@ import { useAddMark, useGetMarks } from '@/api/jegyek/jegyekQuery';
 import { ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 const NewMarkRef = ref<NewMark>({
-    StudentId: '',
+    StudentId: 0,
     subject: '',
     mark: 0,
     markmultiplier: 0, 
@@ -13,6 +13,9 @@ const {data} = useGetMarks()
 const {push} = useRouter()
 const {back} = useRouter()
 const {mutate, isPending} = useAddMark()
+
+
+const range = ref([1, 5]); // Two handles, one at 1, one at 5
 
 </script>
 
@@ -27,7 +30,18 @@ const {mutate, isPending} = useAddMark()
         <br>
         <h3>Tantárgyak:</h3>
         <br>
-        <h3>Érdemjegyek:</h3>
+        <h3>Érdemjegyek átlaga:</h3>
+        <v-range-slider
+          v-model="range"
+          :min="1"
+          :max="5"
+          :step="0.1"
+          show-ticks
+          color="primary"
+        class="mt-4"
+        thumb-label
+        ></v-range-slider>
+        <!--
         <h5>Minimum:</h5>
         <v-slider
         :min="1"
@@ -45,7 +59,7 @@ const {mutate, isPending} = useAddMark()
         color="primary"
         class="mt-4"
         thumb-label
-      ></v-slider>
+      ></v-slider>-->
     </v-navigation-drawer>
       <v-table theme="dark" height="40vw" style="border-radius: 2%;">
       <thead>
