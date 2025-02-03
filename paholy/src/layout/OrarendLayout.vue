@@ -7,7 +7,7 @@ const { data } = useGetOrarend(); // This is already an array
 
 // Hungarian days of the week
 const days =["hetfo", "kedd", "szerda", "csutortok", "pentek", "szombat", "vasarnap"];
-
+const lessonColor = ref("#9c0913"); // Default to blue
 // Time intervals
 const startMinute = 300;
 const endMinute = 1440;
@@ -32,14 +32,8 @@ function orarendfeltolt(lessons: Lesson[]) {
         lessonDayIndex !== -1 &&
         index >= lesson.start_Minute &&
         index <= lesson.start_Minute + lesson.length
-      ) {
-        if(row.lessons[lessonDayIndex-1] != lesson.subjectName){
-          row.lessons[lessonDayIndex] = lesson.subjectName;
-        }
-        else{
-          
-        }
-
+      )  {
+        row.lessons[lessonDayIndex] = lesson.subjectName;
       }
     });
 
@@ -61,7 +55,11 @@ watch(data, (newData) => {
 <template>
   
   <main>
-    <v-table theme="dark" height="30vw" fixed-header style="border-radius: 5%;">
+    <div class="color-picker">
+      <label for="lessonColor">Szín megváltoztatása:</label>
+      <input type="color" id="lessonColor" v-model="lessonColor" />
+    </div>
+    <v-table theme="dark" class="orarendtabla"  fixed-header style="border-radius: 5%;">
       <thead>
         <tr>
           <th class="text-center">Idő</th>
@@ -71,7 +69,7 @@ watch(data, (newData) => {
       <tbody>
         <tr v-for="(row, index) in timetable" :key="index">
           <td class="text-center">{{ row.time }}</td>
-          <td v-for="(lesson, dayIndex) in row.lessons" :key="dayIndex" class="text-center">
+          <td v-for="(lesson, dayIndex) in row.lessons" :key="dayIndex" class="text-center" :style="{ backgroundColor: lesson ? lessonColor : 'transparent' }">
             {{ lesson || "" }}
           </td>
         </tr>
@@ -83,9 +81,25 @@ watch(data, (newData) => {
 </template>
 
 <style lang="css">
-main {
-  width: 80vw;
-
+/* Portrait mode */
+@media (orientation: portrait) {
+  main {
+  width: 95vw;
+  }
+  .orarendtabla{
+    height: 95vw;
+  }
 }
+
+/* Landscape mode */
+@media (orientation: landscape) {
+  main {
+  width: 80vw;
+  }
+  .orarendtabla{
+    height: 40vw;
+  }
+}
+
 
 </style>

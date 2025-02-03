@@ -8,11 +8,7 @@ const { push } = useRouter()
   <main>
 
 
-    <div v-if = "getUserStatusFromLocalStorage() == 'tanar' || getUserStatusFromLocalStorage() == 'admin' ">
-    </div>
-    <div v-else>
 
-    </div>
 
     <RouterView></RouterView>
   </main>

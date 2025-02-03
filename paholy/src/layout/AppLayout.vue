@@ -78,3 +78,20 @@ else{
       </v-main>
     </v-layout>
   </template>
+<style lang="css">
+/* Default (Light Mode) */
+body {
+  background-color: white;
+  color: black;
+  align-content: center;
+}
+
+/* Dark Mode */
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: rgb(25, 25, 25);
+    color: white;
+  }
+}
+
+</style>
