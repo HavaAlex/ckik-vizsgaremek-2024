@@ -56,7 +56,7 @@ db.absence = Absence;
 
 db.classdistruption = ClassDistruption;
 
-sequelize.sync({ force: false })
+sequelize.sync({ force: true })
     .then(() => {
         console.log("Database & tables created!");
     })

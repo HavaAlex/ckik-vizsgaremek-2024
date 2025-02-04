@@ -5,7 +5,7 @@ module.exports = (sequelize, DataTypes) => {
     const Student = require("../models/student")(sequelize, DataTypes);
     const Teacher = require("../models/teacher")(sequelize, DataTypes);
     const Message = require("../models/message")(sequelize, DataTypes);
-    const Receiver = require("../models/receiver")(sequelize, DataTypes);
+   
     const Mark = require("../models/mark")(sequelize, DataTypes);
     const ClassDistruption = require("../models/classDisruption")(sequelize, DataTypes);
     const Group = require("../models/group")(sequelize, DataTypes);
@@ -25,8 +25,8 @@ module.exports = (sequelize, DataTypes) => {
     Student.belongsToMany(Guardian, { through: GuardianStudent });
 
     // egy üzenetnek több címzettje is lehet, egy címzettnek több üzenete is lehet
-    Message.belongsToMany(Receiver, { through: MessageReceiver });
-    Receiver.belongsToMany(Message, { through: MessageReceiver });
+    Message.belongsToMany(User, { through: MessageReceiver });
+    User.belongsToMany(Message, { through: MessageReceiver });
 
     // egy csoportnak több tanulója is lehet, egy tanulónak több csoportja is lehet
     Group.belongsToMany(Student, {through: StudentGroup});
@@ -34,9 +34,6 @@ module.exports = (sequelize, DataTypes) => {
 
     User.hasMany(Message, {foreignKey: 'senderUserID'});
     Message.belongsTo(User, { foreignKey: 'senderUserID' });
-
-    User.hasMany(Receiver, {foreignKey: 'receiverUserID'})
-    Receiver.belongsTo(User, { foreignKey: 'receiverUserID' });
 
     Teacher.hasMany(Lesson, {foreignKey: 'teacherID'})
     Lesson.belongsTo(Teacher, { foreignKey: 'teacherID' });
@@ -70,5 +67,5 @@ module.exports = (sequelize, DataTypes) => {
 
 
 
-    return { User, Admin, Guardian, Student, Teacher, Message, Receiver, Group, Lesson, Mark, GuardianStudent, MessageReceiver, StudentGroup, Absence, ClassDistruption };
+    return { User, Admin, Guardian, Student, Teacher, Message,  Group, Lesson, Mark, GuardianStudent, MessageReceiver, StudentGroup, Absence, ClassDistruption };
 } 
