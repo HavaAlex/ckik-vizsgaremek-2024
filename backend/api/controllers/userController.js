@@ -6,7 +6,7 @@ const salt = 10;
 
 const jwt = require("jsonwebtoken");
 
-exports.getUser = async (req, res, next) =>
+exports.getUser = async (req, res, next) => 
 {
     res.status(200).send(await userService.getUser(req.userID));
 }

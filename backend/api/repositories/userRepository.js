@@ -12,7 +12,7 @@ class UserRepository
         this.Admins = db.admin;
         this.Guardians = db.guardian;
         this.Teachers = db.teacher;
-        this.Students = db.student
+        this.Students = db.student 
         console.log(this.Users)
     }
 
