@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import type { LoginData } from '@/api/auth/auth';
 import { useLogin } from '@/api/auth/authQuery';
-import { ref } from 'vue';
+import { ref ,onMounted, onUnmounted } from 'vue';
 import { useRouter } from 'vue-router';
  
 const LoginDataRef = ref<LoginData>({
@@ -12,22 +12,52 @@ const LoginDataRef = ref<LoginData>({
 const { push } = useRouter()
 const { mutate: login, isPending} = useLogin()
 const {back} = useRouter()
+
+const isPortrait = ref(window.matchMedia("(orientation: portrait)").matches);
+const updateOrientation = () => {
+  isPortrait.value = window.matchMedia("(orientation: portrait)").matches;
+};
+onMounted(() => {
+  window.matchMedia("(orientation: portrait)").addEventListener("change", updateOrientation);
+});
+onUnmounted(() => {
+  window.matchMedia("(orientation: portrait)").removeEventListener("change", updateOrientation);
+});
 </script>
 <template>
-    <v-card class="logincard">
-        <v-card-title>Bejelentkezés a Páholy rendszerbe</v-card-title>
+    <div v-if="isPortrait">
+        <v-card class="logincard">
+        <v-card-title class ="telefonosnagyitas" >Bejelentkezés a Páholy rendszerbe</v-card-title>
         <v-card-text>
-            <v-text-field v-model="LoginDataRef.username" label="Felhasználónév" variant="outlined"></v-text-field>
-            <v-text-field v-model="LoginDataRef.password" label="Jelszó" type="password" variant="outlined"></v-text-field>
+            <v-text-field class ="telefonosnagyitas2" v-model="LoginDataRef.username" placeholder="Felhasználónév" variant="outlined"></v-text-field>
+            <v-text-field class ="telefonosnagyitas2" v-model="LoginDataRef.password" placeholder="Jelszó" type="password" variant="outlined"></v-text-field>
         </v-card-text>
         <v-card-actions>
-            <v-btn @click="() => {
+            <v-btn class="loginbtn" @click="() => {
                 login(LoginDataRef)
             }" :loading="isPending"> 
                 Bejelentkezés
             </v-btn>
         </v-card-actions>
     </v-card>
+    </div>
+    <div v-else>
+        <v-card class="logincard">
+        <v-card-title >Bejelentkezés a Páholy rendszerbe</v-card-title>
+        <v-card-text>
+            <v-text-field v-model="LoginDataRef.username" label="Felhasználónév" variant="outlined"></v-text-field>
+            <v-text-field v-model="LoginDataRef.password" label="Jelszó" type="password" variant="outlined"></v-text-field>
+        </v-card-text>
+        <v-card-actions>
+            <v-btn class="loginbtn" @click="() => {
+                login(LoginDataRef)
+            }" :loading="isPending"> 
+                Bejelentkezés
+            </v-btn>
+        </v-card-actions>
+    </v-card>
+    </div>
+
 </template>
 <style lang="css">
 html, body {
@@ -37,6 +67,10 @@ html, body {
     align-items: center;
 }
 
+.loginbtn{
+    background-color:#9c0913 !important;
+    color: white !important;
+}
 
 
 @media (orientation: portrait) {
@@ -44,11 +78,33 @@ html, body {
     width: 95vw;
   }
   .logincard {
-  
-   width: 95vw;
-   height: 40vw;
+   width: 95vw !important;
+   height: 70vw !important;
+   align-items: center !important;
+} 
+  .loginbtn{
+    height:10vw !important;
+    width:50% !important;
+    font-size: 200% !important;
 }
+  .telefonosnagyitas{
+    height:25% !important;
+    width:150% !important;
+    font-size: 300% !important;
+    
+  }
+  .telefonosnagyitas2{
+    height:15vw !important;
+    width:150% !important;
+    font-size: 300% !important;
+  }
+  .telefonosnagyitas2 ::placeholder{
+    height: 300%;
+    font-size: 250% !important;
+  }
+
 }
+
 
 /* Landscape mode */
 @media (orientation: landscape) {
