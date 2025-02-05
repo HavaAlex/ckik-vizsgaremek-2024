@@ -8,7 +8,7 @@ class UserService
     }
 
     async getUsers()
-    {
+    { 
         return await userRepository.getUsers();
     }
 
