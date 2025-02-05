@@ -1,3 +1,4 @@
+const { or } = require("sequelize");
 const db = require("../db/dbContext");
 
 class MessageRepository
@@ -23,8 +24,11 @@ class MessageRepository
             {
                 where:
                 {
-                    senderUserID: ID,
-                }
+                    [Op.or]: {
+                        senderUserID: ID,
+                        UserID: ID,
+                    },
+                },
             }
         )
     }
