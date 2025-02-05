@@ -25,6 +25,7 @@ onUnmounted(() => {
 });
 </script>
 <template>
+
     <div v-if="isPortrait">
         <v-card class="logincard">
         <v-card-title class ="telefonosnagyitas" >Bejelentkezés a Páholy rendszerbe</v-card-title>
@@ -32,7 +33,7 @@ onUnmounted(() => {
             <v-text-field class ="telefonosnagyitas2" v-model="LoginDataRef.username" placeholder="Felhasználónév" variant="outlined"></v-text-field>
             <v-text-field class ="telefonosnagyitas2" v-model="LoginDataRef.password" placeholder="Jelszó" type="password" variant="outlined"></v-text-field>
         </v-card-text>
-        <v-card-actions>
+        <v-card-actions class="buttoncontainer">
             <v-btn class="loginbtn" @click="() => {
                 login(LoginDataRef)
             }" :loading="isPending"> 
@@ -45,20 +46,33 @@ onUnmounted(() => {
         <v-card class="logincard">
         <v-card-title >Bejelentkezés a Páholy rendszerbe</v-card-title>
         <v-card-text>
-            <v-text-field v-model="LoginDataRef.username" label="Felhasználónév" variant="outlined"></v-text-field>
+            <v-text-field v-model="LoginDataRef.username" label="Felhasználónév" variant="outlined" ></v-text-field>
             <v-text-field v-model="LoginDataRef.password" label="Jelszó" type="password" variant="outlined"></v-text-field>
         </v-card-text>
-        <v-card-actions>
+        <v-card-actions class="buttoncontainer">
             <v-btn class="loginbtn" @click="() => {
                 login(LoginDataRef)
             }" :loading="isPending"> 
                 Bejelentkezés
             </v-btn>
+
+          
+
         </v-card-actions>
     </v-card>
     </div>
 
 </template>
+<style lang="css" scoped>
+@media (orientation: portrait) {
+  .telefonosnagyitas2 :deep(.v-field__input) {
+  font-size: 5vw !important; /* Adjusts text size based on viewport width */
+ /* height: 5vw;  Adjusts input height */
+}
+
+}
+
+</style>
 <style lang="css">
 html, body {
     height: 100%;
@@ -71,12 +85,20 @@ html, body {
     background-color:#9c0913 !important;
     color: white !important;
 }
+.buttoncontainer{
+    display: flex !important;
+    justify-content: center !important;
+    width: 100%;
+}
+
 
 
 @media (orientation: portrait) {
   main {
     width: 95vw;
+    
   }
+
   .logincard {
    width: 95vw !important;
    height: 70vw !important;
@@ -84,24 +106,30 @@ html, body {
 } 
   .loginbtn{
     height:10vw !important;
-    width:50% !important;
-    font-size: 200% !important;
+    width:50vw !important;
+    font-size: 5vw !important;
 }
   .telefonosnagyitas{
-    height:25% !important;
-    width:150% !important;
-    font-size: 300% !important;
+    height:15vw !important;
+    width:90vw !important;
+    font-size: 5vw !important;
     
   }
   .telefonosnagyitas2{
     height:15vw !important;
-    width:150% !important;
-    font-size: 300% !important;
+    width:90vw !important;
+    font-size: 5vw !important;
   }
   .telefonosnagyitas2 ::placeholder{
-    height: 300%;
-    font-size: 250% !important;
+    padding-top: 0.5vw;
+    height: 5vw;
+    font-size: 5vw !important;
   }
+  .buttoncontainer{
+    display: flex !important;
+    justify-content: center !important;
+    width: 100%;
+}
 
 }
 
