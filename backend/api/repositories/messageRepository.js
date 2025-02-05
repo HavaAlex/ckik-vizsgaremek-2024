@@ -1,4 +1,4 @@
-const { or } = require("sequelize");
+const { Op } = require("sequelize");
 const db = require("../db/dbContext");
 
 class MessageRepository
