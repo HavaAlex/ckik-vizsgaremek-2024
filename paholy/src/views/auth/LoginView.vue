@@ -13,6 +13,7 @@ const { push } = useRouter()
 const { mutate: login, isPending} = useLogin()
 const {back} = useRouter()
 
+//itt kezdődik a forgatásnak a figyelése
 const isPortrait = ref(window.matchMedia("(orientation: portrait)").matches);
 const updateOrientation = () => {
   isPortrait.value = window.matchMedia("(orientation: portrait)").matches;
@@ -22,7 +23,7 @@ onMounted(() => {
 });
 onUnmounted(() => {
   window.matchMedia("(orientation: portrait)").removeEventListener("change", updateOrientation);
-});
+});//itt ér véget
 </script>
 <template>
 
