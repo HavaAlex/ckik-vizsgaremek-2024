@@ -11,16 +11,17 @@ exports.verifyToken = (req, res, next) =>
 
         return;
     }
-    const decoded = jwt.verify(token, process.env.JWT_KEY, (error, decoded)=>
+    console.log(token.substring(0,token.length-1))//Annyira szeretem bármelyik rendszer is felel azért HOGY VAN EGY KIBEBASZOTT ; A TOKENBEN MIÉRT IS LEGYEN EGYSZERŰ AZ EMBER ÉLETE
+    const decoded = jwt.verify(token.substring(0,token.length-1), process.env.JWT_KEY, (error, decoded)=>
     {
         if(error)
         {
-            return error;
+            return {error:error};
         }
         return decoded.userData
     });
-    if(!decoded|| decoded == undefined || typeof(decoded) == jwt.JsonWebTokenError){
-        console.log("BAJ VAN A BUGYIBAN")
+    if(!decoded|| decoded == undefined || decoded.error){
+        console.log("BAJ VAN A BUGYIBAN");
         res.status(400).send("Invalid token");
         return;
     }
@@ -28,4 +29,5 @@ exports.verifyToken = (req, res, next) =>
     console.log(decoded)
     console.log("KÉRÉS")
     next()
+    //next(decodedGlobal);
 }

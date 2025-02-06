@@ -1,4 +1,5 @@
 const messageRepository = require("../repositories/messageRepository")
+const messageReceiverRepository = require("../repositories/messageReceiverRepository")
 
 class UzenetService
 {
@@ -16,7 +17,9 @@ class UzenetService
     uzenetService.createUzenet(tesztUzenet)
     */
     async getUzenetek(ID) {
-        return await messageRepository.getMessages(ID)
+        const elkuldott = await messageRepository.getSentMessages(ID)
+        const kapott = await messageRepository.getReceivedMessages(ID)
+        return elkuldott.concat(kapott)
     }
     async createUzenet(ID) {
         return await messageRepository.createMessage(ID)

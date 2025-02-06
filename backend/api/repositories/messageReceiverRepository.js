@@ -1,4 +1,6 @@
-const db = require("../db/dbContext")
+const { where } = require("sequelize");
+const db = require("../db/dbContext");
+const message = require("../models/message");
 
 class MessageReceiverRepository
 {
@@ -14,19 +16,6 @@ class MessageReceiverRepository
         await newMessageReceiver.save();
         
         return newMessageReceiver;
-    }
-
-    async getMessageReceiver(ID)
-    {
-        return await this.MessageReceiver.findAll
-        (
-            {
-                where:
-                {
-                    ID: ID,
-                }
-            }
-        )
     }
 }
 

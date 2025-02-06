@@ -17,7 +17,7 @@ class MessageRepository
         return newMessage;
     }
 
-    async getMessages(ID)//megkeresi az összes üzenetet egy felhasználótól
+    async getSentMessages(ID)//megkeresi az összes üzenetet egy felhasználótól
     {
         return await this.Messages.findAll
         (
@@ -26,9 +26,36 @@ class MessageRepository
                 {
                     [Op.or]: {
                         senderUserID: ID,
-                        UserID: ID,
                     },
                 },
+            }
+        )
+    }
+    async getMessageByID(messageID)//megkeresi az összes üzenetet egy felhasználótól
+    {
+        return await this.Messages.findAll
+        (
+            {
+                where:
+                {
+                    ID:messageID
+                },
+            }
+        )
+    }
+    async getReceivedMessages(userID)
+    {
+        return await this.Messages.findAll
+        (
+            {
+                include: [
+                    {
+                        model:db.user,
+                        where:{
+                            ID:userID
+                        }
+                    },
+                ]
             }
         )
     }

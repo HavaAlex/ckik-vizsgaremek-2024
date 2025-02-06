@@ -56,14 +56,14 @@ db.absence = Absence;
 
 db.classdistruption = ClassDistruption;
 
-sequelize.sync({ force: true })
+sequelize.sync({ force: false })
     .then(() => {
         console.log("Database & tables created!");
     })
     .catch(err => {
         console.error("Error creating database & tables:", err);
     });
-
+ 
 try {
     sequelize.authenticate();
     console.log("Database Connected");
