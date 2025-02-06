@@ -12,7 +12,7 @@ exports.verifyToken = (req, res, next) =>
         return;
     }
     console.log(token.substring(0,token.length-1))//Annyira szeretem bármelyik rendszer is felel azért HOGY VAN EGY KIBEBASZOTT ; A TOKENBEN MIÉRT IS LEGYEN EGYSZERŰ AZ EMBER ÉLETE
-    const decoded = jwt.verify(token.substring(0,token.length-1), process.env.JWT_KEY, (error, decoded)=>
+    const decoded = jwt.verify(token, process.env.JWT_KEY, (error, decoded)=>
     {
         if(error)
         {

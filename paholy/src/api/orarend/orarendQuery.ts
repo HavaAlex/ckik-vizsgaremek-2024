@@ -18,10 +18,13 @@ const getGroup = async (): Promise<Group> => {
 }
 
 export const useGetOrarend = () => {
-    return useQuery( 
+    const {push} = useRouter()
+    return useMutation(
         {
-            queryKey: [QUERY_KEYS.getOrarend], 
-            queryFn: getGroup,
+            mutationFn: getGroup,
+            onSuccess(data) {
+                console.log(data)
+            },
         }
     )
 }

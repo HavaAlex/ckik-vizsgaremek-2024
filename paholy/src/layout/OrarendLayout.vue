@@ -3,7 +3,9 @@ import type { Lesson } from '@/api/orarend/orarend';
 import { useGetOrarend } from '@/api/orarend/orarendQuery';
 import { ref, watch } from 'vue';
 
-const { data } = useGetOrarend(); // This is already an array
+const {mutate: getGroup} = useGetOrarend()
+const data = getGroup()
+console.log(data)
 
 // Hungarian days of the week
 const days =["hetfo", "kedd", "szerda", "csutortok", "pentek", "szombat", "vasarnap"];

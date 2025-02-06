@@ -2,15 +2,17 @@ const orarendService = require("../services/orarendService")
 
 exports.getOrarend = async (req, res, next) =>
 {
-        const groups = await orarendService.getGroup(req.decoded.ID)
-        console.log(groups)
+    console.log("órarendget")
+    const groups = await orarendService.getGroup(req.decoded.ID)
+    //console.log(groups)
 
 
-        const lessons = await orarendService.getLessons(groups)
+    const lessons = await orarendService.getLessons(groups)
 
-        console.log(lessons)
+    //console.log(lessons)
 
-        res.status(201).json(lessons);
+    res.status(201).json(lessons);
+    console.log("órarendgetvég")
 }
 
 exports.modifyOrarend = async (req, res, next) =>
