@@ -46,11 +46,11 @@ function orarendfeltolt(lessons: Lesson[]) {
 }
 
 // Watch for changes in data and update timetable
-watch(data, (newData) => {
+/*watch(data, (newData) => {
   if (newData) {
     orarendfeltolt(newData);
   }
-}, { immediate: true }); // Run immediately on first load
+}, { immediate: true });*/ // Run immediately on first load
 
 </script>
 

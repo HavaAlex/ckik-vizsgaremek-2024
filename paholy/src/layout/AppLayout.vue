@@ -147,6 +147,7 @@ onUnmounted(() => {
       </v-col>
     </v-app-bar>
       <v-main class="d-flex align-center justify-center fill-height">
+        
         <RouterView></RouterView>
       </v-main>
     </v-layout>
@@ -175,6 +176,7 @@ onUnmounted(() => {
     .appnavbar{
       height: 20vw;
       width: 100vw;
+      border-bottom: 50vw !important;
     }
     .appnavbarmenubtn{
       height: 25vw !important;
