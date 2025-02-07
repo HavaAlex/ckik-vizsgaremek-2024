@@ -17,4 +17,13 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url))
     },
   },
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3000/', // Express API portja
+        changeOrigin: true,
+      },
+    },
+    open: '/', // Automatikusan a /1 oldalra navigál, amikor elindítod a szervert
+  },
 })

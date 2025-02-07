@@ -25,6 +25,9 @@ export const useGetOrarend = () => {
             onSuccess(data) {
                 console.log(data)
             },
+            onError(data) {
+                alert("Lebasztad");
+            },
         }
     )
 }
