@@ -105,7 +105,7 @@ const ChangeBeerkezett = () => {
     </div>
     
 
-    
+    <RouterView></RouterView>
   </main>
 </template>
 
