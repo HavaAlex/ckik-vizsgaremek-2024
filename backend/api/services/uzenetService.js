@@ -8,7 +8,7 @@ class UzenetService
     const uzenetService = require("../services/uzenetService")
 
     const tesztUzenet = {
-        ID:undefined,
+        ID:undefined, 
         senderUserID:1,
         message:"fingo",
         date:"2055"
@@ -21,8 +21,12 @@ class UzenetService
         const kapott = await messageRepository.getReceivedMessages(ID)
         return elkuldott.concat(kapott)
     }
-    async createUzenet(ID) {
-        return await messageRepository.createMessage(ID)
+    async getPotentialReceivers(ID){
+        const PotentialReceiversArray = await messageRepository.getPotentialReceivers(ID)
+        return PotentialReceiversArray
+    }
+    async createUzenet(NewUzenet) {
+        return await messageRepository.createMessage(NewUzenet)
     }
 }
 

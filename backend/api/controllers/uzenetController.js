@@ -11,6 +11,21 @@ exports.getUzenetek = async (req, res, next) =>
     //console.log(uzenetek)
     console.log("FINGO2")
     res.status(201).json(uzenetek);
+} 
+
+exports.getPotentialReceivers = async (req, res, next) => {
+    console.log("elindult: getPotentialReceivers")
+    const PotentialReceivers = await uzenetService.getPotentialReceivers(req.decoded.ID)
+    const PotentialReceiversFormed = [];
+    for (let index = 0; index < PotentialReceivers.length; index++) {
+        let newReciever = {
+            id : PotentialReceivers[index].ID,
+            name : PotentialReceivers[index].username,
+            role : PotentialReceivers[index].role
+        }
+        PotentialReceiversFormed.push(newReciever)
+    }
+    res.status(201).json(PotentialReceiversFormed);
 }
 
 exports.modifyUzenet = async (req, res, next) =>
@@ -19,13 +34,14 @@ exports.modifyUzenet = async (req, res, next) =>
 }
 exports.createUzenet = async (req, res, next) =>
 {
-    let {ID,senderUserID,message,date} = req.body;
+    console.log("uzenetcsinálas")
+    let {senderUserID,message,date} = req.body;
 
     try
     {
-        var newUzenet =
+        const newUzenet =
         {
-            ID: ID,
+            ID: null,
             senderUserID: senderUserID,
             message: message,
             date: date,
@@ -33,7 +49,14 @@ exports.createUzenet = async (req, res, next) =>
 
         newUzenet = await uzenetService.createUzenet(newUzenet);
 
-        res.status(201).json(newUzenet);
+        
+        if(newUzenet){
+            console.log("SZŰŰŰŰŰŰŰŰŰŰŰŰű")
+            res.status(201).json(newUzenet)
+        }
+        else{
+            res.status(400).send("Failed to create a message")
+        }
     }
     catch(error)
     {

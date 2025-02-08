@@ -5,11 +5,13 @@ import { QUERY_KEYS } from "@/utils/QueryKeys"
 import { jwtDecode } from "jwt-decode";
 import { useCookieHandler } from "@/stores/cookieHandler";
 
-import type { Message } from "./uzenetek";
+import type { Message,PotentialReciever } from "./uzenetek";
 import queryClient from "@/lib/queryClient";
 
+
+
 const getUzenetek = async (): Promise<Message> => {
-    console.log("LEFUTOK")
+    console.log("LEFUTOK: getUzenetek")
     const config = {
         headers: { Authorization: `Bearer ${document.cookie}` }
     };
@@ -28,13 +30,31 @@ export const useGetUzenetek = () => {
     )
 }
 
-const addMessage = async (data: Message) : Promise<Message> =>{
-    let config = {
-        headers: {
-            'Authorization': 'Bearer' + localStorage.token
+const getPotentialReceivers = async (): Promise<PotentialReciever> =>{
+    console.log("LEFUTOK: getPotentialRecievers")
+    const config = {
+        headers: { Authorization: `Bearer ${document.cookie}` }
+    };
+    const response = await axiosClient.get(`http://localhost:3000/paholy/uzenetekreceivers`,config)
+    console.log(response)
+    return response.data
+}
+export const usegetPotentialReceivers = () => {
+    return useQuery (
+        {
+            queryKey: [QUERY_KEYS.getPotentialReceivers], 
+            queryFn: getPotentialReceivers,
         }
+    )
+}
+
+const addMessage = async (data: Message) : Promise<Message> =>{
+    console.log("LEFUTOK: addMessage")
+    let config = {
+        headers: { Authorization: `Bearer ${document.cookie}` }
     }
-    const response = await axiosClient.post(`http://localhost:3000/paholy/uzenetek`,config) // ${document.cookie}
+    const response = await axiosClient.post(`http://localhost:3000/paholy/uzenetek`,data,config) // ${document.cookie}
+    console.log("SIKERÜÜÜÜLT")
     console.log(response)
     console.log(response.data)  
     return response.data

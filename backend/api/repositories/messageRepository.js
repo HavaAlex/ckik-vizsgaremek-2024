@@ -6,6 +6,7 @@ class MessageRepository
     constructor(db)
     {
         this.Messages = db.message;
+        this.User = db.user
     }
 
     async createMessage(message)
@@ -16,7 +17,9 @@ class MessageRepository
         
         return newMessage;
     }
-
+    async getPotentialReceivers(userID){
+        return await this.User.findAll();
+    }
     async getSentMessages(ID)//megkeresi az összes üzenetet egy felhasználótól
     {
         return await this.Messages.findAll
@@ -59,6 +62,8 @@ class MessageRepository
             }
         )
     }
+
+
 }
 
 module.exports = new MessageRepository(db);

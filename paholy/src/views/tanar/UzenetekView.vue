@@ -1,11 +1,20 @@
 <script setup lang="ts">
   import { ref } from 'vue'
   import type {Message } from '@/api/uzenetek/uzenetek';
-  import {useGetUzenetek} from '@/api/uzenetek/uzenetekQuery';
+  import {/*useGetUzenetek,*/useaddMessage,usegetPotentialReceivers} from '@/api/uzenetek/uzenetekQuery';
 const dialog = ref(false)
 
+const{mutate: addMessage, isPending} = useaddMessage()
 
-const {data} = useGetUzenetek()
+const MessageDataRef = ref<Message>({
+  senderUserID: 2,
+  message: '',
+  date: new Date("0000-12-12"),
+})
+
+//const {data} = useGetUzenetek()
+const {data} = usegetPotentialReceivers()
+
 </script>
 
 <template>
@@ -26,17 +35,18 @@ const {data} = useGetUzenetek()
           <v-menu class="appnavbarmenubtn"><!--itt lehet majd kiválasztani a "célpontokat"-->
             <template v-slot:activator="{ props }">
               <v-btn v-bind="props" class="appnavbarmenubtn">
-                Oldalak
+                Címzettek:
               </v-btn>
             </template>
             <v-list>
+              <v-list v-for="elem in data">{{ elem.name + " (" + elem.role + ")"  }}</v-list>
               <!--itt lesznek kilistázva-->
             </v-list>
               
           </v-menu>
 
           <v-card-text>
-            <v-textarea label="Label"></v-textarea>
+            <v-textarea label="Az üzenet szövege" v-model="MessageDataRef.message"></v-textarea>
           </v-card-text>
 
           <v-card-actions>
@@ -48,7 +58,10 @@ const {data} = useGetUzenetek()
             ></v-btn>
             <v-btn
               text="Űzenet elküldése"
-              @click="isActive.value = false"
+              
+              @click="() => {
+                addMessage(MessageDataRef)
+              }" :loading="isPending"
             ></v-btn>
           </v-card-actions>
         </v-card>
