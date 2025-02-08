@@ -41,6 +41,25 @@ const range = ref([1, 5]); // Two handles, one at 1, one at 5
         class="mt-4"
         thumb-label
         ></v-range-slider>
+        <!--
+        <h5>Minimum:</h5>
+        <v-slider
+        :min="1"
+        :max="5"
+        :step="0.1"
+        color="primary"
+        class="mt-4"
+        thumb-label
+      ></v-slider>
+      <h5>Maximum:</h5>
+        <v-slider
+        :min="1.1"
+        :max="5"
+        :step="0.1"
+        color="primary"
+        class="mt-4"
+        thumb-label
+      ></v-slider>-->
     </v-navigation-drawer>
       <v-table theme="dark" height="40vw" style="border-radius: 2%;">
       <thead>

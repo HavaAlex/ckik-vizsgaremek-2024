@@ -11,7 +11,7 @@ const {data} = useGetUzenetek()
 <template>
   <main>
 
-      <v-dialog max-width="500">
+        <v-dialog max-width="500">
       <template v-slot:activator="{ props: activatorProps }">
         <v-btn
           v-bind="activatorProps"
@@ -23,18 +23,6 @@ const {data} = useGetUzenetek()
 
       <template v-slot:default="{ isActive }">
         <v-card title="Üzenet">
-          <v-menu class="appnavbarmenubtn"><!--itt lehet majd kiválasztani a "célpontokat"-->
-            <template v-slot:activator="{ props }">
-              <v-btn v-bind="props" class="appnavbarmenubtn">
-                Oldalak
-              </v-btn>
-            </template>
-            <v-list>
-              <!--itt lesznek kilistázva-->
-            </v-list>
-              
-          </v-menu>
-
           <v-card-text>
             <v-textarea label="Label"></v-textarea>
           </v-card-text>

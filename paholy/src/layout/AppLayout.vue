@@ -123,9 +123,11 @@ onUnmounted(() => {
       <v-btn @click="push({name:role+'uzenetek'})">
                 Üzenetek
       </v-btn>
+      
       <v-btn @click="push({name:'jogosultsagok'})" v-if="role=='admin'">
                 Jogosultsagok kezelése
       </v-btn>
+
       <v-spacer></v-spacer>
       <v-btn @click="deleteUserStatusFromLocalStorage() ; push({name:'login'})">
                 Kilépés
