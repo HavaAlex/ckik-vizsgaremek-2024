@@ -9,7 +9,7 @@ class StudentRepository
         console.log(this.Students)
     }
 
-    async createstudent(student)
+    async createStudent(student)
     {
         const newStudent = await this.Students.build(student);
 

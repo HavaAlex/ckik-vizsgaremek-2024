@@ -12,14 +12,18 @@ export type MarksInAllSubjects = {
     AllMarks: []
 }
 
-export type MarksInSubject = { //belemegy a MarksInAllSubjects
-    subject:string,
-    marks:[
-        {
-            value: number,
-            multiplier: number,
-        }
-    ]
+export type Marks = { //belemegy a MarksInAllSubjects
+    data:Mark[]
+}
+
+export type Mark = {
+    ID: number,
+    teacherID: number,
+    studentID: number,
+    Value: number,
+    Multiplier: number,
+    subjectName: string,
+    date:string
 }
 
 export type NewMark = { 

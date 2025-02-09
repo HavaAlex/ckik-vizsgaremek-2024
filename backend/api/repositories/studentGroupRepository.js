@@ -4,12 +4,12 @@ class StudentGroupRepository
 {
     constructor(db)
     {
-        this.StudentGroup = db.studentgroup;
+        this.StudentGroups = db.studentgroup;
     }
 
     async createStudentGroup(studentgroup)
     {
-        const newStudentGroup = await this.StudentGroup.build(studentgroup);
+        const newStudentGroup = await this.StudentGroups.build(studentgroup);
 
         await newStudentGroup.save();
         

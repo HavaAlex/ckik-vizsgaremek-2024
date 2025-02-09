@@ -13,6 +13,7 @@ const uzenetController = require("../controllers/uzenetController")
 
 const hianyzasController = require("../controllers/hianyzasController")
 
+const jegyController = require("../controllers/jegyController")
 
 router.use(userAuth.verifyToken);
 
@@ -22,7 +23,7 @@ router.post("/uzenetek", orarendController.getOrarend);
 
 router.get("/orarend",orarendController.getOrarend);
 
-router.get("/jegyek",orarendController.getOrarend);
+router.get("/jegyek",jegyController.getJegyek);
 
 router.post("/jegyek", orarendController.getOrarend);
 

@@ -6,7 +6,7 @@ class TeacherRepository
 {
     constructor(db)
     {
-        this.Teachers = db.admin;
+        this.Teachers = db.teacher;
         console.log(this.Teachers)
     }
 
