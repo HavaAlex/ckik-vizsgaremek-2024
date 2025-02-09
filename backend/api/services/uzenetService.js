@@ -17,9 +17,13 @@ class UzenetService
     uzenetService.createUzenet(tesztUzenet)
     */
     async getUzenetek(ID) {
-        const elkuldott = await messageRepository.getSentMessages(ID)
-        const kapott = await messageRepository.getReceivedMessages(ID)
-        return elkuldott.concat(kapott)
+        const osszes = {
+            elkuldott : [],
+            kapott: []
+        }
+        osszes.elkuldott = await messageRepository.getSentMessages(ID)
+        osszes.kapott = await messageRepository.getReceivedMessages(ID)
+        return osszes
     }
     async getPotentialReceivers(ID){
         const PotentialReceiversArray = await messageRepository.getPotentialReceivers(ID)
