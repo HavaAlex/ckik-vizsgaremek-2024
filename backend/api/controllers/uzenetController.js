@@ -35,7 +35,7 @@ exports.modifyUzenet = async (req, res, next) =>
 exports.createUzenet = async (req, res, next) =>
 {
     console.log("uzenetcsinálas")
-    let {message,date} = req.body;
+    let {message,date,receiverlist} = req.body;
 
     try
     {
@@ -46,8 +46,9 @@ exports.createUzenet = async (req, res, next) =>
             message: message,
             date: date,
         }
-
-        newUzenet = await uzenetService.createUzenet(newUzenet);
+        console.log("elmentide")
+        console.log(receiverlist)
+        newUzenet = await uzenetService.createUzenet(newUzenet,receiverlist);
 
         
         if(newUzenet){

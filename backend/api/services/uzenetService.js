@@ -25,9 +25,17 @@ class UzenetService
         const PotentialReceiversArray = await messageRepository.getPotentialReceivers(ID)
         return PotentialReceiversArray
     }
-    async createUzenet(NewUzenet) {
-        return await messageRepository.createMessage(NewUzenet)
-    }
+    async createUzenet(NewUzenet,newMessageReceivers) {
+        console.log("NewUzenet:")
+        console.log(NewUzenet.date)
+        console.log(NewUzenet.message)
+        console.log("newMessageReceivers: ")
+        console.log(newMessageReceivers)
+        return await messageRepository.createMessage(NewUzenet,newMessageReceivers)
+    }/*
+    async createMessageReceiver(newMessageReceiver){
+        return await messageRepository.createMessageReceiver(newMessageReceiver)
+    }*/
 }
 
 module.exports = new UzenetService();

@@ -5,7 +5,7 @@ import { QUERY_KEYS } from "@/utils/QueryKeys"
 import { jwtDecode } from "jwt-decode";
 import { useCookieHandler } from "@/stores/cookieHandler";
 
-import type { Message,PotentialReciever } from "./uzenetek";
+import type { Message,PotentialReceiver,newMessage } from "./uzenetek";
 import queryClient from "@/lib/queryClient";
 
 
@@ -30,8 +30,8 @@ export const useGetUzenetek = () => {
     )
 }
 
-const getPotentialReceivers = async (): Promise<PotentialReciever> =>{
-    console.log("LEFUTOK: getPotentialRecievers")
+const getPotentialReceivers = async (): Promise<PotentialReceiver> =>{
+    console.log("LEFUTOK: getPotentialReceivers")
     const config = {
         headers: { Authorization: `Bearer ${document.cookie}` }
     };
@@ -50,6 +50,8 @@ export const usegetPotentialReceivers = () => {
 
 const addMessage = async (data: Message) : Promise<Message> =>{
     console.log("LEFUTOK: addMessage")
+    console.log(data)
+    
     let config = {
         headers: { Authorization: `Bearer ${document.cookie}` }
     }

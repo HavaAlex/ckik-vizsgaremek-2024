@@ -1,16 +1,17 @@
 <script setup lang="ts">
   import { ref } from 'vue'
-  import type {Message } from '@/api/uzenetek/uzenetek';
+  import type {Message,ChoosenReceivers} from '@/api/uzenetek/uzenetek';
   import {/*useGetUzenetek,*/useaddMessage,usegetPotentialReceivers} from '@/api/uzenetek/uzenetekQuery';
 const dialog = ref(false)
 
 const{mutate: addMessage, isPending} = useaddMessage()
 
 const MessageDataRef = ref<Message>({
-  
   message: '',
   date: new Date("0000-12-12"),
+  receiverlist: [],
 })
+
 
 //const {data} = useGetUzenetek()
 const {data} = usegetPotentialReceivers()
@@ -32,14 +33,17 @@ const {data} = usegetPotentialReceivers()
 
       <template v-slot:default="{ isActive }">
         <v-card title="Üzenet">
+          <p>Címzettek</p>
+          
           <v-menu class="appnavbarmenubtn"><!--itt lehet majd kiválasztani a "célpontokat"-->
             <template v-slot:activator="{ props }">
               <v-btn v-bind="props" class="appnavbarmenubtn">
-                Címzettek:
+                Címzettek hozzáadása:
               </v-btn>
             </template>
             <v-list>
-              <v-list v-for="elem in data">{{ elem.name + " (" + elem.role + ")"  }}</v-list>
+              <v-list class="targetelement" v-for="elem in data" @click="MessageDataRef.receiverlist.push(elem.id) ;console.log('ezeka ccélpontok: ') ;console.log(MessageDataRef)">{{ elem.name + " (" + elem.role + ")"  }} 
+              </v-list>
               <!--itt lesznek kilistázva-->
             </v-list>
               
@@ -70,3 +74,8 @@ const {data} = usegetPotentialReceivers()
 
   </main>
 </template>
+<style lang="css">
+.targetelement:hover{
+  cursor: pointer;
+}
+</style>

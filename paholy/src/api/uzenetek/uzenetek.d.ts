@@ -1,19 +1,21 @@
-import type { EnumType } from "typescript"
-enum PotentialTypes {
-    group,
-    tanar,
-    diak,
-    tanar,
-    szulo
-}
 export type Message = {
-    
     message: string,
     date: Date,
+    receiverlist: Array
 }
 
-export type PotentialReciever = {
+export type newMessage = {
+    message: string,
+    date: Date,
+    receivers: FormData
+}
+
+export type PotentialReceiver = {
     ID: number,
     name: string,
     type: PotentialReciever, 
+}
+
+export type ChoosenReceivers = {
+    ID:number
 }
