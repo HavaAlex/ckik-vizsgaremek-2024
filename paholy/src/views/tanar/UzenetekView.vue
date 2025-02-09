@@ -12,7 +12,6 @@ const MessageDataRef = ref<Message>({
   receiverlist: [],
 })
 
-
 //const {data} = useGetUzenetek()
 const {data} = usegetPotentialReceivers()
 
@@ -33,8 +32,14 @@ const {data} = usegetPotentialReceivers()
 
       <template v-slot:default="{ isActive }">
         <v-card title="Üzenet">
-          <p>Címzettek</p>
-          
+          <p>Címzettek:</p>
+          <v-list-item 
+          v-for="(cuccli, index) in MessageDataRef.receiverlist" 
+          :key="index" 
+          @click="MessageDataRef.receiverlist.splice(index, 1)"
+        >
+          {{ cuccli.name + " (" + cuccli.role + ")"  }}
+        </v-list-item>
           <v-menu class="appnavbarmenubtn"><!--itt lehet majd kiválasztani a "célpontokat"-->
             <template v-slot:activator="{ props }">
               <v-btn v-bind="props" class="appnavbarmenubtn">
@@ -42,10 +47,10 @@ const {data} = usegetPotentialReceivers()
               </v-btn>
             </template>
             <v-list>
-              <v-list class="targetelement" v-for="elem in data" @click="MessageDataRef.receiverlist.push(elem.id) ;console.log('ezeka ccélpontok: ') ;console.log(MessageDataRef)">{{ elem.name + " (" + elem.role + ")"  }} 
+              <v-list class="targetelement" v-for="elem in data" @click="MessageDataRef.receiverlist.push(elem);">{{ elem.name + " (" + elem.role + ")"  }} 
               </v-list>
               <!--itt lesznek kilistázva-->
-            </v-list>
+            </v-list>:
               
           </v-menu>
 

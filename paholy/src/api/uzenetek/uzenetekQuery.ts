@@ -49,16 +49,16 @@ export const usegetPotentialReceivers = () => {
 }
 
 const addMessage = async (data: Message) : Promise<Message> =>{
-    console.log("LEFUTOK: addMessage")
-    console.log(data)
-    
+    //console.log("LEFUTOK: addMessage")
+    //console.log(data)
+    data.date = new Date(); //aktuális dátum hozzáadása
     let config = {
         headers: { Authorization: `Bearer ${document.cookie}` }
     }
     const response = await axiosClient.post(`http://localhost:3000/paholy/uzenetek`,data,config) // ${document.cookie}
-    console.log("SIKERÜÜÜÜLT")
-    console.log(response)
-    console.log(response.data)  
+    //console.log("SIKERÜÜÜÜLT")
+    //console.log(response)
+    //console.log(response.data)  
     return response.data
 }
 

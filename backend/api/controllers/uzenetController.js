@@ -28,9 +28,7 @@ exports.modifyUzenet = async (req, res, next) =>
 }
 exports.createUzenet = async (req, res, next) =>
 {
-    console.log("uzenetcsinálas")
     let {message,date,receiverlist} = req.body;
-
     try
     {
         const newUzenet =
@@ -40,13 +38,15 @@ exports.createUzenet = async (req, res, next) =>
             message: message,
             date: date,
         }
-        console.log("elmentide")
-        console.log(receiverlist)
-        newUzenet = await uzenetService.createUzenet(newUzenet,receiverlist);
+        cleanedreceiverlist = [];
+        
+        for (let l = 0; l < receiverlist.length; l++) { //ahogy átjön ez a lista, benne van még a receiverek role-ja és name-je. Csak az ID kell ezért
+            cleanedreceiverlist.push(receiverlist[l].id)//új listát csinálok nekik
+        }
+        newUzenet = await uzenetService.createUzenet(newUzenet,cleanedreceiverlist);
 
         
         if(newUzenet){
-            console.log("SZŰŰŰŰŰŰŰŰŰŰŰŰű")
             res.status(201).json(newUzenet)
         }
         else{
