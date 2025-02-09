@@ -2,11 +2,11 @@ const jegyService = require("../services/jegyService")
 
 exports.getJegyek = async (req, res, next) =>
 {
+    console.log("JEGY KEZD")
     const jegyek = await jegyService.getJegyek(req.decoded.ID)
-    for(let i =0;i<jegyek.length;i++){
-        console.log(jegyek[i])
-    }
+    console.log(jegyek)
     res.status(201).json(jegyek);
+    console.log("JEGY VÉG")
 }
 
 exports.modifyUzenet = async (req, res, next) =>

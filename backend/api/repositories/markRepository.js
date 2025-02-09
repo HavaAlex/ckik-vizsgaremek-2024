@@ -16,15 +16,37 @@ class MarkRepository
         return newMark;
     }
 
-    async getMarks(ID)//megkeresi az összes üzenetet egy felhasználótól
+    async getMarksUser(userID)
     {
         return await this.Marks.findAll
         (
             {
                 where:
                 {
-                    Student_ID: ID,
+                    studentID: userID,
                 }
+            }
+        )
+    }
+    async getMarksByGroup(groupID)
+    {
+        return await this.Marks.findAll
+        (
+            {
+                include: [
+                    {
+                        model:db.student,
+                        include: [
+                            {
+                                model:db.group,
+                                through: {attributes:[]},
+                                where:{
+                                    ID:groupID,
+                                }
+                            },
+                        ]
+                    },
+                ]
             }
         )
     }

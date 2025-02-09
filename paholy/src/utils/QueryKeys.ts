@@ -21,7 +21,7 @@ const HIANYZASOK_KEYS = {
     getHianyzasok: 'getHianyzasok',
 }
 const JEGYEK_KEYS = {
-    getMarks: 'getMarks',
+    getJegyek: 'getJegyek',
 }
 export const QUERY_KEYS = {
     ...USER_KEYS,

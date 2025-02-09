@@ -6,16 +6,22 @@ INSERT INTO `users` (`ID`, `username`, `password`, `role`) VALUES (NULL, 'jozsi'
 INSERT INTO `users` (`ID`, `username`, `password`, `role`) VALUES (NULL, 'patrik', '$2b$10$VNNkLu/F6zul7suWcA6qAOmuDaLEVTYT.v/Ae8I4l04ad9Np0W8XO', 'admin');
 
 INSERT INTO `groups` (`ID`, `name`) VALUES (NULL,'1.b');
-INSERT INTO `students` ( `ID`, `name`, `DoB`, `address`, `phone`, `email`, `username`, `userID`) VALUES (null, 'laci','1999-01-01','Cegléd hörömbő u. 2','06424206969','lacikanagykuki@gmail.com','kanoslajos',1);
-INSERT INTO `students` ( `ID`, `name`, `DoB`, `address`, `phone`, `email`, `username`, `userID`) VALUES (null, 'rebeka','1492-01-01','Nagykáta cigánytelep 4.','493287','rebekababaxoxo@gmail.com','repikitten69',2);
+INSERT INTO `students` ( `ID`, `name`, `DoB`, `address`, `phone`, `email`, `userID`) VALUES (null, 'laci','1999-01-01','Cegléd hörömbő u. 2','06424206969','lacikanagykuki@gmail.com',1);
+INSERT INTO `studentgroups` (`GroupID`, `StudentID`) VALUES (1,1);
+INSERT INTO `teachers` ( `ID`,`phone`, `email`,`userID`) VALUES (null, '0620habekapodmegfusz','lajosnagyfarok@gmail.com',2);
+INSERT INTO `students` ( `ID`, `name`, `DoB`, `address`, `phone`, `email`, `userID`) VALUES (null, 'laci','1999-01-01','Cegléd hörömbő u. 2','06424206969','lacikanagykuki@gmail.com',1);
+INSERT INTO `students` ( `ID`, `name`, `DoB`, `address`, `phone`, `email`, `userID`) VALUES (null, 'rebeka','1492-01-01','Nagykáta cigánytelep 4.','493287','rebekababaxoxo@gmail.com',2);
 INSERT INTO `studentgroups` (`GroupID`, `StudentID`) VALUES (1,1);
 INSERT INTO `studentgroups` (`GroupID`, `StudentID`) VALUES (1,2);
-INSERT INTO `teachers` ( `ID`,`phone`, `email`, `username`,`userID`) VALUES (null, '0620habekapodmegfusz','lajosnagyfarok@gmail.com','lajosba5000',3);
-INSERT INTO `teachers` ( `ID`,`phone`, `email`, `username`,`userID`) VALUES (null, '4536546456456','enikokovacsnevaleriatakacs@gmail.com','turoseniko',4);
-INSERT INTO `guardians` ( `ID`,`phone`, `email`, `username`,`userID`) VALUES (null, '354563453245','laciapujozsi@gmail.com','komuvesjozsef',5);
+INSERT INTO `teachers` ( `ID`,`phone`, `email`,`userID`) VALUES (null, '0620habekapodmegfusz','lajosnagyfarok@gmail.com',3);
+INSERT INTO `teachers` ( `ID`,`phone`, `email`,`userID`) VALUES (null, '4536546456456','enikokovacsnevaleriatakacs@gmail.com',4);
+INSERT INTO `guardians` ( `ID`,`phone`, `email`,`userID`) VALUES (null, '354563453245','laciapujozsi@gmail.com',5);
 insert into `guardianstudents` (`GuardianID`,`StudentID`) VALUES (1,1);
 insert into `guardianstudents` (`GuardianID`,`StudentID`) VALUES (1,2);
-INSERT INTO `admins` ( `ID`,`phone`, `email`, `username`,`userID`) VALUES (null, '111111','dagipatrik@gmail.com','dagipatrik',6);
+INSERT INTO `admins` ( `ID`,`phone`, `email`,`userID`) VALUES (null, '111111','dagipatrik@gmail.com',6);
 
 INSERT INTO `lessons` (`ID`, `groupID`, `teacherID`, `start_Minute`, `length`, `day`, `subjectName`) VALUES (NULL, 1, 1 , 480, 45, 'kedd','Matematika');
 INSERT INTO `lessons` (`ID`, `groupID`, `teacherID`, `start_Minute`, `length`, `day`, `subjectName`) VALUES (NULL, 1, 1, 580, 45, 'csutortok','Matematika');
+
+INSERT INTO `marks` (`ID`, `teacherID`, `studentID`, `Value`, `Multiplier`, `subjectName`, `date`) VALUES (NULL, '1', '1', '4', '100', 'maki', '2025-02-09 20:29:27.000000');
+INSERT INTO `marks` (`ID`, `teacherID`, `studentID`, `Value`, `Multiplier`, `subjectName`, `date`) VALUES (NULL, '1', '1', '3', '100', 'maki2', '2025-02-09 20:30:21.000000');
