@@ -14,6 +14,7 @@ const ORAREND_KEYS = {
 
 const UZENETEK_KEYS = {
     getUzenetek: 'getUzenetek',
+    getPotentialReceivers: 'getPotentialReceivers'
 }
 
 const HIANYZASOK_KEYS = {

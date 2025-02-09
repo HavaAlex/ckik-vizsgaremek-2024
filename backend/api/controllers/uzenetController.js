@@ -2,15 +2,24 @@ const uzenetService = require("../services/uzenetService")
 
 exports.getUzenetek = async (req, res, next) =>
 {
-    console.log("FINGO1")
-    console.log(req.decoded)
     const uzenetek = await uzenetService.getUzenetek(req.decoded.ID)
-    for(let i =0;i<uzenetek.length;i++){
-        //console.log(uzenetek[i].message)
-    }
-    //console.log(uzenetek)
-    console.log("FINGO2")
+    console.log(uzenetek)
     res.status(201).json(uzenetek);
+} 
+
+exports.getPotentialReceivers = async (req, res, next) => {
+    console.log("elindult: getPotentialReceivers")
+    const PotentialReceivers = await uzenetService.getPotentialReceivers(req.decoded.ID)
+    const PotentialReceiversFormed = [];
+    for (let index = 0; index < PotentialReceivers.length; index++) {
+        let newReciever = {
+            id : PotentialReceivers[index].ID,
+            name : PotentialReceivers[index].username,
+            role : PotentialReceivers[index].role
+        }
+        PotentialReceiversFormed.push(newReciever)
+    }
+    res.status(201).json(PotentialReceiversFormed);
 }
 
 exports.modifyUzenet = async (req, res, next) =>
@@ -19,21 +28,30 @@ exports.modifyUzenet = async (req, res, next) =>
 }
 exports.createUzenet = async (req, res, next) =>
 {
-    let {ID,senderUserID,message,date} = req.body;
+    console.log("uzenetcsinálas")
+    let {message,date,receiverlist} = req.body;
 
     try
     {
-        var newUzenet =
+        const newUzenet =
         {
-            ID: ID,
-            senderUserID: senderUserID,
+            ID: null,
+            senderUserID: req.decoded.ID,
             message: message,
             date: date,
         }
+        console.log("elmentide")
+        console.log(receiverlist)
+        newUzenet = await uzenetService.createUzenet(newUzenet,receiverlist);
 
-        newUzenet = await uzenetService.createUzenet(newUzenet);
-
-        res.status(201).json(newUzenet);
+        
+        if(newUzenet){
+            console.log("SZŰŰŰŰŰŰŰŰŰŰŰŰű")
+            res.status(201).json(newUzenet)
+        }
+        else{
+            res.status(400).send("Failed to create a message")
+        }
     }
     catch(error)
     {

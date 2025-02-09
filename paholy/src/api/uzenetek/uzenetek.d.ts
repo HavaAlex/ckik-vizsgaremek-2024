@@ -1,6 +1,21 @@
 export type Message = {
-    ID: number,
-    senderUserID: number,
     message: string,
     date: Date,
+    receiverlist: Array
+}
+
+export type newMessage = {
+    message: string,
+    date: Date,
+    receivers: FormData
+}
+
+export type PotentialReceiver = {
+    ID: number,
+    name: string,
+    type: PotentialReciever, 
+}
+
+export type ChoosenReceivers = {
+    ID:number
 }

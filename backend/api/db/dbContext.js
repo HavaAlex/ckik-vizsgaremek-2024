@@ -44,8 +44,6 @@ db.message = Message;
 
 db.mark = Mark;
 
-db.message = Message;
-
 db.guardianstudent = GuardianStudent;
 
 db.messagereceiver = MessageReceiver;

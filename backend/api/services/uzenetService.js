@@ -8,7 +8,7 @@ class UzenetService
     const uzenetService = require("../services/uzenetService")
 
     const tesztUzenet = {
-        ID:undefined,
+        ID:undefined, 
         senderUserID:1,
         message:"fingo",
         date:"2055"
@@ -17,13 +17,29 @@ class UzenetService
     uzenetService.createUzenet(tesztUzenet)
     */
     async getUzenetek(ID) {
-        const elkuldott = await messageRepository.getSentMessages(ID)
-        const kapott = await messageRepository.getReceivedMessages(ID)
-        return elkuldott.concat(kapott)
+        const osszes = {
+            elkuldott : [],
+            kapott: []
+        }
+        osszes.elkuldott = await messageRepository.getSentMessages(ID)
+        osszes.kapott = await messageRepository.getReceivedMessages(ID)
+        return osszes
     }
-    async createUzenet(ID) {
-        return await messageRepository.createMessage(ID)
+    async getPotentialReceivers(ID){
+        const PotentialReceiversArray = await messageRepository.getPotentialReceivers(ID)
+        return PotentialReceiversArray
     }
+    async createUzenet(NewUzenet,newMessageReceivers) {
+        console.log("NewUzenet:")
+        console.log(NewUzenet.date)
+        console.log(NewUzenet.message)
+        console.log("newMessageReceivers: ")
+        console.log(newMessageReceivers)
+        return await messageRepository.createMessage(NewUzenet,newMessageReceivers)
+    }/*
+    async createMessageReceiver(newMessageReceiver){
+        return await messageRepository.createMessageReceiver(newMessageReceiver)
+    }*/
 }
 
 module.exports = new UzenetService();

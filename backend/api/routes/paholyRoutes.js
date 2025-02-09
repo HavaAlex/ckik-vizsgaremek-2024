@@ -19,7 +19,9 @@ router.use(userAuth.verifyToken);
 
 router.get("/uzenetek", uzenetController.getUzenetek);
 
-router.post("/uzenetek", orarendController.getOrarend);
+router.get("/uzenetekreceivers", uzenetController.getPotentialReceivers);
+
+router.post("/uzenetek", uzenetController.createUzenet);
 
 router.get("/orarend",orarendController.getOrarend);
 

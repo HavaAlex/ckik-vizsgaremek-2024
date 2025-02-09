@@ -1,11 +1,21 @@
 <script setup lang="ts">
   import { ref } from 'vue'
-  import type {Message } from '@/api/uzenetek/uzenetek';
-  import {useGetUzenetek} from '@/api/uzenetek/uzenetekQuery';
+  import type {Message,ChoosenReceivers} from '@/api/uzenetek/uzenetek';
+  import {/*useGetUzenetek,*/useaddMessage,usegetPotentialReceivers} from '@/api/uzenetek/uzenetekQuery';
 const dialog = ref(false)
 
+const{mutate: addMessage, isPending} = useaddMessage()
 
-const {data} = useGetUzenetek()
+const MessageDataRef = ref<Message>({
+  message: '',
+  date: new Date("0000-12-12"),
+  receiverlist: [],
+})
+
+
+//const {data} = useGetUzenetek()
+const {data} = usegetPotentialReceivers()
+
 </script>
 
 <template>
@@ -23,20 +33,24 @@ const {data} = useGetUzenetek()
 
       <template v-slot:default="{ isActive }">
         <v-card title="Üzenet">
+          <p>Címzettek</p>
+          
           <v-menu class="appnavbarmenubtn"><!--itt lehet majd kiválasztani a "célpontokat"-->
             <template v-slot:activator="{ props }">
               <v-btn v-bind="props" class="appnavbarmenubtn">
-                Oldalak
+                Címzettek hozzáadása:
               </v-btn>
             </template>
             <v-list>
+              <v-list class="targetelement" v-for="elem in data" @click="MessageDataRef.receiverlist.push(elem.id) ;console.log('ezeka ccélpontok: ') ;console.log(MessageDataRef)">{{ elem.name + " (" + elem.role + ")"  }} 
+              </v-list>
               <!--itt lesznek kilistázva-->
             </v-list>
               
           </v-menu>
 
           <v-card-text>
-            <v-textarea label="Label"></v-textarea>
+            <v-textarea label="Az üzenet szövege" v-model="MessageDataRef.message"></v-textarea>
           </v-card-text>
 
           <v-card-actions>
@@ -48,7 +62,10 @@ const {data} = useGetUzenetek()
             ></v-btn>
             <v-btn
               text="Űzenet elküldése"
-              @click="isActive.value = false"
+              
+              @click="() => {
+                addMessage(MessageDataRef)
+              }" :loading="isPending"
             ></v-btn>
           </v-card-actions>
         </v-card>
@@ -57,3 +74,8 @@ const {data} = useGetUzenetek()
 
   </main>
 </template>
+<style lang="css">
+.targetelement:hover{
+  cursor: pointer;
+}
+</style>
