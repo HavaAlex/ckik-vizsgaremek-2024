@@ -7,7 +7,7 @@ const dialog = ref(false)
 const{mutate: addMessage, isPending} = useaddMessage()
 
 const MessageDataRef = ref<Message>({
-  senderUserID: 2,
+  
   message: '',
   date: new Date("0000-12-12"),
 })

@@ -7,7 +7,7 @@ enum PotentialTypes {
     szulo
 }
 export type Message = {
-    senderUserID: number,
+    
     message: string,
     date: Date,
 }

@@ -35,14 +35,14 @@ exports.modifyUzenet = async (req, res, next) =>
 exports.createUzenet = async (req, res, next) =>
 {
     console.log("uzenetcsinálas")
-    let {senderUserID,message,date} = req.body;
+    let {message,date} = req.body;
 
     try
     {
         const newUzenet =
         {
             ID: null,
-            senderUserID: senderUserID,
+            senderUserID: req.decoded.ID,
             message: message,
             date: date,
         }
