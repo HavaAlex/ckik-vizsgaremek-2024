@@ -11,6 +11,8 @@ class UzenetService
         }
         osszes.elkuldott = await messageRepository.getSentMessages(ID)
         osszes.kapott = await messageRepository.getReceivedMessages(ID)
+        console.log("ez itt az amit kapunk: ")
+        console.log(osszes)
         const senderIDs = new Set();
         for (let ik = 0; ik < osszes.kapott.length; ik++) { //ez egy katyvasz, este volt és nem tudtam mi a helyzet
             senderIDs.add(osszes.kapott[ik].ID)
