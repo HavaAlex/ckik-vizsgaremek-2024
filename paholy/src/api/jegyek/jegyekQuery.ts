@@ -9,7 +9,7 @@ import queryClient from "@/lib/queryClient"
 
 const getMarks = async () : Promise<Mark[]> => {
     const config = {
-        headers: { Authorization: `Bearer ${document.cookie}` }
+        headers: { Authorization: `Bearer ${document.cookie.split(";")[0]}` }
     };
     const response = await axiosClient.get(`http://localhost:3000/paholy/jegyek`,config)
     return response.data

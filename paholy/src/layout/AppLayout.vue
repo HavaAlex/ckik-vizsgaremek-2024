@@ -4,12 +4,14 @@ import { getUserStatusFromLocalStorage, deleteUserStatusFromLocalStorage} from '
 import Jogosultsagok from '@/views/admin/Jogosultsagok.vue';
 import { useCookieHandler } from '@/stores/cookieHandler';
 import { jwtDecode } from 'jwt-decode';
-import { ref ,onMounted, onUnmounted } from 'vue';
+import { ref ,onMounted, onUnmounted,onUpdated } from 'vue';
+import { storeToRefs } from 'pinia';
 const { push } = useRouter()
 
-const {hasValidCookie} = useCookieHandler()
+const cookieHandler = useCookieHandler()
+const { time } = storeToRefs(cookieHandler);
 
-const cookieStatus = hasValidCookie()
+const cookieStatus = cookieHandler.hasValidCookie()
 let role: string = ''
 if (cookieStatus == true){
   const decoded = jwtDecode(document.cookie)
@@ -22,7 +24,6 @@ else{
   push({name:"login"})
 }
 
-
 //itt kezdődik a forgatásnak a figyelése
 const isPortrait = ref(window.matchMedia("(orientation: portrait)").matches);
 const updateOrientation = () => {
@@ -30,12 +31,26 @@ const updateOrientation = () => {
 };
 onMounted(() => {
   window.matchMedia("(orientation: portrait)").addEventListener("change", updateOrientation);
+  cookieHandler.startTimer();
 });
 onUnmounted(() => {
   window.matchMedia("(orientation: portrait)").removeEventListener("change", updateOrientation);
+  cookieHandler.resetTimer();
 });//itt ér véget
 
-
+onUpdated(()=>{
+  const cookieStatus =  cookieHandler.hasValidCookie()
+  if (cookieStatus == false){
+    push({name:"login"})
+    alert("Süti lejárt")
+    cookieHandler.resetTimer()
+  }
+  else
+  {
+    console.log("nem járt le")
+    console.log(time)
+  }
+})
 
 
 </script>
@@ -127,6 +142,11 @@ onUnmounted(() => {
                 Jogosultsagok kezelése
       </v-btn>
       <v-spacer></v-spacer>
+      <v-tooltip text="Ennyi idő múlva automatikusan kijelentkezel">
+        <template v-slot:activator="{ props }">
+          <v-btn v-bind="props">{{ time }}</v-btn>
+        </template>
+      </v-tooltip>
       <v-btn @click="deleteUserStatusFromLocalStorage() ; push({name:'login'})">
                 Kilépés
       </v-btn>
