@@ -46,10 +46,10 @@ const filteredTantargyak = computed(() => {
       </thead>
       <tbody>
         <tr v-for="(jegy, index) in filteredTantargyak" :key="index">
-          <td style="width: 15vw; justify-content: center;">{{ jegy.subjectName }}</td>
-          <td style="width: 15vw; justify-content: center;">{{ jegy.Value }}</td>
-          <td style="width: 15vw; justify-content: center;">{{ jegy.Multiplier }}%</td>
-          <td style="width: 15vw; justify-content: center;">{{ new Date(jegy.date).getFullYear() }}.{{ new Date(jegy.date).getMonth()+1 }}.{{ new Date(jegy.date).getDate() }}</td>
+          <td style="width: 15vw; justify-content: center !important; ">{{ jegy.subjectName }}</td>
+          <td style="width: 15vw; justify-content: center !important;">{{ jegy.Value }}</td>
+          <td style="width: 15vw; justify-content: center !important;">{{ jegy.Multiplier }}%</td>
+          <td style="width: 15vw; justify-content: center !important;">{{ new Date(jegy.date).getFullYear() }}.{{ new Date(jegy.date).getMonth()+1 }}.{{ new Date(jegy.date).getDate() }}</td>
         </tr>
       </tbody>
     </v-table>

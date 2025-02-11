@@ -50,7 +50,7 @@ const ChangeBeerkezett = () => {
                 <td id="szoveg" style="width: 15vw; justify-content: center;">{{ uzenet.message }}</td>
                 <td style="width: 15vw; justify-content: center;">
                   <v-btn @click="openDialog(uzenet)">Megtekintés</v-btn>
-                  <v-btn @click="">Elrejtés</v-btn>
+                  <!--<v-btn @click="">Elrejtés</v-btn>-->
                 </td>
               </tr>
             </tbody>
