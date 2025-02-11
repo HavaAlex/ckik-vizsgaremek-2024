@@ -11,7 +11,7 @@ import queryClient from "@/lib/queryClient";
 
 
 const getUzenetek = async (): Promise<Message> => {
-    console.log("LEFUTOK: getUzenetek")
+    //console.log("LEFUTOK: getUzenetek")
     const config = {
         headers: { Authorization: `Bearer ${document.cookie}` }
     };
@@ -36,7 +36,9 @@ const getPotentialReceivers = async (): Promise<PotentialReceiver> =>{
         headers: { Authorization: `Bearer ${document.cookie}` }
     };
     const response = await axiosClient.get(`http://localhost:3000/paholy/uzenetekreceivers`,config)
+    console.log("anyád:")
     console.log(response)
+    console.log(response.data)
     return response.data
 }
 export const usegetPotentialReceivers = () => {

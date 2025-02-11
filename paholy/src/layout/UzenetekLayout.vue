@@ -61,14 +61,26 @@ onUnmounted(() => {
 
     <v-card class ="conainerCard">
       <div style="display:flex; flex-direction: row; justify-content: left; align-items: center">
-        <v-btn class="switchBtn "  id="switchBtn1" :disabled="Beerkezett"@click="ChangeBeerkezett()">Beérkezett üzenetek <br> megnézése</v-btn>
+        <v-btn class="switchBtn "  id="switchBtn1" :disabled="Beerkezett"@click="ChangeBeerkezett()">Beérkezett üzenetek</v-btn>
         
-        <v-btn class="switchBtn" id="switchBtn2" :disabled="!Beerkezett" @click="ChangeBeerkezett()">Elküldött üzenetek <br> megnézése</v-btn>
+        <v-btn class="switchBtn" id="switchBtn2" :disabled="!Beerkezett" @click="ChangeBeerkezett()">Elküldött üzenetek</v-btn>
       </div>
       <div v-if="Beerkezett">
           
           <div v-if="!data?.kapott || data.kapott.length === 0">
               <p>Még nem érkezett üzenete</p>
+              <v-table theme="dark"  fixed-header style="border-radius: 3%;" class="messageTable">
+                  <thead>
+                    <tr>
+                      <th class="text-center" style="width: 15vw; justify-content: center;">Feladó</th>
+                      <th class="text-center" style="width: 15vw; justify-content: center;">Dátum</th>
+                      <th class="text-center" style="width: 15vw; justify-content: center;">Üzenet</th>
+                      <th class="text-center" style="width: 15vw; justify-content: center;">Interakció</th>
+                    </tr>
+                  </thead>
+                  <tbody >
+                  </tbody>
+              </v-table>
           </div>
 
           <div v-else><!---->
@@ -84,10 +96,10 @@ onUnmounted(() => {
                 </thead>
                 <tbody >
                   <tr v-for="uzenet in data.kapott" ><!--:key="uzenet.id"-->
-                    <td style="width: 15vw; justify-content: center;">{{ uzenet.senderUserID }}</td>
+                    <td style="width: 15vw; justify-content: center;">{{ uzenet.senderUserName.username }}</td>
                     <td style="width: 15vw; justify-content: center;" >{{ formatDate(uzenet.date) }}</td>
                     <td id="szoveg" style="width: 15vw; justify-content: center;">{{ uzenet.message }}</td>
-                    <td style="width: 15vw; display: block !important; justify-content: center !important; ">
+                    <td style="width: 15vw;  justify-content: center !important; ">
                       <v-btn @click="openDialog(uzenet)">Megtekintés</v-btn>
                       <!--<v-btn @click="">Elrejtés</v-btn>-->
                     </td>
@@ -102,7 +114,7 @@ onUnmounted(() => {
             <v-card max-width="50 vw">
               <v-card-title>Üzenet részletei</v-card-title>
               <v-card-text>
-                <p><strong>Feladó:</strong> {{ selectedMessage?.senderUserID }}</p>
+                <p><strong>Feladó:</strong> {{ selectedMessage?.senderUserName.username }}</p>
                 <p><strong>Dátum:</strong> {{ formatDate(selectedMessage?.date)  }}</p>
                 <p><strong>Üzenet:</strong> {{ selectedMessage?.message }}</p>
               </v-card-text>
@@ -118,6 +130,19 @@ onUnmounted(() => {
           
           <div v-if="!data?.elkuldott || data.elkuldott.length === 0">
               <p>Még nem küldött üzeneteket</p>
+              <v-table theme="dark"  fixed-header style="border-radius: 3%;" class="messageTable">
+              <thead>
+                <tr>
+                  
+                  <th class="text-center" style="width: 15vw; justify-content: center;">Dátum</th>
+                  <th class="text-center" style="width: 15vw; justify-content: center;">Üzenet</th>
+                  <th class="text-center" style="width: 15vw; justify-content: center;">Interakció</th>
+                </tr>
+              </thead>
+              <tbody>
+
+              </tbody>
+            </v-table>
           </div>
           <div v-else><!---->
             <!--<h1>Elküldött üzenetek</h1>-->
@@ -220,8 +245,9 @@ onUnmounted(() => {
     width: 95vw !important;
   }
   .switchBtn{
-    width: 25vw !important;
-    height: 5vw !important;
+    width: 15vw !important;
+    height: 3vw !important;
+    font-size: 1vw
   }
   .navigationdrawer{
     width: 15vw !important;

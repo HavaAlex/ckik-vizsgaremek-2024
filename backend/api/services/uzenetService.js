@@ -12,17 +12,20 @@ class UzenetService
         osszes.elkuldott = await messageRepository.getSentMessages(ID)
         osszes.kapott = await messageRepository.getReceivedMessages(ID)
         console.log("ez itt az amit kapunk: ")
-        console.log(osszes)
-        const senderIDs = new Set();
-        for (let ik = 0; ik < osszes.kapott.length; ik++) { //ez egy katyvasz, este volt és nem tudtam mi a helyzet
-            senderIDs.add(osszes.kapott[ik].ID)
-        }
-        osszes.senderUserNames  = await messageRepository.getSenderNames(senderIDs)
         return osszes
     }
     async getPotentialReceivers(ID){ //kiszedi az összes elérhető felhasználót ( ez jelenleg mindenki, később változhat)
-        const PotentialReceiversArray = await messageRepository.getPotentialReceivers(ID)
-        return PotentialReceiversArray
+        
+        
+        const overallReceivers = {
+            singleUsers : [],
+            groups : []
+        }
+        overallReceivers.singleUsers = await messageRepository.getPotentialReceivers(ID)
+        overallReceivers.groups = await messageRepository.getPotentialGroups()
+        console.log("lorem ipsum")
+        console.log(overallReceivers)
+        return overallReceivers
     }
     async createUzenet(NewUzenet,newMessageReceivers) {
         return await messageRepository.createMessage(NewUzenet,newMessageReceivers)

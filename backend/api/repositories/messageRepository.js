@@ -8,7 +8,8 @@ class MessageRepository
         this.Messages = db.message;
         this.User = db.user;
         this.MessageReceiver = db.messagereceiver;
-        
+        this.Group = db.group
+        this.Student = db.student
     }
 
     async createMessage(message, messageReceivers)
@@ -35,6 +36,30 @@ class MessageRepository
             },
         });
     }
+
+    async getPotentialGroups() {
+        const groups = await this.Group.findAll({
+            attributes: ['ID', 'name'],
+            include: [
+                {
+                    model: this.Student,
+                    attributes: ['userId'],
+                    through: { attributes: [] }, // Exclude join table attributes
+                }
+            ]
+        });
+    
+        const groupList = groups.map(group => ({
+            ID: group.ID,
+            name: group.name,
+            studentList: group.Students.map(student => student.userId)
+        }));
+        console.log("uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu")
+        console.log(groupList)
+        console.log("uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu")
+        return groupList;
+    }
+    
     async getSentMessages(ID)//megkeresi az összes üzenetet egy felhasználótól
     {
         return await this.Messages.findAll
@@ -61,36 +86,27 @@ class MessageRepository
             }
         )
     }
-    async getReceivedMessages(userID) //megkeresi egy adott felhasználónak beérkezett üzeneteit. Fontos, hogy nem a messageReceiverst használjuk
-{                                     //mert az csak egy kapcsoló tábla és error-t dob. A kapcsolótábla másik felén lévő, User táblára hivatkozunk  
-        const messages = await this.Messages.findAll({//helyette
+    async getReceivedMessages(userID) {
+        const messages = await this.Messages.findAll({
             include: [{
-              model: this.User,
-              through: { attributes: [] }, // Exclude the connection table fields
-              where: { ID: userID }, // Filtering by UserID
-              attributes:["ID","username"]
+                model: this.User,
+                through: { attributes: [] }, // Exclude the connection table fields
+                where: { ID: userID }, // Filtering by UserID
             }]
-          });
+        });
+    
+        for (let k = 0; k < messages.length; k++) {
+            const theOneSender = await this.User.findOne({
+                where: { ID: messages[k].senderUserID },
+                attributes: ["username"]
+            });
+    
+            // Add senderUserName inside dataValues directly
+            messages[k].dataValues.senderUserName = theOneSender //? theOneSender.username : "Unknown";
+        }
         return messages;
     }
-    async getSenderNames(messageIDs){ // álmos katyvasz, de még jól jöhet.
-        const UserNamesWithIDs = [];
-        for (const element of messageIDs) {
-            const newUserNameWithID={
-                ID: element,
-                name: await this.User.findOne({
-                    where:{
-                        ID:element
-                    },
-                    attributes:[
-                        "username"
-                    ]
-                })
-            }
-            UserNamesWithIDs.push(newUserNameWithID);
-        }
-        return(UserNamesWithIDs)
-    }
+
 
 
 }

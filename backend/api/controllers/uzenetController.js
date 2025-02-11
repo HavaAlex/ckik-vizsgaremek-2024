@@ -11,15 +11,17 @@ exports.getPotentialReceivers = async (req, res, next) => {
     console.log("elindult: getPotentialReceivers")
     const PotentialReceivers = await uzenetService.getPotentialReceivers(req.decoded.ID)
     const PotentialReceiversFormed = [];
-    for (let index = 0; index < PotentialReceivers.length; index++) {
+    for (let index = 0; index < PotentialReceivers.singleUsers.length; index++) {
         let newReciever = {
-            id : PotentialReceivers[index].ID,
-            name : PotentialReceivers[index].username,
-            role : PotentialReceivers[index].role
+            id : PotentialReceivers.singleUsers[index].ID,
+            name : PotentialReceivers.singleUsers[index].username,
+            role : PotentialReceivers.singleUsers[index].role
         }
         PotentialReceiversFormed.push(newReciever)
     }
-    res.status(201).json(PotentialReceiversFormed);
+
+    PotentialReceivers.singleUsers = PotentialReceiversFormed
+    res.status(201).json(PotentialReceivers);
 }
 
 exports.modifyUzenet = async (req, res, next) =>
