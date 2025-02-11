@@ -11,7 +11,7 @@ import queryClient from "@/lib/queryClient";
 const getHianyzasok = async (): Promise<HianyzasValasz> => {
     console.log("LEFUTOK")
     const config = {
-        headers: { Authorization: `Bearer ${document.cookie}` }
+        headers: { Authorization: `Bearer ${document.cookie.split(";")[0]}` }
     };
     //console.log(`localhost:3000/uzenetek/${document.cookie}`)
     const response = await axiosClient.get(`http://localhost:3000/paholy/hianyzasok`,config) // ${document.cookie}

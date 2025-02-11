@@ -3,8 +3,9 @@ import type { LoginData, LoginResponse, ResetPasswordData, SetPasswordData, SetP
 import { useMutation, useQuery } from "@tanstack/vue-query"
 import { useRoute, useRouter } from "vue-router"
 import { QUERY_KEYS } from "@/utils/QueryKeys"
-import { jwtDecode } from "jwt-decode";
+import { jwtDecode, type JwtPayload } from "jwt-decode";
 import { getUserStatusFromLocalStorage, setUserStatusToLocalStorage} from '@/localstorage/localStorageManagment.ts';
+import { useCookieHandler } from "@/stores/cookieHandler"
 
 const getSetPassword = async (): Promise<SetPasswordResponse> => {
     const {params} = useRoute()
@@ -46,17 +47,21 @@ export const useLogin = () => {
         mutationFn:Login,
         onSuccess(data){
             document.cookie = data
-            console.log("Token elmentve!")
-            console.log(data)
+            //console.log("Token elmentve!")
+            //console.log(data)
             const decoded = jwtDecode(data)
-            console.log(decoded)
-            console.log(decoded.userData)
+            //console.log("EXP")
+            //console.log(decoded.exp*1000)
+            //console.log(decoded.userData)
+            const {setBaseTime} = useCookieHandler()
+            //console.log(Math.floor((decoded.exp*1000-Date.now())/1000))
+            setBaseTime(Math.floor((decoded.exp*1000-Date.now())/1000))
             push({name:decoded.userData.role+'orarend'})
+            
         },
         onError(error)
         {
             console.log(error)
-            
         }
     })
 }

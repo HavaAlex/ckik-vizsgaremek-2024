@@ -33,7 +33,7 @@ export const useGetUzenetek = () => {
 const getPotentialReceivers = async (): Promise<PotentialReceiver> =>{
     console.log("LEFUTOK: getPotentialReceivers")
     const config = {
-        headers: { Authorization: `Bearer ${document.cookie}` }
+        headers: { Authorization: `Bearer ${document.cookie.split(";")[0]}` }
     };
     const response = await axiosClient.get(`http://localhost:3000/paholy/uzenetekreceivers`,config)
     console.log("anyád:")
@@ -55,7 +55,7 @@ const addMessage = async (data: Message) : Promise<Message> =>{
     //console.log(data)
     data.date = new Date(); //aktuális dátum hozzáadása
     let config = {
-        headers: { Authorization: `Bearer ${document.cookie}` }
+        headers: { Authorization: `Bearer ${document.cookie.split(";")[0]}` }
     }
     const response = await axiosClient.post(`http://localhost:3000/paholy/uzenetek`,data,config) // ${document.cookie}
     //console.log("SIKERÜÜÜÜLT")
