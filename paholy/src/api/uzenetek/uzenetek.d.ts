@@ -1,7 +1,8 @@
 export type Message = {
     message: string,
     date: Date,
-    receiverlist: Array
+    receiverlist: Array,
+    receiverGrouplist: Array
 }
 
 export type newMessage = {

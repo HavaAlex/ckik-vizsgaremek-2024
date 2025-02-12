@@ -54,6 +54,8 @@ const addMessage = async (data: Message) : Promise<Message> =>{
     //console.log("LEFUTOK: addMessage")
     //console.log(data)
     data.date = new Date(); //aktuális dátum hozzáadása
+    console.log("EZ A KAKA A BUGYIBAN:::")
+    console.log(data)
     let config = {
         headers: { Authorization: `Bearer ${document.cookie.split(";")[0]}` }
     }
