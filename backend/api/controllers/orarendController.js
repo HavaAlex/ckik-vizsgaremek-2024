@@ -9,9 +9,22 @@ exports.getOrarend = async (req, res, next) =>
 
     const lessons = await orarendService.getLessons(groups)
 
-    //console.log(lessons)
+    const disruptions = await orarendService.getDisruptions(groups)
 
-    res.status(201).json(lessons);
+    console.log(disruptions)
+
+    const disruptionMap = new Map()
+    disruptions.forEach(disruption => {
+        const key = `${disruption.day}-${disruption.start_Minute}`
+        disruptionMap.set(key, disruption)
+    })
+
+    const combinedOrarend = lessons.map(lesson => {
+        const key = `${lesson.day}-${lesson.start_Minute}`
+        return disruptionMap.get(key) || lesson
+    })
+
+    res.status(201).json(combinedOrarend)
     console.log("órarendgetvég")
 }
 

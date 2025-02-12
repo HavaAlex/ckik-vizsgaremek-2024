@@ -29,6 +29,11 @@ class OrarendService
         return lessons.find((x)=>x.day == napok[date.getDay()]&& x.start_Hour == date.getHours()-1&&x.start_Minute == date.getMinutes())
     }
 
+    async getDisruptions(groups)
+    {
+        return await orarendRepository.getDisruptions(groups)
+    }
+
 
     async createOra()
     {
