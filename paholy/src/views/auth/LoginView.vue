@@ -3,15 +3,17 @@ import type { LoginData } from '@/api/auth/auth';
 import { useLogin } from '@/api/auth/authQuery';
 import { ref ,onMounted, onUnmounted } from 'vue';
 import { useRouter } from 'vue-router';
+import { jwtDecode } from 'jwt-decode';
+import { useCookieHandler } from '@/stores/cookieHandler';
  
 const LoginDataRef = ref<LoginData>({
     username: '',
     password:''
 })
 
-const { push } = useRouter()
+const { push,back } = useRouter()
 const { mutate: login, isPending} = useLogin()
-const {back} = useRouter()
+const {getCookie} = useCookieHandler()
 
 //itt kezdődik a forgatásnak a figyelése
 const isPortrait = ref(window.matchMedia("(orientation: portrait)").matches);
@@ -20,6 +22,10 @@ const updateOrientation = () => {
 };
 onMounted(() => {
   window.matchMedia("(orientation: portrait)").addEventListener("change", updateOrientation);
+  if(document.cookie != ''){
+    const decoded = jwtDecode(getCookie("alap"))
+    push({name:decoded.userData.role+'orarend'})
+  }
 });
 onUnmounted(() => {
   window.matchMedia("(orientation: portrait)").removeEventListener("change", updateOrientation);

@@ -4,12 +4,12 @@ import { useMutation, useQuery } from "@tanstack/vue-query"
 import { useRoute, useRouter } from "vue-router"
 import { QUERY_KEYS } from "@/utils/QueryKeys"
 import queryClient from "@/lib/queryClient"
-
-
+import { useCookieHandler } from "@/stores/cookieHandler"
 
 const getMarks = async () : Promise<Mark[]> => {
+    const {getCookie} = useCookieHandler()
     const config = {
-        headers: { Authorization: `Bearer ${document.cookie.split(";")[0]}` }
+        headers: { Authorization: `Bearer ${getCookie("alap")}` }
     };
     const response = await axiosClient.get(`http://localhost:3000/paholy/jegyek`,config)
     return response.data
@@ -26,9 +26,10 @@ export const useGetMarks = () => {
 }
 
 const addMark = async (data : NewMark) : Promise<MarkAttribute> => {
+    const {getCookie} = useCookieHandler()
     let config = {
         headers: {
-          'Authorization': 'Bearer ' + localStorage.token
+          'Authorization': 'Bearer ' + getCookie("alap")
         }
     } 
     const response = await axiosClient.post(`http://172.22.1.219/api/v1/projects`, data,config)

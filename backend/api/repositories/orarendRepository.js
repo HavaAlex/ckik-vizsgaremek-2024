@@ -1,4 +1,5 @@
 const db = require("../db/dbContext");
+const classDisruption = require("../models/classDisruption");
 
 class OrarendRepository
 {
@@ -7,6 +8,7 @@ class OrarendRepository
         this.Group = db.group;
         this.StudentGroups = db.studentgroup;
         this.Lesson = db.lesson;
+        this.ClassDisruption = db.classdistruption;
     }
 
     async createGroup(orarend)
@@ -33,6 +35,20 @@ class OrarendRepository
         groups = groups.map(group => group.GroupID);
         console.log(groups);
         return await this.Lesson.findAll
+        (
+            {
+                where: {groupID: groups},
+            }
+        )
+
+    }
+
+    async getDisruptions(groups)//Megkeresi az összes óráját az adott embernek
+    {
+        groups = groups.map(group => group.GroupID);
+        console.log(groups);
+        console.log(classDisruption);
+        return await this.ClassDisruption.findAll
         (
             {
                 where: {groupID: groups},

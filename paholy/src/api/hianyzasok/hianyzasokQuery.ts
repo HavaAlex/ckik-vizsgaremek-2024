@@ -10,8 +10,9 @@ import queryClient from "@/lib/queryClient";
 
 const getHianyzasok = async (): Promise<HianyzasValasz> => {
     console.log("LEFUTOK")
+    const {getCookie} = useCookieHandler()
     const config = {
-        headers: { Authorization: `Bearer ${document.cookie.split(";")[0]}` }
+        headers: { Authorization: `Bearer ${getCookie("alap")}` }
     };
     //console.log(`localhost:3000/uzenetek/${document.cookie}`)
     const response = await axiosClient.get(`http://localhost:3000/paholy/hianyzasok`,config) // ${document.cookie}

@@ -46,14 +46,16 @@ export const useLogin = () => {
     return useMutation({
         mutationFn:Login,
         onSuccess(data){
-            document.cookie = data
+            const {setBaseTime,setCookie} = useCookieHandler()
             //console.log("Token elmentve!")
             //console.log(data)
             const decoded = jwtDecode(data)
+            const d = new Date(0)
+            d.setUTCSeconds(decoded.exp)
+            setCookie("alap",data,d)
             //console.log("EXP")
             //console.log(decoded.exp*1000)
             //console.log(decoded.userData)
-            const {setBaseTime} = useCookieHandler()
             //console.log(Math.floor((decoded.exp*1000-Date.now())/1000))
             setBaseTime(Math.floor((decoded.exp*1000-Date.now())/1000))
             push({name:decoded.userData.role+'orarend'})

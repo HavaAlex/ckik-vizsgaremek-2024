@@ -12,8 +12,9 @@ import queryClient from "@/lib/queryClient";
 
 const getUzenetek = async (): Promise<Message> => {
     //console.log("LEFUTOK: getUzenetek")
+    const {getCookie} = useCookieHandler()
     const config = {
-        headers: { Authorization: `Bearer ${document.cookie}` }
+        headers: { Authorization: `Bearer ${getCookie("alap")}` }
     };
     //console.log(`localhost:3000/uzenetek/${document.cookie}`)
     const response = await axiosClient.get(`http://localhost:3000/paholy/uzenetek`,config) // ${document.cookie}
@@ -32,8 +33,9 @@ export const useGetUzenetek = () => {
 
 const getPotentialReceivers = async (): Promise<PotentialReceiver> =>{
     console.log("LEFUTOK: getPotentialReceivers")
+    const {getCookie} = useCookieHandler()
     const config = {
-        headers: { Authorization: `Bearer ${document.cookie.split(";")[0]}` }
+        headers: { Authorization: `Bearer ${getCookie("alap")}` }
     };
     const response = await axiosClient.get(`http://localhost:3000/paholy/uzenetekreceivers`,config)
     console.log("anyád:")
@@ -54,11 +56,10 @@ const addMessage = async (data: Message) : Promise<Message> =>{
     //console.log("LEFUTOK: addMessage")
     //console.log(data)
     data.date = new Date(); //aktuális dátum hozzáadása
-    console.log("EZ A KAKA A BUGYIBAN:::")
-    console.log(data)
-    let config = {
-        headers: { Authorization: `Bearer ${document.cookie.split(";")[0]}` }
-    }
+    const {getCookie} = useCookieHandler()
+    const config = {
+        headers: { Authorization: `Bearer ${getCookie("alap")}` }
+    };
     const response = await axiosClient.post(`http://localhost:3000/paholy/uzenetek`,data,config) // ${document.cookie}
     //console.log("SIKERÜÜÜÜLT")
     //console.log(response)
