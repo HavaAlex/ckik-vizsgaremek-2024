@@ -147,7 +147,7 @@ onUpdated(()=>{
           <v-btn v-bind="props">{{ time }}</v-btn>
         </template>
       </v-tooltip>
-      <v-btn @click="deleteUserStatusFromLocalStorage() ; push({name:'login'})">
+      <v-btn @click="cookieHandler.deleteCookie('alap') ; push({name:'login'})">
                 Kilépés
       </v-btn>
     </v-app-bar>

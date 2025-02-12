@@ -74,5 +74,31 @@ export const useCookieHandler = defineStore('cookieHandler', () => {
     baseTime.value = newTime
   };
 
-  return { hasValidCookie,startTimer,resetTimer,time,setBaseTime }
+  function setCookie(cname:string, cvalue:string, date:Date) {
+    let expires = "expires="+date.toUTCString();
+    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+  }
+  
+  function getCookie(cname:string) {
+    let name = cname + "=";
+    let ca = document.cookie.split(';');
+    for(let i = 0; i < ca.length; i++) {
+      let c = ca[i];
+      while (c.charAt(0) == ' ') {
+        c = c.substring(1);
+      }
+      if (c.indexOf(name) == 0) {
+        return c.substring(name.length, c.length);
+      }
+    }
+    return "";
+  }
+
+  function deleteCookie(cname:string) {
+    const d = new Date()
+    d.setUTCFullYear(1970,1,1)
+    setCookie(cname,"",d)
+  }
+
+  return { hasValidCookie,startTimer,resetTimer,time,setBaseTime,setCookie,getCookie,deleteCookie }
 })
