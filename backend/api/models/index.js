@@ -18,6 +18,8 @@ module.exports = (sequelize, DataTypes) => {
     const CompletedAssignmentFiles = require("../models/completedAssignmentFiles")(sequelize, DataTypes);
 
 
+
+
     // több a többhöz kapcsolatok
     const GuardianStudent = sequelize.define('GuardianStudent', {}, { timestamps: false });
     const MessageReceiver = sequelize.define('MessageReceiver', {}, { timestamps: false });
@@ -70,7 +72,19 @@ module.exports = (sequelize, DataTypes) => {
     ClassDistruption.belongsTo(Teacher, {foreignKey: 'teacherID'});
     Teacher.hasMany(ClassDistruption, {foreignKey: 'teacherID'});
 
+    Assignment.hasMany(AssignmentFiles, {foreignKey: 'assignmentID'});
+    AssignmentFiles.belongsTo(Assignment, { foreignKey: 'assignmentID' });
 
+    CompletedAssignment.hasMany(CompletedAssignmentFiles, {foreignKey: 'completedAssignmentID'});
+    CompletedAssignmentFiles.belongsTo(CompletedAssignment, { foreignKey: 'completedAssignmentID' });
+    Assignment.belongsTo(Teacher, {foreignKey: 'teacherID'});
+    Teacher.hasMany(Assignment, {foreignKey: 'teacherID'});
+    CompletedAssignment.belongsTo(Student, {foreignKey: 'studentID'});
+    Student.hasMany(CompletedAssignment, {foreignKey: 'studentID'});
 
-    return { User, Admin, Guardian, Student, Teacher, Message,  Group, Lesson, Mark, GuardianStudent, MessageReceiver, StudentGroup, Absence, ClassDistruption };
+    CompletedAssignment.belongsTo(Assignment, {foreignKey: 'assignmentID'});
+    Assignment.hasMany(CompletedAssignment, {foreignKey: 'assignmentID'});
+
+    return { User, Admin, Guardian, Student, Teacher, Message,  Group, Lesson, Mark, GuardianStudent, MessageReceiver, StudentGroup,
+         Absence, ClassDistruption, Assignment, AssignmentFiles, CompletedAssignment, CompletedAssignmentFiles };
 } 
