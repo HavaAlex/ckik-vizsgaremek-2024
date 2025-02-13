@@ -12,6 +12,11 @@ module.exports = (sequelize, DataTypes) => {
     const Lesson = require("../models/lesson")(sequelize, DataTypes);
     const Absence = require("../models/absence")(sequelize, DataTypes);
 
+    const Assignment = require("../models/assignment")(sequelize, DataTypes);
+    const AssignmentFiles = require("../models/assignmentFiles")(sequelize, DataTypes);
+    const CompletedAssignment = require("../models/completedAssignment")(sequelize, DataTypes);
+    const CompletedAssignmentFiles = require("../models/completedAssignmentFiles")(sequelize, DataTypes);
+
 
     // több a többhöz kapcsolatok
     const GuardianStudent = sequelize.define('GuardianStudent', {}, { timestamps: false });

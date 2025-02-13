@@ -65,11 +65,12 @@ exports.createUzenet = async (req, res, next) =>
 
         console.log("YYYYYYYYYYYYSYYYYYYYYYYYYYYYS")
         console.log(cleanedreceiverlist)
-        newUzenet = await uzenetService.createUzenet(newUzenet,cleanedreceiverlist);
+
+        let cucc = await uzenetService.createUzenet(newUzenet,cleanedreceiverlist);
 
         
-        if(newUzenet){
-            res.status(201).json(newUzenet)
+        if(cucc){
+            res.status(201).json(cucc)
         }
         else{
             res.status(400).send("Failed to create a message")
