@@ -1,4 +1,4 @@
-export type HaziRecievers = {
+export type Assignment = {
     HaziId: number,
     StudentId: number,
     DeadLine: Date,

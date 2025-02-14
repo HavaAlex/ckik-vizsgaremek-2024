@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) =>
                 autoIncrement: true,
                 allowNull: false,
             },
-            CompletedAssignmentID:
+            completedAssignmentID:
             {
                 type: DataTypes.INTEGER,
                 allowNull: false,

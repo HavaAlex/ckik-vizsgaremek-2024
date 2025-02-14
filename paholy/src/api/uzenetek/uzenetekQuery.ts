@@ -30,7 +30,7 @@ export const useGetUzenetek = () => {
         }
     )
 }
-
+ 
 const getPotentialReceivers = async (): Promise<PotentialReceiver> =>{
     console.log("LEFUTOK: getPotentialReceivers")
     const {getCookie} = useCookieHandler()

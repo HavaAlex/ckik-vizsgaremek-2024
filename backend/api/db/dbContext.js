@@ -25,7 +25,8 @@ db.Sequelize = Sequelize;
 
 db.sequelize = sequelize;
 
-const { User,Student,Guardian, Admin, Teacher, Lesson, Group, Mark, Message, Absence, ClassDistruption, GuardianStudent,MessageReceiver,StudentGroup} = require("../models")(sequelize, DataTypes);
+const { User,Student,Guardian, Admin, Teacher, Lesson, Group, Mark, Message, Absence, ClassDistruption, GuardianStudent,MessageReceiver,StudentGroup
+    ,Assignment, AssignmentFiles, CompletedAssignment, CompletedAssignmentFiles} = require("../models")(sequelize, DataTypes);
 
 db.user = User;
 
@@ -54,6 +55,11 @@ db.studentgroup = StudentGroup;
 db.absence = Absence;
 
 db.classdistruption = ClassDistruption;
+
+db.assignment = Assignment
+db.assignmentFiles = AssignmentFiles
+db.completedAssignment = CompletedAssignment
+db.completedAssignmentFiles = CompletedAssignmentFiles
 
 sequelize.sync({ force: false })
     .then(() => {

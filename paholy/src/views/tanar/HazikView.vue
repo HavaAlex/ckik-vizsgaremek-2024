@@ -1,4 +1,8 @@
-<script setup lang="ts">
+<script setup lang="ts"> 
+import { ref } from 'vue'
+import {  usegetGroups } from '@/api/hazik/hazikQuery';
+
+const { data } = usegetGroups();
 </script>
 
 <template>

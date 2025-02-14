@@ -21,7 +21,7 @@ module.exports = (sequelize, DataTypes) =>
             },
             studentID:
             {
-                type: DataTypes.STRING(5000),
+                type: DataTypes.INTEGER,
                 allowNull: false,
             },
             date:

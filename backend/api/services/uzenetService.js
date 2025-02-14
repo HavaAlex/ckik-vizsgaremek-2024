@@ -16,7 +16,7 @@ class UzenetService
     }
     async getPotentialReceivers(ID){ //kiszedi az összes elérhető felhasználót ( ez jelenleg mindenki, később változhat)
         
-        
+         
         const overallReceivers = {
             singleUsers : [],
             groups : []

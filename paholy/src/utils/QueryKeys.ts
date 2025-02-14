@@ -25,6 +25,10 @@ const JEGYEK_KEYS = {
     getTeacherGroups:"getTeacherGroups",
     getGroupMarks:'getGroupMarks'
 }
+
+const HAZIK_KEYS = {
+        getGroups: 'getGroups'
+}
 export const QUERY_KEYS = {
     ...USER_KEYS,
     ...AUTH_KEYS,
@@ -32,4 +36,5 @@ export const QUERY_KEYS = {
     ...UZENETEK_KEYS,
     ...HIANYZASOK_KEYS,
     ...JEGYEK_KEYS,
+    ...HAZIK_KEYS,
 } as const 

@@ -15,6 +15,8 @@ const hianyzasController = require("../controllers/hianyzasController")
 
 const jegyController = require("../controllers/jegyController")
 
+const hazikController = require("../controllers/hazikController")
+
 router.use(userAuth.verifyToken);
 
 router.get("/uzenetek", uzenetController.getUzenetek);
@@ -36,5 +38,7 @@ router.post("/hianyzasok", orarendController.getOrarend);
 router.get("/fiokadatok", userController.getUser);
 
 router.post("/fiokadatok", orarendController.getOrarend);
+
+router.get("/hazikGroups",hazikController.getGroups);
 
 module.exports = router;
