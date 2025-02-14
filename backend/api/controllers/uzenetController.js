@@ -8,7 +8,7 @@ exports.getUzenetek = async (req, res, next) =>
 } 
 
 exports.getPotentialReceivers = async (req, res, next) => {
-    console.log("elindult: getPotentialReceivers")
+    console.log("elindult: getPotentialReceivers") 
     const PotentialReceivers = await uzenetService.getPotentialReceivers(req.decoded.ID)
     const PotentialReceiversFormed = [];
     for (let index = 0; index < PotentialReceivers.singleUsers.length; index++) {
@@ -20,7 +20,7 @@ exports.getPotentialReceivers = async (req, res, next) => {
         PotentialReceiversFormed.push(newReciever)
     }
 
-    PotentialReceivers.singleUsers = PotentialReceiversFormed
+    PotentialReceivers.singleUsers = PotentialReceiversFormed 
     res.status(201).json(PotentialReceivers);
 }
 

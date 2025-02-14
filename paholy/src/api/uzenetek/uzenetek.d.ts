@@ -10,7 +10,7 @@ export type newMessage = {
     date: Date,
     receivers: FormData
 }
-
+ 
 export type PotentialReceiver = {
     ID: number,
     name: string,

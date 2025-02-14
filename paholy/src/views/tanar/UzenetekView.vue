@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import type { Message } from '@/api/uzenetek/uzenetek';
 import { useaddMessage, usegetPotentialReceivers } from '@/api/uzenetek/uzenetekQuery';
-import { useToast } from 'vuetify/lib/framework'; // Assuming Vuetify's built-in toast
+//import { useToast } from 'vuetify/lib/framework'; // Assuming Vuetify's built-in toast
 
 const dialog = ref(false);
 const successDialog = ref(false);
