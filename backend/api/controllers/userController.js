@@ -63,7 +63,7 @@ exports.loginUser = async (req, res, next) =>
 
     if(await bcrypt.compare(password, user.password))
     {
-        const token = jwt.sign({ userData }, process.env.JWT_KEY, { expiresIn: "45m" });
+        const token = jwt.sign({ userData }, process.env.JWT_KEY, { expiresIn: "20m" });
 
         res.status(200).json(token);
     }

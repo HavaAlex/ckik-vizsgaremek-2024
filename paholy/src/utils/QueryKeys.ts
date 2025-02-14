@@ -22,6 +22,8 @@ const HIANYZASOK_KEYS = {
 }
 const JEGYEK_KEYS = {
     getJegyek: 'getJegyek',
+    getTeacherGroups:"getTeacherGroups",
+    getGroupMarks:'getGroupMarks'
 }
 export const QUERY_KEYS = {
     ...USER_KEYS,

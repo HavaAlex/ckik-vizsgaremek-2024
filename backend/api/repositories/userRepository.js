@@ -56,19 +56,19 @@ class UserRepository
         )
     }
 
-    async getRole(user)
+    async getRole(userID,userType)
     {
-        if(user.role == "diak"){
-            return await studentRepository.getRoleByUserID(user.ID)
+        if(userType == "diak"){
+            return await studentRepository.getRoleByUserID(userID)
         }
-        else if (user.role == "tanar"){
-            return await teacherRepository.getRoleByUserID(user.ID)
+        else if (userType == "tanar"){
+            return await teacherRepository.getRoleByUserID(userID)
         }
-        else if (user.role == "admin"){
-            return await adminRepository.getRoleByUserID(user.ID)
+        else if (userType == "admin"){
+            return await adminRepository.getRoleByUserID(userID)
         }
-        else if (user.role == "szulo"){
-            return await guardianRepository.getRoleByUserID(user.ID)
+        else if (userType == "szulo"){
+            return await guardianRepository.getRoleByUserID(userID)
         }
     }
 }

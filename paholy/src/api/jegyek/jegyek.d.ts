@@ -26,6 +26,17 @@ export type Mark = {
     date:string
 }
 
+export type NamedMark = {
+    ID: number,
+    teacherID: number,
+    studentID: number,
+    Value: number,
+    Multiplier: number,
+    subjectName: string,
+    date:string
+    studentName:string
+}
+
 export type NewMark = { 
     StudentId: number,
     subject: string,
@@ -41,4 +52,9 @@ export type ModifyMark = {
     MarkId: number,
     NewValue: number,
     newModifier: number,
+}
+
+export type GroupMark ={
+    groupName:string,
+    marks:NamedMark[]
 }

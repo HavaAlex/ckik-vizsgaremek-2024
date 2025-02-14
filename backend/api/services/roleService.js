@@ -7,9 +7,9 @@ class RoleService
         return await userRepository.createUser(role);//TODO
     }
 
-    async getRole(ID)
+    async getRole(userID,userType)
     {
-        return await userRepository.getUserRole(ID);
+        return await userRepository.getRole(userID,userType);
     }
 }
 

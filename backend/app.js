@@ -19,6 +19,8 @@ const loginRoutes = require("./api/routes/loginRoutes")
 
 const orarendRoutes = require("./api/routes/orarendRoutes");
 
+const tanarRoutes = require("./api/routes/tanarRoutes")
+
 const errorHandler = require("./api/middlewares/errorHandler");
 
 app.use(express.json());
@@ -32,6 +34,8 @@ app.use("/paholy", paholyRoutes);
 app.use("/orarend", orarendRoutes);
 
 app.use("/admin", adminRoutes);
+
+app.use("/tanar",tanarRoutes)
 
 app.use(errorHandler.notFoundError);
 

@@ -15,6 +15,18 @@ class GroupRepository
         
         return newGroup;
     }
+    async getTeacherGroups(teacherID){
+        return await this.Groups.findAll
+        (
+            {
+                distinct:true,
+                include: [{
+                    model: db.lesson,
+                    where: { teacherID: teacherID },
+                }]
+            }
+        )
+    }
 }
 
 module.exports = new GroupRepository(db);

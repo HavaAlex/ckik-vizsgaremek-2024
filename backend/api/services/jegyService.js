@@ -6,6 +6,10 @@ class JegyService
     {
         return await markRepository.getMarksUser(ID);
     }
+    async getJegyekCsoport(csoportID)
+    {
+        return await markRepository.getMarksByGroup(csoportID);
+    }
 }
 
 module.exports = new JegyService();

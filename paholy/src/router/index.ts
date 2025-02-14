@@ -11,7 +11,7 @@ import JogosultsagokView from '../views/admin/Jogosultsagok.vue'
 // Gyerek komponens importálása
 import HazikViewTanulo from '../views/diak/HazikView.vue'
 import HianyzasokViewTanulo from '../views/diak/HianyzasokView.vue'
-import JegyekViewTanulo from '../views/diak/HazikView.vue'
+import JegyekViewTanulo from '../views/diak/JegyekView.vue'
 import OrarendViewTanulo from '../views/diak/OrarendView.vue'
 import UzenetekViewTanulo from '../views/diak/UzenetekView.vue'
 

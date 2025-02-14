@@ -28,28 +28,27 @@ class MarkRepository
             }
         )
     }
-    async getMarksByGroup(groupID)
-    {
-        return await this.Marks.findAll
-        (
-            {
-                include: [
-                    {
-                        model:db.student,
-                        include: [
-                            {
-                                model:db.group,
-                                through: {attributes:[]},
-                                where:{
-                                    ID:groupID,
-                                }
-                            },
-                        ]
-                    },
-                ]
-            }
-        )
+    async getMarksByGroup(groupID) {
+        return await this.Marks.findAll({
+            include: [
+                {
+                    model: db.student,
+                    required: true, // INNER JOIN biztosítása
+                    include: [
+                        {
+                            model: db.group,
+                            attributes: [],
+                            through: { attributes: [] },
+                            where: { ID: groupID },
+                            required: true // INNER JOIN biztosítása
+                        }
+                    ]
+                }
+            ]
+        });
     }
+    
+    
 }
 
 module.exports = new MarkRepository(db);

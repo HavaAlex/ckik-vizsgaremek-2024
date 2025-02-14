@@ -25,7 +25,7 @@ class StudentRepository
             {
                 where:
                 {
-                    ID: ID,
+                    userId: ID,
                 }
             }
         )
