@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed} from 'vue'
 import type { Message } from '@/api/uzenetek/uzenetek';
 import { useaddMessage, usegetPotentialReceivers } from '@/api/uzenetek/uzenetekQuery';
 //import { useToast } from 'vuetify/lib/framework'; // Assuming Vuetify's built-in toast

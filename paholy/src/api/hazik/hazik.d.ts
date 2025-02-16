@@ -1,11 +1,7 @@
 export type Assignment = {
-    HaziId: number,
-    StudentId: number,
+    Groups: Array,
+    Description: string,
     DeadLine: Date,
-    Subject:string,
-    Sender: string,
-    Title: string,
-    Description: Text,
 }
 
 export type HaziSender = {
