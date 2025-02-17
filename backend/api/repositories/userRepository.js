@@ -71,6 +71,11 @@ class UserRepository
             return await guardianRepository.getRoleByUserID(userID)
         }
     }
+
+    async getGroupMembers(groupID)
+    {
+        return await studentRepository.getGroupMembers(groupID)
+    }
 }
 
 module.exports = new UserRepository(db);

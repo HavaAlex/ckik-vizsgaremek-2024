@@ -23,4 +23,11 @@ router.get("/csoportok", groupController.getTeacherGroups);
 
 router.get("/csoportjegyek", jegyController.getJegyekTanar);
 
+router.get("/csoporttagok", userController.getTeacherGroupMembers);
+
+router.get("/tantargyak", jegyController.getTantargyakTanar);
+
+router.post("/jegy", jegyController.createJegy);
+
+
 module.exports = router;

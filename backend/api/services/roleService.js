@@ -11,6 +11,11 @@ class RoleService
     {
         return await userRepository.getRole(userID,userType);
     }
+    
+    async getGroupMembers(groupID)
+    {
+        return await userRepository.getGroupMembers(groupID);
+    }
 }
 
 module.exports = new RoleService();

@@ -26,7 +26,7 @@ class TeacherRepository
             {
                 where:
                 {
-                    ID: ID,
+                    userID: ID,
                 }
             }
         )

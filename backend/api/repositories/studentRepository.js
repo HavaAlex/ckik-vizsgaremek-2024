@@ -30,6 +30,23 @@ class StudentRepository
             }
         )
     }
+
+    async getGroupMembers(groupID)
+    {
+        //console.log("ITTTT")
+        //console.log(groupID)
+        //console.log("ITTT")
+        return await this.Students.findAll
+        (
+            {
+                include: [{
+                    model: db.group,
+                    through: { attributes: [] },
+                    where: { ID: groupID },
+                }]
+            }
+        )
+    }
 }
 
 module.exports = new StudentRepository(db);

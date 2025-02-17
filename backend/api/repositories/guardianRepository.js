@@ -24,7 +24,7 @@ class GuardianRepository
             {
                 where:
                 {
-                    ID: ID,
+                    userID: ID,
                 }
             }
         )

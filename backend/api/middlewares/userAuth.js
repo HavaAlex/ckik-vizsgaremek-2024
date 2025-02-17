@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
+const roleService = require("../services/roleService")
 
-exports.verifyToken = (req, res, next) =>
+exports.verifyToken = async (req, res, next) =>
 {
     //console.log(req.headers)
     var token = req.headers["authorization"]?.split(" ")[1]; // Bearer <token>
@@ -26,7 +27,9 @@ exports.verifyToken = (req, res, next) =>
         return;
     }
     req.decoded = decoded
+    req.role = await roleService.getRole(decoded.ID,decoded.role)
     console.log(decoded)
+    console.log(req.role)
     console.log("KÉRÉS")
     next()
     //next(decodedGlobal);

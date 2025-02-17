@@ -1,10 +1,13 @@
 const userService = require("../services/userService");
 
+const groupService = require("../services/groupService");
+
 const bcrypt = require("bcrypt");
 
 const salt = 10;
 
 const jwt = require("jsonwebtoken");
+const roleService = require("../services/roleService");
 
 exports.getUser = async (req, res, next) => 
 {
@@ -71,4 +74,23 @@ exports.loginUser = async (req, res, next) =>
     {
         res.status(401).send("Helytelen jelszó!");
     }
+}
+
+exports.getTeacherGroupMembers = async (req, res, next) => 
+{
+    //console.log("CSOPORT")
+    //console.log(req.role.ID)
+    const groups = await groupService.getTeacherGroups(req.role.ID);
+    //console.log(groups)
+    //console.log("CSOPORT VÉG")
+    const members = []
+    for(const element of groups){
+        //console.log(groups)
+        //console.log("CSOPORTELEM KEZD")
+        //console.log(element)
+        //console.log(element.ID)
+        //console.log("CSOPORTELEM VÉG")
+        members.push({groupName:element.name,members: await roleService.getGroupMembers(element.ID)})
+    }
+    res.status(200).send(members);
 }

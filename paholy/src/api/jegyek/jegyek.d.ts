@@ -56,5 +56,33 @@ export type ModifyMark = {
 
 export type GroupMark ={
     groupName:string,
-    marks:NamedMark[]
+    marks:Mark[][],
+    tantargyak:Array
+}
+
+export type GroupMember ={
+    ID:string,
+    name:string,
+    DoB:string,
+    address:string,
+    phone:string,
+    email:string,
+    userId:number
+}
+
+export type GroupMembers ={
+    groupName:string,
+    members:GroupMember[],
+}
+
+export type Lesson ={
+    
+    ID:number,
+    groupID:number,
+    teacherID:number,
+    start_Hour:number,
+    start_Minute:number,
+    length:number,
+    day:string,
+    subjectName:string,
 }

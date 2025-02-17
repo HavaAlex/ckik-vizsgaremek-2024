@@ -25,7 +25,7 @@ class AdminRepository
             {
                 where:
                 {
-                    ID: ID,
+                    userID: ID,
                 }
             }
         )
