@@ -3,10 +3,12 @@ import { useMutation, useQuery } from "@tanstack/vue-query"
 import { useRoute, useRouter } from "vue-router"
 import { QUERY_KEYS } from "@/utils/QueryKeys"
 import { jwtDecode } from "jwt-decode";
+import type { Assignment } from '@/api/hazik/hazik';
 import { useCookieHandler } from "@/stores/cookieHandler";
 
 //import type { Message,PotentialReceiver,newMessage } from "./uzenetek";
 import queryClient from "@/lib/queryClient";
+import { el } from "vuetify/locale";
 
 const getGroups = async ()  =>{
     //console.log("LEFUTOK: getGroups")
@@ -28,3 +30,64 @@ export const usegetGroups = () => {
         }
     )
 }
+
+const addAssignment = async (assignment: Assignment) : Promise<Assignment> =>{
+    assignment.UploadDate = new Date();
+    const {getCookie} = useCookieHandler()
+    const config = {
+        headers: { Authorization: `Bearer ${getCookie("alap")}` }
+    };
+    const response = await axiosClient.post(`http://localhost:3000/paholy/newassignment`,assignment,config) // ${document.cookie}
+    console.log("resposééééééé_")
+    console.log(response)
+    return response.data
+
+}
+
+export const useaddAssignment = () => {
+    return useMutation( 
+        {
+            mutationFn: addAssignment,
+            onSuccess(){
+                queryClient.refetchQueries({queryKey:[QUERY_KEYS.postAssignment]})
+            }
+        }
+    )
+}
+
+const uploadFiles = async ({
+    files,
+    assignmentId,
+  }: {
+    files: File[];
+    assignmentId: string;
+  }): Promise<void> => {
+    const formData = new FormData();
+
+  // Now we can loop over `files` directly
+  files.forEach((file) => {
+    formData.append('files', file);
+  });
+  formData.append('assignmentId', assignmentId);
+
+  const { getCookie } = useCookieHandler();
+  const config = {
+    headers: { 
+      Authorization: `Bearer ${getCookie("alap")}`,
+      "Content-Type": "multipart/form-data"
+    }
+  };
+
+  await axiosClient.post(`http://localhost:3000/paholy/uploadassignmentfiles`, formData, config);
+}
+
+export const useUploadFiles = () => {
+    return useMutation( 
+        {
+            mutationFn: uploadFiles,
+            onSuccess(){
+                queryClient.refetchQueries({queryKey:[QUERY_KEYS.postAssignment]})
+            }
+        }
+    ) 
+};

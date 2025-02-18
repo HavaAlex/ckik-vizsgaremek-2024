@@ -2,13 +2,9 @@ export type Assignment = {
     Groups: Array,
     Description: string,
     DeadLine: Date,
+    UploadDate: Date,
 }
 
-export type HaziSender = {
-    HaziId: number,
-    ClassId: number,
-    DeadLine: Date,
-    Subject:string,
-    Title: string,
-    Description: string,
+export type FileList = {
+    List: FormData[]
 }

@@ -8,6 +8,8 @@ class AssignmentRepository
         this.User = db.user;
         this.Group = db.group
         this.Student = db.student
+        this.Teacher = db.teacher
+        this.Assignment = db.assignment
     }
 
 
@@ -28,11 +30,24 @@ class AssignmentRepository
             name: group.name,
             studentList: group.Students.map(student => student.userId)
         }));
-        console.log("uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu")
-        console.log(groupList)
-        console.log("uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu")
         return groupList;
-}
+        }
+        async createAssignment(assignmenT, groups)
+        {
+            let techerID = await this.Teacher.findAll({
+                where:{
+                    userId:{[Op.eq]:assignmenT.teacherID}
+                }
+            })
+            assignmenT.teacherID = techerID[0].ID
+            console.log("AMi bejött: ")
+            console.log(assignmenT)
+            const newAssignment = await this.Assignment.build(assignmenT);
+            await newAssignment.save();
+            console.log("az új:")
+            console.log(newAssignment)
+            return newAssignment;
+        }
 }
 
 module.exports = new AssignmentRepository(db);

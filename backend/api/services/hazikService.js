@@ -5,5 +5,12 @@ class hazikService{
         const PotentialGroups = await assignmentRepository.getPotentialGroups()
         return PotentialGroups
     }
+    async createAssignment(newHazi,Groups) {
+
+        let kiscucc =  await assignmentRepository.createAssignment(newHazi,Groups)
+        console.log("SERVISZ BE VOK MÁ:  ")
+        console.log(kiscucc)
+        return(kiscucc)
+    }
 }
-module.exports = new hazikService();
+module.exports = new hazikService(); 
