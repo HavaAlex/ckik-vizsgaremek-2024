@@ -29,10 +29,11 @@ export const usegetGroups = () => {
         queryFn: getGroups,
     })
 
-    if (query.error) {
+    if (query.error.value) {
         console.error("Lekérdezési hiba:", query.error)
         setError(query.error.value)
     }
+    return query
 }
 
 const addAssignment = async (assignment: Assignment) : Promise<Assignment> =>{

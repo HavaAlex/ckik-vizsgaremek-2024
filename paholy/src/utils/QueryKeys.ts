@@ -25,7 +25,8 @@ const JEGYEK_KEYS = {
     getTeacherGroups:"getTeacherGroups",
     getGroupMarks:'getGroupMarks',
     getSubjects:'getSubjects',
-    getMembers:'getMembers'
+    getMembers:'getMembers',
+    postJegyek:'postJegyek'
 }
 
 const HAZIK_KEYS = {
