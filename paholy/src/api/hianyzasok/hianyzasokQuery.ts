@@ -29,9 +29,8 @@ export const useGetHianyzasok = () => {
         queryFn: getHianyzasok,
     })
 
-    if (query.error.value) {
+    if (query.error) {
         console.error("Lekérdezési hiba:", query.error)
         setError(query.error.value)
     }
-    return query
 }

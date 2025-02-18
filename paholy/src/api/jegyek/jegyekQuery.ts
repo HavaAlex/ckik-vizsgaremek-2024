@@ -17,18 +17,13 @@ const getMarks = async () : Promise<Mark[]> => {
 }
 
 export const useGetMarks = () => {
-    const { setError } = useErrorHandler()
-
-    const query = useQuery({
-        queryKey: [QUERY_KEYS.getJegyek],
-        queryFn: getMarks,
-    })
-
-    if (query.error.value) {
-        console.error("Lekérdezési hiba:", query.error)
-        setError(query.error.value)
-    }
-    return query
+    return useQuery(
+        {
+            
+            queryKey: [QUERY_KEYS.getJegyek],
+            queryFn: getMarks,
+        }
+    )
 }
 
 const getTeacherGroups = async () : Promise<Mark[]> => {
@@ -41,18 +36,13 @@ const getTeacherGroups = async () : Promise<Mark[]> => {
 }
 
 export const useGetTeacherGroups = () => {
-    const { setError } = useErrorHandler()
-
-    const query = useQuery({
-        queryKey: [QUERY_KEYS.getTeacherGroups],
-        queryFn: getTeacherGroups,
-    })
-
-    if (query.error.value) {
-        console.error("Lekérdezési hiba:", query.error)
-        setError(query.error.value)
-    }
-    return query
+    return useQuery(
+        {
+            
+            queryKey: [QUERY_KEYS.getTeacherGroups],
+            queryFn: getTeacherGroups,
+        }
+    )
 }
 
 const getGroupMarks = async () : Promise<GroupMark[]> => {
@@ -74,11 +64,10 @@ export const usegetGroupMarks = () => {
         queryFn: getGroupMarks,
     })
 
-    if (query.error.value) {
+    if (query.error) {
         console.error("Lekérdezési hiba:", query.error)
         setError(query.error.value)
     }
-    return query
 }
 
 const getGroupMembers = async () : Promise<GroupMembers[]> => {
@@ -100,11 +89,10 @@ export const useGetGroupMembers = () => {
         queryFn: getGroupMembers,
     })
 
-    if (query.error.value) {
+    if (query.error) {
         console.error("Lekérdezési hiba:", query.error)
         setError(query.error.value)
     }
-    return query
 }
 
 const getSubjects = async () : Promise<Lesson[]> => {
@@ -126,12 +114,10 @@ export const useGetSubjects = () => {
         queryFn: getSubjects,
     })
 
-    if (query.error.value) {
+    if (query.error) {
         console.error("Lekérdezési hiba:", query.error)
         setError(query.error.value)
     }
-
-    return query
 }
 
 const addMarks = async (data : Mark) : Promise<MarkAttribute> => {
