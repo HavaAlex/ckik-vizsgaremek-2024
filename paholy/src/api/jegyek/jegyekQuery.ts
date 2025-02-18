@@ -5,6 +5,7 @@ import { useRoute, useRouter } from "vue-router"
 import { QUERY_KEYS } from "@/utils/QueryKeys"
 import queryClient from "@/lib/queryClient"
 import { useCookieHandler } from "@/stores/cookieHandler"
+import { useErrorHandler } from "@/stores/errorHandler"
 
 const getMarks = async () : Promise<Mark[]> => {
     const {getCookie} = useCookieHandler()
@@ -56,13 +57,17 @@ const getGroupMarks = async () : Promise<GroupMark[]> => {
 }
 
 export const usegetGroupMarks = () => {
-    return useQuery(
-        {
-            
-            queryKey: [QUERY_KEYS.getGroupMarks],
-            queryFn: getGroupMarks,
-        }
-    )
+   const { setError } = useErrorHandler()
+
+    const query = useQuery({
+        queryKey: [QUERY_KEYS.getGroupMarks],
+        queryFn: getGroupMarks,
+    })
+
+    if (query.error) {
+        console.error("Lekérdezési hiba:", query.error)
+        setError(query.error.value)
+    }
 }
 
 const getGroupMembers = async () : Promise<GroupMembers[]> => {
@@ -77,13 +82,17 @@ const getGroupMembers = async () : Promise<GroupMembers[]> => {
 }
 
 export const useGetGroupMembers = () => {
-    return useQuery(
-        {
-            
-            queryKey: [QUERY_KEYS.getMembers],
-            queryFn: getGroupMembers,
-        }
-    )
+    const { setError } = useErrorHandler()
+
+    const query = useQuery({
+        queryKey: [QUERY_KEYS.getMembers],
+        queryFn: getGroupMembers,
+    })
+
+    if (query.error) {
+        console.error("Lekérdezési hiba:", query.error)
+        setError(query.error.value)
+    }
 }
 
 const getSubjects = async () : Promise<Lesson[]> => {
@@ -98,13 +107,17 @@ const getSubjects = async () : Promise<Lesson[]> => {
 }
 
 export const useGetSubjects = () => {
-    return useQuery(
-        {
-            
-            queryKey: [QUERY_KEYS.getSubjects],
-            queryFn: getSubjects,
-        }
-    )
+    const { setError } = useErrorHandler()
+
+    const query = useQuery({
+        queryKey: [QUERY_KEYS.getSubjects],
+        queryFn: getSubjects,
+    })
+
+    if (query.error) {
+        console.error("Lekérdezési hiba:", query.error)
+        setError(query.error.value)
+    }
 }
 
 const addMarks = async (data : Mark) : Promise<MarkAttribute> => {
@@ -130,6 +143,10 @@ export const useAddMark = () => {
                 console.log(data)
                 alert("Sikeres adat felvitel!")
             },
+            onError(error){
+                const {setError} = useErrorHandler()
+                setError(error)
+            }
         }
     )
 }

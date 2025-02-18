@@ -26,7 +26,7 @@ export const useGetOrarend = () => {
                 console.log(data)
             },
             onError(error) {
-                console.log(error)
+                
             },
         }
     )

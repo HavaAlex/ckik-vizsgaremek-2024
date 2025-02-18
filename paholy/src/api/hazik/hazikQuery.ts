@@ -7,6 +7,7 @@ import { useCookieHandler } from "@/stores/cookieHandler";
 
 //import type { Message,PotentialReceiver,newMessage } from "./uzenetek";
 import queryClient from "@/lib/queryClient";
+import { useErrorHandler } from "@/stores/errorHandler";
 
 const getGroups = async ()  =>{
     //console.log("LEFUTOK: getGroups")
@@ -21,10 +22,14 @@ const getGroups = async ()  =>{
     return response.data
 }
 export const usegetGroups = () => {
-    return useQuery (
-        {
-            queryKey: [QUERY_KEYS.getGroups], 
-            queryFn: getGroups,
-        }
-    )
+    const {setError} = useErrorHandler()
+    const query = useQuery({
+        queryKey: [QUERY_KEYS.getGroups],
+        queryFn: getGroups,
+    })
+
+    if (query.error) {
+        console.error("Lekérdezési hiba:", query.error)
+        setError(query.error.value)
+    }
 }

@@ -6,6 +6,8 @@ import { useCookieHandler } from '@/stores/cookieHandler';
 import { jwtDecode } from 'jwt-decode';
 import { ref ,onMounted, onUnmounted,onUpdated } from 'vue';
 import { storeToRefs } from 'pinia';
+import { useErrorHandler } from '@/stores/errorHandler';
+import { AxiosError } from 'axios';
 const { push } = useRouter()
 
 const cookieHandler = useCookieHandler()
@@ -42,13 +44,8 @@ onUpdated(()=>{
   const cookieStatus =  cookieHandler.hasValidCookie()
   if (cookieStatus == false){
     push({name:"login"})
-    alert("Süti lejárt")
+    useErrorHandler().setError(new Error("Süti lejárt!"))
     cookieHandler.resetTimer()
-  }
-  else
-  {
-    console.log("nem járt le")
-    console.log(time)
   }
 })
 
@@ -151,15 +148,13 @@ onUpdated(()=>{
                 Kilépés
       </v-btn>
     </v-app-bar>
-  
-
-  
     <v-app-bar
       color="grey-lighten-2"
       height="48"
       location="bottom"
       flat
     >
+    
       <v-col class="text-center mt-4" cols="12">
         {{ new Date().getFullYear() }} - <strong>Páholy</strong>
       </v-col>

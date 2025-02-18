@@ -7,6 +7,7 @@ import { useCookieHandler } from "@/stores/cookieHandler";
 
 import type { Message,PotentialReceiver,newMessage } from "./uzenetek";
 import queryClient from "@/lib/queryClient";
+import { useErrorHandler } from "@/stores/errorHandler";
 
 
 
@@ -23,12 +24,19 @@ const getUzenetek = async (): Promise<Message> => {
     return response.data
 }
 export const useGetUzenetek = () => {
-    return useQuery( 
-        {
-            queryKey: [QUERY_KEYS.getUzenetek], 
-            queryFn: getUzenetek,
-        }
-    )
+    const { setError } = useErrorHandler()
+
+    const query = useQuery({
+        queryKey: [QUERY_KEYS.getUzenetek],
+        queryFn: getUzenetek,
+    })
+
+    if (query.error) {
+        console.error("Lekérdezési hiba:", query.error)
+        setError(query.error.value)
+    }
+
+    return query
 }
  
 const getPotentialReceivers = async (): Promise<PotentialReceiver> =>{
@@ -44,12 +52,17 @@ const getPotentialReceivers = async (): Promise<PotentialReceiver> =>{
     return response.data
 }
 export const usegetPotentialReceivers = () => {
-    return useQuery (
-        {
-            queryKey: [QUERY_KEYS.getPotentialReceivers], 
-            queryFn: getPotentialReceivers,
-        }
-    )
+    const { setError } = useErrorHandler()
+
+    const query = useQuery({
+        queryKey: [QUERY_KEYS.getPotentialReceivers],
+        queryFn: getPotentialReceivers,
+    })
+
+    if (query.error) {
+        console.error("Lekérdezési hiba:", query.error)
+        setError(query.error.value)
+    }
 }
 
 const addMessage = async (data: Message) : Promise<Message> =>{
@@ -73,6 +86,10 @@ export const useaddMessage = () => {
             mutationFn: addMessage,
             onSuccess(data){
                 queryClient.refetchQueries({queryKey:[QUERY_KEYS.getUzenetek]})
+            },
+            onError(error){
+                const {setError} = useErrorHandler()
+                setError(error)
             }
         }
     )

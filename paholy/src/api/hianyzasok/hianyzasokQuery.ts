@@ -7,6 +7,7 @@ import { useCookieHandler } from "@/stores/cookieHandler";
 
 import type { HianyzasValasz } from "./hianyzasok";
 import queryClient from "@/lib/queryClient";
+import { useErrorHandler } from "@/stores/errorHandler";
 
 const getHianyzasok = async (): Promise<HianyzasValasz> => {
     console.log("LEFUTOK")
@@ -22,10 +23,14 @@ const getHianyzasok = async (): Promise<HianyzasValasz> => {
     return response
 }
 export const useGetHianyzasok = () => {
-    return useQuery( 
-        {
-            queryKey: [QUERY_KEYS.getHianyzasok], 
-            queryFn: getHianyzasok,
-        }
-    )
+    const {setError} = useErrorHandler()
+    const query = useQuery({
+        queryKey: [QUERY_KEYS.getHianyzasok],
+        queryFn: getHianyzasok,
+    })
+
+    if (query.error) {
+        console.error("Lekérdezési hiba:", query.error)
+        setError(query.error.value)
+    }
 }
