@@ -29,7 +29,8 @@ const JEGYEK_KEYS = {
 }
 
 const HAZIK_KEYS = {
-        getGroups: 'getGroups'
+        getGroups: 'getGroups',
+        postAssignment: 'postAssignment'
 }
 export const QUERY_KEYS = {
     ...USER_KEYS,

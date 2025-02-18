@@ -6,7 +6,6 @@ INSERT INTO `users` (`ID`, `username`, `password`, `role`) VALUES (NULL, 'jozsi'
 INSERT INTO `users` (`ID`, `username`, `password`, `role`) VALUES (NULL, 'patrik', '$2b$10$VNNkLu/F6zul7suWcA6qAOmuDaLEVTYT.v/Ae8I4l04ad9Np0W8XO', 'admin');
 
 INSERT INTO `groups` (`ID`, `name`) VALUES (NULL,'1.b');
-INSERT INTO `teachers` ( `ID`,`phone`, `email`,`userID`) VALUES (null, '0620habekapodmegfusz','lajosnagyfarok@gmail.com',2);
 INSERT INTO `students` ( `ID`, `name`, `DoB`, `address`, `phone`, `email`, `userID`) VALUES (null, 'laci','1999-01-01','Cegléd hörömbő u. 2','06424206969','lacikanagykuki@gmail.com',1);
 INSERT INTO `students` ( `ID`, `name`, `DoB`, `address`, `phone`, `email`, `userID`) VALUES (null, 'rebeka','1492-01-01','Nagykáta cigánytelep 4.','493287','rebekababaxoxo@gmail.com',2);
 INSERT INTO `studentgroups` (`GroupID`, `StudentID`) VALUES (1,1);
@@ -32,3 +31,5 @@ INSERT INTO `messages` (`ID`, `senderUserID`, `message`, `date`) VALUES (NULL, 3
 INSERT INTO `messagereceivers` (`messageID`, `UserID`) VALUES (1, 3);
 INSERT INTO `messagereceivers` (`messageID`, `UserID`) VALUES (2, 3);
 INSERT INTO `messagereceivers` (`messageID`, `UserID`) VALUES (3, 1);
+
+INSERT INTO `assignments` ( `ID`,`teacherID`, `desc`,`deadline`) VALUES (null, 1,'lorem ipsum',"2026-06-01");

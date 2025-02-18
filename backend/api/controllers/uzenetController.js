@@ -3,12 +3,11 @@ const uzenetService = require("../services/uzenetService")
 exports.getUzenetek = async (req, res, next) =>
 {
     const uzenetek = await uzenetService.getUzenetek(req.decoded.ID)
-    console.log(uzenetek)
     res.status(201).json(uzenetek);
 } 
 
 exports.getPotentialReceivers = async (req, res, next) => {
-    console.log("elindult: getPotentialReceivers") 
+    
     const PotentialReceivers = await uzenetService.getPotentialReceivers(req.decoded.ID)
     const PotentialReceiversFormed = [];
     for (let index = 0; index < PotentialReceivers.singleUsers.length; index++) {
@@ -34,13 +33,6 @@ exports.createUzenet = async (req, res, next) =>
     console.log("createuzenetbevan")
     try
     {
-        console.log("megpróbálja")
-        console.log(receiverlist)
-        console.log(receiverlist.length)
-        console.log(receiverGrouplist)
-        console.log(receiverGrouplist.length)
-        console.log(receiverGrouplist.studentList)
-
         const newUzenet =
         {
             ID: null,
@@ -63,8 +55,6 @@ exports.createUzenet = async (req, res, next) =>
             }
         }
 
-        console.log("YYYYYYYYYYYYSYYYYYYYYYYYYYYYS")
-        console.log(cleanedreceiverlist)
 
         let cucc = await uzenetService.createUzenet(newUzenet,cleanedreceiverlist);
 
@@ -78,8 +68,6 @@ exports.createUzenet = async (req, res, next) =>
     }
     catch(error)
     {
-        console.log("elbassza")
-        console.log(error)
         next(error);
     }
 }

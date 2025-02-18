@@ -54,9 +54,6 @@ class MessageRepository
             name: group.name,
             studentList: group.Students.map(student => student.userId)
         }));
-        console.log("uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu")
-        console.log(groupList)
-        console.log("uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu")
         return groupList;
     }
     
