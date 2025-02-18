@@ -5,6 +5,7 @@ import { QUERY_KEYS } from "@/utils/QueryKeys"
 import { jwtDecode } from "jwt-decode";
 import { useCookieHandler } from "@/stores/cookieHandler";
 import type { Group } from "./orarend";
+import { useErrorHandler } from "@/stores/errorHandler";
 
 const getGroup = async (): Promise<Group> => {
     const {getCookie} = useCookieHandler()
@@ -25,9 +26,10 @@ export const useGetOrarend = () => {
             onSuccess(data) {
                 console.log(data)
             },
-            onError(error) {
-                
-            },
+            onError(error){
+                const {setError} = useErrorHandler()
+                setError(error)
+            }
         }
     )
 }

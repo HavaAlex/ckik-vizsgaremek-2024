@@ -31,7 +31,7 @@ export const useGetUzenetek = () => {
         queryFn: getUzenetek,
     })
 
-    if (query.error) {
+    if (query.error.value) {
         console.error("Lekérdezési hiba:", query.error)
         setError(query.error.value)
     }
@@ -59,10 +59,11 @@ export const usegetPotentialReceivers = () => {
         queryFn: getPotentialReceivers,
     })
 
-    if (query.error) {
+    if (query.error.value) {
         console.error("Lekérdezési hiba:", query.error)
         setError(query.error.value)
     }
+    return query  
 }
 
 const addMessage = async (data: Message) : Promise<Message> =>{
