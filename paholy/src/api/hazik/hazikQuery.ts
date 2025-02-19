@@ -10,6 +10,32 @@ import { useCookieHandler } from "@/stores/cookieHandler";
 import queryClient from "@/lib/queryClient";
 import { useErrorHandler } from "@/stores/errorHandler";
 
+const getAssignmentsTeacher = async ()  =>{
+    //console.log("LEFUTOK: getGroups")
+    const {getCookie} = useCookieHandler()
+    const config = {
+        headers: { Authorization: `Bearer ${getCookie("alap")}` }
+    };
+    const response = await axiosClient.get(`http://localhost:3000/paholy/haziktanar`,config)
+    /*console.log("apád:")
+    console.log(response)
+    console.log(response.data)*/
+    return response.data
+}
+export const usegetAssignmentsTeacher = () => {
+    const {setError} = useErrorHandler()
+    const query = useQuery({
+        queryKey: [QUERY_KEYS.getAssignmentsTeacher],
+        queryFn: getAssignmentsTeacher,
+    })
+
+    if (query.error.value) {
+        console.error("Lekérdezési hiba:", query.error)
+        setError(query.error.value)
+    }
+    return query
+}
+
 const getGroups = async ()  =>{
     //console.log("LEFUTOK: getGroups")
     const {getCookie} = useCookieHandler()

@@ -12,5 +12,9 @@ class hazikService{
         console.log(kiscucc)
         return(kiscucc)
     }
+    async uploadFiles(files,assignmentId){
+        let cucc = await assignmentRepository.uploadFiles(files,assignmentId)
+        return cucc
+    }
 }
 module.exports = new hazikService(); 

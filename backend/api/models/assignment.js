@@ -29,6 +29,11 @@ module.exports = (sequelize, DataTypes) =>
                 type: DataTypes.DATE,
                 allowNull: false,
             },
+            uploadDate:
+            {
+                type: DataTypes.DATE,
+                allowNull: false,
+            },
         },
 
         {

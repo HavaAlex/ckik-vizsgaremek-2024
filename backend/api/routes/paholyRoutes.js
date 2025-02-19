@@ -34,6 +34,7 @@ router.get("/fiokadatok", userController.getUser);
 router.post("/fiokadatok", orarendController.getOrarend);
 
 router.get("/hazikGroups", hazikController.getGroups);
+router.get("/haziktanar", hazikController.getGroups);
 router.post("/newassignment", hazikController.postAssignment);
 
 // <-- IMPORTANT: Use upload.array("files") on this route

@@ -8,7 +8,7 @@ exports.getGroups = async (req, res, next) =>{
 }
 
 exports.postAssignment = async (req, res, next) =>{
-    let {Groups,Description,DeadLine,UploadDate,} = req.body;
+    let {Groups,Description,DeadLine,UploadDate} = req.body;
     console.log("groups: ")
     console.log(Groups)
     console.log("desc")
@@ -23,7 +23,8 @@ exports.postAssignment = async (req, res, next) =>{
         ID: null,
         teacherID: req.decoded.ID,
         desc: Description,
-        deadline: DeadLine
+        deadline: DeadLine,
+        uploadDate: UploadDate
     }
     let cucc =  await hazikService.createAssignment(newHazi,Groups);
     res.status(200).json(cucc)
@@ -35,7 +36,7 @@ exports.uploadAssignmentFiles = async (req, res, next) => {
       const uploadedFiles = req.files;
   
       // The assignmentId will be in req.body.assignmentId
-      const { assignmentId } = req.body;
+      const { assignmentId } = req.body; 
   
       console.log("Files received:", uploadedFiles);
       console.log("Assignment ID:", assignmentId);
@@ -46,8 +47,8 @@ exports.uploadAssignmentFiles = async (req, res, next) => {
       // uploadedFiles.forEach(file => {
       //   // do something with file.buffer or file.originalname
       // });
-  
-      res.status(200).json({ message: "Files uploaded successfully" });
+      let nagycucc= await hazikService.uploadFiles(uploadedFiles, assignmentId)
+      res.status(200).json({ nagycucc });
     } catch (error) {
       console.error("File upload error:", error);
       res.status(500).json({ message: "Error uploading files" });

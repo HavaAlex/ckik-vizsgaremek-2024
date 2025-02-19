@@ -1,13 +1,14 @@
 <script setup lang="ts"> 
 import { ref, computed, watch } from 'vue';
 import type { Assignment } from '@/api/hazik/hazik';
-import { usegetGroups, useaddAssignment, useUploadFiles } from '@/api/hazik/hazikQuery';
+import { usegetGroups, useaddAssignment, useUploadFiles,usegetAssignmentsTeacher } from '@/api/hazik/hazikQuery';
 
 const dialog = ref(false);
 const successDialog = ref(false);
 const { data } = usegetGroups();
 const { mutate: addAssignment, isPending } = useaddAssignment();
 const { mutate: uploadFiles } = useUploadFiles();
+const assignmentTeacherList  = usegetAssignmentsTeacher();
 
 const AssignmentDataRef = ref<Assignment>({
   Groups: [],
