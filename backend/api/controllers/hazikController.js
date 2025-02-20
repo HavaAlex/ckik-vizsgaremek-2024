@@ -9,16 +9,6 @@ exports.getGroups = async (req, res, next) =>{
 
 exports.postAssignment = async (req, res, next) =>{
     let {Groups,Description,DeadLine,UploadDate} = req.body;
-    console.log("groups: ")
-    console.log(Groups)
-    console.log("desc")
-    console.log(Description)
-    console.log("dedlinge")
-    console.log(DeadLine)
-    console.log("uploaddate")
-    console.log(UploadDate)
-    console.log("fileok")
-    console.log()
     const newHazi = {
         ID: null,
         teacherID: req.decoded.ID,
@@ -32,26 +22,23 @@ exports.postAssignment = async (req, res, next) =>{
 
 exports.uploadAssignmentFiles = async (req, res, next) => {
     try {
-      // Multer populates req.files with the uploaded files
       const uploadedFiles = req.files;
-  
-      // The assignmentId will be in req.body.assignmentId
       const { assignmentId } = req.body; 
   
-      console.log("Files received:", uploadedFiles);
-      console.log("Assignment ID:", assignmentId);
-  
-      // TODO: Do something with the files (e.g. save to disk, upload to S3, store in DB, etc.)
-      // Each file in uploadedFiles has fields like: fieldname, originalname, buffer, etc.
-      // For example:
-      // uploadedFiles.forEach(file => {
-      //   // do something with file.buffer or file.originalname
-      // });
       let nagycucc= await hazikService.uploadFiles(uploadedFiles, assignmentId)
       res.status(200).json({ nagycucc });
     } catch (error) {
       console.error("File upload error:", error);
       res.status(500).json({ message: "Error uploading files" });
     }
-  };
+};
   
+exports.getsentAssignments = async (req,res,next) =>{
+      const hazik = await hazikService.getsentAssignments(req.decoded.ID)
+      res.status(201).json(hazik);
+}
+
+exports.getReceivedAssignments = async (req,res,next) => {
+      const hazik = await hazikService.getReceivedAssignments(req.decoded.ID)
+      res.status(201).json(hazik);
+}

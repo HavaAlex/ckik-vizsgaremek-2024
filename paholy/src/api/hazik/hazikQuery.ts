@@ -17,9 +17,11 @@ const getAssignmentsTeacher = async ()  =>{
         headers: { Authorization: `Bearer ${getCookie("alap")}` }
     };
     const response = await axiosClient.get(`http://localhost:3000/paholy/haziktanar`,config)
-    /*console.log("apád:")
+    console.log("általa kiküldött assignmentek:::")
     console.log(response)
-    console.log(response.data)*/
+    console.log(response.data)
+    console.log("AZ első eleme természetesen nem més mint : ")
+    console.log(response.data[0])
     return response.data
 }
 export const usegetAssignmentsTeacher = () => {
@@ -36,6 +38,34 @@ export const usegetAssignmentsTeacher = () => {
     return query
 }
 
+const getAssignmentsStudent = async ()  =>{
+    //console.log("LEFUTOK: getGroups")
+    const {getCookie} = useCookieHandler()
+    const config = {
+        headers: { Authorization: `Bearer ${getCookie("alap")}` }
+    };
+    const response = await axiosClient.get(`http://localhost:3000/paholy/hazikdiak`,config)
+    console.log("általa kiküldött assignmentek:::")
+    console.log(response)
+    console.log(response.data)
+    console.log("AZ első eleme természetesen nem més mint : ")
+    console.log(response.data[0])
+    return response.data
+}
+export const usegetAssignmentsStudent = () => {
+    const {setError} = useErrorHandler()
+    const query = useQuery({
+        queryKey: [QUERY_KEYS.getAssignmentsStudent],
+        queryFn: getAssignmentsStudent,
+    })
+
+    if (query.error.value) {
+        console.error("Lekérdezési hiba:", query.error)
+        setError(query.error.value)
+    }
+    return query
+}
+
 const getGroups = async ()  =>{
     //console.log("LEFUTOK: getGroups")
     const {getCookie} = useCookieHandler()
@@ -43,9 +73,9 @@ const getGroups = async ()  =>{
         headers: { Authorization: `Bearer ${getCookie("alap")}` }
     };
     const response = await axiosClient.get(`http://localhost:3000/paholy/hazikGroups`,config)
-    /*console.log("apád:")
+    console.log("apád:")
     console.log(response)
-    console.log(response.data)*/
+    console.log(response.data)
     return response.data
 }
 export const usegetGroups = () => {
@@ -64,6 +94,8 @@ export const usegetGroups = () => {
 
 const addAssignment = async (assignment: Assignment) : Promise<Assignment> =>{
     assignment.UploadDate = new Date();
+    console.log("GROPS_")
+    console.log(assignment.Groups)
     const {getCookie} = useCookieHandler()
     const config = {
         headers: { Authorization: `Bearer ${getCookie("alap")}` }

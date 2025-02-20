@@ -58,7 +58,7 @@ class MessageRepository
     }
     
     async getSentMessages(ID)//megkeresi az összes üzenetet egy felhasználótól
-    {
+    { 
         return await this.Messages.findAll
         (
             {

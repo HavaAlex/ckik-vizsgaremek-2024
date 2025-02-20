@@ -34,7 +34,7 @@ module.exports = (sequelize, DataTypes) =>
                 allowNull: false,
             },
             status: {
-                type: DataTypes.ENUM('completed','not viewed','not complated','late'),
+                type: DataTypes.ENUM('completed','not complated','late'),
                 allowNull: false,
             },
         },

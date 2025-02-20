@@ -6,15 +6,16 @@ class hazikService{
         return PotentialGroups
     }
     async createAssignment(newHazi,Groups) {
-
-        let kiscucc =  await assignmentRepository.createAssignment(newHazi,Groups)
-        console.log("SERVISZ BE VOK MÁ:  ")
-        console.log(kiscucc)
-        return(kiscucc)
+        return await assignmentRepository.createAssignment(newHazi,Groups)
     }
     async uploadFiles(files,assignmentId){
-        let cucc = await assignmentRepository.uploadFiles(files,assignmentId)
-        return cucc
+        return await assignmentRepository.uploadFiles(files,assignmentId)
+    }
+    async getsentAssignments(ID){
+        return await assignmentRepository.getsentAssignments(ID)
+    }
+    async getReceivedAssignments(ID){
+        return await assignmentRepository.getReceivedAssignments(ID)
     }
 }
 module.exports = new hazikService(); 
