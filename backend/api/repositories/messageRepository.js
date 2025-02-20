@@ -97,7 +97,7 @@ class MessageRepository
                 where: { ID: messages[k].senderUserID },
                 attributes: ["username"]
             });
-    
+     
             // Add senderUserName inside dataValues directly
             messages[k].dataValues.senderUserName = theOneSender //? theOneSender.username : "Unknown";
         }

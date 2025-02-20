@@ -31,7 +31,7 @@ class AssignmentRepository
 
         const visszakuldomakkoreztarray = []
         for (const ennekacucca of assignmentAnswerek) {
-            const valaszok = await this.Assignment.findAll({
+            const feladat = await this.Assignment.findAll({
                 where:{
                     [Op.or]:{
                         ID : ennekacucca.assignmentID
@@ -39,11 +39,19 @@ class AssignmentRepository
                 }
             })
             const visszakuldomakkorezt = {
-                feladat: ennekacucca,
-                anwsers: valaszok[0]
+                valasz: ennekacucca,
+                feladat: feladat[0]
             }
             visszakuldomakkoreztarray.push(visszakuldomakkorezt)
 
+        }
+        for (let i = 0; i < visszakuldomakkoreztarray.length; i++) {
+            const theOneSender = await this.Teacher.findOne({
+                where: { ID: visszakuldomakkoreztarray[i].feladat.teacherID },
+                attributes: ["name"]
+            });
+
+            visszakuldomakkoreztarray[i].feladat.dataValues.senderUserName = theOneSender
         }
         return visszakuldomakkoreztarray;
 
