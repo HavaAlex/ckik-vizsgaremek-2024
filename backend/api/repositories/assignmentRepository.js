@@ -86,9 +86,13 @@ class AssignmentRepository
             visszakuldomakkoreztarray.push(visszakuldomakkorezt)
 
         }
-
+        console.log("EZ A NEM JÓÓÓÓÓ")
+        console.log(visszakuldomakkoreztarray)
         for (let i = 0; i < visszakuldomakkoreztarray.length; i++) {
-            for (let j = 0; j < visszakuldomakkoreztarray[j].anwsers.length; j++) {
+            for (let j = 0; j < visszakuldomakkoreztarray[i].anwsers.length; j++) {
+                console.log("CUCC")
+                console.log(visszakuldomakkoreztarray[i].anwsers[j])
+                console.log("idje",visszakuldomakkoreztarray[i].anwsers[j].studentID)
                 const theOneSender = await this.Student.findOne({
                     where: { ID:  visszakuldomakkoreztarray[i].anwsers[j].studentID },
                     attributes: ["name"]
