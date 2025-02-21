@@ -33,7 +33,9 @@ const HAZIK_KEYS = {
         getGroups: 'getGroups',
         postAssignment: 'postAssignment',
         getAssignmentsTeacher: 'getAssignmentsTeacher',
-        getAssignmentsStudent: 'getAssignmentsStudent'
+        getAssignmentsStudent: 'getAssignmentsStudent',
+        getAssignmentFiles: 'getAssignmentFiles',
+        modifyCompletedAssignment: 'modifyCompletedAssignment',
 
 }
 export const QUERY_KEYS = {

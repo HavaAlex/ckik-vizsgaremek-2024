@@ -86,9 +86,18 @@ class AssignmentRepository
             visszakuldomakkoreztarray.push(visszakuldomakkorezt)
 
         }
+
+        for (let i = 0; i < visszakuldomakkoreztarray.length; i++) {
+            for (let j = 0; j < visszakuldomakkoreztarray[j].anwsers.length; j++) {
+                const theOneSender = await this.Student.findOne({
+                    where: { ID:  visszakuldomakkoreztarray[i].anwsers[j].studentID },
+                    attributes: ["name"]
+                });
+                visszakuldomakkoreztarray[i].anwsers[j].dataValues.senderUserName = theOneSender 
+            }
+        }
         return visszakuldomakkoreztarray;
     }
-
     async getPotentialGroups() {
         const groups = await this.Group.findAll({
             attributes: ['ID', 'name'],
@@ -167,7 +176,19 @@ class AssignmentRepository
             throw new Error(`File upload failed: ${error.message}`);
         }
     }
-    
+    async modifycompletedassignment(ID,completedassignment){
+        console.log("EZ LESZ FELBASZVA")
+        console.log(completedassignment)
+        // Assume User is a Sequelize model
+        const changedAnswer = await this.CompletedAssignment.findOne({ where: { id: completedassignment.ID } });
+        
+        await changedAnswer.update({ textAnswer: completedassignment.textAnswer });
+        await changedAnswer.update({ date: completedassignment.date });
+        await changedAnswer.update({ status: completedassignment.status });
+        console.log(changedAnswer)
+
+        return changedAnswer
+    }
 }
 
 module.exports = new AssignmentRepository(db);

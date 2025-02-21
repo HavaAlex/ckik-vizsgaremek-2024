@@ -20,7 +20,7 @@ const getHianyzasok = async (): Promise<HianyzasValasz> => {
     console.log("hianyzasok:")
     console.log(response)
     console.log(response.data)  
-    return response
+    return response 
 }
 export const useGetHianyzasok = () => {
     const {setError} = useErrorHandler()

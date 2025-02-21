@@ -17,6 +17,19 @@ export type OpenAssignment = {
     uploadDate: Date
 }
 
+export type OpenCompletedAssignment = {
+    ID: number,
+    assignmentID: number,
+    date: Date,
+    status: string,
+    studentID: number,
+    textAnswer: string
+}
+
+export type THEULTIMATEASSIGNMENTTYPE = {
+    assignment: OpenAssignment,
+    answer: OpenCompletedAssignment
+}
 export type CompletedAssignmentInstance = {
     ID: number,
     assignmentID: Date,

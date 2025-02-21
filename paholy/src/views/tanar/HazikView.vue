@@ -20,6 +20,8 @@ const AssignmentDataRef = ref<Assignment>({
 
 const selectedFiles = ref<File[]>([]);
 
+
+
 // Deadline selection:
 const date = ref<Date | null>(null);
 const hour = ref<number | null>(null);
@@ -158,7 +160,7 @@ const openViewAssignmentAnswerDialog = (assignmentItem: { anwsers: any[]; felada
           <v-list>
             <v-list-item v-for="(answer, index) in selectedAssignmentForAnswers?.anwsers" :key="index">
               <v-list-item-content>
-                <v-list-item-title>Diák {{ answer.studentID}}</v-list-item-title>
+                <v-list-item-title>{{ answer.senderUserName.name}}</v-list-item-title>
                 <!-- Display the answer text; adjust properties as needed -->
                 <v-list-item-subtitle>Válasz szövege: {{ answer.textAnswer }}</v-list-item-subtitle>
               </v-list-item-content>

@@ -73,7 +73,7 @@ const addMessage = async (data: Message) : Promise<Message> =>{
     const {getCookie} = useCookieHandler()
     const config = {
         headers: { Authorization: `Bearer ${getCookie("alap")}` }
-    };
+    }; 
     const response = await axiosClient.post(`http://localhost:3000/paholy/uzenetek`,data,config) // ${document.cookie}
     //console.log("SIKERÜÜÜÜLT")
     //console.log(response)

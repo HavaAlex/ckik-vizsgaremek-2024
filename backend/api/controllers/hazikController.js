@@ -42,3 +42,24 @@ exports.getReceivedAssignments = async (req,res,next) => {
       const hazik = await hazikService.getReceivedAssignments(req.decoded.ID)
       res.status(201).json(hazik);
 }
+
+exports.getTeacherAssignmentFiles = async (req,res,next) => {
+  const haziFileok = await hazikService.getTeacherAssignmentFiles(req.decoded.ID)
+  res.status(201).json(haziFileok)
+}
+
+exports.modifycompletedassignment = async (req,res,next) => {
+  const {ID,assignmentID,date,status,studentID,textAnswer} = req.body
+  const completedassignment = {
+    ID: ID,
+    assignmentID: assignmentID,
+    date: date,
+    status:status,
+    studentID:studentID,
+    textAnswer:textAnswer
+  }
+  console.log("EZAZ TTE SZAROS")
+  console.log(completedassignment)
+  const modositotthazik = await hazikService.modifycompletedassignment(req.decoded.ID,completedassignment)
+  res.status(201).json(modositotthazik)
+}
