@@ -111,12 +111,13 @@ const jegyFeltoltes = async () =>
 
 const range = ref([1, 5]); // Two handles, one at 1, one at 5
 
+const honapLista = [9,10,11,12,1,2,3,4,5,6,7,8]
+const honapNevLista = ["Szeptember","Október","November","December","Január","Február","Március","Április","Május","Június","Július","Augusztus"]
+
 </script>
 
 <template>
   <main>
-    <h1>Osztályzatok</h1>
-
       <v-navigation-drawer theme="dark">
         <v-card>
           <v-tabs v-model="tab">
@@ -131,19 +132,27 @@ const range = ref([1, 5]); // Two handles, one at 1, one at 5
               <v-divider></v-divider>
               <h3>Osztályok:</h3>
               <v-select
+              v-if="csoportok.length>0"
               v-model="selectedGroup"
               :items="csoportok"
               label="Válasszon osztályt!"
               ></v-select>
+              <v-card v-else>
+                "Nincsenek megjeleníthető csoportok!"
+              </v-card>
               <br>
               <h3>Tantárgyak:</h3>
               <v-select
+               v-if="csoportJegyek?.tantargyak"
               v-model="selectedSubject"
               :items="csoportJegyek?.tantargyak"
               label="Válasszon tantárgyat!"
               ></v-select>
+              <v-card v-else>
+                "Nincsenek megjeleníthető tantárgyak!"
+              </v-card>
               <br>
-              <h3>Érdemjegyek átlaga:</h3>
+              <!--<h3>Érdemjegyek átlaga:</h3>
               <v-range-slider
                 v-model="range"
                 :min="1"
@@ -153,26 +162,34 @@ const range = ref([1, 5]); // Two handles, one at 1, one at 5
                 color="primary"
               class="mt-4"
               thumb-label
-              ></v-range-slider>
+              ></v-range-slider>-->
             </v-tabs-window-item>
             <v-tabs-window-item value="two">
               <v-list-item title="Beállítások: "></v-list-item>
               <v-divider></v-divider>
               <h3>Osztályok:</h3>
               <v-select
+              v-if="csoportok.length>0"
               v-model="selectedOsszGroup"
               :items="csoportok"
               label="Válasszon osztályt!"
               ></v-select>
+              <v-card v-else>
+                "Nincsenek megjeleníthető csoportok!"
+              </v-card>
               <br>
               <h3>Tantárgyak:</h3>
               <v-select
+              v-if="osszTantargyComputed?.length>0"
               v-model="selectedOsszTantargy"
               :items="osszTantargyComputed"
               label="Válasszon tantárgyat!"
               ></v-select>
+              <v-card v-else>
+                "Nincsenek megjeleníthető csoportok!"
+              </v-card>
               <br>
-              <h3>Érdemjegyek átlaga:</h3>
+              <!--<h3>Érdemjegyek átlaga:</h3>
               <v-range-slider
                 v-model="range"
                 :min="1"
@@ -182,35 +199,40 @@ const range = ref([1, 5]); // Two handles, one at 1, one at 5
                 color="primary"
               class="mt-4"
               thumb-label
-              ></v-range-slider>
+              ></v-range-slider>-->
             </v-tabs-window-item>
         </v-tabs-window>
       </v-card>
     </v-navigation-drawer>
     <v-tabs-window v-model="tab">
       <v-tabs-window-item value="one">
-        <v-table theme="dark" height="40vw" style="border-radius: 2%;">
+        <v-table theme="dark" height="40vw" style="border-radius: 2%;" v-if="groupMarks.data != undefined">
           <thead>
             <tr>
                 <th style="width: 15vw; justify-content: center !important; " class="text-center">Név</th>
-                <th style="width: 15vw; justify-content: center !important; " class="text-center">Szeptember</th>
-                <th style="width: 15vw; justify-content: center !important; " class="text-center">Október</th>
-                <th style="width: 15vw; justify-content: center !important; " class="text-center">November</th>
-                <th style="width: 15vw; justify-content: center !important; " class="text-center">December</th>
-                <th style="width: 15vw; justify-content: center !important; " class="text-center">Január</th>
-                <th style="width: 15vw; justify-content: center !important; " class="text-center">Február</th>
-                <th style="width: 15vw; justify-content: center !important; " class="text-center">Március</th>
-                <th style="width: 15vw; justify-content: center !important; " class="text-center">Április</th>
-                <th style="width: 15vw; justify-content: center !important; " class="text-center">Május</th>
-                <th style="width: 15vw; justify-content: center !important; " class="text-center">Június</th>
-                <th style="width: 15vw; justify-content: center !important; " class="text-center">Július</th>
-                <th style="width: 15vw; justify-content: center !important; " class="text-center">Augusztus</th>
+                <th style="width: 15vw; justify-content: center !important; " class="text-center" v-for="(honapNev) in honapNevLista">{{honapNev}}</th>
               </tr>
           </thead>
           <tbody>
-            <tr v-for="(record, index) in szemelyJegyek" :key="index">
+            <tr v-for="(record, index) in szemelyJegyek" :key="index" v-if="szemelyJegyek.undefined">
               <td style="width: 15vw; justify-content: center !important;">{{ record[0].Student?.name }}</td>
-              <td style="width: 15vw; justify-content: center !important;" v-for="(jegy, index) in record" :key="index"><p v-if="new Date(jegy.date).getMonth()+1 == 9">{{ jegy.Value }}</p></td>
+              <td style="width: 15vw; justify-content: center !important;" v-for="(honap) in honapLista">
+                <p v-for="(jegy, index2) in record.filter((jegy:any)=>new Date(jegy.date).getMonth()+1 == honap)" :key="index2">
+                  <v-hover
+                    v-slot="{ isHovering, props }"
+                  >
+                    <v-card v-bind="props">
+                      <v-card-text v-if="isHovering == false||isHovering == undefined" style="justify-self: center;">
+                        {{ jegy.Value }}
+                      </v-card-text>
+                      <v-card-text v-else>
+                        Jegy: {{ jegy.Value }} Tanár: {{ jegy.teacherID }} Százalék: {{ jegy.Multiplier }}%
+                      </v-card-text>
+                    </v-card>
+                  </v-hover>
+                </p>
+              </td>
+              <!--<td style="width: 15vw; justify-content: center !important;" v-for="(jegy, index) in record" :key="index"><p v-if="new Date(jegy.date).getMonth()+1 == 9">{{ jegy.Value }}</p></td>
               <td style="width: 15vw; justify-content: center !important;" v-for="(jegy, index) in record" :key="index"><p v-if="new Date(jegy.date).getMonth()+1 == 10">{{ jegy.Value }}</p></td>
               <td style="width: 15vw; justify-content: center !important;" v-for="(jegy, index) in record" :key="index"><p v-if="new Date(jegy.date).getMonth()+1 == 11">{{ jegy.Value }}</p></td>
               <td style="width: 15vw; justify-content: center !important;" v-for="(jegy, index) in record" :key="index"><p v-if="new Date(jegy.date).getMonth()+1 == 12">{{ jegy.Value }}</p></td>
@@ -221,10 +243,18 @@ const range = ref([1, 5]); // Two handles, one at 1, one at 5
               <td style="width: 15vw; justify-content: center !important;" v-for="(jegy, index) in record" :key="index"><p v-if="new Date(jegy.date).getMonth()+1 == 5">{{ jegy.Value }}</p></td>
               <td style="width: 15vw; justify-content: center !important;" v-for="(jegy, index) in record" :key="index"><p v-if="new Date(jegy.date).getMonth()+1 == 6">{{ jegy.Value }}</p></td>
               <td style="width: 15vw; justify-content: center !important;" v-for="(jegy, index) in record" :key="index"><p v-if="new Date(jegy.date).getMonth()+1 == 7">{{ jegy.Value }}</p></td>
-              <td style="width: 15vw; justify-content: center !important;" v-for="(jegy, index) in record" :key="index"><p v-if="new Date(jegy.date).getMonth()+1 == 8">{{ jegy.Value }}</p></td>
+              <td style="width: 15vw; justify-content: center !important;" v-for="(jegy, index) in record" :key="index"><p v-if="new Date(jegy.date).getMonth()+1 == 8">{{ jegy.Value }}</p></td>-->
             </tr>
+            <v-card v-else>
+              <v-card style="justify-content: center">
+              Nincs megjeleníthető adat!
+              </v-card>
+            </v-card>
           </tbody>
         </v-table>
+        <v-card style="justify-content: center" v-else>
+          <v-progress-circular indeterminate :size="37"></v-progress-circular>
+        </v-card>
       </v-tabs-window-item>
       <v-tabs-window-item value="two">
         <v-table theme="dark" height="40vw" style="border-radius: 2%;">

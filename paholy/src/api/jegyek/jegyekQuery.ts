@@ -55,15 +55,20 @@ export const useGetTeacherGroups = () => {
     return query
 }
 
-const getGroupMarks = async () : Promise<GroupMark[]> => {
+const getGroupMarks = async () : Promise<GroupMark[]|Error> => {
     const {getCookie} = useCookieHandler()
     const config = {
         headers: { Authorization: `Bearer ${getCookie("alap")}` }
     };
-    const response = await axiosClient.get(`http://localhost:3000/tanar/csoportjegyek`,config)
-    console.log("IIIT VVV")
-    console.log(response.data)
-    return response.data
+    try{
+        const response = await axiosClient.get(`http://localhost:3000/tanar/csoportjegyek`,config)
+        console.log("IIIT VVV")
+        console.log(response.data)
+        return response.data
+    }
+    catch(error:any){//annyira jó a typescript hogy erre kényszerít
+        return error
+    }
 }
 
 export const usegetGroupMarks = () => {

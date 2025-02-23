@@ -4,10 +4,10 @@ import { useRoute, useRouter } from "vue-router"
 import { QUERY_KEYS } from "@/utils/QueryKeys"
 import { jwtDecode } from "jwt-decode";
 import { useCookieHandler } from "@/stores/cookieHandler";
-import type { Group } from "./orarend";
+import type { Lesson } from "./orarend";
 import { useErrorHandler } from "@/stores/errorHandler";
 
-const getOrarend = async (): Promise<Group> => {
+const getOrarend = async (): Promise<Lesson[]> => {
     const {getCookie} = useCookieHandler()
     const config = {
         headers: { Authorization: `Bearer ${getCookie("alap")}` }

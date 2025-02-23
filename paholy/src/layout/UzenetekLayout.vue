@@ -88,6 +88,9 @@ onUnmounted(() => {
 
 <template>
   <main class="main">
+    <v-card theme="dark" style="border-radius: 10px; border: 1px; margin-bottom: 10px;">
+      <h1 style="padding: 10px;">Üzenetek</h1>
+    </v-card>
     <v-card class="conainerCard">
       <div style="display:flex; flex-direction: row; justify-content: left; align-items: center">
         <v-btn class="switchBtn" id="switchBtn1" :disabled="Beerkezett" @click="ChangeBeerkezett()">Beérkezett üzenetek</v-btn>
