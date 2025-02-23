@@ -5,21 +5,14 @@ import { useGetMarks } from '@/api/jegyek/jegyekQuery';
 import { ref, computed } from 'vue';
 const {data} = useGetMarks();
 
-// Kiválasztott tantárgy
-const selectedSubject = ref<string | null>(null);
-
 // Egyedi tantárgyak listázása
 const tantargyak = computed(() => {
   if (!data.value) return [];
   return [...new Set(data.value.map((jegy: any) => jegy.subjectName))];
 });
 
-// Jegyek szűrése a kiválasztott tantárgy alapján
-const filteredTantargyak = computed(() => {
-  if (!data.value) return [];
-  if (!selectedSubject.value) return data.value;
-  return data.value.filter((jegy: any) => jegy.subjectName === selectedSubject.value);
-});
+const honapLista = [9,10,11,12,1,2,3,4,5,6,7,8]
+const honapNevLista = ["Szeptember","Október","November","December","Január","Február","Március","Április","Május","Június","Július","Augusztus"]
 
 </script>
 
@@ -30,29 +23,44 @@ const filteredTantargyak = computed(() => {
       <label for="lessonColor">Szín megváltoztatása:</label>
       <input type="color" id="lessonColor"/>
     </div>
-    <v-table theme="dark" class="jegytabla"  fixed-header style="border-radius: 5%;">
+
+    <v-table theme="dark" height="40vw" style="border-radius: 2%;" v-if="data != undefined">
       <thead>
         <tr>
-          <th class="text-center">
-            <v-select
-            v-model="selectedSubject"
-            :items="tantargyak"
-            label="Tantárgy"
-            ></v-select></th>
-          <th class="text-center">Jegy</th>
-          <th class="text-center">Százalék</th>
-          <th class="text-center">Dátum</th>
-        </tr>
+            <th style="width: 15vw; justify-content: center !important; " class="text-center">Tantárgy</th>
+            <th style="width: 15vw; justify-content: center !important; " class="text-center" v-for="(honapNev) in honapNevLista">{{honapNev}}</th>
+          </tr>
       </thead>
       <tbody>
-        <tr v-for="(jegy, index) in filteredTantargyak" :key="index">
-          <td style="width: 15vw; justify-content: center !important; ">{{ jegy.subjectName }}</td>
-          <td style="width: 15vw; justify-content: center !important;">{{ jegy.Value }}</td>
-          <td style="width: 15vw; justify-content: center !important;">{{ jegy.Multiplier }}%</td>
-          <td style="width: 15vw; justify-content: center !important;">{{ new Date(jegy.date).getFullYear() }}.{{ new Date(jegy.date).getMonth()+1 }}.{{ new Date(jegy.date).getDate() }}</td>
+        <tr v-for="(record, index) in tantargyak" :key="index" v-if="tantargyak.length>0">
+          <td style="width: 15vw; justify-content: center !important;">{{ record }}</td>
+          <td style="width: 15vw; justify-content: center !important;" v-for="(honap) in honapLista">
+            <p v-for="(jegy, index) in data.filter((jegy:any)=>new Date(jegy.date).getMonth()+1 == honap&& jegy.subjectName == record )" :key="index">
+              <v-hover
+                v-slot="{ isHovering, props }"
+              >
+                <v-card v-bind="props" style="justify-self: center;">
+                  <v-card-text v-if="isHovering == false||isHovering == undefined">
+                    {{ jegy.Value }}
+                  </v-card-text>
+                  <v-card-text v-else>
+                    Jegy: {{ jegy.Value }} Tanár: {{ jegy.teacherID }} Százalék: {{ jegy.Multiplier }}%
+                  </v-card-text>
+                </v-card>
+              </v-hover>
+            </p>
+          </td>
         </tr>
+        <v-card v-else>
+          <v-card style="justify-content: center">
+          Nincs megjeleníthető adat!
+          </v-card>
+        </v-card>
       </tbody>
     </v-table>
+    <v-card style="justify-content: center" v-else>
+      <v-progress-circular indeterminate :size="37"></v-progress-circular>
+    </v-card>
   </main>
 
 </template>

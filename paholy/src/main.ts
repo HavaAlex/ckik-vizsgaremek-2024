@@ -16,4 +16,11 @@ app.use(router)
 app.use(vuetify)
 app.use(VueQueryPlugin, {queryClient: queryClient})
 
+app.config.errorHandler = (err, vm, info) => {
+  console.error("Error:", err);
+  console.error("Vue component:", vm);
+  console.error("Additional info:", info);
+};
+
+
 app.mount('#app')

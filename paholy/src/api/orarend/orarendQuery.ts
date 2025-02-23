@@ -4,10 +4,10 @@ import { useRoute, useRouter } from "vue-router"
 import { QUERY_KEYS } from "@/utils/QueryKeys"
 import { jwtDecode } from "jwt-decode";
 import { useCookieHandler } from "@/stores/cookieHandler";
-import type { Group } from "./orarend";
+import type { Lesson } from "./orarend";
 import { useErrorHandler } from "@/stores/errorHandler";
 
-const getGroup = async (): Promise<Group> => {
+const getOrarend = async (): Promise<Lesson[]> => {
     const {getCookie} = useCookieHandler()
     const config = {
         headers: { Authorization: `Bearer ${getCookie("alap")}` }
@@ -19,19 +19,16 @@ const getGroup = async (): Promise<Group> => {
 }
 
 export const useGetOrarend = () => {
-    const {push} = useRouter()
-    return useMutation(
-        {
-            mutationFn: getGroup,
-            onSuccess(data) {
-                console.log(data)
-            },
-            onError(error){
-                const {setError} = useErrorHandler()
-                setError(error)
-            }
-        }
-    )
+    const { setError } = useErrorHandler()
+    const query = useQuery({
+        queryKey:[QUERY_KEYS.getOrarend],
+        queryFn:getOrarend
+    })
+    if (query.error.value) {
+        console.error("Lekérdezési hiba:", query.error)
+        setError(query.error.value)
+    }
+    return query
 }
 
 

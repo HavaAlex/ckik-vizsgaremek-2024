@@ -60,8 +60,7 @@ function modositasmentese(){
 
 <template>
   <main>
-    <h1>Az ön feladatai</h1>
-    <v-table style="height: 30vw !important;">
+    <v-table style="height: 30vw !important;" theme="dark">
       <thead>
         <tr>
           <th class="text-center" style="width: 10vw; justify-content: center;">Feladó tanár</th>

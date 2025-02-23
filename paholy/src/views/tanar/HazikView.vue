@@ -108,7 +108,7 @@ const openViewAssignmentAnswerDialog = (assignmentItem: { anwsers: any[]; felada
 
 <template>
   <main>
-    <v-table style="height: 30vw !important;">
+    <v-table style="height: 30vw !important;" theme="dark">
       <thead>
         <tr>
           <th class="text-center" style="width: 15vw; justify-content: center;">Határidő</th>
