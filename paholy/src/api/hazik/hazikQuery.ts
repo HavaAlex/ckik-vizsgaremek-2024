@@ -45,7 +45,7 @@ const getAssignmentsStudent = async ()  =>{
         headers: { Authorization: `Bearer ${getCookie("alap")}` }
     };
     const response = await axiosClient.get(`http://localhost:3000/paholy/hazikdiak`,config)
-    console.log("általa kiküldött assignmentek:::")
+    console.log("általa kapott assignmentek:::")
     console.log(response)
     console.log(response.data)
     console.log("AZ első eleme természetesen nem més mint : ")

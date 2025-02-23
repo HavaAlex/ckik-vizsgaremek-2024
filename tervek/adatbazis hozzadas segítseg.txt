@@ -10,8 +10,8 @@ INSERT INTO `students` ( `ID`, `name`, `DoB`, `address`, `phone`, `email`, `user
 INSERT INTO `students` ( `ID`, `name`, `DoB`, `address`, `phone`, `email`, `userID`) VALUES (null, 'rebeka','1492-01-01','Nagykáta cigánytelep 4.','493287','rebekababaxoxo@gmail.com',2);
 INSERT INTO `studentgroups` (`GroupID`, `StudentID`) VALUES (1,1);
 INSERT INTO `studentgroups` (`GroupID`, `StudentID`) VALUES (1,2);
-INSERT INTO `teachers` ( `ID`,`phone`, `email`,`userID`) VALUES (null, '0620habekapodmegfusz','lajosnagyfarok@gmail.com',3);
-INSERT INTO `teachers` ( `ID`,`phone`, `email`,`userID`) VALUES (null, '4536546456456','enikokovacsnevaleriatakacs@gmail.com',4);
+INSERT INTO `teachers` ( `ID`,`name`,`phone`, `email`,`userID`) VALUES (null,'lajos', '0620habekapodmegfusz','lajosnagyfarok@gmail.com',3);
+INSERT INTO `teachers` ( `ID`,`name`,`phone`, `email`,`userID`) VALUES (null,'eniko', '4536546456456','enikokovacsnevaleriatakacs@gmail.com',4);
 INSERT INTO `guardians` ( `ID`,`phone`, `email`,`userID`) VALUES (null, '354563453245','laciapujozsi@gmail.com',5);
 insert into `guardianstudents` (`GuardianID`,`StudentID`) VALUES (1,1);
 insert into `guardianstudents` (`GuardianID`,`StudentID`) VALUES (1,2);

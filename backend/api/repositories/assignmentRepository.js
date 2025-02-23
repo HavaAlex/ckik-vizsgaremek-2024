@@ -50,7 +50,6 @@ class AssignmentRepository
                 where: { ID: visszakuldomakkoreztarray[i].feladat.teacherID },
                 attributes: ["name"]
             });
-
             visszakuldomakkoreztarray[i].feladat.dataValues.senderUserName = theOneSender
         }
         return visszakuldomakkoreztarray;
@@ -86,8 +85,6 @@ class AssignmentRepository
             visszakuldomakkoreztarray.push(visszakuldomakkorezt)
 
         }
-        console.log("EZ A NEM JÓÓÓÓÓ")
-        console.log(visszakuldomakkoreztarray)
         for (let i = 0; i < visszakuldomakkoreztarray.length; i++) {
             for (let j = 0; j < visszakuldomakkoreztarray[i].anwsers.length; j++) {
                 console.log("CUCC")
