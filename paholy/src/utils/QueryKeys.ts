@@ -12,6 +12,11 @@ const ORAREND_KEYS = {
     getOrarend: 'getOrarend',
 }
 
+const SZULO_KEYS = {
+    getChildren: 'getChildren',
+}
+
+
 const UZENETEK_KEYS = {
     getUzenetek: 'getUzenetek',
     getPotentialReceivers: 'getPotentialReceivers'
@@ -46,4 +51,5 @@ export const QUERY_KEYS = {
     ...HIANYZASOK_KEYS,
     ...JEGYEK_KEYS,
     ...HAZIK_KEYS,
+    ...SZULO_KEYS,
 } as const 

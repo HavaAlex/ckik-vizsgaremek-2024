@@ -12,9 +12,10 @@ const userAuth = require("../middlewares/userAuth");
 const orarendController = require("../controllers/orarendController");
 const userController = require("../controllers/userController");
 const uzenetController = require("../controllers/uzenetController");
-const hianyzasController = require("../controllers/hianyzasController");
+const absenceController = require("../controllers/absenceController");
 const jegyController = require("../controllers/jegyController");
 const hazikController = require("../controllers/hazikController");
+const user = require("../models/user");
 
 // Make sure to protect all routes with your auth middleware
 router.use(userAuth.verifyToken);
@@ -27,11 +28,13 @@ router.get("/orarend", orarendController.getOrarend);
 router.get("/jegyek", jegyController.getJegyek);
 router.post("/jegyek", orarendController.getOrarend);
 
-router.get("/hianyzasok", hianyzasController.getHianyzasokDiak);
+router.get("/hianyzasok", absenceController.getAbsences);
 router.post("/hianyzasok", orarendController.getOrarend);
 
 router.get("/fiokadatok", userController.getUser);
 router.post("/fiokadatok", orarendController.getOrarend);
+
+router.get("/gyerekek", userController.getGuardiansChildren);
 
 router.get("/hazikGroups", hazikController.getGroups);
 router.get("/haziktanar", hazikController.getsentAssignments);

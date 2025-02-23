@@ -4,23 +4,23 @@ import { useRoute, useRouter } from "vue-router"
 import { QUERY_KEYS } from "@/utils/QueryKeys"
 import { jwtDecode } from "jwt-decode";
 import { useCookieHandler } from "@/stores/cookieHandler";
-import type { Group } from "./orarend";
+import type { child } from "./szulo";
 import { useErrorHandler } from "@/stores/errorHandler";
 
-const getOrarend = async (): Promise<Group> => {
+const getChildren = async (): Promise<child> => {
     const {getCookie} = useCookieHandler()
     const config = {
         headers: { Authorization: `Bearer ${getCookie("alap")}` }
     };
-    const response = await axiosClient.get(`http://localhost:3000/paholy/orarend`,config) // ${document.cookie}
+    const response = await axiosClient.get(`http://localhost:3000/paholy/gyerekek`,config) // ${document.cookie}
     return response.data
 }
 
-export const useGetOrarend = () => {
+export const useGetChildren = () => {
     const {setError} = useErrorHandler()
     const query = useQuery({
-        queryKey: [QUERY_KEYS.getOrarend],
-        queryFn: getOrarend,
+        queryKey: [QUERY_KEYS.getChildren],
+        queryFn: getChildren,
     })
 
     if (query.error.value) {

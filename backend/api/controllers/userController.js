@@ -94,3 +94,8 @@ exports.getTeacherGroupMembers = async (req, res, next) =>
     }
     res.status(200).send(members);
 }
+
+exports.getGuardiansChildren = async (req, res, next) =>{
+    const children = await userService.getGuardiansChildren(req.role.ID);
+    res.status(200).send(children);
+}

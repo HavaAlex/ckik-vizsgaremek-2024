@@ -3,9 +3,8 @@ import type { Lesson } from '@/api/orarend/orarend';
 import { useGetOrarend } from '@/api/orarend/orarendQuery';
 import { ref, watch } from 'vue';
 
-const {mutate: getGroup} = useGetOrarend()
-const data = getGroup()
-console.log(data)
+const {data} = useGetOrarend()
+console.log(data.value)
 
 // Hungarian days of the week
 const days =["hetfo", "kedd", "szerda", "csutortok", "pentek", "szombat", "vasarnap"];
@@ -17,6 +16,7 @@ const interval = 5;
 
 // Reactive timetable
 const timetable = ref<{ time: string; lessons: (string | null)[] }[]>([]);
+
 
 function orarendfeltolt(lessons: Lesson[]) {
   let newTimetable = [];
@@ -46,12 +46,12 @@ function orarendfeltolt(lessons: Lesson[]) {
 }
 
 // Watch for changes in data and update timetable
-/*watch(data, (newData) => {
+watch(data, (newData) => {
   if (newData) {
     orarendfeltolt(newData);
   }
-}, { immediate: true });*/ // Run immediately on first load
-
+}, { immediate: true }); // Run immediately on first load
+  
 </script>
 
 <template>

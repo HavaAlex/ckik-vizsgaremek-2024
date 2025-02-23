@@ -21,9 +21,9 @@ class UserService
         return await userRepository.getUser(ID);
     }
 
-    async getUserChildren(ID)
+    async getGuardiansChildren(ID)
     {
-        
+        return await userRepository.getGuardiansChildren(ID);
     }
 }
 

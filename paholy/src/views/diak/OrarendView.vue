@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { useGetOrarend } from '@/api/orarend/orarendQuery';
-const {mutate: getGroup} = useGetOrarend()
-const data = getGroup()
+const data = useGetOrarend()
 console.log(data)
 
 console.log("orarend")

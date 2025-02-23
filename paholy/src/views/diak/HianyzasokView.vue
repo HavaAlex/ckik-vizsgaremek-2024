@@ -2,8 +2,6 @@
 import { useGetHianyzasok } from '@/api/hianyzasok/hianyzasokQuery';
 import { ref } from 'vue';
 const {data} = useGetHianyzasok()
-console.log("hianyzasok újra")
-console.log(data)
 </script>
 
 <template>
@@ -19,8 +17,8 @@ console.log(data)
       </thead>
       <tbody>
         <tr v-for="elem in data?.data">
-          <td>{{ elem.hianyzas.date }}</td>
-          <td>{{ elem.hianyzas.excused }}</td>
+          <td>{{ elem.date }}</td>
+          <td>{{ elem.excused }}</td>
         </tr>
       </tbody>
     </v-table>

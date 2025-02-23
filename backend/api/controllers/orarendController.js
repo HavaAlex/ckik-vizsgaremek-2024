@@ -11,7 +11,7 @@ exports.getOrarend = async (req, res, next) =>
 
     const disruptions = await orarendService.getDisruptions(groups)
 
-    console.log(disruptions)
+    console.log(disruptions+"disruptions")
 
     const disruptionMap = new Map()
     disruptions.forEach(disruption => {
