@@ -19,11 +19,20 @@ module.exports = (sequelize, DataTypes) =>
                 type: DataTypes.INTEGER,
                 allowNull: false,
             },
-            desc:
+            buffer:
             {
                 type: DataTypes.BLOB("long"),
                 allowNull: false,
             },
+            mimetype:{
+                type: DataTypes.STRING(500),
+                allowNull:false
+            },
+            filename:{
+                type: DataTypes.STRING(500),
+                allowNull:false
+            }
+
         },
 
         {

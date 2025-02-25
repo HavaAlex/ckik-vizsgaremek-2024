@@ -49,7 +49,7 @@ watch(data, (newData) => {
   if (newData) {
     orarendfeltolt(newData);
   }
-}, { immediate: true });*/ // Run immediately on first load
+}, { immediate: true }); // Run immediately on first load
 
 </script>
 

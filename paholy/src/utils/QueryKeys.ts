@@ -37,6 +37,8 @@ const JEGYEK_KEYS = {
 const HAZIK_KEYS = {
         getGroups: 'getGroups',
         postAssignment: 'postAssignment',
+        uploadAssignmentFiles: 'uploadAssignmentFiles',
+        uploadCompletedAssignmentFiles: 'uploadCompletedAssignmentFiles',
         getAssignmentsTeacher: 'getAssignmentsTeacher',
         getAssignmentsStudent: 'getAssignmentsStudent',
         getAssignmentFiles: 'getAssignmentFiles',

@@ -8,8 +8,11 @@ class hazikService{
     async createAssignment(newHazi,Groups) {
         return await assignmentRepository.createAssignment(newHazi,Groups)
     }
-    async uploadFiles(files,assignmentId){
-        return await assignmentRepository.uploadFiles(files,assignmentId)
+    async uploadAssignmentFiles(files,assignmentId){
+        return await assignmentRepository.uploadAssignmentFiles(files,assignmentId)
+    }
+    async uploadCompletedAssignmentFiles(files,completedAssignmentId){
+        return await assignmentRepository.uploadCompletedAssignmentFiles(files,completedAssignmentId)
     }
     async getsentAssignments(ID){
         return await assignmentRepository.getsentAssignments(ID)
@@ -22,6 +25,9 @@ class hazikService{
     }
     async modifycompletedassignment(ID,completedassignment){
         return await assignmentRepository.modifycompletedassignment(ID,completedassignment)
+    }
+    async getAssignmentFiles(assignmentID){
+        return await assignmentRepository.getAssignmentFiles(assignmentID)
     }
 }
 module.exports = new hazikService(); 

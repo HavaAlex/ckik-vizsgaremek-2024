@@ -66,31 +66,33 @@ export const usegetAssignmentsStudent = () => {
     return query
 }
 
-/*
-const getAssignmentFiles = async ()  =>{
-    //console.log("LEFUTOK: getGroups")
+
+const getAssignmentFiles = async (assignmentId:number) : Promise<number> =>{
+    console.log("QUERYBEE: ",assignmentId)
     const {getCookie} = useCookieHandler()
     const config = {
-        headers: { Authorization: `Bearer ${getCookie("alap")}` }
+        headers: { Authorization: `Bearer ${getCookie("alap")}`/*,assignmentID:assignmentId*/ }
     };
-    const response = await axiosClient.get(`http://localhost:3000/paholy/hazikfileoktanar`,config)
+    const response = await axiosClient.post(`http://localhost:3000/paholy/getAssignmentFiles`,{assignmentId} ,config)
+    console.log("FÁJLAJAID NÉKED")
+    console.log(response)
+    console.log(response.data)
     return response.data
 }
 export const usegetAssignmentFiles = () => {
-    const {setError} = useErrorHandler()
-    const query = useQuery({
-        queryKey: [QUERY_KEYS.getGroups],
-        queryFn: getGroups,
-    })
-
-    if (query.error.value) {
-        console.error("Lekérdezési hiba:", query.error)
-        setError(query.error.value)
-    }
-    return query
-}*/
-
-
+    return useMutation( 
+        {
+            mutationFn: getAssignmentFiles,
+            onSuccess(){
+                queryClient.refetchQueries({queryKey:[QUERY_KEYS.getAssignmentFiles]})
+            },
+            onError(error){
+                const {setError} = useErrorHandler()
+                setError(error)
+            }
+        }
+    )
+};
 const getGroups = async ()  =>{
     //console.log("LEFUTOK: getGroups")
     const {getCookie} = useCookieHandler()
@@ -145,15 +147,11 @@ export const usemodifyCompletedAssignment = () => {
 
 const addAssignment = async (assignment: Assignment) : Promise<Assignment> =>{
     assignment.UploadDate = new Date();
-    console.log("GROPS_")
-    console.log(assignment.Groups)
     const {getCookie} = useCookieHandler()
     const config = {
         headers: { Authorization: `Bearer ${getCookie("alap")}` }
     };
     const response = await axiosClient.post(`http://localhost:3000/paholy/newassignment`,assignment,config) // ${document.cookie}
-    console.log("resposééééééé_")
-    console.log(response)
     return response.data
 }
 
@@ -172,7 +170,7 @@ export const useaddAssignment = () => {
     )
 }
 
-const uploadFiles = async ({
+const uploadAssignmentFiles = async ({
     files,
     assignmentId,
   }: {
@@ -194,16 +192,55 @@ const uploadFiles = async ({
       "Content-Type": "multipart/form-data"
     }
   };
-
+  console.log("SZARSTAR SZAR")
+  console.log(formData)
   await axiosClient.post(`http://localhost:3000/paholy/uploadassignmentfiles`, formData, config);
 }
 
-export const useUploadFiles = () => {
+export const useuploadAssignmentFiles = () => {
     return useMutation( 
         {
-            mutationFn: uploadFiles,
+            mutationFn: uploadAssignmentFiles,
             onSuccess(){
-                queryClient.refetchQueries({queryKey:[QUERY_KEYS.postAssignment]})
+                queryClient.refetchQueries({queryKey:[QUERY_KEYS.uploadAssignmentFiles]})
+            },
+            onError(error){
+                const {setError} = useErrorHandler()
+                setError(error)
+            }
+        }
+    ) 
+};
+
+const uploadCompletedAssignmentFiles = async ({
+    files,
+    completedAssignmentId,
+  }: {
+    files: File[];
+    completedAssignmentId: any;
+  }): Promise<void> => {
+    const formData = new FormData();
+  // Now we can loop over `files` directly
+  files.forEach((file) => {
+    formData.append('files', file);
+  });
+  formData.append('completedAssignmentId', completedAssignmentId);
+  const { getCookie } = useCookieHandler();
+  const config = {
+    headers: { 
+      Authorization: `Bearer ${getCookie("alap")}`,
+      "Content-Type": "multipart/form-data"
+    }
+  };
+  await axiosClient.post(`http://localhost:3000/paholy/uploadcompletedassignmentfiles`, formData, config);
+}
+
+export const useuploadCompletedAssignmentFiles = () => {
+    return useMutation( 
+        {
+            mutationFn: uploadCompletedAssignmentFiles,
+            onSuccess(){
+                queryClient.refetchQueries({queryKey:[QUERY_KEYS.uploadCompletedAssignmentFiles]})
             },
             onError(error){
                 const {setError} = useErrorHandler()

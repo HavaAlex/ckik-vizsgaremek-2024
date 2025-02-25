@@ -14,6 +14,7 @@ class AssignmentRepository
         this.Assignment = db.assignment
         this.AssignmentFile = db.assignmentFiles
         this.CompletedAssignment = db.completedAssignment
+        this.CompletedAssignmentFile = db.completedAssignmentFiles
     }
     async getReceivedAssignments(ID){
         let studnetID = await this.Student.findAll({
@@ -154,7 +155,7 @@ class AssignmentRepository
         }
         return newAssignment;
     }
-    async uploadFiles(files, assignmentId) { //varázslat
+    async uploadAssignmentFiles(files, assignmentId) { //varázslat
         try {
             if (!files || files.length === 0) {
                 throw new Error('No files uploaded');
@@ -162,12 +163,13 @@ class AssignmentRepository
             if (!assignmentId) {
                 throw new Error('assignmentID is required');
             }
-    
             const uploadedFiles = await Promise.all(files.map(async (file) => {
                 return await this.AssignmentFile.create({
                     ID: null, // Auto-incremented by the database
                     assignmentID: assignmentId,
-                    desc: file.buffer // Store file content in desc (LONGBLOB)
+                    buffer: file.buffer,// Store file content in desc (LONGBLOB)
+                    mimetype: file.mimetype,
+                    filename: file.originalname
                 });
             }));
     
@@ -176,6 +178,48 @@ class AssignmentRepository
             console.error('Upload Error:', error);
             throw new Error(`File upload failed: ${error.message}`);
         }
+    }
+    async uploadCompletedAssignmentFiles(files, completedAssignmentId) { //varázslat
+        try {
+            if (!files || files.length === 0) {
+                throw new Error('No files uploaded');
+            }
+            if (!completedAssignmentId) {
+                throw new Error('assignmentID is required');
+            }
+            const uploadedFiles = await Promise.all(files.map(async (file) => {
+                return await this.CompletedAssignmentFile.create({
+                    ID: null, // Auto-incremented by the database
+                    assignmentID: completedAssignmentId,
+                    buffer: file.buffer,// Store file content in desc (LONGBLOB)
+                    mimetype: file.mimetype,
+                    filename: file.originalname
+                });
+            }));
+    
+            return { message: 'Files uploaded successfully', uploadedFiles };
+        } catch (error) {
+            console.error('Upload Error:', error);
+            throw new Error(`File upload failed: ${error.message}`);
+        }
+    }
+    async getAssignmentFiles(assignmentID){
+        
+        console.log("belép a repoba: ", assignmentID)
+        const files = await this.AssignmentFile.findAll({
+            where:{
+                assignmentID:{[Op.eq]:assignmentID}
+            }
+        })
+        return files
+    }
+    async getCompletedAssignmentFiles(completedAssignmentId){
+        const files = await this.AssignmentFile.findAll({
+            where:{
+                assignmentID:{[Op.eq]:completedAssignmentId}
+            }
+        })
+        return files
     }
     async modifycompletedassignment(ID,completedassignment){
         console.log("EZ LESZ FELBASZVA")

@@ -40,14 +40,21 @@ router.get("/hazikGroups", hazikController.getGroups);
 router.get("/haziktanar", hazikController.getsentAssignments);
 router.get("/hazikdiak",hazikController.getReceivedAssignments)
 router.post("/newassignment", hazikController.postAssignment);
-//router.get("/hazikfileoktanar",hazikController.getTeacherAssignmentFiles)
+
 router.patch("/modifycompletedassignment",hazikController.modifycompletedassignment)
 
+router.post("/getAssignmentFiles",hazikController.getAssignmentFiles)
 // <-- IMPORTANT: Use upload.array("files") on this route
 router.post(
   "/uploadassignmentfiles",
   upload.array("files"),
   hazikController.uploadAssignmentFiles
 );
+
+router.post(
+  "/uploadcompletedassignmentfiles",
+  upload.array("files"),
+  hazikController.uploadCompletedAssignmentFiles
+)
 
 module.exports = router;
