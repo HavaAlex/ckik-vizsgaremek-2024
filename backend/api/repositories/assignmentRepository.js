@@ -88,9 +88,6 @@ class AssignmentRepository
         }
         for (let i = 0; i < visszakuldomakkoreztarray.length; i++) {
             for (let j = 0; j < visszakuldomakkoreztarray[i].anwsers.length; j++) {
-                console.log("CUCC")
-                console.log(visszakuldomakkoreztarray[i].anwsers[j])
-                console.log("idje",visszakuldomakkoreztarray[i].anwsers[j].studentID)
                 const theOneSender = await this.Student.findOne({
                     where: { ID:  visszakuldomakkoreztarray[i].anwsers[j].studentID },
                     attributes: ["name"]
@@ -204,8 +201,6 @@ class AssignmentRepository
         }
     }
     async getAssignmentFiles(assignmentID){
-        
-        console.log("belép a repoba: ", assignmentID)
         const files = await this.AssignmentFile.findAll({
             where:{
                 assignmentID:{[Op.eq]:assignmentID}
@@ -213,14 +208,23 @@ class AssignmentRepository
         })
         return files
     }
-    async getCompletedAssignmentFiles(completedAssignmentId){
-        const files = await this.AssignmentFile.findAll({
-            where:{
-                assignmentID:{[Op.eq]:completedAssignmentId}
-            }
-        })
-        return files
-    }
+    async getCompletedAssignmentFiles(completedAssignmentIds) {
+        const files = [];
+        console.log("o az ami ami: ", completedAssignmentIds);
+        
+        for (const celpontID of completedAssignmentIds) {
+          const cuccli = await this.CompletedAssignmentFile.findAll({
+            where: { assignmentID: { [Op.eq]: celpontID } }
+          });
+          files.push(cuccli);
+        }
+      
+        files.forEach(element => {
+            console.log("őőőő",element)
+        });
+        return files;
+      }
+      
     async modifycompletedassignment(ID,completedassignment){
         console.log("EZ LESZ FELBASZVA")
         console.log(completedassignment)
@@ -230,8 +234,6 @@ class AssignmentRepository
         await changedAnswer.update({ textAnswer: completedassignment.textAnswer });
         await changedAnswer.update({ date: completedassignment.date });
         await changedAnswer.update({ status: completedassignment.status });
-        console.log(changedAnswer)
-
         return changedAnswer
     }
 }

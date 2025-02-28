@@ -68,15 +68,12 @@ export const usegetAssignmentsStudent = () => {
 
 
 const getAssignmentFiles = async (assignmentId:number) : Promise<number> =>{
-    console.log("QUERYBEE: ",assignmentId)
     const {getCookie} = useCookieHandler()
     const config = {
         headers: { Authorization: `Bearer ${getCookie("alap")}`/*,assignmentID:assignmentId*/ }
     };
     const response = await axiosClient.post(`http://localhost:3000/paholy/getAssignmentFiles`,{assignmentId} ,config)
-    console.log("FÁJLAJAID NÉKED")
-    console.log(response)
-    console.log(response.data)
+    console.log("getAssignmentFiles RESPONSEEEEEEEEEEEE: ", response)
     return response.data
 }
 export const usegetAssignmentFiles = () => {
@@ -93,6 +90,31 @@ export const usegetAssignmentFiles = () => {
         }
     )
 };
+
+const getCompletedAssignmentFiles = async (assignmentId:any[]) : Promise<any[]> =>{
+    const {getCookie} = useCookieHandler()
+    const config = {
+        headers: { Authorization: `Bearer ${getCookie("alap")}` }
+    };
+    const response = await axiosClient.post(`http://localhost:3000/paholy/getCompletedAssignmentFiles`,{assignmentId} ,config)
+    console.log("getCompletedAssignmentFiles RESPONSEEEEEEEEEEEE: ", response)
+    return response.data
+}
+export const usegetCompletedAssignmentFiles = () => {
+    return useMutation( 
+        {
+            mutationFn: getCompletedAssignmentFiles,
+            onSuccess(){
+                queryClient.refetchQueries({queryKey:[QUERY_KEYS.getCompletedAssignmentFiles]})
+            },
+            onError(error){
+                const {setError} = useErrorHandler()
+                setError(error)
+            }
+        }
+    )
+};
+
 const getGroups = async ()  =>{
     //console.log("LEFUTOK: getGroups")
     const {getCookie} = useCookieHandler()
@@ -192,8 +214,6 @@ const uploadAssignmentFiles = async ({
       "Content-Type": "multipart/form-data"
     }
   };
-  console.log("SZARSTAR SZAR")
-  console.log(formData)
   await axiosClient.post(`http://localhost:3000/paholy/uploadassignmentfiles`, formData, config);
 }
 

@@ -1,7 +1,14 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue';
 import type { Assignment, OpenAssignment } from '@/api/hazik/hazik';
-import { usegetGroups, useaddAssignment, useuploadAssignmentFiles, usegetAssignmentsTeacher, usegetAssignmentFiles } from '@/api/hazik/hazikQuery';
+import { 
+  usegetGroups, 
+  useaddAssignment, 
+  useuploadAssignmentFiles, 
+  usegetAssignmentsTeacher, 
+  usegetAssignmentFiles, 
+  usegetCompletedAssignmentFiles 
+} from '@/api/hazik/hazikQuery';
 
 const dialog = ref(false); // dialog for sending assignment
 const successDialog = ref(false); // shows when submission is successful
@@ -9,6 +16,7 @@ const { data } = usegetGroups(); // target groups
 const { mutate: addAssignment, isPending } = useaddAssignment();
 const { mutate: uploadAssignmentFiles } = useuploadAssignmentFiles();
 const { mutate: getAssignmentFiles } = usegetAssignmentFiles();
+const { mutate: getCompletedAssignmentFiles } = usegetCompletedAssignmentFiles();
 const { data: assignmentTeacherList } = usegetAssignmentsTeacher();
 
 // Store assignment data for adding an assignment
@@ -18,8 +26,6 @@ const AssignmentDataRef = ref<Assignment>({
   DeadLine: new Date(0),
   UploadDate: new Date(0),
 });
-
-
 
 // Deadline selection:
 const date = ref<Date | null>(null);
@@ -92,49 +98,73 @@ function formatDate(dateString: Date | string) {
 // For viewing answers, we need the full teacher-assignment item (which contains the answers array)
 const selectedAssignmentForAnswers = ref<{ anwsers: any[]; feladat: OpenAssignment } | null>(null);
 const ViewAssignmentAnwserDialog = ref(false);
-const openViewAssignmentAnswerDialog = (assignmentItem: { anwsers: any[]; feladat: OpenAssignment }) => {
+
+// Store files for each answer keyed by answer id
+const answerFiles = ref<Record<number, any[]>>({});
+const answerFilesIDs = ref<any[]>([]);
+
+// Fetch files for a given answer using its ID
+const fetchAnswerFiles = async (answerFilesIDs: any[]) => {
+  console.log("Fetching answer files for answer id:", answerFilesIDs);
+  await getCompletedAssignmentFiles(answerFilesIDs, {
+    onSuccess: (response) => {
+      console.log("Answer files fetched:", response, "for:", answerFilesIDs);
+      const filesArray = response.data || response;
+      const filesByAnswer: Record<number, any[]> = {};
+      // Map each answer ID to its corresponding file array from the response.
+      answerFilesIDs.forEach((id, index) => {
+        filesByAnswer[id] = filesArray[index];
+      });
+      answerFiles.value = filesByAnswer;
+    }
+  });
+};
+
+const openViewAssignmentAnswerDialog = async (assignmentItem: { anwsers: any[]; feladat: OpenAssignment }) => {
+  fetchAssignmentFiles(assignmentItem.feladat.ID);
   selectedAssignmentForAnswers.value = assignmentItem;
   ViewAssignmentAnwserDialog.value = true;
+  
+  // Reset the answerFilesIDs array before pushing new IDs.
+  answerFilesIDs.value = [];
+  
+  // For each answer, fetch its associated files
+  if (assignmentItem.anwsers) {
+    for (const answer of assignmentItem.anwsers) {
+      const answerId = answer.id || answer.ID;
+      if (answerId) {
+        answerFilesIDs.value.push(answerId);
+      }
+    }
+    fetchAnswerFiles(answerFilesIDs.value);
+  }
 };
 
 // Holds the files fetched for a given assignment
 const assignmentFiles = ref<any[]>([]);
 
-// Fetch assignment files (no change here except we confirm the response is an array of objects
-// that include { ID, buffer, filename, mimetype, ... }):
+// Fetch assignment files (we expect an array of objects including { ID, buffer, filename, mimetype, ... })
 const fetchAssignmentFiles = async (selectedAssignmentID: number) => {
   console.log("Fetching files for assignment:", selectedAssignmentID);
   await getAssignmentFiles(selectedAssignmentID, {
     onSuccess: async (response) => {
       console.log("Files fetched:", response);
-      // Assign the array of files to our local reactive array
-      assignmentFiles.value = response;
+      assignmentFiles.value = response.data || response;
     }
   });
 };
 
 // Updated download function
-// Use file.buffer.data, the file’s correct mimetype, and file.filename as the download name:
 const downloadFile = (file: any) => {
-  // Convert the array of bytes to a Uint8Array
   const byteArray = new Uint8Array(file.buffer.data);
-
-  // Create a blob with the actual MIME type (if available)
   const blob = new Blob([byteArray], { type: file.mimetype || 'application/octet-stream' });
-
-  // Create a temporary link element
   const link = document.createElement("a");
   link.href = URL.createObjectURL(blob);
-
-  // Download using the original filename (which should include the extension)
   link.download = file.filename;
-
-  // Trigger the download and clean up
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
 };
-
 </script>
 
 <template>
@@ -157,8 +187,8 @@ const downloadFile = (file: any) => {
           </td>
           <td>
             <div style="display: flex; gap: 10px;">
-              <!-- Open answers dialog -->
-              <v-btn @click="openViewAssignmentAnswerDialog(feladat); fetchAssignmentFiles(feladat.feladat.ID)">
+              <!-- Open answers dialog and fetch assignment files -->
+              <v-btn @click="openViewAssignmentAnswerDialog(feladat);">
                 Válaszok megtekintése
               </v-btn>
             </div>
@@ -175,6 +205,8 @@ const downloadFile = (file: any) => {
           <p><strong>Feladás dátuma:</strong> {{ formatDate(selectedAssignmentForAnswers?.feladat.uploadDate) }}</p>
           <p><strong>Határidő:</strong> {{ formatDate(selectedAssignmentForAnswers?.feladat.deadline) }}</p>
           <p><strong>Feladat leírása:</strong> {{ selectedAssignmentForAnswers?.feladat.desc }}</p>
+
+          <!-- Assignment files -->
           <div v-if="assignmentFiles.length">
             <p><strong>Fájlok:</strong></p>
             <v-list-item
@@ -183,28 +215,50 @@ const downloadFile = (file: any) => {
               @click="downloadFile(file)"
               style="cursor: pointer;"
             >
-              <v-list-item-content>
-                <!-- Display the file’s actual name (with extension) -->
-                <v-list-item-title>{{ file.filename }}</v-list-item-title>
-              </v-list-item-content>
+              <v-list-item-title>{{ file.filename }}</v-list-item-title>
             </v-list-item>
           </div>
           <div v-else>
             <p><strong>Fájlok:</strong> Nincsenek fájlok ehhez a feladathoz.</p>
           </div>
-        <v-card-title>Válaszok:</v-card-title>
-          <!-- Iterate over all answers -->
+
+          <!-- Answers -->
+          <v-card-title>Válaszok:</v-card-title>
           <v-list>
-            <v-list-item v-for="(answer, index) in selectedAssignmentForAnswers?.anwsers" :key="index">
-              <v-list-item-content>
-                <v-list-item-title>{{ answer.senderUserName.name }}</v-list-item-title>
-                <v-list-item-subtitle>Válasz szövege: {{ answer.textAnswer }}</v-list-item-subtitle>
-              </v-list-item-content>
+            <!-- Loop over each answer in the selected assignment -->
+            <v-list-item
+              v-for="(answer, index) in selectedAssignmentForAnswers?.anwsers"
+              :key="answer.ID"
+            >
+              <!-- Basic answer info -->
+              <v-list-item-title>{{ answer.senderUserName.name }}</v-list-item-title>
+              <v-list-item-subtitle>Válasz szövege: {{ answer.textAnswer }}</v-list-item-subtitle>
+
+              <!-- Files for this particular answer -->
+              <div v-if="answerFiles[answer.ID] && answerFiles[answer.ID].length">
+                <p><strong>Fájlok:</strong></p>
+                <v-list dense>
+                  <v-list-item
+                    v-for="(file, fileIndex) in answerFiles[answer.ID]"
+                    :key="file.ID"
+                    @click="downloadFile(file)"
+                    style="cursor: pointer;"
+                  >
+                    <v-list-item-title>{{ file.filename }}</v-list-item-title>
+                  </v-list-item>
+                </v-list>
+              </div>
+              <div v-else>
+                <p><strong>Fájlok:</strong> Nincsenek fájlok ehhez a válaszhoz.</p>
+              </div>
             </v-list-item>
           </v-list>
         </v-card-text>
+
         <v-card-actions>
           <v-btn color="primary" @click="ViewAssignmentAnwserDialog = false">Bezárás</v-btn>
+          <v-btn @click="console.log(answerFiles)">Jeffry Epstein button</v-btn>
+          <v-btn @click="console.log(selectedAssignmentForAnswers)">Pol Pot button</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>

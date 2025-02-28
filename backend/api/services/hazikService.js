@@ -29,5 +29,8 @@ class hazikService{
     async getAssignmentFiles(assignmentID){
         return await assignmentRepository.getAssignmentFiles(assignmentID)
     }
+    async getCompletedAssignmentFiles(assignmentID){
+        return await assignmentRepository.getCompletedAssignmentFiles(assignmentID)
+    }
 }
 module.exports = new hazikService(); 
