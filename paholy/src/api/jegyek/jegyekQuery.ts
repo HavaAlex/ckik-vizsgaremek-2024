@@ -6,6 +6,7 @@ import { QUERY_KEYS } from "@/utils/QueryKeys"
 import queryClient from "@/lib/queryClient"
 import { useCookieHandler } from "@/stores/cookieHandler"
 import { useErrorHandler } from "@/stores/errorHandler"
+import { useStatusHandler } from "@/stores/statusHandler"
 
 const getMarks = async () : Promise<Mark[]> => {
     const {getCookie} = useCookieHandler()
@@ -160,7 +161,8 @@ export const useAddMark = () => {
             onSuccess(data) {
                 queryClient.refetchQueries({queryKey:[QUERY_KEYS.postJegyek]})
                 console.log(data)
-                alert("Sikeres adat felvitel!")
+                const {setStatus} = useStatusHandler()
+                setStatus("Sikeres jegy felvitel!")
             },
             onError(error){
                 const {setError} = useErrorHandler()

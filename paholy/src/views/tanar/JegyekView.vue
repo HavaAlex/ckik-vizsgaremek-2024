@@ -266,10 +266,9 @@ const honapNevLista = ["Szeptember","Október","November","December","Január","
           </thead>
           <tbody>
             <tr v-for="(record, index) in osszTagComputed?.members" :key="index">
-              <td style="width: 15vw; justify-content: center !important;">{{ record.name }}</td>
-              <td style="width: 15vw; justify-content: center !important;">
-                {{ newMarks[index] }}
-                <v-radio-group inline v-model="newMarks[index]" label="Add meg a jegyet:">
+              <td style="width: 15vw; text-align: center !important; font-size: large" class="border border-s-lg">{{ record.name }}</td>
+              <td style="width: 15vw; text-align: center !important; font-size: large" class="border border-s-lg">
+                <v-radio-group inline v-model="newMarks[index]" label="Add meg a jegyet:" style="justify-self: center;">
                   <v-radio label="1" :value="1"></v-radio>
                   <v-radio label="2" :value="2"></v-radio>
                   <v-radio label="3" :value="3"></v-radio>
@@ -286,4 +285,10 @@ const honapNevLista = ["Szeptember","Október","November","December","Január","
     </v-tabs-window>
   </main>
 </template>
+
+<style lang="css">
+.targetelement:hover {
+  cursor: pointer;
+}
+</style>
   
