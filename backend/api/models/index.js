@@ -75,8 +75,8 @@ module.exports = (sequelize, DataTypes) => {
     Assignment.hasMany(AssignmentFiles, {foreignKey: 'assignmentID'});
     AssignmentFiles.belongsTo(Assignment, { foreignKey: 'assignmentID' });
 
-    CompletedAssignment.hasMany(CompletedAssignmentFiles, {foreignKey: 'completedAssignmentID'});
-    CompletedAssignmentFiles.belongsTo(CompletedAssignment, { foreignKey: 'completedAssignmentID' });
+    CompletedAssignment.hasMany(CompletedAssignmentFiles, {foreignKey: 'assignmentID'});
+    CompletedAssignmentFiles.belongsTo(CompletedAssignment, { foreignKey: 'assignmentID' }); 
     Assignment.belongsTo(Teacher, {foreignKey: 'teacherID'});
     Teacher.hasMany(Assignment, {foreignKey: 'teacherID'});
     CompletedAssignment.belongsTo(Student, {foreignKey: 'studentID'});

@@ -44,6 +44,7 @@ router.post("/newassignment", hazikController.postAssignment);
 router.patch("/modifycompletedassignment",hazikController.modifycompletedassignment)
 
 router.post("/getAssignmentFiles",hazikController.getAssignmentFiles)
+router.post("/getCompletedAssignmentFiles",hazikController.getCompletedAssignmentFiles)
 // <-- IMPORTANT: Use upload.array("files") on this route
 router.post(
   "/uploadassignmentfiles",

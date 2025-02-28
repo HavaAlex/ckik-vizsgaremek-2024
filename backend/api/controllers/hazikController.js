@@ -72,15 +72,22 @@ exports.modifycompletedassignment = async (req,res,next) => {
     studentID:studentID,
     textAnswer:textAnswer
   }
-  console.log("EZAZ TTE SZAROS")
-  console.log(completedassignment)
   const modositotthazik = await hazikService.modifycompletedassignment(req.decoded.ID,completedassignment)
   res.status(201).json(modositotthazik)
 }
 
 exports.getAssignmentFiles = async (req,res,next) =>{
   const {assignmentId} = req.body;
-  console.log("controllerbe a követrkező : ",assignmentId)
   const assignmentFilesArray = await hazikService.getAssignmentFiles(assignmentId)
   res.status(201).json(assignmentFilesArray)
+}
+
+exports.getCompletedAssignmentFiles = async (req,res,next) =>{
+  const {assignmentId} = req.body;
+  console.log("ezt keressük: ",assignmentId)
+  const assignmentIds = new Set(assignmentId)
+  console.log("ditinctes:  " ,assignmentIds)
+  const completedassignmentFilesArray = await hazikService.getCompletedAssignmentFiles(assignmentIds)
+  console.log("ITT MÉG JÓÓÓÓÓ  ", completedassignmentFilesArray)
+  res.status(201).json(completedassignmentFilesArray)
 }
