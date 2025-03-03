@@ -226,8 +226,6 @@ class AssignmentRepository
       }
       
     async modifycompletedassignment(ID,completedassignment){
-        console.log("EZ LESZ FELBASZVA")
-        console.log(completedassignment)
         // Assume User is a Sequelize model
         const changedAnswer = await this.CompletedAssignment.findOne({ where: { id: completedassignment.ID } });
         
@@ -235,6 +233,32 @@ class AssignmentRepository
         await changedAnswer.update({ date: completedassignment.date });
         await changedAnswer.update({ status: completedassignment.status });
         return changedAnswer
+    }
+    async deleteAssignment(ID){//mindent kitöröl
+        /*const answersForThis  = await this.CompletedAssignment.findAll({where:{ assignmentID:{[Op.eq]:ID}}})
+        for (const anwser of answersForThis) {*/
+        await this.CompletedAssignmentFile.destroy({
+            where:{
+                assignmentID: ID
+            }
+        })
+        /*}*/
+        await this.CompletedAssignment.destroy({
+            where:{
+                assignmentID: ID
+            }
+        })
+        await this.AssignmentFile.destroy({
+            where:{
+                assignmentID: ID
+            }
+        })
+        await this.Assignment.destroy({
+            where:{
+                ID:ID
+            }
+        })
+        return "sikerült"
     }
 }
 

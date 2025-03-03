@@ -45,6 +45,7 @@ router.patch("/modifycompletedassignment",hazikController.modifycompletedassignm
 
 router.post("/getAssignmentFiles",hazikController.getAssignmentFiles)
 router.post("/getCompletedAssignmentFiles",hazikController.getCompletedAssignmentFiles)
+router.delete("/deleteAssignment/:assignmentId",hazikController.deleteAssignment)
 // <-- IMPORTANT: Use upload.array("files") on this route
 router.post(
   "/uploadassignmentfiles",

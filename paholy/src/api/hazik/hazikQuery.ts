@@ -192,6 +192,32 @@ export const useaddAssignment = () => {
     )
 }
 
+const deleteAssignment = async (assignmentId: number) : Promise<number> =>{
+    const {getCookie} = useCookieHandler()
+    const config = {
+        headers: { Authorization: `Bearer ${getCookie("alap")}` }
+    };
+    console.log("BELE DELETE ", assignmentId)
+    const response = await axiosClient.delete(`http://localhost:3000/paholy/deleteAssignment/${assignmentId}`,config) // ${document.cookie} //nem jó sajna delete csak 2 vel működik
+    return response.data
+}
+
+export const usedeleteAssignment = () => {
+    return useMutation( 
+        {
+            mutationFn: deleteAssignment,
+            onSuccess(){
+                queryClient.refetchQueries({queryKey:[QUERY_KEYS.deleteAssignment]})
+            },
+            onError(error){
+                const {setError} = useErrorHandler()
+                setError(error)
+            }
+        }
+    )
+}
+
+
 const uploadAssignmentFiles = async ({
     files,
     assignmentId,

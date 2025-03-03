@@ -91,3 +91,11 @@ exports.getCompletedAssignmentFiles = async (req,res,next) =>{
   console.log("ITT MÉG JÓÓÓÓÓ  ", completedassignmentFilesArray)
   res.status(201).json(completedassignmentFilesArray)
 }
+
+exports.deleteAssignment = async (req,res,next) =>{
+  const assignmentId = req.params.assignmentId;
+  console.log("DELTEEEE :   ", assignmentId)
+  
+  const cucc = await hazikService.deleteAssignment(assignmentId)
+  res.status(201).json(cucc)
+}
