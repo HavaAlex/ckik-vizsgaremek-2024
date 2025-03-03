@@ -5,7 +5,7 @@
   <main>
     <div>
       <h1>Gyermeke hianyzásai:</h1>
-      <v-table theme="dark" height="40vw">
+      <v-table  height="40vw">
       <thead>
         <tr>
             <th class="text-center">Tanuló</th>

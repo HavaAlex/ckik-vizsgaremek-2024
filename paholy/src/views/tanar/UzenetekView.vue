@@ -41,7 +41,7 @@ const sendMessage = () => {
 <template>
   <main>
     <!-- Message Dialog -->
-    <v-dialog v-model="dialog" max-width="500" theme="dark">
+    <v-dialog v-model="dialog" max-width="500" >
       <template v-slot:activator="{ props: activatorProps }">
         <v-btn v-bind="activatorProps" color="surface-variant" text="Üzenet írása" variant="flat"></v-btn>
       </template>
@@ -93,7 +93,7 @@ const sendMessage = () => {
     </v-dialog>
 
     <!-- Success Dialog -->
-    <v-dialog v-model="successDialog" max-width="400" theme="dark">
+    <v-dialog v-model="successDialog" max-width="400" >
       <v-card title="Siker!">
         <v-card-text>Az üzenetet sikeresen elküldted.</v-card-text>
         <v-card-actions>

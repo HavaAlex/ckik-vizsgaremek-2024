@@ -7,7 +7,7 @@ const {data} = useGetHianyzasok()
 <template>
   <main>
     <div>
-      <v-table theme="dark" height="40vw">
+      <v-table  height="40vw">
       <thead>
           <tr>
             <th class="text-center">időpont</th>

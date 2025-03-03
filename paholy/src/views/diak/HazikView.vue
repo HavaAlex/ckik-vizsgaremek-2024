@@ -115,7 +115,7 @@ const downloadFile = (file: any) => {
 
 <template>
   <main>
-    <v-table style="height: 30vw !important;" theme="dark">
+    <v-table style="height: 30vw !important;" >
       <thead>
         <tr>
           <th class="text-center" style="width: 10vw; justify-content: center;">Feladó tanár</th>
@@ -139,7 +139,7 @@ const downloadFile = (file: any) => {
     </v-table>
 
 
-    <v-dialog v-model="ViewAssignmentDialog" max-width="50vw" theme="dark">
+    <v-dialog v-model="ViewAssignmentDialog" max-width="50vw" >
       <v-card max-width="50vw">
         <v-card-title>Feladat részletei</v-card-title>
         <v-card-text>

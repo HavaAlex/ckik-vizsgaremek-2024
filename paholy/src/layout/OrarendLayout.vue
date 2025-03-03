@@ -56,15 +56,15 @@ watch(data, (newData) => {
 <template>
   
   <main>
-    <v-card theme="dark" style="border-radius: 10px; border: 1px; margin-bottom: 10px;">
-      <h1 style="padding: 10px;">Órarend</h1>
+    <v-card style="border-radius: 10px; border: 1px; margin-bottom: 10px;">
+      <h1 style="padding: 10px;" class="bg-title">Órarend</h1>
     </v-card>
     <div v-if="data != undefined">
       <div class="color-picker">
         <label for="lessonColor">Szín megváltoztatása:</label>
         <input type="color" id="lessonColor" v-model="lessonColor" />
       </div>
-      <v-table theme="dark" class="orarendtabla"  fixed-header style="border-radius: 5%;">
+      <v-table class="orarendtabla"  fixed-header style="border-radius: 5%;">
         <thead>
           <tr>
             <th class="text-center">Idő</th>

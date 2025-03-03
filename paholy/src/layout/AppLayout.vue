@@ -55,7 +55,7 @@ onUpdated(()=>{
 <template>
   <div v-if="isPortrait">
     <v-layout>
-      <v-app-bar color="grey" height="48" flat class="appnavbar">
+      <v-app-bar height="48" flat class="appnavbar bg-secondary">
         <v-container class="d-flex align-center justify-space-between">
           <!-- Left Side -->
           <v-menu class="appnavbarmenubtn">
@@ -95,7 +95,6 @@ onUpdated(()=>{
       <div>
       
       <v-app-bar
-        color="grey-lighten-2"
         height="48"
         location="bottom"
         flat
@@ -113,10 +112,7 @@ onUpdated(()=>{
   </div>
   <div v-else>
     <v-layout class="rounded rounded-md">
-      <v-system-bar color="grey-darken-3"></v-system-bar>
-      <v-app-bar
-        color="grey"
-        height="48"
+      <v-app-bar class="appnavbar bg-secondary"
         flat
       >
   
@@ -149,7 +145,6 @@ onUpdated(()=>{
       </v-btn>
     </v-app-bar>
     <v-app-bar
-      color="grey-lighten-2"
       height="48"
       location="bottom"
       flat
@@ -169,17 +164,11 @@ onUpdated(()=>{
 
   </template>
 <style lang="css">
-  /* Default (Light Mode) */
-  body {
-    background-color: rgb(255, 255, 255);
-    color: rgb(0, 0, 0);
-    align-content: center;
-  }
   
   /* Dark Mode */
   @media (prefers-color-scheme: dark) {
     body {
-      background-color: rgb(25, 25, 25);
+      background-color: rgb(52, 37, 37);
       color: rgb(255, 255, 255);
     }
   }
