@@ -44,6 +44,7 @@ const HAZIK_KEYS = {
         getAssignmentFiles: 'getAssignmentFiles',
         getCompletedAssignmentFiles: 'getCompletedAssignmentFiles',
         modifyCompletedAssignment: 'modifyCompletedAssignment',
+        deleteAssignment:'deleteAssignment'
 }
 export const QUERY_KEYS = {
     ...USER_KEYS,

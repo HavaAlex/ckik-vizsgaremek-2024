@@ -7,7 +7,8 @@ import {
   useuploadAssignmentFiles, 
   usegetAssignmentsTeacher, 
   usegetAssignmentFiles, 
-  usegetCompletedAssignmentFiles 
+  usegetCompletedAssignmentFiles,
+  usedeleteAssignment
 } from '@/api/hazik/hazikQuery';
 
 const dialog = ref(false); // dialog for sending assignment
@@ -17,6 +18,7 @@ const { mutate: addAssignment, isPending } = useaddAssignment();
 const { mutate: uploadAssignmentFiles } = useuploadAssignmentFiles();
 const { mutate: getAssignmentFiles } = usegetAssignmentFiles();
 const { mutate: getCompletedAssignmentFiles } = usegetCompletedAssignmentFiles();
+const { mutate: deleteAssignment } = usedeleteAssignment();
 const { data: assignmentTeacherList } = usegetAssignmentsTeacher();
 
 // Store assignment data for adding an assignment
@@ -139,6 +141,19 @@ const openViewAssignmentAnswerDialog = async (assignmentItem: { anwsers: any[]; 
     fetchAnswerFiles(answerFilesIDs.value);
   }
 };
+const DeleteAssignmentID = ref<number>(-1)
+const DeleteAssignmentDialog = ref(false);
+const openDeleteAssignmentDialog = async(id:number)=>{
+  DeleteAssignmentID.value = id
+  DeleteAssignmentDialog.value = true
+}
+
+const csinaldnigga = async() =>{
+  console.log("aaaaaaaaaaaaaaaaa  ",DeleteAssignmentID)
+  await deleteAssignment(DeleteAssignmentID.value, { onSuccess: (response) => { console.log("SIKER"); } });
+
+}
+
 
 // Holds the files fetched for a given assignment
 const assignmentFiles = ref<any[]>([]);
@@ -190,6 +205,9 @@ const downloadFile = (file: any) => {
               <!-- Open answers dialog and fetch assignment files -->
               <v-btn @click="openViewAssignmentAnswerDialog(feladat);">
                 Válaszok megtekintése
+              </v-btn>
+              <v-btn @click="openDeleteAssignmentDialog(feladat.feladat.ID)">
+                Törlés
               </v-btn>
             </div>
           </td>
@@ -257,11 +275,22 @@ const downloadFile = (file: any) => {
 
         <v-card-actions>
           <v-btn color="primary" @click="ViewAssignmentAnwserDialog = false">Bezárás</v-btn>
-          <v-btn @click="console.log(answerFiles)">Jeffry Epstein button</v-btn>
-          <v-btn @click="console.log(selectedAssignmentForAnswers)">Pol Pot button</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
+
+<!---------------------------------------------------------------->
+      <!-- Dialog for viewing answers -->
+      <v-dialog v-model="DeleteAssignmentDialog" max-width="50vw" theme="dark">
+        <v-card>
+          <v-card-title >Biztos törölni akarod?</v-card-title>
+          <v-btn @click="csinaldnigga">Törlés</v-btn>
+          <v-btn @click="DeleteAssignmentDialog = false">Mégse</v-btn>
+        </v-card>
+      </v-dialog>
+    
+
+
 
     <!-- Dialog for sending assignment -->
     <v-btn theme="dark" @click="dialog = true">Feladat kitűzése</v-btn>
