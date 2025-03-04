@@ -88,8 +88,8 @@ onUnmounted(() => {
 
 <template>
   <main class="main">
-    <v-card theme="dark" style="border-radius: 10px; border: 1px; margin-bottom: 10px;">
-      <h1 style="padding: 10px;">Üzenetek</h1>
+    <v-card style="border-radius: 10px; border: 1px; margin-bottom: 10px;">
+      <h1 style="padding: 10px;" class="bg-title">Üzenetek</h1>
     </v-card>
     <v-card class="conainerCard">
       <div style="display:flex; flex-direction: row; justify-content: left; align-items: center">
@@ -99,7 +99,7 @@ onUnmounted(() => {
       <div v-if="Beerkezett">
         <div v-if="!data?.kapott || data.kapott.length === 0">
           <p>Még nem érkezett üzenete</p>
-          <v-table theme="dark" fixed-header style="border-radius: 3%;" class="messageTable">
+          <v-table fixed-header style="border-radius: 3%;" class="messageTable">
             <thead>
               <tr>
                 <th class="text-center" style="width: 15vw;" @click="sortListBy('sender')">Feladó</th>
@@ -113,7 +113,7 @@ onUnmounted(() => {
           </v-table>
         </div>
         <div v-else>
-          <v-table theme="dark" fixed-header style="border-radius: 3%;" class="messageTable">
+          <v-table fixed-header style="border-radius: 3%;" class="messageTable">
             <thead>
               <tr>
                 <th class="text-center" style="width: 15vw;" @click="sortListBy('sender')">Feladó</th>
@@ -135,7 +135,7 @@ onUnmounted(() => {
           </v-table>
 
           <!-- Popup Modal -->
-          <v-dialog v-model="dialog" max-width="50vw" theme="dark">
+          <v-dialog v-model="dialog" max-width="50vw" >
             <v-card max-width="50vw">
               <v-card-title>Üzenet részletei</v-card-title>
               <v-card-text>
@@ -153,7 +153,7 @@ onUnmounted(() => {
       <div v-else>
         <div v-if="!data?.elkuldott || data.elkuldott.length === 0">
           <p>Még nem küldött üzeneteket</p>
-          <v-table theme="dark" fixed-header style="border-radius: 3%;" class="messageTable">
+          <v-table  fixed-header style="border-radius: 3%;" class="messageTable">
             <thead>
               <tr>
                 <th class="text-center" style="width: 15vw;" @click="sortListBy('date')">Dátum</th>
@@ -166,7 +166,7 @@ onUnmounted(() => {
           </v-table>
         </div>
         <div v-else>
-          <v-table theme="dark" fixed-header style="border-radius: 3%;" class="messageTable">
+          <v-table  fixed-header style="border-radius: 3%;" class="messageTable">
             <thead>
               <tr>
                 <th class="text-center" style="width: 15vw;" @click="sortListBy('date')">Dátum</th>
@@ -186,7 +186,7 @@ onUnmounted(() => {
           </v-table>
 
           <!-- Popup Modal -->
-          <v-dialog v-model="dialog" max-width="50vw" theme="dark">
+          <v-dialog v-model="dialog" max-width="50vw" >
             <v-card max-width="50vw">
               <v-card-title>Üzenet részletei</v-card-title>
               <v-card-text>
@@ -214,25 +214,10 @@ onUnmounted(() => {
   display: inline-block;
 }
 .conainerCard {
-  background-color: rgb(255, 255, 255)!important;
-  color: rgb(0, 0, 0)!important;
   align-content: center!important;
 }
 .switchBtn {
-  background-color: rgb(255, 255, 255)!important;
-  color: rgb(0, 0, 0)!important;
   align-content: center!important;
-}
-/* Dark Mode */
-@media (prefers-color-scheme: dark) {
-  .conainerCard {
-    background-color: rgb(25, 25, 25)!important;
-    color: rgb(255, 255, 255)!important;
-  }
-  .switchBtn {
-    background-color: rgb(25, 25, 25)!important;
-    color: rgb(255, 255, 255)!important;
-  }
 }
 @media (orientation: portrait) {
   .messageTable {

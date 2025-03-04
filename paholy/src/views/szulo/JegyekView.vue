@@ -4,7 +4,7 @@
 <template>
   <main>
     <h1>Osztályzatok:</h1>
-      <v-table theme="dark" height="40vw">
+      <v-table  height="40vw">
       <thead>
         <tr>
             <th class="text-center">Tantárgy</th>

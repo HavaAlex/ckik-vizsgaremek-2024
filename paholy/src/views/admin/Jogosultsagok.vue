@@ -4,7 +4,7 @@
 <template>
   <main>
     <h1>Felhasználók kezelése</h1>
-    <v-navigation-drawer theme="dark">
+    <v-navigation-drawer >
         <v-list-item title="Szűrési szempontok: "></v-list-item>
         <v-divider></v-divider>
         <h3>Szerepkörök:</h3>
@@ -22,7 +22,7 @@
         <h3>Tanított tantárgyak (csak tanárok):</h3>
 
     </v-navigation-drawer>
-    <v-table theme="dark" height="30vw" style="margin: 10%; border-radius: 5%;">
+    <v-table  height="30vw" style="margin: 10%; border-radius: 5%;">
         <thead>
           <tr>
               <th class="text-center">Név</th>

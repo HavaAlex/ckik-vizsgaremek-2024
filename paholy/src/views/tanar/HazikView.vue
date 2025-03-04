@@ -183,7 +183,7 @@ const downloadFile = (file: any) => {
 
 <template>
   <main>
-    <v-table style="height: 30vw !important;" theme="dark">
+    <v-table style="height: 30vw !important;" >
       <thead>
         <tr>
           <th class="text-center" style="width: 15vw; justify-content: center;">Határidő</th>
@@ -215,7 +215,7 @@ const downloadFile = (file: any) => {
     </v-table>
 
     <!-- Dialog for viewing answers -->
-    <v-dialog v-model="ViewAssignmentAnwserDialog" max-width="50vw" theme="dark">
+    <v-dialog v-model="ViewAssignmentAnwserDialog" max-width="50vw" >
       <v-card max-width="50vw">
         <v-card-title>Feladat:</v-card-title>
         <v-card-text>
@@ -292,7 +292,7 @@ const downloadFile = (file: any) => {
 
 
     <!-- Dialog for sending assignment -->
-    <v-btn theme="dark" @click="dialog = true">Feladat kitűzése</v-btn>
+    <v-btn  @click="dialog = true">Feladat kitűzése</v-btn>
     <v-dialog v-model="dialog">
       <v-card max-width="85vw">
         <p>Címzettek:</p>

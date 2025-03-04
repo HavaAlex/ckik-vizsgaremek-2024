@@ -153,7 +153,7 @@ const handleOpenAssignment = (selected: OpenAssignment, complassignment: OpenCom
 
 <template>
   <main>
-    <v-table style="height: 30vw !important;" theme="dark">
+    <v-table style="height: 30vw !important;" >
       <thead>
         <tr>
           <th class="text-center" style="width: 10vw;">Feladó tanár</th>
@@ -179,8 +179,8 @@ const handleOpenAssignment = (selected: OpenAssignment, complassignment: OpenCom
       </tbody>
     </v-table>
 
-    <!-- Assignment Details Dialog -->
-    <v-dialog v-model="ViewAssignmentDialog" max-width="50vw" theme="dark">
+
+    <v-dialog v-model="ViewAssignmentDialog" max-width="50vw" >
       <v-card max-width="50vw">
         <v-card-title>Feladat részletei</v-card-title>
         <v-card-text>

@@ -24,7 +24,7 @@ const honapNevLista = ["Szeptember","Október","November","December","Január","
       <input type="color" id="lessonColor"/>
     </div>
 
-    <v-table theme="dark" height="40vw" style="border-radius: 2%;" v-if="data != undefined">
+    <v-table  height="40vw" style="border-radius: 2%;" v-if="data != undefined">
       <thead>
         <tr>
             <th style="width: 15vw; justify-content: center !important; " class="text-center">Tantárgy</th>
@@ -32,7 +32,7 @@ const honapNevLista = ["Szeptember","Október","November","December","Január","
           </tr>
       </thead>
       <tbody>
-        <tr v-for="(record, index) in tantargyak" :key="index" v-if="tantargyak.length>0">
+        <tr v-for="(record, index) in tantargyak" :key="index" v-if="tantargyak.length>0" class="secondary">
           <td style="width: 15vw; justify-content: center !important;">{{ record }}</td>
           <td style="width: 15vw; justify-content: center !important;" v-for="(honap) in honapLista">
             <p v-for="(jegy, index) in data.filter((jegy:any)=>new Date(jegy.date).getMonth()+1 == honap&& jegy.subjectName == record )" :key="index">

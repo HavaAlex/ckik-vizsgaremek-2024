@@ -5,7 +5,7 @@
   <main>
     <h1>Kiosztott osztályzatok</h1>
 
-      <v-navigation-drawer theme="dark">
+      <v-navigation-drawer >
         <v-list-item title="Szűrési szempontok: "></v-list-item>
         <v-divider></v-divider>
         <h3>Osztályok:</h3>
@@ -32,7 +32,7 @@
         thumb-label
       ></v-slider>
     </v-navigation-drawer>
-      <v-table theme="dark" height="40vw" style="border-radius: 2%;">
+      <v-table  height="40vw" style="border-radius: 2%;">
       <thead>
         <tr>
             <th class="text-center">Tanuló</th>

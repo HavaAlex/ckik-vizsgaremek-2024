@@ -118,8 +118,8 @@ const honapNevLista = ["Szeptember","Október","November","December","Január","
 
 <template>
   <main>
-      <v-navigation-drawer theme="dark">
-        <v-card>
+      <v-navigation-drawer class="bg-secondary">
+        <v-card style="margin-bottom: 10px;">
           <v-tabs v-model="tab">
             <v-tab value="one">Megtekintés</v-tab>
             <v-tab value="two">Beírás</v-tab>
@@ -206,7 +206,7 @@ const honapNevLista = ["Szeptember","Október","November","December","Január","
     </v-navigation-drawer>
     <v-tabs-window v-model="tab">
       <v-tabs-window-item value="one">
-        <v-table theme="dark" height="40vw" style="border-radius: 2%;" v-if="groupMarks.data != undefined">
+        <v-table  height="40vw" style="border-radius: 2%;" v-if="groupMarks.data != undefined">
           <thead>
             <tr>
                 <th style="width: 15vw; justify-content: center !important; " class="text-center">Név</th>
@@ -215,35 +215,23 @@ const honapNevLista = ["Szeptember","Október","November","December","Január","
           </thead>
           <tbody>
             <tr v-for="(record, index) in szemelyJegyek" :key="index" v-if="szemelyJegyek.undefined">
-              <td style="width: 15vw; justify-content: center !important;">{{ record[0].Student?.name }}</td>
+              <td style="width: 15vw; justify-content: center !important;" class="bg-secondary">{{ record[0].Student?.name }}</td>
               <td style="width: 15vw; justify-content: center !important;" v-for="(honap) in honapLista">
                 <p v-for="(jegy, index2) in record.filter((jegy:any)=>new Date(jegy.date).getMonth()+1 == honap)" :key="index2">
                   <v-hover
                     v-slot="{ isHovering, props }"
                   >
-                    <v-card v-bind="props">
-                      <v-card-text v-if="isHovering == false||isHovering == undefined" style="justify-self: center;">
+                    <v-card v-bind="props" class="bg-secondary">
+                      <v-card-text class="bg-secondary" v-if="isHovering == false||isHovering == undefined" style="justify-self: center;">
                         {{ jegy.Value }}
                       </v-card-text>
-                      <v-card-text v-else>
+                      <v-card-text class="bg-secondary" v-else>
                         Jegy: {{ jegy.Value }} Tanár: {{ jegy.teacherID }} Százalék: {{ jegy.Multiplier }}%
                       </v-card-text>
                     </v-card>
                   </v-hover>
                 </p>
               </td>
-              <!--<td style="width: 15vw; justify-content: center !important;" v-for="(jegy, index) in record" :key="index"><p v-if="new Date(jegy.date).getMonth()+1 == 9">{{ jegy.Value }}</p></td>
-              <td style="width: 15vw; justify-content: center !important;" v-for="(jegy, index) in record" :key="index"><p v-if="new Date(jegy.date).getMonth()+1 == 10">{{ jegy.Value }}</p></td>
-              <td style="width: 15vw; justify-content: center !important;" v-for="(jegy, index) in record" :key="index"><p v-if="new Date(jegy.date).getMonth()+1 == 11">{{ jegy.Value }}</p></td>
-              <td style="width: 15vw; justify-content: center !important;" v-for="(jegy, index) in record" :key="index"><p v-if="new Date(jegy.date).getMonth()+1 == 12">{{ jegy.Value }}</p></td>
-              <td style="width: 15vw; justify-content: center !important;" v-for="(jegy, index) in record" :key="index"><p v-if="new Date(jegy.date).getMonth()+1 == 1">{{ jegy.Value }}</p></td>
-              <td style="width: 15vw; justify-content: center !important;" v-for="(jegy, index) in record" :key="index"><p v-if="new Date(jegy.date).getMonth()+1 == 2">{{ jegy.Value }}</p></td>
-              <td style="width: 15vw; justify-content: center !important;" v-for="(jegy, index) in record" :key="index"><p v-if="new Date(jegy.date).getMonth()+1 == 3">{{ jegy.Value }}</p></td>
-              <td style="width: 15vw; justify-content: center !important;" v-for="(jegy, index) in record" :key="index"><p v-if="new Date(jegy.date).getMonth()+1 == 4">{{ jegy.Value }}</p></td>
-              <td style="width: 15vw; justify-content: center !important;" v-for="(jegy, index) in record" :key="index"><p v-if="new Date(jegy.date).getMonth()+1 == 5">{{ jegy.Value }}</p></td>
-              <td style="width: 15vw; justify-content: center !important;" v-for="(jegy, index) in record" :key="index"><p v-if="new Date(jegy.date).getMonth()+1 == 6">{{ jegy.Value }}</p></td>
-              <td style="width: 15vw; justify-content: center !important;" v-for="(jegy, index) in record" :key="index"><p v-if="new Date(jegy.date).getMonth()+1 == 7">{{ jegy.Value }}</p></td>
-              <td style="width: 15vw; justify-content: center !important;" v-for="(jegy, index) in record" :key="index"><p v-if="new Date(jegy.date).getMonth()+1 == 8">{{ jegy.Value }}</p></td>-->
             </tr>
             <v-card v-else>
               <v-card style="justify-content: center">
@@ -257,14 +245,14 @@ const honapNevLista = ["Szeptember","Október","November","December","Január","
         </v-card>
       </v-tabs-window-item>
       <v-tabs-window-item value="two">
-        <v-table theme="dark" height="40vw" style="border-radius: 2%;">
+        <v-table  height="40vw" style="border-radius: 2%;">
           <thead>
             <tr>
               <th class="text-center">Név</th>
               <th class="text-center">Jegy</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody class="secondary">
             <tr v-for="(record, index) in osszTagComputed?.members" :key="index">
               <td style="width: 15vw; text-align: center !important; font-size: large" class="border border-s-lg">{{ record.name }}</td>
               <td style="width: 15vw; text-align: center !important; font-size: large" class="border border-s-lg">
@@ -289,6 +277,9 @@ const honapNevLista = ["Szeptember","Október","November","December","Január","
 <style lang="css">
 .targetelement:hover {
   cursor: pointer;
+}
+.secondary{
+  background-color: rgb(var(--v-theme-secondary)) !important;
 }
 </style>
   
