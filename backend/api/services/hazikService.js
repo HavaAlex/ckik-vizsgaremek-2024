@@ -35,5 +35,8 @@ class hazikService{
     async deleteAssignment(assignmentID){
         return await assignmentRepository.deleteAssignment(assignmentID)
     }
+    async deleteCompletedAssignmentFile(ID){
+        return await assignmentRepository.deleteCompletedAssignmentFile(ID)
+    }
 }
 module.exports = new hazikService(); 

@@ -84,18 +84,18 @@ exports.getAssignmentFiles = async (req,res,next) =>{
 
 exports.getCompletedAssignmentFiles = async (req,res,next) =>{
   const {assignmentId} = req.body;
-  console.log("ezt keressük: ",assignmentId)
   const assignmentIds = new Set(assignmentId)
-  console.log("ditinctes:  " ,assignmentIds)
   const completedassignmentFilesArray = await hazikService.getCompletedAssignmentFiles(assignmentIds)
-  console.log("ITT MÉG JÓÓÓÓÓ  ", completedassignmentFilesArray)
   res.status(201).json(completedassignmentFilesArray)
 }
 
 exports.deleteAssignment = async (req,res,next) =>{
   const assignmentId = req.params.assignmentId;
-  console.log("DELTEEEE :   ", assignmentId)
-  
   const cucc = await hazikService.deleteAssignment(assignmentId)
+  res.status(201).json(cucc)
+}
+exports.deleteCompletedAssignmentFile = async (req,res,next) =>{
+  const fileId = req.params.fileId;
+  const cucc = hazikService.deleteCompletedAssignmentFile(fileId)
   res.status(201).json(cucc)
 }

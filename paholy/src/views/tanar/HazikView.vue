@@ -110,7 +110,6 @@ const fetchAnswerFiles = async (answerFilesIDs: any[]) => {
   console.log("Fetching answer files for answer id:", answerFilesIDs);
   await getCompletedAssignmentFiles(answerFilesIDs, {
     onSuccess: (response) => {
-      console.log("Answer files fetched:", response, "for:", answerFilesIDs);
       const filesArray = response.data || response;
       const filesByAnswer: Record<number, any[]> = {};
       // Map each answer ID to its corresponding file array from the response.

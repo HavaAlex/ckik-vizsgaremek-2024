@@ -210,21 +210,14 @@ class AssignmentRepository
     }
     async getCompletedAssignmentFiles(completedAssignmentIds) {
         const files = [];
-        console.log("o az ami ami: ", completedAssignmentIds);
-        
         for (const celpontID of completedAssignmentIds) {
           const cuccli = await this.CompletedAssignmentFile.findAll({
             where: { assignmentID: { [Op.eq]: celpontID } }
           });
           files.push(cuccli);
         }
-      
-        files.forEach(element => {
-            console.log("őőőő",element)
-        });
         return files;
-      }
-      
+    }
     async modifycompletedassignment(ID,completedassignment){
         // Assume User is a Sequelize model
         const changedAnswer = await this.CompletedAssignment.findOne({ where: { id: completedassignment.ID } });
@@ -234,15 +227,13 @@ class AssignmentRepository
         await changedAnswer.update({ status: completedassignment.status });
         return changedAnswer
     }
-    async deleteAssignment(ID){//mindent kitöröl
-        /*const answersForThis  = await this.CompletedAssignment.findAll({where:{ assignmentID:{[Op.eq]:ID}}})
-        for (const anwser of answersForThis) {*/
+    async deleteAssignment(ID)
+    {
         await this.CompletedAssignmentFile.destroy({
             where:{
                 assignmentID: ID
             }
         })
-        /*}*/
         await this.CompletedAssignment.destroy({
             where:{
                 assignmentID: ID
@@ -256,6 +247,14 @@ class AssignmentRepository
         await this.Assignment.destroy({
             where:{
                 ID:ID
+            }
+        })
+        return "sikerült"
+    }
+    async deleteCompletedAssignmentFile(ID){
+        await this.CompletedAssignmentFile.destroy({
+            where:{
+                ID: ID
             }
         })
         return "sikerült"

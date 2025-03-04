@@ -11,17 +11,11 @@ import queryClient from "@/lib/queryClient";
 import { useErrorHandler } from "@/stores/errorHandler";
 
 const getAssignmentsTeacher = async ()  =>{
-    //console.log("LEFUTOK: getGroups")
     const {getCookie} = useCookieHandler()
     const config = {
         headers: { Authorization: `Bearer ${getCookie("alap")}` }
     };
     const response = await axiosClient.get(`http://localhost:3000/paholy/haziktanar`,config)
-    console.log("általa kiküldött assignmentek:::")
-    console.log(response)
-    console.log(response.data)
-    console.log("AZ első eleme természetesen nem més mint : ")
-    console.log(response.data[0])
     return response.data
 }
 export const usegetAssignmentsTeacher = () => {
@@ -45,11 +39,6 @@ const getAssignmentsStudent = async ()  =>{
         headers: { Authorization: `Bearer ${getCookie("alap")}` }
     };
     const response = await axiosClient.get(`http://localhost:3000/paholy/hazikdiak`,config)
-    console.log("általa kapott assignmentek:::")
-    console.log(response)
-    console.log(response.data)
-    console.log("AZ első eleme természetesen nem més mint : ")
-    console.log(response.data[0])
     return response.data
 }
 export const usegetAssignmentsStudent = () => {
@@ -116,7 +105,6 @@ export const usegetCompletedAssignmentFiles = () => {
 };
 
 const getGroups = async ()  =>{
-    //console.log("LEFUTOK: getGroups")
     const {getCookie} = useCookieHandler()
     const config = {
         headers: { Authorization: `Bearer ${getCookie("alap")}` }
@@ -144,9 +132,6 @@ const modifyCompletedAssignment = async (completedassignment:OpenCompletedAssign
     const config = {
         headers: { Authorization: `Bearer ${getCookie("alap")}` }
     };
-    console.log("ÚJVERZIÓ ")
-    console.log(completedassignment)
-    console.log(completedassignment.date)
     const response = await axiosClient.patch(`http://localhost:3000/paholy/modifycompletedassignment`,completedassignment,config) // ${document.cookie}
     return response.data
 }
@@ -208,6 +193,30 @@ export const usedeleteAssignment = () => {
             mutationFn: deleteAssignment,
             onSuccess(){
                 queryClient.refetchQueries({queryKey:[QUERY_KEYS.deleteAssignment]})
+            },
+            onError(error){
+                const {setError} = useErrorHandler()
+                setError(error)
+            }
+        }
+    )
+}
+const deleteAnswerFile = async (fileId: number) : Promise<number> =>{
+    const {getCookie} = useCookieHandler()
+    const config = {
+        headers: { Authorization: `Bearer ${getCookie("alap")}` }
+    };
+    console.log("BELE DELETE fájl ", fileId)
+    const response = await axiosClient.delete(`http://localhost:3000/paholy/deleteAnswerFile/${fileId}`,config)
+    return response.data
+}
+
+export const usedeleteAnswerFile = () => {
+    return useMutation( 
+        {
+            mutationFn: deleteAnswerFile,
+            onSuccess(){
+                queryClient.refetchQueries({queryKey:[QUERY_KEYS.deleteAnswerFile]})
             },
             onError(error){
                 const {setError} = useErrorHandler()
