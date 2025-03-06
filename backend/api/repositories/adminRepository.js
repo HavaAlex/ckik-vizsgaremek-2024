@@ -30,6 +30,13 @@ class AdminRepository
             }
         )
     }
+
+    async uploadTeachers(teachers){
+        console.log("ADMIN REPOBA ", teachers)
+        return 1;
+    }
+
+
 }
 
 module.exports = new AdminRepository(db);

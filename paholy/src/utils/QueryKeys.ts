@@ -47,6 +47,9 @@ const HAZIK_KEYS = {
         deleteAssignment:'deleteAssignment',
         deleteAnswerFile:'deleteAnswerFile'
 }
+const ADMIN_KEYS = {
+    addTeacherUsers: 'addTeacherUsers',
+}
 export const QUERY_KEYS = {
     ...USER_KEYS,
     ...AUTH_KEYS,
@@ -56,4 +59,5 @@ export const QUERY_KEYS = {
     ...JEGYEK_KEYS,
     ...HAZIK_KEYS,
     ...SZULO_KEYS,
+    ...ADMIN_KEYS,
 } as const 

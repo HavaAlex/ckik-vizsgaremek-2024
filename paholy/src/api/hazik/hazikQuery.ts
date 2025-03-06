@@ -55,7 +55,6 @@ export const usegetAssignmentsStudent = () => {
     return query
 }
 
-
 const getAssignmentFiles = async (assignmentId:number) : Promise<number> =>{
     const {getCookie} = useCookieHandler()
     const config = {
@@ -135,7 +134,6 @@ const modifyCompletedAssignment = async (completedassignment:OpenCompletedAssign
     const response = await axiosClient.patch(`http://localhost:3000/paholy/modifycompletedassignment`,completedassignment,config) // ${document.cookie}
     return response.data
 }
-
 export const usemodifyCompletedAssignment = () => {
     return useMutation( 
         {
@@ -151,7 +149,6 @@ export const usemodifyCompletedAssignment = () => {
     )
 }
 
-
 const addAssignment = async (assignment: Assignment) : Promise<Assignment> =>{
     assignment.UploadDate = new Date();
     const {getCookie} = useCookieHandler()
@@ -161,7 +158,6 @@ const addAssignment = async (assignment: Assignment) : Promise<Assignment> =>{
     const response = await axiosClient.post(`http://localhost:3000/paholy/newassignment`,assignment,config) // ${document.cookie}
     return response.data
 }
-
 export const useaddAssignment = () => {
     return useMutation( 
         {
@@ -186,7 +182,6 @@ const deleteAssignment = async (assignmentId: number) : Promise<number> =>{
     const response = await axiosClient.delete(`http://localhost:3000/paholy/deleteAssignment/${assignmentId}`,config) // ${document.cookie} //nem jó sajna delete csak 2 vel működik
     return response.data
 }
-
 export const usedeleteAssignment = () => {
     return useMutation( 
         {
@@ -201,6 +196,7 @@ export const usedeleteAssignment = () => {
         }
     )
 }
+
 const deleteAnswerFile = async (fileId: number) : Promise<number> =>{
     const {getCookie} = useCookieHandler()
     const config = {
@@ -210,7 +206,6 @@ const deleteAnswerFile = async (fileId: number) : Promise<number> =>{
     const response = await axiosClient.delete(`http://localhost:3000/paholy/deleteAnswerFile/${fileId}`,config)
     return response.data
 }
-
 export const usedeleteAnswerFile = () => {
     return useMutation( 
         {
@@ -225,7 +220,6 @@ export const usedeleteAnswerFile = () => {
         }
     )
 }
-
 
 const uploadAssignmentFiles = async ({
     files,
@@ -251,7 +245,6 @@ const uploadAssignmentFiles = async ({
   };
   await axiosClient.post(`http://localhost:3000/paholy/uploadassignmentfiles`, formData, config);
 }
-
 export const useuploadAssignmentFiles = () => {
     return useMutation( 
         {
@@ -266,6 +259,7 @@ export const useuploadAssignmentFiles = () => {
         }
     ) 
 };
+
 
 const uploadCompletedAssignmentFiles = async ({
     files,
@@ -289,7 +283,6 @@ const uploadCompletedAssignmentFiles = async ({
   };
   await axiosClient.post(`http://localhost:3000/paholy/uploadcompletedassignmentfiles`, formData, config);
 }
-
 export const useuploadCompletedAssignmentFiles = () => {
     return useMutation( 
         {

@@ -24,7 +24,6 @@ exports.uploadAssignmentFiles = async (req, res, next) => {
     try {
       const uploadedFiles = req.files;
       const { assignmentId } = req.body; 
-      console.log("kakakakaaa",uploadedFiles)
       let nagycucc= await hazikService.uploadAssignmentFiles(uploadedFiles, assignmentId)
       res.status(200).json({ nagycucc });
     } catch (error) {
@@ -37,8 +36,6 @@ exports.uploadCompletedAssignmentFiles = async (req, res, next) => {
   try {
     const uploadedFiles = req.files;
     const { completedAssignmentId } = req.body; 
-    console.log("kakakakaaa",uploadedFiles)
-    console.log("EZ MIÉRZT HA UNDEFINED AKKOR BSZAROK", completedAssignmentId)
     let nagycucc= await hazikService.uploadCompletedAssignmentFiles(uploadedFiles, completedAssignmentId)
     res.status(200).json({ nagycucc });
   } catch (error) {

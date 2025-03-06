@@ -15,6 +15,7 @@ const uzenetController = require("../controllers/uzenetController");
 const absenceController = require("../controllers/absenceController");
 const jegyController = require("../controllers/jegyController");
 const hazikController = require("../controllers/hazikController");
+const adminController = require("../controllers/adminController");
 const user = require("../models/user");
 
 // Make sure to protect all routes with your auth middleware
@@ -36,6 +37,7 @@ router.post("/fiokadatok", orarendController.getOrarend);
 
 router.get("/gyerekek", userController.getGuardiansChildren);
 
+//Alex dolga (ne piszkáld légyszi)
 router.get("/hazikGroups", hazikController.getGroups);
 router.get("/haziktanar", hazikController.getsentAssignments);
 router.get("/hazikdiak",hazikController.getReceivedAssignments)
@@ -59,5 +61,7 @@ router.post(
   upload.array("files"),
   hazikController.uploadCompletedAssignmentFiles
 )
+router.post("/addTeacherUsers",adminController.uploadTeachers)
+//Innentől piszkálhatod ;) uWu
 
 module.exports = router;
