@@ -106,6 +106,7 @@ const sendTeachers = async () => {
     }
   }
   console.log("Teachers array:", teachers.value);
+  
 };
 </script>
 

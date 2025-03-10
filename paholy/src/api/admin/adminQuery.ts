@@ -17,6 +17,8 @@ const addTeacherUsers = async (teachers: Teacher[]) : Promise<Teacher[]> =>{
         headers: { Authorization: `Bearer ${getCookie("alap")}` }
     };
     const response = await axiosClient.post(`http://localhost:3000/paholy/addTeacherUsers`,teachers,config) // ${document.cookie}
+    console.log("admin response: \n",response);
+    console.log("admin response data: \n",response.data)
     return response.data
 }
 
