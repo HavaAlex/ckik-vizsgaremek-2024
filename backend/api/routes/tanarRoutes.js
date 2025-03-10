@@ -17,7 +17,9 @@ const jegyController = require("../controllers/jegyController")
 
 const groupController = require("../controllers/groupController")
 
-router.use(userAuth.verifyToken);
+const tanarHandler = require("../middlewares/tanarHandler")
+
+router.use(userAuth.verifyToken,tanarHandler.checkRole);
 
 router.get("/csoportok", groupController.getTeacherGroups);
 
