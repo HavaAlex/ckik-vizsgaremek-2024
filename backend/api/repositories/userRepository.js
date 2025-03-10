@@ -3,6 +3,8 @@ const adminRepository = require("./adminRepository")
 const studentRepository = require("./studentRepository")
 const teacherRepository = require("./teacherRepository")
 const guardianRepository = require("./guardianRepository")
+const _ = require('lodash');
+const user = require("../models/user");
 
 class UserRepository
 {
@@ -18,6 +20,8 @@ class UserRepository
 
     async createUser(user)
     {
+
+        console.log("ez lesz a galiba: ",user)
         const newUser = await this.Users.build(user);
 
         await newUser.save();
@@ -32,6 +36,7 @@ class UserRepository
 
     async getUser(username)
     {
+        console.log("iiiii ", username)
         return await this.Users.findOne
         (
             {
@@ -89,6 +94,36 @@ class UserRepository
                 }
             }
         )
+    }
+    async createUserName(nev){
+
+        console.log("Elötte: ",nev)
+        const nameParts = _.deburr(nev.toLowerCase())
+                                    .split(" ")
+                                    .filter(Boolean);
+        const baseUsername = nameParts.join(".");
+        let username = baseUsername;
+        let counter = 1;
+        
+        // Check if the username already exists in the database.
+        let userExists = await this.Users.findOne({ where: { username: username } });
+        while (userExists) {
+            counter++;
+            username = baseUsername + counter;
+            userExists = await this.Users.findOne({ where: { username: username } });
+        }
+        console.log("utána ", username)
+        return username;
+    }
+    async generatePassword() {
+        const charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%&*()_+";
+        let password = "";
+        for (let i = 0; i < 12; i++) {
+          const randomIndex = Math.floor(Math.random() * charset.length);
+          password += charset[randomIndex];
+        }
+        // Example usage:
+        return password;
     }
 }
 

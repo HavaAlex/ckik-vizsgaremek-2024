@@ -7,7 +7,7 @@ import { jwtDecode, type JwtPayload } from "jwt-decode";
 import { getUserStatusFromLocalStorage, setUserStatusToLocalStorage} from '@/localstorage/localStorageManagment.ts';
 import { useCookieHandler } from "@/stores/cookieHandler"
 import { useErrorHandler } from "@/stores/errorHandler"
-
+ 
 const Login = async (data: LoginData) : Promise<string> => {
     console.log("login elküldve")
     const response = await axiosClient.post('http://localhost:3000/login/', data)
