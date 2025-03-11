@@ -50,6 +50,11 @@ module.exports = (sequelize, DataTypes) =>
                 allowNull: false,
                 unique: true,
             },
+            OMID:{
+                type: DataTypes.INTEGER,
+                allowNull: false,
+                unique: true
+            }
             
         },
 
