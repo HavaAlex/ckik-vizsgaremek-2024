@@ -62,6 +62,8 @@ router.post(
   hazikController.uploadCompletedAssignmentFiles
 )
 router.post("/addTeacherUsers",adminController.uploadTeachers)
+router.post("/addStudentUsers",adminController.uploadStudents)
+router.post("/addGuardianUsers",adminController.addGuardianUsers)
 //Innentől piszkálhatod ;) uWu
 
 module.exports = router;

@@ -12,7 +12,7 @@ INSERT INTO `studentgroups` (`GroupID`, `StudentID`) VALUES (1,1);
 INSERT INTO `studentgroups` (`GroupID`, `StudentID`) VALUES (1,2);
 INSERT INTO `teachers` ( `ID`,`name`,`phone`, `email`,`userID`) VALUES (null,'lajos', '0620habekapodmegfusz','lajosnagyfarok@gmail.com',3);
 INSERT INTO `teachers` ( `ID`,`name`,`phone`, `email`,`userID`) VALUES (null,'eniko', '4536546456456','enikokovacsnevaleriatakacs@gmail.com',4);
-INSERT INTO `guardians` ( `ID`,`phone`, `email`,`userID`) VALUES (null, '354563453245','laciapujozsi@gmail.com',5);
+INSERT INTO `guardians` (  `ID`,`name`,`phone`, `email`,`userID`) VALUES (null, 'jozsi','354563453245','laciapujozsi@gmail.com',5);
 insert into `guardianstudents` (`GuardianID`,`StudentID`) VALUES (1,1);
 insert into `guardianstudents` (`GuardianID`,`StudentID`) VALUES (1,2);
 INSERT INTO `admins` ( `ID`,`phone`, `email`,`userID`) VALUES (null, '111111','dagipatrik@gmail.com',6);

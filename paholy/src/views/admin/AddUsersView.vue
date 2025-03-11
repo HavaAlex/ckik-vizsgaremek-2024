@@ -1,25 +1,32 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import type { Teacher } from '@/api/admin/admin';
+import type { Teacher, Student, Guardian } from '@/api/admin/admin';
 import * as XLSX from 'xlsx'; // Ensure you have installed the xlsx package
 
 import { 
-  useaaddTeacherUsers
+  useaaddTeacherUsers,
+  useaddStudentUsers,
+  useaddGuardianUsers
 } from '@/api/admin/adminQuery';
 
-const {mutate: addTeacherUsers} = useaaddTeacherUsers()
+const { mutate: addTeacherUsers } = useaaddTeacherUsers();
+const { mutate: addStudentUsers } = useaddStudentUsers();
+const { mutate: addGuardianUsers } = useaddGuardianUsers();
 
+// File selection refs
 const selectedFiles = ref<File[]>([]);
+const selectedStudentFiles = ref<File[]>([]);
+const selectedGuardianFiles = ref<File[]>([]);
 
 // Dialog state
 const showStudentDialog = ref(false);
 const showTeacherDialog = ref(false);
 const showParentDialog = ref(false);
 
-// Teachers array
+// ================= Teacher Section =================
+
 const teachers = ref<Teacher[]>([]);
 
-// New teacher form data
 const newTeacher = ref<Teacher>({
   name: '',
   phone: '',
@@ -27,33 +34,27 @@ const newTeacher = ref<Teacher>({
   birth_Date: new Date()
 });
 
-// Function to add teacher manually
 const addTeacher = () => {
   if (!newTeacher.value.name || !newTeacher.value.phone || !newTeacher.value.email) return;
   teachers.value.push({ ...newTeacher.value });
   newTeacher.value = { name: '', phone: '', email: '', birth_Date: new Date() }; // Reset form
 };
 
-// Function to remove teacher
 const removeTeacher = (index: number) => {
   teachers.value.splice(index, 1);
 };
 
-// Process a single file and return an array of teachers
 const processFile = (file: File): Promise<Teacher[]> => {
   return new Promise((resolve, reject) => {
     const extension = file.name.split('.').pop()?.toLowerCase();
     const reader = new FileReader();
     reader.onerror = () => reject(reader.error);
-
     if (extension === 'csv' || extension === 'txt') {
       reader.onload = () => {
         const text = reader.result as string;
         const delimiter = extension === 'txt' ? '\t' : ';';
         const lines = text.split(/\r?\n/).filter(line => line.trim() !== '');
-        // First, split each line into columns
         const rows = lines.map(line => line.split(delimiter));
-        // Filter out rows that do not have at least 4 columns
         const validRows = rows.filter(cols => cols.length >= 4);
         const teachersFromFile: Teacher[] = validRows.map(cols => ({
           name: cols[0].trim(),
@@ -72,7 +73,6 @@ const processFile = (file: File): Promise<Teacher[]> => {
         const worksheet = workbook.Sheets[sheetName];
         const jsonData: any[][] = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
         const teachersFromFile: Teacher[] = [];
-        // Iterate over every row (each row represents a teacher)
         jsonData.forEach(row => {
           if (row && row.length >= 4) {
             teachersFromFile.push({
@@ -87,13 +87,11 @@ const processFile = (file: File): Promise<Teacher[]> => {
       };
       reader.readAsBinaryString(file);
     } else {
-      // Unsupported file type; return an empty array.
       resolve([]);
     }
   });
 };
 
-// Function to process all files and log the teachers array
 const sendTeachers = async () => {
   if (selectedFiles.value.length) {
     for (const file of selectedFiles.value) {
@@ -106,7 +104,274 @@ const sendTeachers = async () => {
     }
   }
   console.log("Teachers array:", teachers.value);
-  
+};
+
+// ================= Student Section =================
+
+const students = ref<Student[]>([]);
+
+const newStudent = ref<Student>({
+  name: '',
+  birth_Date: new Date(),
+  address: '',
+  phone: '',
+  email: '',
+  OM_ID: ''
+});
+
+const addStudent = () => {
+  if (
+    !newStudent.value.name || 
+    !newStudent.value.address || 
+    !newStudent.value.phone ||
+    !newStudent.value.email || 
+    !newStudent.value.OM_ID
+  ) return;
+  students.value.push({ ...newStudent.value });
+  newStudent.value = { name: '', birth_Date: new Date(), address: '', phone: '', email: '', OM_ID: '' };
+};
+
+const removeStudent = (index: number) => {
+  students.value.splice(index, 1);
+};
+
+const processStudentFile = (file: File): Promise<Student[]> => {
+  return new Promise((resolve, reject) => {
+    const extension = file.name.split('.').pop()?.toLowerCase();
+    const reader = new FileReader();
+    reader.onerror = () => reject(reader.error);
+    if (extension === 'csv' || extension === 'txt') {
+      reader.onload = () => {
+        const text = reader.result as string;
+        const delimiter = extension === 'txt' ? '\t' : ';';
+        const lines = text.split(/\r?\n/).filter(line => line.trim() !== '');
+        const rows = lines.map(line => line.split(delimiter));
+        // Expecting 6 columns: name, birth_Date, address, phone, email, OM_ID
+        const validRows = rows.filter(cols => cols.length >= 6);
+        const studentsFromFile: Student[] = validRows.map(cols => ({
+          name: cols[0].trim(),
+          birth_Date: new Date(cols[1].trim()),
+          address: cols[2].trim(),
+          phone: cols[3].trim(),
+          email: cols[4].trim(),
+          OM_ID: cols[5].trim()
+        }));
+        resolve(studentsFromFile);
+      };
+      reader.readAsText(file);
+    } else if (extension === 'xlsx') {
+      reader.onload = () => {
+        const data = reader.result;
+        const workbook = XLSX.read(data, { type: 'binary' });
+        const sheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[sheetName];
+        const jsonData: any[][] = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+        const studentsFromFile: Student[] = [];
+        jsonData.forEach(row => {
+          if (row && row.length >= 6) {
+            studentsFromFile.push({
+              name: String(row[0]).trim(),
+              birth_Date: new Date(row[1]),
+              address: String(row[2]).trim(),
+              phone: String(row[3]).trim(),
+              email: String(row[4]).trim(),
+              OM_ID: String(row[5]).trim()
+            });
+          }
+        });
+        resolve(studentsFromFile);
+      };
+      reader.readAsBinaryString(file);
+    } else {
+      resolve([]);
+    }
+  });
+};
+
+const sendStudents = async () => {
+  if (selectedStudentFiles.value.length) {
+    for (const file of selectedStudentFiles.value) {
+      try {
+        const studentsFromFile = await processStudentFile(file);
+        students.value.push(...studentsFromFile);
+      } catch (error) {
+        console.error(`Error processing file ${file.name}:`, error);
+      }
+    }
+  }
+  console.log("Students array:", students.value);
+};
+
+// ================= Guardian Section =================
+
+// Since your Guardian type defines RelatedStudents as an empty array (type []),
+// we cast it to number[] when using it so that you can push numbers into it.
+const guardians = ref<Guardian[]>([]);
+
+// Cast the empty array to number[] to allow number pushes.
+const newGuardian = ref<Guardian>({
+  name: '',
+  birth_Date: new Date(),
+  address: '',
+  phone: '',
+  email: '',
+  RelatedStudents: [] as unknown as number[]
+});
+
+// For manually adding a related student OM_ID
+const newGuardianRelatedOMID = ref('');
+
+const addGuardianRelatedOMID = () => {
+  if (!newGuardianRelatedOMID.value.trim()) return;
+  const omid = Number(newGuardianRelatedOMID.value.trim());
+  if (!isNaN(omid)) {
+    (newGuardian.value.RelatedStudents as number[]).push(omid);
+    newGuardianRelatedOMID.value = '';
+  }
+};
+
+const removeGuardianRelatedOMID = (index: number) => {
+  (newGuardian.value.RelatedStudents as number[]).splice(index, 1);
+};
+
+const addGuardian = () => {
+  if (
+    !newGuardian.value.name ||
+    !newGuardian.value.address ||
+    !newGuardian.value.phone ||
+    !newGuardian.value.email
+  ) return;
+  guardians.value.push({ ...newGuardian.value });
+  // Reset the new guardian form
+  newGuardian.value = {
+    name: '',
+    birth_Date: new Date(),
+    address: '',
+    phone: '',
+    email: '',
+    RelatedStudents: [] as unknown as number[]
+  };
+  newGuardianRelatedOMID.value = '';
+};
+
+const processGuardianFile = (file: File): Promise<Guardian[]> => {
+  return new Promise((resolve, reject) => {
+    const extension = file.name.split('.').pop()?.toLowerCase();
+    const reader = new FileReader();
+    reader.onerror = () => reject(reader.error);
+
+    if (extension === 'csv' || extension === 'txt') {
+      reader.onload = () => {
+        const text = reader.result as string;
+        // Use tab as primary delimiter for txt files, semicolon for csv.
+        const primaryDelimiter = extension === 'txt' ? '\t' : ';';
+        const lines = text.split(/\r?\n/).filter(line => line.trim() !== '');
+        const guardiansFromFile: Guardian[] = [];
+        lines.forEach(line => {
+          // First try splitting on the primary delimiter.
+          let cols = line.split(primaryDelimiter);
+          // If we don't get enough columns, fallback to splitting on whitespace.
+          if (cols.length < 5) {
+            cols = line.split(/\s+/);
+          }
+          // Now, if we have at least 5 columns, process the line.
+          if (cols.length >= 5) {
+            const name = cols[0].trim();
+            const birth_Date = new Date(cols[1].trim());
+            const address = cols[2].trim();
+            let phone = "";
+            let email = "";
+            let relatedStr = "";
+            if (cols.length === 5) {
+              // Format: name, birth_Date, address, email, RelatedStudents
+              email = cols[3].trim();
+              relatedStr = cols[4].trim();
+            } else {
+              // Format: name, birth_Date, address, phone, email, RelatedStudents
+              phone = cols[3].trim();
+              email = cols[4].trim();
+              relatedStr = cols[5].trim();
+            }
+            const relatedStudents = relatedStr
+              .split(',')
+              .map(item => Number(item.trim()))
+              .filter(x => !isNaN(x));
+            guardiansFromFile.push({
+              name,
+              birth_Date,
+              address,
+              phone,
+              email,
+              RelatedStudents: relatedStudents as unknown as number[]
+            });
+          }
+        });
+        resolve(guardiansFromFile);
+      };
+      reader.readAsText(file);
+    } else if (extension === 'xlsx') {
+      reader.onload = () => {
+        const data = reader.result;
+        const workbook = XLSX.read(data, { type: 'binary' });
+        const sheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[sheetName];
+        const jsonData: any[][] = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+        const guardiansFromFile: Guardian[] = [];
+        jsonData.forEach(row => {
+          if (row && row.length >= 5) {
+            const name = String(row[0]).trim();
+            const birth_Date = new Date(row[1]);
+            const address = String(row[2]).trim();
+            let phone = "";
+            let email = "";
+            let relatedStr = "";
+            if (row.length === 5) {
+              email = String(row[3]).trim();
+              relatedStr = String(row[4]).trim();
+            } else {
+              phone = String(row[3]).trim();
+              email = String(row[4]).trim();
+              relatedStr = String(row[5]).trim();
+            }
+            const relatedStudents = String(relatedStr)
+              .split(',')
+              .map(item => Number(item.trim()))
+              .filter(x => !isNaN(x));
+            guardiansFromFile.push({
+              name,
+              birth_Date,
+              address,
+              phone,
+              email,
+              RelatedStudents: relatedStudents as unknown as number[]
+            });
+          }
+        });
+        resolve(guardiansFromFile);
+      };
+      reader.readAsBinaryString(file);
+    } else {
+      resolve([]);
+    }
+  });
+};
+
+
+
+
+
+const sendGuardians = async () => {
+  if (selectedGuardianFiles.value.length) {
+    for (const file of selectedGuardianFiles.value) {
+      try {
+        const guardiansFromFile = await processGuardianFile(file);
+        guardians.value.push(...guardiansFromFile);
+      } catch (error) {
+        console.error(`Error processing file ${file.name}:`, error);
+      }
+    }
+  }
+  console.log("Guardians array:", guardians.value);
 };
 </script>
 
@@ -122,12 +387,12 @@ const sendTeachers = async () => {
         </v-card-actions>
       </v-card>
 
-      <!-- Tanárok dialog -->
+      <!-- Tanárok dialog (unchanged) -->
       <v-dialog v-model="showTeacherDialog" max-width="600">
         <v-card>
           <v-card-title>Tanárok hozzáadása</v-card-title>
           <v-card-text>
-            <h1>Tanárok hozzáadása manuálisan:</h1>
+            <h1>Tanárok manuális hozzáadása:</h1>
             <v-container>
               <v-row>
                 <v-col cols="12">
@@ -144,15 +409,13 @@ const sendTeachers = async () => {
                   <v-btn color="primary" @click="addTeacher">Tanár hozzáadása</v-btn>
                 </v-col>
               </v-row>
-              <!-- Teachers list -->
-              
             </v-container>
             
-            <h1>Tanárok hozzáadása fájlból</h1>
-            <h3>Kizárólag txt, csv és xlsx fájlokat tölthet fel!</h3>
-            <h6>(A txt fájlban az adattagokat tabulátorral elválasztva töltse fel)</h6>
+            <h1>Tanárok fájlból történő feltöltése</h1>
+            <h3>Kizárólag txt, csv és xlsx fájlok tölthetők fel!</h3>
+            <h6>(A txt fájlban az adattagokat tabulátorral elválasztva kell megadni)</h6>
             <v-file-input 
-              label="Fájlok feltöltése (egyszerre töltse fel)"
+              label="Fájlok feltöltése (egyszerre)"
               multiple
               v-model="selectedFiles"
               accept=".txt, .csv, .xlsx"
@@ -164,16 +427,159 @@ const sendTeachers = async () => {
           
           <v-card-text>
             <h1>Bekerülő tanárok listája:</h1>
-              <v-list>
-                <v-list-item v-for="(teacher, index) in teachers" :key="index" @click="removeTeacher(index)">
-                  <v-list-item-title>{{ teacher.name }} - {{ teacher.email }}</v-list-item-title>
-                </v-list-item>
-              </v-list>
+            <v-list>
+              <v-list-item v-for="(teacher, index) in teachers" :key="index" @click="removeTeacher(index)">
+                <v-list-item-title>{{ teacher.name }} - {{ teacher.email }}</v-list-item-title>
+              </v-list-item>
+            </v-list>
           </v-card-text>
           <v-card-actions>
-            <!-- On click, process the files, add teachers, and log the array -->
             <v-btn color="secondary" @click="showTeacherDialog = false">Bezárás</v-btn>
-            <v-btn color="primary" @click="addTeacherUsers(teachers); showTeacherDialog= false ">Feltöltés az adatbázisba</v-btn>
+            <v-btn color="primary" @click="addTeacherUsers(teachers); showTeacherDialog = false">Feltöltés az adatbázisba</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+
+      <!-- Diákok dialog (unchanged) -->
+      <v-dialog v-model="showStudentDialog" max-width="600">
+        <v-card>
+          <v-card-title>Diákok hozzáadása</v-card-title>
+          <v-card-text>
+            <h1>Diákok manuális hozzáadása:</h1>
+            <v-container>
+              <v-row>
+                <v-col cols="12">
+                  <v-text-field v-model="newStudent.name" label="Név" required></v-text-field>
+                </v-col>
+                <v-col cols="12">
+                  <v-text-field v-model="newStudent.birth_Date" label="Születési dátum" type="date" required></v-text-field>
+                </v-col>
+                <v-col cols="12">
+                  <v-text-field v-model="newStudent.address" label="Cím" required></v-text-field>
+                </v-col>
+                <v-col cols="12">
+                  <v-text-field v-model="newStudent.phone" label="Telefon" required></v-text-field>
+                </v-col>
+                <v-col cols="12">
+                  <v-text-field v-model="newStudent.email" label="Email" required></v-text-field>
+                </v-col>
+                <v-col cols="12">
+                  <v-text-field v-model="newStudent.OM_ID" label="OM azonosító" required></v-text-field>
+                </v-col>
+                <v-col cols="12">
+                  <v-btn color="primary" @click="addStudent">Diák hozzáadása</v-btn>
+                </v-col>
+              </v-row>
+            </v-container>
+            
+            <h1>Diákok fájlból történő feltöltése</h1>
+            <h3>Kizárólag txt, csv és xlsx fájlok tölthetők fel!</h3>
+            <h6>(A txt fájlban az adattagokat tabulátorral elválasztva kell megadni)</h6>
+            <v-file-input 
+              label="Fájlok feltöltése (egyszerre)"
+              multiple
+              v-model="selectedStudentFiles"
+              accept=".txt, .csv, .xlsx"
+              show-size
+              counter
+            ></v-file-input>
+            <v-btn color="primary" :disabled="students.length === 0 && selectedStudentFiles.length === 0" @click="sendStudents">Fájlok beolvasása</v-btn>
+          </v-card-text>
+          
+          <v-card-text>
+            <h1>Bekerülő diákok listája:</h1>
+            <v-list>
+              <v-list-item v-for="(student, index) in students" :key="index" @click="removeStudent(index)">
+                <v-list-item-title>{{ student.name }} - {{ student.email }}</v-list-item-title>
+              </v-list-item>
+            </v-list>
+          </v-card-text>
+          <v-card-actions>
+            <v-btn color="secondary" @click="showStudentDialog = false">Bezárás</v-btn>
+            <v-btn color="primary" @click="addStudentUsers(students); showStudentDialog = false; console.log(students)">Feltöltés az adatbázisba</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+
+      <!-- Szülők (Guardians) dialog -->
+      <v-dialog v-model="showParentDialog" max-width="600">
+        <v-card>
+          <v-card-title>Szülők hozzáadása</v-card-title>
+          <v-card-text>
+            <h1>Szülők manuális hozzáadása:</h1>
+            <v-container>
+              <v-row>
+                <v-col cols="12">
+                  <v-text-field v-model="newGuardian.name" label="Név" required></v-text-field>
+                </v-col>
+                <v-col cols="12">
+                  <v-text-field v-model="newGuardian.birth_Date" label="Születési dátum" type="date" required></v-text-field>
+                </v-col>
+                <v-col cols="12">
+                  <v-text-field v-model="newGuardian.address" label="Cím" required></v-text-field>
+                </v-col>
+                <v-col cols="12">
+                  <v-text-field v-model="newGuardian.phone" label="Telefon" required></v-text-field>
+                </v-col>
+                <v-col cols="12">
+                  <v-text-field v-model="newGuardian.email" label="Email" required></v-text-field>
+                </v-col>
+                <v-col cols="12">
+                  <!-- Input for manually adding a related student's OM_ID -->
+                  <v-text-field v-model="newGuardianRelatedOMID" label="Diák OM azonosító" hint="Adja meg a diák OM azonosítót" required></v-text-field>
+                  <v-btn color="primary" @click="addGuardianRelatedOMID">OM azonosító hozzáadása</v-btn>
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col cols="12">
+                  <h3>Hozzáadott diák OM azonosítók:</h3>
+                  <v-list>
+                    <v-list-item 
+                      v-for="(omid, index) in newGuardian.RelatedStudents" 
+                      :key="index" 
+                      @click="removeGuardianRelatedOMID(index)"
+                    >
+                      <v-list-item-title>{{ omid }}</v-list-item-title>
+                    </v-list-item>
+                  </v-list>
+                </v-col>
+              </v-row>
+              <v-btn color="primary" @click="addGuardian">Szülő hozzáadása</v-btn>
+            </v-container>
+          </v-card-text>
+          
+          <v-card-text>
+            <h1>Szülők fájlból történő feltöltése</h1>
+            <h3>Kizárólag txt, csv és xlsx fájlok tölthetők fel!</h3>
+            <h6>
+              (A txt fájlban az adattagokat tabulátorral elválasztva kell megadni. Az utolsó oszlopban a diák OM azonosítókat vesszővel elválasztva add meg.)
+            </h6>
+            <v-file-input 
+              label="Fájlok feltöltése (egyszerre)"
+              multiple
+              v-model="selectedGuardianFiles"
+              accept=".txt, .csv, .xlsx"
+              show-size
+              counter
+            ></v-file-input>
+            <v-btn color="primary" :disabled="guardians.length === 0 && selectedGuardianFiles.length === 0" @click="sendGuardians">Fájlok beolvasása</v-btn>
+          </v-card-text>
+          
+          <v-card-text>
+            <h1>Bekerülő szülők listája:</h1>
+            <v-list>
+              <v-list-item 
+                v-for="(guardian, index) in guardians" 
+                :key="index" 
+                @click="guardians.splice(index, 1)"
+              >
+                <v-list-item-title>{{ guardian.name }} - {{ guardian.email }}</v-list-item-title>
+              </v-list-item>
+            </v-list>
+          </v-card-text>
+          <v-card-actions>
+            <v-btn color="secondary" @click="showParentDialog = false">Bezárás</v-btn>
+            <v-btn color="primary" @click="addGuardianUsers(guardians); showParentDialog = false">Feltöltés az adatbázisba</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>

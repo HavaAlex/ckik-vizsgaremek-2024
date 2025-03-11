@@ -11,6 +11,7 @@ class StudentRepository
 
     async createStudent(student)
     {
+        console.log("REPÓBBBAAA: ",student)
         const newStudent = await this.Students.build(student);
 
         await newStudent.save();
@@ -29,6 +30,14 @@ class StudentRepository
                 }
             }
         )
+    }
+
+    async getStudentByOmId(OM_ID){
+        return await this.Students.findOne({
+            where:{
+                OMID: OM_ID
+            }
+        })
     }
 
     async getGroupMembers(groupID)
