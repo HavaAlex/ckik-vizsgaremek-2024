@@ -220,7 +220,7 @@ class AssignmentRepository
     }
     async modifycompletedassignment(ID,completedassignment){
         // Assume User is a Sequelize model
-        const changedAnswer = await this.CompletedAssignment.findOne({ where: { id: completedassignment.ID } });
+        const changedAnswer = await this.CompletedAssignment.findOne({ where: { ID: completedassignment.ID } });
         
         await changedAnswer.update({ textAnswer: completedassignment.textAnswer });
         await changedAnswer.update({ date: completedassignment.date });

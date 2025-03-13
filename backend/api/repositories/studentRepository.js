@@ -31,11 +31,16 @@ class StudentRepository
         )
     }
 
+    async getStudentByOmId(OM_ID){
+        return await this.Students.findOne({
+            where:{
+                OMID: OM_ID
+            }
+        })
+    }
+
     async getGroupMembers(groupID)
     {
-        //console.log("ITTTT")
-        //console.log(groupID)
-        //console.log("ITTT")
         return await this.Students.findAll
         (
             {
@@ -46,6 +51,30 @@ class StudentRepository
                 }]
             }
         )
+    }
+    async getAllStudents(){
+        return await this.Students.findAll()
+    }
+
+    async modifyStudent(ID,student){
+        // Assume User is a Sequelize model
+        console.log("biztos ami biztos: ",ID)
+        console.log("studentba  ", student)
+        const changedStudent = await this.Students.findOne({ where: { userId: ID } });
+        await changedStudent.update({ name: student.name });
+        await changedStudent.update({ email: student.email });
+        await changedStudent.update({ phone: student.phone });
+        await changedStudent.update({ DoB: student.DoB });
+        await changedStudent.update({ address: student.address });
+        await changedStudent.update({ OMID: student.OMID });
+        return changedStudent
+    }
+    async deleteStudent(ID){
+        await this.Students.destroy({
+            where:{
+                userId: ID
+            }
+        })
     }
 }
 

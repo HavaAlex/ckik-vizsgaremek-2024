@@ -164,7 +164,7 @@ const fetchAssignmentFiles = async (selectedAssignmentID: number) => {
     onSuccess: async (response) => {
       console.log("Files fetched:", response);
       assignmentFiles.value = response.data || response;
-    }
+    } 
   });
 };
 

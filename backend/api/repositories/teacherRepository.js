@@ -26,10 +26,29 @@ class TeacherRepository
             {
                 where:
                 {
-                    userID: ID,
+                    userId: ID,
                 }
             }
         )
+    }
+    
+    async modifyTeacher(ID,teacher){
+        // Assume User is a Sequelize model
+        console.log("biztos ami biztos: ",ID)
+        console.log("techerbe  ", teacher)
+        const changedTeacher = await this.Teachers.findOne({ where: { userId: ID } });
+        await changedTeacher.update({ name: teacher.name });
+        await changedTeacher.update({ email: teacher.email });
+        await changedTeacher.update({ phone: teacher.phone });
+        return changedTeacher
+    }
+
+    async deleteTeacher(ID){
+        await this.Teachers.destroy({
+            where:{
+                userId: ID
+            }
+        })
     }
 }
 
