@@ -16,13 +16,14 @@ const absenceController = require("../controllers/absenceController");
 const jegyController = require("../controllers/jegyController");
 const hazikController = require("../controllers/hazikController");
 const adminController = require("../controllers/adminController");
+const szuloHandler = require("../middlewares/szuloHandler")
 const user = require("../models/user");
 
 // Make sure to protect all routes with your auth middleware
 router.use(userAuth.verifyToken);
 
-router.get("/", uzenetController.getUzenetek);
-router.get("/uzenetekreceivers", uzenetController.getPotentialReceivers);
-router.post("/", uzenetController.createUzenet);
+router.use(szuloHandler.checkRole)
+
+router.get("/gyerek", userController.getGuardiansChildren);
 
 module.exports = router;

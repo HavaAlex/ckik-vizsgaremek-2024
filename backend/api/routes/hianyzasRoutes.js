@@ -21,6 +21,6 @@ const user = require("../models/user");
 // Make sure to protect all routes with your auth middleware
 router.use(userAuth.verifyToken);
 
-router.get("/hianyzasok", absenceController.getAbsences);
-router.post("/hianyzasok", orarendController.getOrarend);
+router.get("/", absenceController.getAbsences);
+router.post("/", absenceController.getAbsences);//NINCS KÉSZ
 module.exports = router;

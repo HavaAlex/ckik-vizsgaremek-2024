@@ -2,14 +2,6 @@ const orarendRepository  = require("../repositories/orarendRepository");
 
 class OrarendService
 {
-    async createGroup()
-    {
-        return await orarendRepository.createGroup();
-    }
-
-    async getGroup(ID) {
-        return await orarendRepository.getGroup(ID)
-    }
 
     async getLessons(groups)
     {
@@ -48,9 +40,25 @@ class OrarendService
     {
 
     }
-    async getOrarend()
+    async getOrarend(groups)
     {
+        const lessons = await this.getLessons(groups)
 
+        const disruptions = await this.getDisruptions(groups)
+
+        console.log(disruptions+"disruptions")
+
+        const disruptionMap = new Map()
+        disruptions.forEach(disruption => {
+            const key = `${disruption.day}-${disruption.start_Minute}`
+            disruptionMap.set(key, disruption)
+        })
+
+        const combinedOrarend = lessons.map(lesson => {
+            const key = `${lesson.day}-${lesson.start_Minute}`
+            return disruptionMap.get(key) || lesson
+        })
+        return combinedOrarend
     }
 }
 

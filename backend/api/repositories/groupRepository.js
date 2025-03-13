@@ -27,6 +27,18 @@ class GroupRepository
             }
         )
     }
+
+    
+    async getGroup(studentID)//Megkeresi az összes csoportját az adott embernek
+    {
+        return await db.studentgroup.findAll
+        (
+            {
+                where: {StudentID: studentID},
+            }
+        )
+    }
+
 }
 
 module.exports = new GroupRepository(db);

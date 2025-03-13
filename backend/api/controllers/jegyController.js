@@ -1,5 +1,5 @@
 const jegyService = require("../services/jegyService")
-const groupService = require("../services/groupService")
+const groupService = require("../services/csoportService")
 const roleService = require("../services/roleService")
 const lessonService =  require("../services/lessonService")
 
@@ -67,15 +67,6 @@ exports.getJegyekTanar = async (req, res, next) =>
     //console.log("JEGY VÉG")
 }
 
-
-
-exports.getTantargyakTanar = async (req, res, next) =>
-{
-    //console.log("TANTARGY KEZD")
-    const tantargyak = await lessonService.getTeacherSubjects(req.role.ID)
-    res.status(201).json(tantargyak);
-    //console.log("TANTARGY VEG")
-}
 exports.createJegy = async (req, res, next) =>
 {
     let {studentID,Value,Multiplier,subjectName} = req.body;

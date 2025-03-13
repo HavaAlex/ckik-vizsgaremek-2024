@@ -9,7 +9,9 @@ const adminController = require("../controllers/adminController");
 
 const adminHandler = require("../middlewares/adminHandler")
 
-router.use(userAuth.verifyToken,adminHandler.checkRole);
+router.use(userAuth.verifyToken);
+
+router.use(adminHandler.checkRole);
 
 router.post("/register/:token", userController.createUser);
 

@@ -18,7 +18,7 @@ const getUzenetek = async (): Promise<Message> => {
         headers: { Authorization: `Bearer ${getCookie("alap")}` }
     };
     //console.log(`localhost:3000/uzenetek/${document.cookie}`)
-    const response = await axiosClient.get(`http://localhost:3000/paholy/uzenetek`,config) // ${document.cookie}
+    const response = await axiosClient.get(`http://localhost:3000/uzenet/`,config) // ${document.cookie}
     console.log(response)
     console.log(response.data)  
     return response.data
@@ -45,7 +45,7 @@ const getPotentialReceivers = async (): Promise<PotentialReceiver> =>{
     const config = {
         headers: { Authorization: `Bearer ${getCookie("alap")}` }
     };
-    const response = await axiosClient.get(`http://localhost:3000/paholy/uzenetekreceivers`,config)
+    const response = await axiosClient.get(`http://localhost:3000/uzenet/uzenetekreceivers`,config)
     console.log("anyád:")
     console.log(response)
     console.log(response.data)
@@ -74,7 +74,7 @@ const addMessage = async (data: Message) : Promise<Message> =>{
     const config = {
         headers: { Authorization: `Bearer ${getCookie("alap")}` }
     }; 
-    const response = await axiosClient.post(`http://localhost:3000/paholy/uzenetek`,data,config) // ${document.cookie}
+    const response = await axiosClient.post(`http://localhost:3000/uzenet/`,data,config) // ${document.cookie}
     //console.log("SIKERÜÜÜÜLT")
     //console.log(response)
     //console.log(response.data)  

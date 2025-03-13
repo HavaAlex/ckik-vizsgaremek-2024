@@ -48,15 +48,16 @@ const tantargyJegyek = computed(() => {
   return csoportJegyek.value?.marks[csoportJegyek.value.tantargyak.indexOf(selectedSubject.value)];
 });
 
+// stackoverflow sponzor
+const groupBy = <T, K extends keyof any>(arr: T[], key: (i: T) => K) =>
+  arr.reduce((groups, item) => {
+    (groups[key(item)] ||= []).push(item);
+    return groups;
+  }, {} as Record<K, T[]>);
+
 const szemelyJegyek = computed(() => {
   if (!tantargyJegyek.value) return [];
-  return tantargyJegyek.value.reduce((acc: Record<string, any[]>, jegy: any) => {
-    if (!acc[jegy.studentId]) {
-      acc[jegy.studentId] = [];
-    }
-    acc[jegy.studentId].push(jegy);
-    return acc;
-  }, {});
+  return groupBy(tantargyJegyek.value,i=>i?.studentID)
 });
 
 const selectedOsszGroup = ref<string | null>(null);
@@ -103,6 +104,7 @@ const jegyFeltoltes = async () =>
 {
   const adatok = adatOsszeszedes()
   for(let index = 0; index < adatok.length; index++){
+      console.log(adatok[index].value)
       const valasz = mutate(adatok[index].value)
   }
   newMarks.value = ref<Object>({});
@@ -214,7 +216,7 @@ const honapNevLista = ["Szeptember","Október","November","December","Január","
               </tr>
           </thead>
           <tbody>
-            <tr v-for="(record, index) in szemelyJegyek" :key="index" v-if="szemelyJegyek.undefined">
+            <tr v-for="(record, index) in szemelyJegyek" :key="index" v-if="szemelyJegyek!=undefined">
               <td style="width: 15vw; justify-content: center !important;" class="bg-secondary">{{ record[0].Student?.name }}</td>
               <td style="width: 15vw; justify-content: center !important;" v-for="(honap) in honapLista">
                 <p v-for="(jegy, index2) in record.filter((jegy:any)=>new Date(jegy.date).getMonth()+1 == honap)" :key="index2">
@@ -226,6 +228,7 @@ const honapNevLista = ["Szeptember","Október","November","December","Január","
                         {{ jegy.Value }}
                       </v-card-text>
                       <v-card-text class="bg-secondary" v-else>
+                        id:{{ jegy.studentID }}
                         Jegy: {{ jegy.Value }} Tanár: {{ jegy.teacherID }} Százalék: {{ jegy.Multiplier }}%
                       </v-card-text>
                     </v-card>

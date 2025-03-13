@@ -1,28 +1,15 @@
 const orarendService = require("../services/orarendService")
+const csoportService = require("../services/csoportService")
+const lessonService = require("../services/lessonService")
 
 exports.getOrarend = async (req, res, next) =>
 {
     console.log("órarendget")
-    const groups = await orarendService.getGroup(req.decoded.ID)
-    //console.log(groups)
+    console.log("FING")
+    console.log(req.decoded)
+    const groups = await csoportService.getGroup(req.decoded.role!="szulo"? req.decoded.ID:req.body.gyerekID)
 
-
-    const lessons = await orarendService.getLessons(groups)
-
-    const disruptions = await orarendService.getDisruptions(groups)
-
-    console.log(disruptions+"disruptions")
-
-    const disruptionMap = new Map()
-    disruptions.forEach(disruption => {
-        const key = `${disruption.day}-${disruption.start_Minute}`
-        disruptionMap.set(key, disruption)
-    })
-
-    const combinedOrarend = lessons.map(lesson => {
-        const key = `${lesson.day}-${lesson.start_Minute}`
-        return disruptionMap.get(key) || lesson
-    })
+    const combinedOrarend = await orarendService.getOrarend(groups)
 
     res.status(201).json(combinedOrarend)
     console.log("órarendgetvég")
@@ -58,24 +45,10 @@ exports.createOrarend = async (req, res, next) =>
     }
 }
 
-exports.createGroup = async (req, res, next) =>
+exports.getTantargyakTanar = async (req, res, next) =>
 {
-    let {ID, name} = req.body;
-
-    try
-    {
-        var newGroup =
-        {
-            ID: ID,
-            name: name,
-        }
-
-        newGroup = await orarendService.createGroup(newGroup);
-
-        res.status(201).json(newGroup);
-    }
-    catch(error)
-    {
-        next(error);
-    }
+    //console.log("TANTARGY KEZD")
+    const tantargyak = await lessonService.getTeacherSubjects(req.role.ID)
+    res.status(201).json(tantargyak);
+    //console.log("TANTARGY VEG")
 }

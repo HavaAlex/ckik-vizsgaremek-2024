@@ -4,7 +4,11 @@ const router = express.Router();
 
 const orarendController = require("../controllers/orarendController");
 
-router.get("/orarend", orarendController.getOrarend);
+const userAuth = require("../middlewares/userAuth")
+
+router.use(userAuth.verifyToken);
+
+router.get("/", orarendController.getOrarend);
 
 
 module.exports = router;

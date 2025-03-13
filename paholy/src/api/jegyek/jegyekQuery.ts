@@ -13,7 +13,7 @@ const getMarks = async () : Promise<Mark[]> => {
     const config = {
         headers: { Authorization: `Bearer ${getCookie("alap")}` }
     };
-    const response = await axiosClient.get(`http://localhost:3000/paholy/jegyek`,config)
+    const response = await axiosClient.get(`http://localhost:3000/jegy/`,config)
     return response.data
 }
 
@@ -37,7 +37,7 @@ const getTeacherGroups = async () : Promise<Mark[]> => {
     const config = {
         headers: { Authorization: `Bearer ${getCookie("alap")}` }
     };
-    const response = await axiosClient.get(`http://localhost:3000/tanar/csoportok`,config)
+    const response = await axiosClient.get(`http://localhost:3000/csoport/tanarcsoport`,config)
     return response.data
 }
 
@@ -62,7 +62,7 @@ const getGroupMarks = async () : Promise<GroupMark[]|Error> => {
         headers: { Authorization: `Bearer ${getCookie("alap")}` }
     };
     try{
-        const response = await axiosClient.get(`http://localhost:3000/tanar/csoportjegyek`,config)
+        const response = await axiosClient.get(`http://localhost:3000/jegy/csoportjegy`,config)
         console.log("IIIT VVV")
         console.log(response.data)
         return response.data
@@ -92,7 +92,7 @@ const getGroupMembers = async () : Promise<GroupMembers[]> => {
     const config = {
         headers: { Authorization: `Bearer ${getCookie("alap")}` }
     };
-    const response = await axiosClient.get(`http://localhost:3000/tanar/csoporttagok`,config)
+    const response = await axiosClient.get(`http://localhost:3000/csoport/csoporttag`,config)
     console.log("IIIT VVV")
     console.log(response.data)
     return response.data
@@ -118,7 +118,7 @@ const getSubjects = async () : Promise<Lesson[]> => {
     const config = {
         headers: { Authorization: `Bearer ${getCookie("alap")}` }
     };
-    const response = await axiosClient.get(`http://localhost:3000/tanar/tantargyak`,config)
+    const response = await axiosClient.get(`http://localhost:3000/tanar/tantargy`,config)
     console.log("IIIT VVV")
     console.log(response.data)
     return response.data
@@ -149,7 +149,7 @@ const addMarks = async (data : Mark) : Promise<MarkAttribute> => {
           'Authorization': 'Bearer ' + getCookie("alap")
         }
     } 
-    const response = await axiosClient.post(`http://localhost:3000/tanar/jegy`, data,config)
+    const response = await axiosClient.post(`http://localhost:3000/jegy/`, data,config)
     return response.data.data
 }
 

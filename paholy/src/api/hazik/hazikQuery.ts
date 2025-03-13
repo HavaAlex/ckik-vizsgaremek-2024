@@ -15,7 +15,7 @@ const getAssignmentsTeacher = async ()  =>{
     const config = {
         headers: { Authorization: `Bearer ${getCookie("alap")}` }
     };
-    const response = await axiosClient.get(`http://localhost:3000/paholy/haziktanar`,config)
+    const response = await axiosClient.get(`http://localhost:3000/feladat/haziktanar`,config)
     return response.data
 }
 export const usegetAssignmentsTeacher = () => {
@@ -38,7 +38,7 @@ const getAssignmentsStudent = async ()  =>{
     const config = {
         headers: { Authorization: `Bearer ${getCookie("alap")}` }
     };
-    const response = await axiosClient.get(`http://localhost:3000/paholy/hazikdiak`,config)
+    const response = await axiosClient.get(`http://localhost:3000/feladat/hazikdiak`,config)
     return response.data
 }
 export const usegetAssignmentsStudent = () => {
@@ -60,7 +60,7 @@ const getAssignmentFiles = async (assignmentId:number) : Promise<number> =>{
     const config = {
         headers: { Authorization: `Bearer ${getCookie("alap")}`/*,assignmentID:assignmentId*/ }
     };
-    const response = await axiosClient.post(`http://localhost:3000/paholy/getAssignmentFiles`,{assignmentId} ,config)
+    const response = await axiosClient.post(`http://localhost:3000/feladat/getAssignmentFiles`,{assignmentId} ,config)
     console.log("getAssignmentFiles RESPONSEEEEEEEEEEEE: ", response)
     return response.data
 }
@@ -84,7 +84,7 @@ const getCompletedAssignmentFiles = async (assignmentId:any[]) : Promise<any[]> 
     const config = {
         headers: { Authorization: `Bearer ${getCookie("alap")}` }
     };
-    const response = await axiosClient.post(`http://localhost:3000/paholy/getCompletedAssignmentFiles`,{assignmentId} ,config)
+    const response = await axiosClient.post(`http://localhost:3000/feladat/getCompletedAssignmentFiles`,{assignmentId} ,config)
     console.log("getCompletedAssignmentFiles RESPONSEEEEEEEEEEEE: ", response)
     return response.data
 }
@@ -108,7 +108,7 @@ const getGroups = async ()  =>{
     const config = {
         headers: { Authorization: `Bearer ${getCookie("alap")}` }
     };
-    const response = await axiosClient.get(`http://localhost:3000/paholy/hazikGroups`,config)
+    const response = await axiosClient.get(`http://localhost:3000/feladat/hazikGroups`,config)
     return response.data
 }
 export const usegetGroups = () => {
@@ -131,7 +131,7 @@ const modifyCompletedAssignment = async (completedassignment:OpenCompletedAssign
     const config = {
         headers: { Authorization: `Bearer ${getCookie("alap")}` }
     };
-    const response = await axiosClient.patch(`http://localhost:3000/paholy/modifycompletedassignment`,completedassignment,config) // ${document.cookie}
+    const response = await axiosClient.patch(`http://localhost:3000/feladat/modifycompletedassignment`,completedassignment,config) // ${document.cookie}
     return response.data
 }
 export const usemodifyCompletedAssignment = () => {
@@ -155,7 +155,7 @@ const addAssignment = async (assignment: Assignment) : Promise<Assignment> =>{
     const config = {
         headers: { Authorization: `Bearer ${getCookie("alap")}` }
     };
-    const response = await axiosClient.post(`http://localhost:3000/paholy/newassignment`,assignment,config) // ${document.cookie}
+    const response = await axiosClient.post(`http://localhost:3000/feladat/newassignment`,assignment,config) // ${document.cookie}
     return response.data
 }
 export const useaddAssignment = () => {
@@ -179,7 +179,7 @@ const deleteAssignment = async (assignmentId: number) : Promise<number> =>{
         headers: { Authorization: `Bearer ${getCookie("alap")}` }
     };
     console.log("BELE DELETE ", assignmentId)
-    const response = await axiosClient.delete(`http://localhost:3000/paholy/deleteAssignment/${assignmentId}`,config) // ${document.cookie} //nem jó sajna delete csak 2 vel működik
+    const response = await axiosClient.delete(`http://localhost:3000/feladat/deleteAssignment/${assignmentId}`,config) // ${document.cookie} //nem jó sajna delete csak 2 vel működik
     return response.data
 }
 export const usedeleteAssignment = () => {
@@ -203,7 +203,7 @@ const deleteAnswerFile = async (fileId: number) : Promise<number> =>{
         headers: { Authorization: `Bearer ${getCookie("alap")}` }
     };
     console.log("BELE DELETE fájl ", fileId)
-    const response = await axiosClient.delete(`http://localhost:3000/paholy/deleteAnswerFile/${fileId}`,config)
+    const response = await axiosClient.delete(`http://localhost:3000/feladat/deleteAnswerFile/${fileId}`,config)
     return response.data
 }
 export const usedeleteAnswerFile = () => {
@@ -243,7 +243,7 @@ const uploadAssignmentFiles = async ({
       "Content-Type": "multipart/form-data"
     }
   };
-  await axiosClient.post(`http://localhost:3000/paholy/uploadassignmentfiles`, formData, config);
+  await axiosClient.post(`http://localhost:3000/feladat/uploadassignmentfiles`, formData, config);
 }
 export const useuploadAssignmentFiles = () => {
     return useMutation( 
@@ -281,7 +281,7 @@ const uploadCompletedAssignmentFiles = async ({
       "Content-Type": "multipart/form-data"
     }
   };
-  await axiosClient.post(`http://localhost:3000/paholy/uploadcompletedassignmentfiles`, formData, config);
+  await axiosClient.post(`http://localhost:3000/feladat/uploadcompletedassignmentfiles`, formData, config);
 }
 export const useuploadCompletedAssignmentFiles = () => {
     return useMutation( 

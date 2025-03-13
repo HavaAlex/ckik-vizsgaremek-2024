@@ -12,7 +12,7 @@ const getOrarend = async (): Promise<Lesson[]> => {
     const config = {
         headers: { Authorization: `Bearer ${getCookie("alap")}` }
     };
-    const response = await axiosClient.get(`http://localhost:3000/paholy/orarend`,config) // ${document.cookie}
+    const response = await axiosClient.get(`http://localhost:3000/orarend`,config) // ${document.cookie}
     return response.data
 }
 

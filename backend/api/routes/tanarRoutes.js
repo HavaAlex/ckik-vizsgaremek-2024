@@ -19,11 +19,11 @@ const groupController = require("../controllers/groupController")
 
 const tanarHandler = require("../middlewares/tanarHandler")
 
-router.use(userAuth.verifyToken,tanarHandler.checkRole);
+router.use(userAuth.verifyToken);
 
-router.get("/tantargyak", jegyController.getTantargyakTanar);
+router.use(tanarHandler.checkRole)
 
-router.post("/jegy", jegyController.createJegy);
+router.get("/tantargy", orarendController.getTantargyakTanar);
 
 
 module.exports = router;

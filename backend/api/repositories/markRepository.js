@@ -33,6 +33,7 @@ class MarkRepository
             include: [
                 {
                     model: db.student,
+                    attributes:["name"],
                     required: true, // INNER JOIN biztosítása
                     include: [
                         {

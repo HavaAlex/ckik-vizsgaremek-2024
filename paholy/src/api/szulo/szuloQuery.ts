@@ -12,7 +12,7 @@ const getChildren = async (): Promise<child> => {
     const config = {
         headers: { Authorization: `Bearer ${getCookie("alap")}` }
     };
-    const response = await axiosClient.get(`http://localhost:3000/paholy/gyerekek`,config) // ${document.cookie}
+    const response = await axiosClient.get(`http://localhost:3000/szulo/gyerek`,config) // ${document.cookie}
     return response.data
 }
 

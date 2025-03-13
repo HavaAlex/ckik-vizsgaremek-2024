@@ -6,6 +6,15 @@ class GroupService
     {
         return await GroupRepository.getTeacherGroups(teacherID);
     }
+
+    async createGroup()
+    {
+        return await GroupRepository.createGroup();
+    }
+
+    async getGroup(studentID) {
+        return await GroupRepository.getGroup(studentID)
+    }
 }
 
 module.exports = new GroupService();

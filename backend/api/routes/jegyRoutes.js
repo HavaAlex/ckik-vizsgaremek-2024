@@ -18,10 +18,15 @@ const hazikController = require("../controllers/hazikController");
 const adminController = require("../controllers/adminController");
 const user = require("../models/user");
 
+const tanarHandler = require("../middlewares/tanarHandler")
+
 // Make sure to protect all routes with your auth middleware
 router.use(userAuth.verifyToken);
 
-router.get("/jegyek", jegyController.getJegyek);
-router.post("/jegyek", orarendController.getOrarend);
+router.get("/", jegyController.getJegyek);
+
+router.use(tanarHandler.checkRole);
+router.post("/", jegyController.createJegy);
+router.get("/csoportjegy", jegyController.getJegyekTanar);
 
 module.exports = router;
