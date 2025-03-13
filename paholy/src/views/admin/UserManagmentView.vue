@@ -6,13 +6,20 @@ import * as XLSX from 'xlsx'; // Ensure you have installed the xlsx package
 import { 
   useaaddTeacherUsers,
   useaddStudentUsers,
-  useaddGuardianUsers
+  useaddGuardianUsers,
+  usegetUsers,
+  usegetUser,
+  getUser,
+  usemodifyUser,
+  usedeleteUser
 } from '@/api/admin/adminQuery';
 
 const { mutate: addTeacherUsers } = useaaddTeacherUsers();
 const { mutate: addStudentUsers } = useaddStudentUsers();
 const { mutate: addGuardianUsers } = useaddGuardianUsers();
-
+const { mutate: modifyUser } = usemodifyUser();
+const { mutate: deleteUser} = usedeleteUser()
+const { data: userList} = usegetUsers()
 // File selection refs
 const selectedFiles = ref<File[]>([]);
 const selectedStudentFiles = ref<File[]>([]);
@@ -356,10 +363,6 @@ const processGuardianFile = (file: File): Promise<Guardian[]> => {
   });
 };
 
-
-
-
-
 const sendGuardians = async () => {
   if (selectedGuardianFiles.value.length) {
     for (const file of selectedGuardianFiles.value) {
@@ -373,17 +376,86 @@ const sendGuardians = async () => {
   }
   console.log("Guardians array:", guardians.value);
 };
+
+const viewUserDialog = ref(false);
+const DeleteAssignmentDialog = ref(false)
+const selectedUserForView = ref(null);
+const SelectedUserData = ref<any>(null);
+
+const openSelectedUserDialog = async (user: any) => {
+  
+  try {
+    const data = await getUser(user.ID);
+    SelectedUserData.value = {...data};
+    console.log('Fetched user data:', SelectedUserData.value);
+    viewUserDialog.value = true;
+  } catch (error) {
+    console.error("Error fetching user data:", error);
+  }
+};
+
+const closeSelectedUserDialog = () => {
+  SelectedUserData.value = {}
+  viewUserDialog.value = false
+}
+
+const uploadChangedUser = async() => {
+  console.log("Ez az egyik lehetőség: ", SelectedUserData)
+  console.log("Viszont ez az igazi  ", SelectedUserData.value)
+  await modifyUser(SelectedUserData.value)
+  SelectedUserData.value = {}
+  viewUserDialog.value = false
+}
+
+const deleteUserfunction = async() =>{
+  await deleteUser(SelectedUserData.value.userSide,{
+    onSuccess: (response) => {
+      console.log("eredmény: ", response)
+      DeleteAssignmentDialog.value = false;
+      viewUserDialog.value = false;
+    }
+  })
+}
+
 </script>
 
 <template>
   <main>
-    <v-container>
+    <v-container style="height: 25vw !important;">
+      <v-card>
+        <v-card-title>Felhasználók kezelése: </v-card-title>
+        <v-card-text>
+          <v-table>
+            <thead>
+              <tr>
+                <th>Név</th>
+                <th>Azonosító</th>
+                <th>Szerepkör</th>
+                <!--<th>Jelszó</th>-->
+                <th>Interakció</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="user in userList">
+                <td>{{ user.username }}</td>
+                <td>{{ user.ID }}</td>
+                <td>{{ user.role }}</td>
+                <!--<td>{{ user.password }}</td>-->
+                <td>
+                  <v-btn @click="console.log(user);openSelectedUserDialog(user)">Felhasználó módosítása</v-btn>
+                </td>
+              </tr>
+            </tbody>
+          </v-table>
+        </v-card-text>
+      </v-card>
+        
       <v-card>
         <v-card-title>Új felhasználók hozzáadása</v-card-title>
         <v-card-actions>
           <v-btn @click="showStudentDialog = true">Diákok hozzáadása</v-btn>
           <v-btn @click="showTeacherDialog = true">Tanárok hozzáadása</v-btn>
-          <v-btn @click="showParentDialog = true">Szülők hozzáadása</v-btn>
+          <v-btn @click="showParentDialog = true">Gondviselők hozzáadása</v-btn>
         </v-card-actions>
       </v-card>
 
@@ -504,9 +576,9 @@ const sendGuardians = async () => {
       <!-- Szülők (Guardians) dialog -->
       <v-dialog v-model="showParentDialog" max-width="600">
         <v-card>
-          <v-card-title>Szülők hozzáadása</v-card-title>
+          <v-card-title>Gondviselők hozzáadása</v-card-title>
           <v-card-text>
-            <h1>Szülők manuális hozzáadása:</h1>
+            <h1>Gondviselők manuális hozzáadása:</h1>
             <v-container>
               <v-row>
                 <v-col cols="12">
@@ -544,12 +616,12 @@ const sendGuardians = async () => {
                   </v-list>
                 </v-col>
               </v-row>
-              <v-btn color="primary" @click="addGuardian">Szülő hozzáadása</v-btn>
+              <v-btn color="primary" @click="addGuardian">Gondviselők hozzáadása</v-btn>
             </v-container>
           </v-card-text>
           
           <v-card-text>
-            <h1>Szülők fájlból történő feltöltése</h1>
+            <h1>Gondviselők fájlból történő feltöltése</h1>
             <h3>Kizárólag txt, csv és xlsx fájlok tölthetők fel!</h3>
             <h6>
               (A txt fájlban az adattagokat tabulátorral elválasztva kell megadni. Az utolsó oszlopban a diák OM azonosítókat vesszővel elválasztva add meg.)
@@ -566,7 +638,7 @@ const sendGuardians = async () => {
           </v-card-text>
           
           <v-card-text>
-            <h1>Bekerülő szülők listája:</h1>
+            <h1>Bekerülő gondviselők listája:</h1>
             <v-list>
               <v-list-item 
                 v-for="(guardian, index) in guardians" 
@@ -583,6 +655,74 @@ const sendGuardians = async () => {
           </v-card-actions>
         </v-card>
       </v-dialog>
+
+      <!-- Felhasználó megtekintése -->
+      <v-dialog v-model="viewUserDialog">
+        <v-card>
+          <v-card-title>Kiválasztott felhasználó adatai</v-card-title>
+           
+          <div v-if="SelectedUserData.userRole==='tanar'">
+            <v-card-text>
+              <h3>Felhasználó típusa : {{ SelectedUserData.userRole }}</h3>
+              <v-text-field label="Felhasználónév: " v-model="SelectedUserData.roleSide.name"></v-text-field>
+            
+              <v-text-field label="Email cím: "v-model="SelectedUserData.roleSide.email"></v-text-field>
+            
+              <v-text-field label="Mobiltelefonszám: " v-model="SelectedUserData.roleSide.phone"></v-text-field>
+            </v-card-text>
+            
+          </div>
+          <div v-else-if="SelectedUserData.userRole==='szulo'">
+            <v-card-text>
+              <h3>Felhasználó típusa : {{ SelectedUserData.userRole }}</h3>
+              <v-text-field label="Felhasználónév: " v-model="SelectedUserData.roleSide.name"></v-text-field>
+            
+              <v-text-field label="Email cím: "v-model="SelectedUserData.roleSide.email"></v-text-field>
+            
+              <v-text-field label="Mobiltelefonszám: " v-model="SelectedUserData.roleSide.phone"></v-text-field>
+            </v-card-text>
+          </div>
+          <div v-else-if="SelectedUserData.userRole==='diak'">
+            <v-card-text>
+              <h3>Felhasználó típusa : {{ SelectedUserData.userRole }}</h3>
+              <v-text-field label="Felhasználónév: " v-model="SelectedUserData.roleSide.name"></v-text-field>
+              <v-text-field label="Születési dátum" v-model="SelectedUserData.roleSide.DoB" required></v-text-field>
+              <v-text-field label="Email cím: "v-model="SelectedUserData.roleSide.email"></v-text-field>
+              <v-text-field label="Mobiltelefonszám: " v-model="SelectedUserData.roleSide.phone"></v-text-field>
+              <v-text-field label="OM azonosító: " v-model="SelectedUserData.roleSide.OMID"></v-text-field>
+              <v-text-field label="Lakcím : " v-model="SelectedUserData.roleSide.address"></v-text-field>
+              
+            </v-card-text>
+          </div>
+          <div v-else-if="SelectedUserData.userRole==='admin'">
+            <v-card-text>
+            <h3>Felhasználó típusa : {{ SelectedUserData.userRole }}</h3>
+              <v-text-field label="Felhasználónév: " v-model="SelectedUserData.roleSide.name"></v-text-field>
+            
+              <v-text-field label="Email cím: "v-model="SelectedUserData.roleSide.email"></v-text-field>
+            
+              <v-text-field label="Mobiltelefonszám: " v-model="SelectedUserData.roleSide.phone"></v-text-field>
+            </v-card-text>
+          </div>
+          <v-card-actions>
+            <v-btn @click="console.log(SelectedUserData)"> CHECK </v-btn>
+            <v-btn @click="closeSelectedUserDialog">Bezárás</v-btn>
+            <v-btn @click="uploadChangedUser">Módosítás</v-btn>
+            <v-btn @click="DeleteAssignmentDialog = true">Törlés</v-btn>
+          </v-card-actions>
+          
+          
+        </v-card>
+      </v-dialog>
+
+      <v-dialog v-model="DeleteAssignmentDialog" max-width="50vw" theme="dark">
+      <v-card>
+        <v-card-title>Biztos törölni akarod?</v-card-title>
+        <v-btn @click="deleteUserfunction">Törlés</v-btn>
+        <v-btn @click="DeleteAssignmentDialog = false">Mégse</v-btn>
+      </v-card>
+    </v-dialog>
+
     </v-container>
   </main>
 </template>

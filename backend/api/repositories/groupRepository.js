@@ -27,6 +27,7 @@ class GroupRepository
             }
         )
     }
+    
 }
 
 module.exports = new GroupRepository(db);

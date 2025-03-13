@@ -6,7 +6,7 @@ import HianyzasokViewAdmin from '../views/admin/HianyzasokView.vue'
 import JegyekViewAdmin from '../views/admin/HazikView.vue'
 import OrarendViewAdmin from '../views/admin/OrarendView.vue'
 import UzenetekViewAdmin from '../views/admin/UzenetekView.vue'
-import AddUsersView from '@/views/admin/AddUsersView.vue'
+import UserManagmentView from '@/views/admin/UserManagmentView.vue'
 
 // Gyerek komponens importálása
 import HazikViewTanulo from '../views/diak/HazikView.vue'
@@ -53,9 +53,9 @@ const router = createRouter({
       component: AppLayout,
       children: [
         {
-          path: '/AddUses',
-          name: 'AddUsersView',
-          component: AddUsersView,
+          path: '/UserManagmentView',
+          name: 'UserManagmentView',
+          component: UserManagmentView,
         },
         {
           path: '/hazik',

@@ -21,7 +21,6 @@ class UserRepository
     async createUser(user)
     {
 
-        console.log("ez lesz a galiba: ",user)
         const newUser = await this.Users.build(user);
 
         await newUser.save();
@@ -36,7 +35,6 @@ class UserRepository
 
     async getUser(username)
     {
-        console.log("iiiii ", username)
         return await this.Users.findOne
         (
             {
@@ -124,6 +122,53 @@ class UserRepository
         }
         // Example usage:
         return password;
+    }
+    async getAllUsers(){
+        return await this.Users.findAll()
+    }
+    async modifyUser(user){
+        // Assume User is a Sequelize model
+        console.log("biztos ami biztos: ",user)
+        const changedUser = await this.Users.findOne({ where: { id: user.userSide } });
+        await changedUser.update({ username: user.roleSide.name });
+        if(user.userRole == "tanar"){
+            await teacherRepository.modifyTeacher(user.userSide,user.roleSide)
+        }
+        else if(user.userRole == "diak"){
+           await studentRepository.modifyStudent(user.userSide,user.roleSide)
+        }
+        else if(user.userRole == "szulo"){
+            await guardianRepository.modifyGuardian(user.userSide,user.roleSide)
+        }
+        else if(user.userRole == "admin"){
+            await adminRepository.modifyAdmin(user.userSide,user.roleSide)
+        }
+        return changedUser
+    }
+    async deleteUser(ID,oaz){
+        // Assume User is a Sequelize model
+        console.log("biztos ami biztos: ",ID)
+        console.log("Biztos ami biztos 2: ",oaz)
+        if(oaz.role == "tanar"){
+            await teacherRepository.deleteTeacher(ID)
+        }
+        else if(oaz.role == "diak"){
+           await studentRepository.deleteStudent(ID)
+        }
+        else if(oaz.role == "szulo"){
+            await guardianRepository.deleteGuardian(ID)
+        }
+        else if(oaz.role == "admin"){
+            await adminRepository.deleteAdmin(ID)
+        }
+
+        await this.Users.destroy({
+            where:{
+                ID: ID
+            }
+        })
+        
+        return "törölve "
     }
 }
 

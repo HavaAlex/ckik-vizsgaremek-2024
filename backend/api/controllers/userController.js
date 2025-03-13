@@ -2,16 +2,36 @@ const userService = require("../services/userService");
 
 const groupService = require("../services/groupService");
 
+const userRepository  = require("../repositories/userRepository"); 
+
 const bcrypt = require("bcrypt");
 
 const salt = 10;
 
 const jwt = require("jsonwebtoken");
 const roleService = require("../services/roleService");
+const { stubTrue } = require("lodash");
 
 exports.getUser = async (req, res, next) => 
 {
     res.status(200).send(await userService.getUser(req.userID));
+}
+
+exports.getUserWithAdditionalAttributes = async (req, res, next ) =>{
+    const userID = JSON.parse(req.params.userID);
+    console.log("user a headerből: ", userID)
+    const role = await userRepository.getUserByID(userID)
+    console.log("nagyjából ", role)
+    const truerole = role.role
+    console.log("pontosan ",truerole)
+    const finalUser = {
+        userSide: userID,
+        userRole: truerole,
+        roleSide: await userService.getUserWithAdditionalAttributes(role.ID,truerole)
+    }
+    console.log("ez lett: ", finalUser)
+    console.log("KAKAÁSS A GAYTYA : ",finalUser.userRole)
+    res.status(201).json(finalUser)
 }
 
 exports.createUser = async (req, res, next) =>
@@ -99,3 +119,4 @@ exports.getGuardiansChildren = async (req, res, next) =>{
     const children = await userService.getGuardiansChildren(req.role.ID);
     res.status(200).send(children);
 }
+

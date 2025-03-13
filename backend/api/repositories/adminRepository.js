@@ -33,56 +33,29 @@ class AdminRepository
             {
                 where:
                 {
-                    userID: ID,
+                    userId: ID,
                 }
             }
         )
     }
-
     
-
-    async uploadTeachers(teachers, passwordsUncrypted) {
-        
-        const userek = [];
-        console.log("jenysavak: ",passwordsUncrypted)
-        let i = 0;
-        for (const teacher of teachers) {
-            // Use lodash.deburr to remove diacritics
-            const nameParts = _.deburr(teacher.name.toLowerCase())
-                .split(" ")
-                .filter(Boolean);
-            const baseUsername = nameParts.join(".");
-            let username = baseUsername;
-            let counter = 1;
-            
-            // Check if the username already exists in the database.
-            let userExists = await this.User.findOne({ where: { username: username } });
-            while (userExists) {
-                counter++;
-                username = baseUsername + counter;
-                userExists = await this.User.findOne({ where: { username: username } });
-            }
-            const passwordUncrypted = passwordsUncrypted[i]
-            // Create new user object with the given attributes.
-            const newUser = {
-                id: null,
-                username: username,
-                password: await bcrypt.hash(passwordUncrypted, salt),
-                role: "tanar"
-            };
-            
-            const createdUser = await this.User.build(newUser);
-            await createdUser.save();
-
-            newUser.password = passwordUncrypted
-            userek.push(createdUser);
-            i++;
-        }
-        
-        return userek;
+    async modifyAdmin(ID,admin){
+        // Assume User is a Sequelize model
+        console.log("biztos ami biztos: ",ID)
+        console.log("adminba  ", admin)
+        const changedAdmin = await this.Admins.findOne({ where: { userId: ID } });
+        await changedAdmin.update({ name: admin.name });
+        await changedAdmin.update({ email: admin.email });
+        await changedAdmin.update({ phone: admin.phone });
+        return changedAdmin
     }
-
-    
+    async deleteAdmin(ID){
+        await this.Admins.destroy({
+            where:{
+                userId: ID
+            }
+        })
+    }
 }
 
 module.exports = new AdminRepository(db);

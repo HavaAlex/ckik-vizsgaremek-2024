@@ -14,6 +14,12 @@ module.exports = (sequelize, DataTypes) =>
                 autoIncrement: true,
                 allowNull: false,
             },
+            
+            name:
+            {
+                type: DataTypes.STRING(60),
+                allowNull: false,
+            },
 
             phone:
             {
@@ -22,12 +28,6 @@ module.exports = (sequelize, DataTypes) =>
             },
             
             email:
-            {
-                type: DataTypes.STRING(60),
-                allowNull: false,
-            },
-
-            username:
             {
                 type: DataTypes.STRING(60),
                 allowNull: false,

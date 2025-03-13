@@ -64,6 +64,10 @@ router.post(
 router.post("/addTeacherUsers",adminController.uploadTeachers)
 router.post("/addStudentUsers",adminController.uploadStudents)
 router.post("/addGuardianUsers",adminController.addGuardianUsers)
+router.get("/getAllUsers",adminController.getAllUsers)
+router.get("/getUser/:userID",userController.getUserWithAdditionalAttributes)
+router.put("/modifyUser",adminController.modifyUser)
+router.delete("/deleteUser/:userID",adminController.deleteUser)
 //Innentől piszkálhatod ;) uWu
 
 module.exports = router;

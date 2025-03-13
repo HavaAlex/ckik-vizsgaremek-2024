@@ -50,7 +50,11 @@ const HAZIK_KEYS = {
 const ADMIN_KEYS = {
     addTeacherUsers: 'addTeacherUsers',
     addStudentUsers: 'addStudentUsers',
-    addGuardianUsers: 'addGuardianUsers'
+    addGuardianUsers: 'addGuardianUsers',
+    getUsers: 'getUsers',
+    getUser: 'getUser',
+    modifyUser: 'modifyUser',
+    deleteUser: 'deleteUser'
 }
 export const QUERY_KEYS = {
     ...USER_KEYS,

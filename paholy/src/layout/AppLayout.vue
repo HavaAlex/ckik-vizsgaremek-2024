@@ -131,8 +131,8 @@ onUpdated(()=>{
       <v-btn @click="push({name:role+'uzenetek'})">
                 Üzenetek
       </v-btn>
-      <v-btn @click="push({name:'AddUsersView'})" v-if="role=='admin'">
-                Userek Hozzáadása
+      <v-btn @click="push({name:'UserManagmentView'})" v-if="role=='admin'">
+                Felhasználók kezelése
       </v-btn>
       <v-spacer></v-spacer>
       <v-tooltip text="Ennyi idő múlva automatikusan kijelentkezel">
