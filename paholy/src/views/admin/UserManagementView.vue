@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import type { Teacher, Student, Guardian } from '@/api/admin/admin';
 import * as XLSX from 'xlsx'; // Ensure you have installed the xlsx package
 
@@ -18,20 +18,52 @@ const { mutate: addTeacherUsers } = useaaddTeacherUsers();
 const { mutate: addStudentUsers } = useaddStudentUsers();
 const { mutate: addGuardianUsers } = useaddGuardianUsers();
 const { mutate: modifyUser } = usemodifyUser();
-const { mutate: deleteUser} = usedeleteUser()
-const { data: userList} = usegetUsers()
-// File selection refs
-const selectedFiles = ref<File[]>([]);
-const selectedStudentFiles = ref<File[]>([]);
-const selectedGuardianFiles = ref<File[]>([]);
+const { mutate: deleteUser } = usedeleteUser();
+const { data: userList } = usegetUsers();
 
-// Dialog state
-const showStudentDialog = ref(false);
-const showTeacherDialog = ref(false);
-const showParentDialog = ref(false);
+// === Sorting and Searching functionality for the table ===
+const sortKey = ref<string>('username');
+const sortOrder = ref<'asc' | 'desc'>('asc');
+const searchQuery = ref<string>(''); // New search query variable
+
+const sortedUsers = computed(() => {
+  if (!userList.value) return [];
+  // Filter users by username based on the searchQuery
+  let filteredUsers = [...userList.value];
+  if (searchQuery.value.trim() !== '') {
+    filteredUsers = filteredUsers.filter(user =>
+      user.username.toLowerCase().includes(searchQuery.value.toLowerCase())
+    );
+  }
+  // Then sort the filtered list
+  return filteredUsers.sort((a, b) => {
+    const key = sortKey.value;
+    let valA = a[key];
+    let valB = b[key];
+    // Normalize strings for comparison
+    if (typeof valA === 'string') {
+      valA = valA.toLowerCase();
+    }
+    if (typeof valB === 'string') {
+      valB = valB.toLowerCase();
+    }
+    if (valA < valB) return sortOrder.value === 'asc' ? -1 : 1;
+    if (valA > valB) return sortOrder.value === 'asc' ? 1 : -1;
+    return 0;
+  });
+});
+
+function changeSort(column: string) {
+  if (sortKey.value === column) {
+    // Toggle the sort order
+    sortOrder.value = sortOrder.value === 'asc' ? 'desc' : 'asc';
+  } else {
+    sortKey.value = column;
+    sortOrder.value = 'asc';
+  }
+}
 
 // ================= Teacher Section =================
-
 const teachers = ref<Teacher[]>([]);
 
 const newTeacher = ref<Teacher>({
@@ -211,11 +243,8 @@ const sendStudents = async () => {
 
 // ================= Guardian Section =================
 
-// Since your Guardian type defines RelatedStudents as an empty array (type []),
-// we cast it to number[] when using it so that you can push numbers into it.
 const guardians = ref<Guardian[]>([]);
 
-// Cast the empty array to number[] to allow number pushes.
 const newGuardian = ref<Guardian>({
   name: '',
   birth_Date: new Date(),
@@ -225,7 +254,6 @@ const newGuardian = ref<Guardian>({
   RelatedStudents: [] as unknown as number[]
 });
 
-// For manually adding a related student OM_ID
 const newGuardianRelatedOMID = ref('');
 
 const addGuardianRelatedOMID = () => {
@@ -249,7 +277,6 @@ const addGuardian = () => {
     !newGuardian.value.email
   ) return;
   guardians.value.push({ ...newGuardian.value });
-  // Reset the new guardian form
   newGuardian.value = {
     name: '',
     birth_Date: new Date(),
@@ -270,18 +297,14 @@ const processGuardianFile = (file: File): Promise<Guardian[]> => {
     if (extension === 'csv' || extension === 'txt') {
       reader.onload = () => {
         const text = reader.result as string;
-        // Use tab as primary delimiter for txt files, semicolon for csv.
         const primaryDelimiter = extension === 'txt' ? '\t' : ';';
         const lines = text.split(/\r?\n/).filter(line => line.trim() !== '');
         const guardiansFromFile: Guardian[] = [];
         lines.forEach(line => {
-          // First try splitting on the primary delimiter.
           let cols = line.split(primaryDelimiter);
-          // If we don't get enough columns, fallback to splitting on whitespace.
           if (cols.length < 5) {
             cols = line.split(/\s+/);
           }
-          // Now, if we have at least 5 columns, process the line.
           if (cols.length >= 5) {
             const name = cols[0].trim();
             const birth_Date = new Date(cols[1].trim());
@@ -290,11 +313,9 @@ const processGuardianFile = (file: File): Promise<Guardian[]> => {
             let email = "";
             let relatedStr = "";
             if (cols.length === 5) {
-              // Format: name, birth_Date, address, email, RelatedStudents
               email = cols[3].trim();
               relatedStr = cols[4].trim();
             } else {
-              // Format: name, birth_Date, address, phone, email, RelatedStudents
               phone = cols[3].trim();
               email = cols[4].trim();
               relatedStr = cols[5].trim();
@@ -378,15 +399,14 @@ const sendGuardians = async () => {
 };
 
 const viewUserDialog = ref(false);
-const DeleteAssignmentDialog = ref(false)
+const DeleteAssignmentDialog = ref(false);
 const selectedUserForView = ref(null);
 const SelectedUserData = ref<any>(null);
 
 const openSelectedUserDialog = async (user: any) => {
-  
   try {
     const data = await getUser(user.ID);
-    SelectedUserData.value = {...data};
+    SelectedUserData.value = { ...data };
     console.log('Fetched user data:', SelectedUserData.value);
     viewUserDialog.value = true;
   } catch (error) {
@@ -394,55 +414,106 @@ const openSelectedUserDialog = async (user: any) => {
   }
 };
 
+const fastdelete = async (user: any) => {
+  try {
+    const data = await getUser(user.ID);
+    SelectedUserData.value = { ...data };
+    console.log('Fetched user data:', SelectedUserData.value);
+    DeleteAssignmentDialog.value = true;
+  } catch (error) {
+    console.error("Error fetching user data:", error);
+  }
+};
+
 const closeSelectedUserDialog = () => {
-  SelectedUserData.value = {}
-  viewUserDialog.value = false
-}
+  SelectedUserData.value = {};
+  viewUserDialog.value = false;
+};
 
-const uploadChangedUser = async() => {
-  console.log("Ez az egyik lehetőség: ", SelectedUserData)
-  console.log("Viszont ez az igazi  ", SelectedUserData.value)
-  await modifyUser(SelectedUserData.value)
-  SelectedUserData.value = {}
-  viewUserDialog.value = false
-}
+const uploadChangedUser = async () => {
+  console.log("Ez az egyik lehetőség: ", SelectedUserData);
+  console.log("Viszont ez az igazi  ", SelectedUserData.value);
+  await modifyUser(SelectedUserData.value);
+  SelectedUserData.value = {};
+  viewUserDialog.value = false;
+};
 
-const deleteUserfunction = async() =>{
-  await deleteUser(SelectedUserData.value.userSide,{
+const deleteUserfunction = async () => {
+  await deleteUser(SelectedUserData.value.userSide, {
     onSuccess: (response) => {
-      console.log("eredmény: ", response)
+      console.log("eredmény: ", response);
+      // Remove the deleted user from the userList so that the table updates.
+      userList.value = userList.value.filter(user => user.ID !== SelectedUserData.value.ID);
       DeleteAssignmentDialog.value = false;
       viewUserDialog.value = false;
     }
-  })
+  });
+};
+
+function formatDate(dateString: Date | string) {
+  if (!dateString) return "";
+  const dateObj = new Date(dateString);
+  return dateObj.toISOString().slice(0, 19).replace("T", " ");
 }
 
+// File selection refs
+const selectedFiles = ref<File[]>([]);
+const selectedStudentFiles = ref<File[]>([]);
+const selectedGuardianFiles = ref<File[]>([]);
+
+// Dialog state
+const showStudentDialog = ref(false);
+const showTeacherDialog = ref(false);
+const showParentDialog = ref(false);
 </script>
 
 <template>
   <main>
-    <v-container style="height: 25vw !important;">
+    <v-container>
+      <!-- Users Management Card -->
       <v-card>
-        <v-card-title>Felhasználók kezelése: </v-card-title>
+        <v-card-title>Felhasználók kezelése:</v-card-title>
+        <!-- Search Bar -->
         <v-card-text>
+          <v-text-field
+            v-model="searchQuery"
+            label="Keresés felhasználónév alapján"
+            clearable
+          ></v-text-field>
+        </v-card-text>
+        <v-card-text style="height: 25vw !important; overflow-y: auto;">
           <v-table>
             <thead>
               <tr>
-                <th>Név</th>
-                <th>Azonosító</th>
-                <th>Szerepkör</th>
-                <!--<th>Jelszó</th>-->
+                <th @click="changeSort('username')">
+                  Név 
+                  <span v-if="sortKey==='username'">
+                    {{ sortOrder==='asc' ? '▲' : '▼' }}
+                  </span>
+                </th>
+                <th @click="changeSort('ID')">
+                  Azonosító 
+                  <span v-if="sortKey==='ID'">
+                    {{ sortOrder==='asc' ? '▲' : '▼' }}
+                  </span>
+                </th>
+                <th @click="changeSort('role')">
+                  Szerepkör 
+                  <span v-if="sortKey==='role'">
+                    {{ sortOrder==='asc' ? '▲' : '▼' }}
+                  </span>
+                </th>
                 <th>Interakció</th>
               </tr>
             </thead>
-            <tbody>
-              <tr v-for="user in userList">
+            <tbody style="height: 23vw !important; overflow-y: auto;">
+              <tr v-for="user in sortedUsers" :key="user.ID">
                 <td>{{ user.username }}</td>
                 <td>{{ user.ID }}</td>
                 <td>{{ user.role }}</td>
-                <!--<td>{{ user.password }}</td>-->
                 <td>
-                  <v-btn @click="console.log(user);openSelectedUserDialog(user)">Felhasználó módosítása</v-btn>
+                  <v-btn @click="console.log(user); openSelectedUserDialog(user)">Felhasználó módosítása</v-btn>
+                  <v-btn @click="fastdelete(user)">Felhasználó törlése</v-btn>
                 </td>
               </tr>
             </tbody>
@@ -450,6 +521,7 @@ const deleteUserfunction = async() =>{
         </v-card-text>
       </v-card>
         
+      <!-- New Users Card -->
       <v-card>
         <v-card-title>Új felhasználók hozzáadása</v-card-title>
         <v-card-actions>
@@ -665,20 +737,15 @@ const deleteUserfunction = async() =>{
             <v-card-text>
               <h3>Felhasználó típusa : {{ SelectedUserData.userRole }}</h3>
               <v-text-field label="Felhasználónév: " v-model="SelectedUserData.roleSide.name"></v-text-field>
-            
-              <v-text-field label="Email cím: "v-model="SelectedUserData.roleSide.email"></v-text-field>
-            
+              <v-text-field label="Email cím: " v-model="SelectedUserData.roleSide.email"></v-text-field>
               <v-text-field label="Mobiltelefonszám: " v-model="SelectedUserData.roleSide.phone"></v-text-field>
             </v-card-text>
-            
           </div>
           <div v-else-if="SelectedUserData.userRole==='szulo'">
             <v-card-text>
               <h3>Felhasználó típusa : {{ SelectedUserData.userRole }}</h3>
               <v-text-field label="Felhasználónév: " v-model="SelectedUserData.roleSide.name"></v-text-field>
-            
-              <v-text-field label="Email cím: "v-model="SelectedUserData.roleSide.email"></v-text-field>
-            
+              <v-text-field label="Email cím: " v-model="SelectedUserData.roleSide.email"></v-text-field>
               <v-text-field label="Mobiltelefonszám: " v-model="SelectedUserData.roleSide.phone"></v-text-field>
             </v-card-text>
           </div>
@@ -687,20 +754,17 @@ const deleteUserfunction = async() =>{
               <h3>Felhasználó típusa : {{ SelectedUserData.userRole }}</h3>
               <v-text-field label="Felhasználónév: " v-model="SelectedUserData.roleSide.name"></v-text-field>
               <v-text-field label="Születési dátum" v-model="SelectedUserData.roleSide.DoB" required></v-text-field>
-              <v-text-field label="Email cím: "v-model="SelectedUserData.roleSide.email"></v-text-field>
+              <v-text-field label="Email cím: " v-model="SelectedUserData.roleSide.email"></v-text-field>
               <v-text-field label="Mobiltelefonszám: " v-model="SelectedUserData.roleSide.phone"></v-text-field>
               <v-text-field label="OM azonosító: " v-model="SelectedUserData.roleSide.OMID"></v-text-field>
               <v-text-field label="Lakcím : " v-model="SelectedUserData.roleSide.address"></v-text-field>
-              
             </v-card-text>
           </div>
           <div v-else-if="SelectedUserData.userRole==='admin'">
             <v-card-text>
-            <h3>Felhasználó típusa : {{ SelectedUserData.userRole }}</h3>
+              <h3>Felhasználó típusa : {{ SelectedUserData.userRole }}</h3>
               <v-text-field label="Felhasználónév: " v-model="SelectedUserData.roleSide.name"></v-text-field>
-            
-              <v-text-field label="Email cím: "v-model="SelectedUserData.roleSide.email"></v-text-field>
-            
+              <v-text-field label="Email cím: " v-model="SelectedUserData.roleSide.email"></v-text-field>
               <v-text-field label="Mobiltelefonszám: " v-model="SelectedUserData.roleSide.phone"></v-text-field>
             </v-card-text>
           </div>
@@ -710,18 +774,16 @@ const deleteUserfunction = async() =>{
             <v-btn @click="uploadChangedUser">Módosítás</v-btn>
             <v-btn @click="DeleteAssignmentDialog = true">Törlés</v-btn>
           </v-card-actions>
-          
-          
         </v-card>
       </v-dialog>
 
       <v-dialog v-model="DeleteAssignmentDialog" max-width="50vw" theme="dark">
-      <v-card>
-        <v-card-title>Biztos törölni akarod?</v-card-title>
-        <v-btn @click="deleteUserfunction">Törlés</v-btn>
-        <v-btn @click="DeleteAssignmentDialog = false">Mégse</v-btn>
-      </v-card>
-    </v-dialog>
+        <v-card>
+          <v-card-title>Biztos törölni akarod?</v-card-title>
+          <v-btn @click="deleteUserfunction">Törlés</v-btn>
+          <v-btn @click="DeleteAssignmentDialog = false">Mégse</v-btn>
+        </v-card>
+      </v-dialog>
 
     </v-container>
   </main>
