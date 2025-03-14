@@ -10,6 +10,7 @@ export const useErrorHandler = defineStore('errorHandler', () => {
 
   function setError(error:Error){
     console.log("ERROR")
+    console.log(error)
     currentErrorStatus.value = error
     showError.value = true
   }

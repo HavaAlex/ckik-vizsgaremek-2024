@@ -475,6 +475,7 @@ const showParentDialog = ref(false);
         <v-card-title>Felhasználók kezelése:</v-card-title>
         <!-- Search Bar -->
         <v-card-text>
+          <p> Felhasználók száma: {{ userList.length }}</p>
           <v-text-field
             v-model="searchQuery"
             label="Keresés felhasználónév alapján"

@@ -40,6 +40,16 @@ exports.createUzenet = async (req, res, next) =>
             message: message,
             date: date,
         }
+        if(!message){
+            res.status(500).send("Szöveg nélkül nem lehet üzenetet küldeni!")
+            return
+        }
+        console.log("EGYIK :", receiverGrouplist)
+        console.log("MASKI : ", receiverlist)
+        if(receiverlist.length< 1 && receiverGrouplist.length<1){
+            res.status(500).send("Címzettek nélkül nem lehet üzenetet küldeni!")
+            return
+        }
         cleanedreceiverlist = [];
         
         for (let l = 0; l < receiverlist.length; l++) { //ahogy átjön ez a lista, benne van még a receiverek role-ja és name-je. Csak az ID kell ezért

@@ -3,7 +3,7 @@ const db = require("../db/dbContext");
 class GroupRepository
 {
     constructor(db)
-    {
+    { 
         this.Groups = db.group;
     }
 
@@ -39,6 +39,10 @@ class GroupRepository
         )
     }
 
+    async getAllGroups()
+    {
+        return await db.group.findAll({})
+    }
 }
 
 module.exports = new GroupRepository(db);

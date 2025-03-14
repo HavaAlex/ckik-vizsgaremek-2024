@@ -15,7 +15,7 @@ const {showStatus} = storeToRefs(statusHandler)
         v-model="showError"
         color="yellow"
       >
-      {{ errorHandler.currentErrorStatus?.message }}
+      {{ errorHandler.currentErrorStatus?.response.data }}
 
       <template v-slot:actions>
         <v-btn

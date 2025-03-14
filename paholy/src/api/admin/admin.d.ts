@@ -22,3 +22,8 @@ export type Guardian = {
     email: string,
     RelatedStudents: number[]
 }
+
+export type CreatedGroup = {
+    name: string,
+    StudentOMIDs: number[]
+}
