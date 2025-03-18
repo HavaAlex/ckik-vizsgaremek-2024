@@ -76,7 +76,8 @@ const router = createRouter({
               { 
                   path: 'szulohazik',
                   name: 'szulohazik',
-                  component: HazikViewSzulo
+                  component: HazikViewSzulo,
+                  props:true
               },
               { 
                   path: 'tanarhazik',
