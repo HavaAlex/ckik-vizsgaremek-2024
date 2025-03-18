@@ -8,16 +8,23 @@ import { ref ,onMounted, onUnmounted,onUpdated } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useErrorHandler } from '@/stores/errorHandler';
 import { AxiosError } from 'axios';
+import { useGyerekStore } from '@/stores/gyerekStore';
+import { useGetChildren } from '@/api/szulo/szuloQuery';
 const { push } = useRouter()
 
 const cookieHandler = useCookieHandler()
 const { time } = storeToRefs(cookieHandler);
+
+const gyerekStore = useGyerekStore()
 
 const cookieStatus = cookieHandler.hasValidCookie()
 let role: string = ''
 if (cookieStatus == true){
   const decoded = jwtDecode(document.cookie)
   role = decoded.userData.role
+  if(role == "szulo"){
+    gyer
+  }
   console.log(decoded)
   console.log(role)
   push({name:role+'orarend'})
