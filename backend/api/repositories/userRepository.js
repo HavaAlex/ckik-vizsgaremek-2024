@@ -80,19 +80,6 @@ class UserRepository
         return await studentRepository.getGroupMembers(groupID)
     }
 
-
-    async getGuardiansChildren(ID)
-    {
-        return await this.Students.findAll
-        (
-            {
-                where:
-                {
-                    guardianID: ID,
-                }
-            }
-        )
-    }
     async createUserName(nev){
 
         console.log("Elötte: ",nev)

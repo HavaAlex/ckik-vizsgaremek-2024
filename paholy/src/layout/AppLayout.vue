@@ -23,7 +23,8 @@ if (cookieStatus == true){
   const decoded = jwtDecode(document.cookie)
   role = decoded.userData.role
   if(role == "szulo"){
-    gyer
+    const { mutate:getChildren } = useGetChildren()
+    getChildren()
   }
   console.log(decoded)
   console.log(role)
@@ -144,6 +145,11 @@ onUpdated(()=>{
       <v-btn @click="push({name:'GroupManagementView'})" v-if="role=='admin'">
                 Csoportok kezelése
       </v-btn>
+
+      <v-select v-if="role=='szulo'"
+        label="Választott gyermek"
+        :items="gyerekStore.children.map((c)=>c.name)"
+      ></v-select>
       <v-spacer></v-spacer>
       <v-tooltip text="Ennyi idő múlva automatikusan kijelentkezel">
         <template v-slot:activator="{ props }">

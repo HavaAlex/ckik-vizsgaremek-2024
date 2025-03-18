@@ -78,10 +78,24 @@ exports.loginUser = async (req, res, next) =>
         return
     }
 
-    const userData = {
-        ID:user.ID,
-        username:user.username,
-        role:user.role
+    let userData = null;
+    if(user.role=="szulo")
+    {
+        const role = await roleService.getRole(user.ID,user.role)
+        userData = {
+            ID:user.ID,
+            username:user.username,
+            role:user.role,
+            children: await userService.getGuardiansChildren(role.ID)
+        }
+    }
+    else
+    {
+        userData = {
+            ID:user.ID,
+            username:user.username,
+            role:user.role
+        }
     }
 
     if(await bcrypt.compare(password, user.password))
