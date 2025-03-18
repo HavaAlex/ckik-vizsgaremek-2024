@@ -32,6 +32,8 @@ router.delete("/deleteUser/:userID",adminController.deleteUser)
 router.get("/getAllGroupsWithStudents",adminController.getAllGroupsWithStudents)
 router.post("/createGroup",adminController.CreateGroup)
 router.post("/addStudentsToGroup",adminController.addStudentsToGroup)
+router.delete("/deleteStudentGroup/:ID",adminController.deleteStudentGroup)
+router.delete("/deleteGroup/:ID",adminController.deleteGroup)
 
 router.delete("/deleteMessage/:ID",uzenetController.deleteMessage)
 

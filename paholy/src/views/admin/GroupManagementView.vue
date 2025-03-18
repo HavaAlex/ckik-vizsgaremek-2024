@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { usegetGroups, useCreateGroup, useAddUsersToGroup } from '@/api/admin/adminQuery'
+import { usegetGroups, useCreateGroup, useAddUsersToGroup, usedeleteStudentGroup,usedeleteGroup } from '@/api/admin/adminQuery'
 import type { CreatedGroup } from '@/api/admin/admin'
 import * as XLSX from 'xlsx'
 
 const { mutate: CreateGroup } = useCreateGroup()
 const { mutate: AddUsers } = useAddUsersToGroup()
+const { mutate: deleteStudentGroup} = usedeleteStudentGroup()
+const { mutate: deleteGroup} = usedeleteGroup()
 const newGroups = ref<CreatedGroup>({
   name: '',
   StudentOMIDs: []
@@ -101,6 +103,20 @@ const sendEditedGroup = async () => {
     groupDialog.value = false
   }
 }
+
+
+//Delete Student Group
+
+const deleteStudentGroupDialog = ref(false)
+const deleteStudentGroupID = ref<number>(-100)
+
+
+// Delete Group 
+
+const deleteGroupDialog = ref(false)
+const deleteGroupID = ref<number>(-100)
+
+
 </script>
 
 <template>
@@ -161,6 +177,7 @@ const sendEditedGroup = async () => {
               <th>E-mail</th>
               <th>Telefonszám</th>
               <th>Lakcím</th>
+              <th>Interakció</th>
             </tr>
           </thead>
           <tbody>
@@ -170,6 +187,7 @@ const sendEditedGroup = async () => {
               <td>{{ student.email }}</td>
               <td>{{ student.phone }}</td>
               <td>{{ student.address }}</td>
+              <td><v-btn @click="deleteStudentGroupID = student.ID, deleteStudentGroupDialog = true">Eltávolás a csoportból</v-btn></td>
             </tr>
           </tbody>
         </v-table>
@@ -190,6 +208,30 @@ const sendEditedGroup = async () => {
         <v-spacer></v-spacer>
         <v-btn @click="groupDialog = false">Bezárás</v-btn>
         <v-btn color="primary" @click="sendEditedGroup">Hozzáadás</v-btn>
+        <v-btn @click="deleteGroupID= selectedGroup.id,deleteGroupDialog = true">Csoport törlése</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
+<!--Delete studentGroup confirm dialog-->
+  <v-dialog v-model="deleteStudentGroupDialog" style="width: 50vw;">
+    <v-card>
+      <v-card-title>Biztos el akarja távolítani a diákot a csoportból?</v-card-title>
+      <v-card-text>A diák adatai ezzel nem törlődnek, de nem lesz tagja a csoportnak</v-card-text>
+      <v-card-actions>
+        <v-btn @click="deleteStudentGroup(deleteStudentGroupID), deleteStudentGroupDialog=false, groupDialog= false">Eltávolás</v-btn>
+        <v-btn @click="deleteStudentGroupDialog = false;">Mégse</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
+
+  <!--Delete Group confirm dialog-->
+  <v-dialog v-model="deleteGroupDialog" style="width: 50vw;">
+    <v-card>
+      <v-card-title>Biztos törölni akarja a csoportot?</v-card-title>
+      <v-card-text>Ez konfliktust válthat ki az orarend és a jegyek megtekintésekor</v-card-text>
+      <v-card-actions>
+        <v-btn @click="deleteGroup(deleteGroupID), deleteGroupDialog=false, groupDialog= false">Törlés</v-btn>
+        <v-btn @click="deleteGroupDialog = false;">Mégse</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
