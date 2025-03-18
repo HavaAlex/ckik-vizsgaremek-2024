@@ -25,6 +25,11 @@ export const useCookieHandler = defineStore('cookieHandler', () => {
   let timer: ReturnType<typeof setInterval> | null = null;
 
   function startTimer(){
+    const decoded = jwtDecode(document.cookie.split(";")[0])
+    /*console.log("!!!!!!!!!!!!!!!!!!!!")
+    console.log(Date.now())
+    console.log(decoded.exp*1000)*/
+    baseTime.value = Math.floor(Math.abs(Date.now() - (decoded.exp*1000))/1000)
     timeValue.value = baseTime.value
     if (!timer) {
       timer = setInterval(() => {

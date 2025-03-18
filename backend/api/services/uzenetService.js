@@ -7,7 +7,6 @@ class UzenetService
         const osszes = {
             elkuldott : [],
             kapott: [], 
-            senderUserNames:[] //jelenleg használaton kívül van
         }
         osszes.elkuldott = await messageRepository.getSentMessages(ID)
         osszes.kapott = await messageRepository.getReceivedMessages(ID)
@@ -27,6 +26,14 @@ class UzenetService
     async createUzenet(NewUzenet,newMessageReceivers) {
 
         return await messageRepository.createMessage(NewUzenet,newMessageReceivers)
+    }
+
+    async getAllMessages(){
+        return await messageRepository.getAllMessages()
+    }
+
+    async deleteMessage(ID){
+        return await messageRepository.deleteMessage(ID);
     }
 }
 

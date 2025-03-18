@@ -78,18 +78,25 @@ exports.modifyUser = async (req,res,next) => {
 
 exports.deleteUser = async (req,res,next) => {
     const userID = JSON.parse(req.params.userID);
-    const result = await adminService.deleteUser(userID)
-    res.status(201).json(result)
+
+    if(userID == req.decoded.ID){
+        res.status(500).send("Nem törölheti ki az aktuálisan használt felhasználót")
+        return
+    }
+    else {
+        const result = await adminService.deleteUser(userID)
+        res.status(201).json(result)
+    }
+    
 }
 
 exports.getAllGroupsWithStudents = async (req,res,next) => {
     const eredmeny = await adminService.getAllGroupsWithStudents();
-    console.log("ÉÉÉÉÉÉÉÉÉJAAAAAAAAAAAAAAAAHÚÚÚÚÚÚÚÚÚÚÚ ", eredmeny)
     res.status(201).json(eredmeny)
 }
 exports.CreateGroup = async (req,res,next) => {
     const newGroup = req.body 
-    console.log("itt van áááááááá: ",newGroup);
+    
     if(newGroup.StudentOMIDs.length < 1){
         res.status(500).send("Nem adott meg OM azonosítókat. Csoport létrehozása sikertelen.")
         return
@@ -106,4 +113,26 @@ exports.CreateGroup = async (req,res,next) => {
     }
     
     res.status(201).json(newGroup)
+}
+
+exports.addStudentsToGroup = async (req,res,next) => {
+    console.log("bentvan")
+    const newUsers  = req.body
+    if(newUsers.StudentOMIDs.length < 1){
+        res.status(500).send("Nem adott meg OM azonosítókat. Csoport modósítása sikertelen.")
+        return
+    }
+
+    const response = await adminService.addStudentsToGroup(newUsers)
+    if(response == -1 ){
+        res.status(500).send("Hibás OM azonosítot adott meg. Csoport módosítása sikertelen.")
+        return
+    }
+    if(response == -2){
+        res.status(500).send("A tanulo a megadott OM azonosítók egyikével már tagja egy csoportnak. Csoport módosítása sikertelen")
+        return
+    }
+    console.log("ILYNE GASZA: ", newUsers)
+    console.log("///////////////////////////////")
+    res.status(201).send("elérted")
 }

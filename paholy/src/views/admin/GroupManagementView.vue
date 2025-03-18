@@ -1,189 +1,196 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { usegetGroups, useCreateGroup } from '@/api/admin/adminQuery'
+import { usegetGroups, useCreateGroup, useAddUsersToGroup } from '@/api/admin/adminQuery'
 import type { CreatedGroup } from '@/api/admin/admin'
-import * as XLSX from 'xlsx' // Ensure you have installed the xlsx package
+import * as XLSX from 'xlsx'
 
-const { mutate: CreateGroup } = useCreateGroup();
-
-// Reactive group for new group creation
+const { mutate: CreateGroup } = useCreateGroup()
+const { mutate: AddUsers } = useAddUsersToGroup()
 const newGroups = ref<CreatedGroup>({
   name: '',
   StudentOMIDs: []
 })
-
-// Fetch existing groups
 const { data: Groups } = usegetGroups()
 
-// Track which group is currently open
-const openedGroup = ref<number | null>(null)
-const toggleGroup = (index: number) => {
-  openedGroup.value = openedGroup.value === index ? null : index;
-}
+const selectedGroup = ref<{ id: number, name: string, students: any[] } | null>(null)
+const groupDialog = ref(false)
 
-// Dialog state for creating a new group
+const editedGroup = ref<{ id: number, StudentOMIDs: number[] }>({ id: 0, StudentOMIDs: [] })
+
+const openGroupDialog = (group: any) => {
+  console.log("Opening group dialog with group:", group); // Debugging
+
+  if (!group?.group?.ID) {
+    console.error("Group ID is missing!", group);
+    return;
+  }
+
+  selectedGroup.value = { 
+    id: group.group.ID, 
+    name: group.group.name, 
+    students: group.students 
+  };
+
+  editedGroup.value = { 
+    id: group.group.ID,  // ✅ Ensure ID is correctly assigned
+    StudentOMIDs: [] 
+  };
+
+  console.log("Selected group ID:", selectedGroup.value.id);
+  console.log("Edited group ID:", editedGroup.value.id); // Debugging
+
+  groupDialog.value = true;
+};
+
+//====================================================
 const newGroupDialog = ref(false)
-
-// A temporary input for a new StudentOMID
 const newStudentOMID = ref<number | null>(null)
 
-// Add the StudentOMID entered manually to the list
-const addStudentOMID = () => {
-  if (newStudentOMID.value !== null && !newGroups.value.StudentOMIDs.includes(newStudentOMID.value)) {
-    newGroups.value.StudentOMIDs.push(newStudentOMID.value)
+const addStudentOMID = (targetGroup: 'new' | 'edit') => {
+  if (newStudentOMID.value !== null) {
+    const targetList = targetGroup === 'new' ? newGroups.value.StudentOMIDs : editedGroup.value.StudentOMIDs
+    if (!targetList.includes(newStudentOMID.value)) {
+      targetList.push(newStudentOMID.value)
+    }
     newStudentOMID.value = null
   }
 }
 
-// Remove a StudentOMID from the list when its element is clicked
-const removeStudentOMID = (omid: number) => {
-  newGroups.value.StudentOMIDs = newGroups.value.StudentOMIDs.filter(item => item !== omid)
-}
-
-// File input handler to read .txt, .csv, or .xlsx files
-const onFileChange = (event: Event) => {
-  const target = event.target as HTMLInputElement
-  if (target.files && target.files.length) {
-    const file = target.files[0]
-    const fileName = file.name.toLowerCase()
-    if (fileName.endsWith('.txt') || fileName.endsWith('.csv')) {
-      const reader = new FileReader()
-      reader.onload = (e) => {
-        const text = e.target?.result
-        if (typeof text === 'string') {
-          const lines = text.split('\n')
-          lines.forEach(line => {
-            const trimmed = line.trim()
-            if (trimmed) {
-              const num = Number(trimmed)
-              if (!isNaN(num) && !newGroups.value.StudentOMIDs.includes(num)) {
-                newGroups.value.StudentOMIDs.push(num)
-              }
-            }
-          })
-        }
-      }
-      reader.readAsText(file)
-    } else if (fileName.endsWith('.xlsx')) {
-      const reader = new FileReader()
-      reader.onload = (e) => {
-        const data = e.target?.result
-        if (data) {
-          const workbook = XLSX.read(data, { type: 'binary' })
-          const sheetName = workbook.SheetNames[0]
-          const worksheet = workbook.Sheets[sheetName]
-          const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 })
-          jsonData.forEach((row: any) => {
-            if (row && row[0] !== undefined) {
-              const num = Number(row[0])
-              if (!isNaN(num) && !newGroups.value.StudentOMIDs.includes(num)) {
-                newGroups.value.StudentOMIDs.push(num)
-              }
-            }
-          })
-        }
-      }
-      reader.readAsBinaryString(file)
-    }
+const removeStudentOMID = (omid: number, targetGroup: 'new' | 'edit') => {
+  if (targetGroup === 'new') {
+    newGroups.value.StudentOMIDs = newGroups.value.StudentOMIDs.filter(item => item !== omid)
+  } else {
+    editedGroup.value.StudentOMIDs = editedGroup.value.StudentOMIDs.filter(item => item !== omid)
   }
 }
 
-// Dummy function for sending the new group (you can implement the query later)
-const sendNewGroup = async() => {
-  console.log("Sending new group:", newGroups.value)
+const onFileChange = (event: Event, targetGroup: 'new' | 'edit') => {
+  const targetList = targetGroup === 'new' ? newGroups.value.StudentOMIDs : editedGroup.value.StudentOMIDs
+  const target = event.target as HTMLInputElement
 
+  if (target.files && target.files.length) {
+    const file = target.files[0]
+    const reader = new FileReader()
+
+    reader.onload = (e) => {
+      const text = e.target?.result
+      if (typeof text === 'string') {
+        const lines = text.split('\n')
+        lines.forEach(line => {
+          const num = Number(line.trim())
+          if (!isNaN(num) && !targetList.includes(num)) {
+            targetList.push(num)
+          }
+        })
+      }
+    }
+    reader.readAsText(file)
+  }
+}
+
+const sendNewGroup = async () => {
   await CreateGroup(newGroups.value)
-  // Reset the dialog data after sending
   newGroups.value = { name: '', StudentOMIDs: [] }
   newGroupDialog.value = false
+}
+
+const sendEditedGroup = async () => {
+  if (editedGroup.value.StudentOMIDs.length > 0) {
+    await AddUsers({ id: editedGroup.value.id, StudentOMIDs: editedGroup.value.StudentOMIDs })
+    editedGroup.value.StudentOMIDs = []
+    groupDialog.value = false
+  }
 }
 </script>
 
 <template>
   <v-container>
-    <v-card style="height: 30vw!important;">
+    <v-card >
       <v-card-title>Csoportok</v-card-title>
       <v-card-text>
-        <div v-for="(group, index) in Groups" :key="index">
-          <div 
-            @click="toggleGroup(index)" 
-            style="cursor: pointer; font-weight: bold; display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid #ddd;">
-            <span>{{ group.group.name }}</span>
-            <span>Diákok száma: {{ group.students.length }}</span>
-          </div>
-          
-          <v-expand-transition>
-            <v-table 
-              v-if="openedGroup === index" 
-              style="width: 60vw; max-height: 20vw; overflow-y: auto; margin-top: 10px;">
-              <thead>
-                <tr>
-                  <th>Név</th>
-                  <th>OM azonosító</th>
-                  <th>E-mail</th>
-                  <th>Telefonszám</th>
-                  <th>Lakcím</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="student in group.students" :key="student.OMID">
-                  <td>{{ student.name }}</td>
-                  <td>{{ student.OMID }}</td>
-                  <td>{{ student.email }}</td>
-                  <td>{{ student.phone }}</td>
-                  <td>{{ student.address }}</td>
-                </tr>
-              </tbody>
-            </v-table>
-          </v-expand-transition>
-        </div>
+        <v-list style="height: 30vw;" >
+          <v-list-item v-for="(group, index) in Groups" :key="index" @click="openGroupDialog(group)" style="cursor: pointer;">
+            <v-list-item-content>
+              <v-list-item-title>{{ group.group.name }}</v-list-item-title>
+              <v-list-item-subtitle>Diákok száma: {{ group.students.length }}</v-list-item-subtitle>
+            </v-list-item-content>
+          </v-list-item>
+        </v-list>
+      </v-card-text>
+      <v-card-actions>
+        <v-btn color="primary" @click="newGroupDialog = true">Új csoport létrehozása</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-container>
+
+  <!-- New Group Creation Dialog -->
+  <v-dialog v-model="newGroupDialog" max-width="600">
+    <v-card>
+      <v-card-title>Új csoport létrehozása</v-card-title>
+      <v-card-text>
+        <v-text-field v-model="newGroups.name" label="Csoport neve"></v-text-field>
+        <v-text-field v-model.number="newStudentOMID" label="Diák OMID" type="number"></v-text-field>
+        <v-btn @click="addStudentOMID('new')">Hozzáad</v-btn>
+
+        <v-list>
+          <v-list-item v-for="(omid, index) in newGroups.StudentOMIDs" :key="index" @click="removeStudentOMID(omid, 'new')" style="cursor: pointer;">
+            <v-list-item-content>{{ omid }}</v-list-item-content>
+          </v-list-item>
+        </v-list>
+
+        <v-file-input label="Fájl feltöltése (.txt, .csv, .xlsx)" accept=".txt,.csv,.xlsx" @change="onFileChange($event, 'new')"></v-file-input>
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="primary" @click="newGroupDialog = true">
-          Új csoport létrehozása
-        </v-btn>
+        <v-btn @click="newGroupDialog = false">Mégse</v-btn>
+        <v-btn color="primary" @click="sendNewGroup">Küldés</v-btn>
       </v-card-actions>
     </v-card>
+  </v-dialog>
 
-    <!-- New Group Creation Dialog -->
-    <v-dialog v-model="newGroupDialog" max-width="600">
-      <v-card>
-        <v-card-title>Új csoport létrehozása</v-card-title>
-        <v-card-text>
-          <v-text-field v-model="newGroups.name" label="Csoport neve"></v-text-field>
-          <v-text-field 
-            v-model.number="newStudentOMID" 
-            label="Diák OMID" 
-            type="number">
-          </v-text-field>
-          <v-btn @click="addStudentOMID">Hozzáad</v-btn>
-          
-          <!-- Display added StudentOMIDs -->
-          <v-list>
-            <v-list-item 
-              v-for="(omid, index) in newGroups.StudentOMIDs" 
-              :key="index"
-              @click="removeStudentOMID(omid)"
-              style="cursor: pointer;"
-            >
-              <v-list-item-content>{{ omid }}</v-list-item-content>
-            </v-list-item>
-          </v-list>
+  <!-- Group Details Dialog -->
+  <v-dialog v-model="groupDialog" max-width="800">
+    <v-card v-if="selectedGroup">
+      <v-card-title>{{ selectedGroup.name }}</v-card-title>
+      <v-card-text>
+        <v-table>
+          <thead>
+            <tr>
+              <th>Név</th>
+              <th>OM azonosító</th>
+              <th>E-mail</th>
+              <th>Telefonszám</th>
+              <th>Lakcím</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="student in selectedGroup.students" :key="student.OMID">
+              <td>{{ student.name }}</td>
+              <td>{{ student.OMID }}</td>
+              <td>{{ student.email }}</td>
+              <td>{{ student.phone }}</td>
+              <td>{{ student.address }}</td>
+            </tr>
+          </tbody>
+        </v-table>
 
-          <!-- File input for bulk upload -->
-          <v-file-input 
-            label="Fájl feltöltése (.txt, .csv, .xlsx)" 
-            accept=".txt,.csv,.xlsx"
-            @change="onFileChange"
-          ></v-file-input>
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn  @click="newGroupDialog = false">Mégse</v-btn>
-          <v-btn color="primary" @click="sendNewGroup">Küldés</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-  </v-container>
+        <h2>Új tanulók hozzáadása</h2>
+        <v-text-field v-model.number="newStudentOMID" label="Diák OMID" type="number"></v-text-field>
+        <v-btn @click="addStudentOMID('edit')">Hozzáad</v-btn>
+
+        <v-list>
+          <v-list-item v-for="(omid, index) in editedGroup.StudentOMIDs" :key="index" @click="removeStudentOMID(omid, 'edit')" style="cursor: pointer;">
+            <v-list-item-content>{{ omid }}</v-list-item-content>
+          </v-list-item>
+        </v-list>
+
+        <v-file-input label="Fájl feltöltése (.txt, .csv, .xlsx)" accept=".txt,.csv,.xlsx" @change="onFileChange($event, 'edit')"></v-file-input>
+      </v-card-text>
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn @click="groupDialog = false">Bezárás</v-btn>
+        <v-btn color="primary" @click="sendEditedGroup">Hozzáadás</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 </template>

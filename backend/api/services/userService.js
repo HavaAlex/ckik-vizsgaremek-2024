@@ -5,6 +5,7 @@ const studentRepository = require("../repositories/studentRepository")
 const GuardianStudentRepository = require("../repositories/guardianStudentRepository")
 const GuardianRepository = require("../repositories/guardianRepository")
 const adminRepository = require("../repositories/adminRepository")
+const studentGroupRepository = require("../repositories/studentGroupRepository")
 
 class UserService
 {
@@ -46,7 +47,36 @@ class UserService
             return await GuardianRepository.getRoleByUserID(ID)
         }
     }
-    
+    async checkIfUsersExist(StudentOMIDs){
+        console.log("ezek az OM ID K ", StudentOMIDs)
+        for (let i = 0; i < StudentOMIDs.length; i++) {
+            const StudentID = await studentRepository.getStudentByOmId(StudentOMIDs[i])
+            console.log(StudentID)
+            if(StudentID == null){
+                console.log("NINCS IJEN SALYNA ")
+                return false
+            }
+            else{
+                console.log(" FASZA VAN ILYEN : ",StudentID)
+            }
+        }
+        return true
+    }
+
+    async checkIfUsersAlreadyInGroup(StudentOMIDs){
+        for (let i = 0; i < StudentOMIDs.length; i++) {
+            console.log("Ő A SOROS : ", StudentOMIDs[i])
+            const Student = await studentRepository.getStudentByOmId(StudentOMIDs[i])
+            console.log("MG IS VAN : ", Student)
+            const response = await studentGroupRepository.getStudentGroupByStudentID(Student.ID)
+
+            console.log("EBBE A CSOPORTBA JÁR : ", response)
+            if(response != null){
+                return true
+            }
+        }
+        return false
+    }
 }
 
 module.exports = new UserService();

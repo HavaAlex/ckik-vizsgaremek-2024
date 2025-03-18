@@ -6,8 +6,9 @@ import { jwtDecode } from "jwt-decode";
 import { useCookieHandler } from "@/stores/cookieHandler";
 import type { child } from "./szulo";
 import { useErrorHandler } from "@/stores/errorHandler";
+import { useGyerekStore } from "@/stores/gyerekStore";
 
-const getChildren = async (): Promise<child> => {
+const getChildren = async (): Promise<child[]> => {
     const {getCookie} = useCookieHandler()
     const config = {
         headers: { Authorization: `Bearer ${getCookie("alap")}` }
@@ -17,17 +18,24 @@ const getChildren = async (): Promise<child> => {
 }
 
 export const useGetChildren = () => {
-    const {setError} = useErrorHandler()
-    const query = useQuery({
-        queryKey: [QUERY_KEYS.getChildren],
-        queryFn: getChildren,
-    })
-
-    if (query.error.value) {
-        console.error("Lekérdezési hiba:", query.error)
-        setError(query.error.value)
-    }
-    return query
+    return useMutation(
+        {
+            mutationFn: getChildren,
+            onSuccess(data) {
+                console.log("FASU")
+                console.log(data)
+                const gyerekStore = useGyerekStore()
+                gyerekStore.clearChildren()
+                data.forEach(element => {
+                    gyerekStore.addChild(element)
+                });
+            },
+            onError(error){
+                const {setError} = useErrorHandler()
+                setError(error)
+            }
+        }
+    )
 }
 
 

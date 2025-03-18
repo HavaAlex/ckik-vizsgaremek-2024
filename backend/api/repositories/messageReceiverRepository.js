@@ -8,7 +8,7 @@ class MessageReceiverRepository
     {
         this.MessageReceiver = db.messagereceiver;
     }
-
+ 
     async createMessageReciever(messagereceiver)
     {
         const newMessageReceiver = await this.MessageReceiver.build(messagereceiver);
