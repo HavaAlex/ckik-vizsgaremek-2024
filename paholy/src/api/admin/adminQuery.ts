@@ -222,7 +222,7 @@ export const useCreateGroup = () => {
     return useMutation({
         mutationFn: CreateGroup,
         onSuccess() {
-            queryClient.refetchQueries({ queryKey: [QUERY_KEYS.getUsers] })
+            queryClient.refetchQueries({ queryKey: [QUERY_KEYS.getGroups] })
         },
         onError(error) {
             const { setError } = useErrorHandler()
@@ -234,9 +234,6 @@ export const useCreateGroup = () => {
 
 
 const AddUsersToGroup = async (newUsers: any) => {
-    console.log("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
-    console.log(newUsers)
-    console.log("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
     const { getCookie } = useCookieHandler() 
     const config = {
         headers: { Authorization: `Bearer ${getCookie("alap")}` }
@@ -258,4 +255,54 @@ export const useAddUsersToGroup = () => {
             setError(error)
         }
     })
+}
+
+
+const deleteStudentGroup = async (ID: Number)=>{
+    const {getCookie} = useCookieHandler()
+    const config = {
+        headers: { Authorization: `Bearer ${getCookie("alap")}` }
+    }; 
+    const response = await axiosClient.delete(`http://localhost:3000/admin/deleteStudentGroup/${ID}`,config) // ${document.cookie}
+    return response.data
+}
+
+export const usedeleteStudentGroup = () => {
+    return useMutation( 
+        {
+            mutationFn: deleteStudentGroup,
+            onSuccess(data){
+                queryClient.refetchQueries({queryKey:[QUERY_KEYS.getGroups]})
+            },
+            onError(error){
+                const {setError} = useErrorHandler()
+                setError(error)
+            }
+        }
+    )
+}
+
+
+const deleteGroup = async (ID: Number)=>{
+    const {getCookie} = useCookieHandler()
+    const config = {
+        headers: { Authorization: `Bearer ${getCookie("alap")}` }
+    }; 
+    const response = await axiosClient.delete(`http://localhost:3000/admin/deleteGroup/${ID}`,config) // ${document.cookie}
+    return response.data
+}
+
+export const usedeleteGroup = () => {
+    return useMutation( 
+        {
+            mutationFn: deleteGroup,
+            onSuccess(data){
+                queryClient.refetchQueries({queryKey:[QUERY_KEYS.getGroups]})
+            },
+            onError(error){
+                const {setError} = useErrorHandler()
+                setError(error)
+            }
+        }
+    )
 }

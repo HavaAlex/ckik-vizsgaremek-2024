@@ -22,6 +22,12 @@ class StudentGroupRepository
         })
         return studentGroup
     }
+    async deleteStudentGroup(ID){
+        await this.StudentGroups.destroy({
+            where: {StudentID : ID}
+        })
+        return "Diák eltávolítva a csoportból"
+    }
 }
 
 module.exports = new StudentGroupRepository(db);

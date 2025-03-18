@@ -258,6 +258,14 @@ class adminService {
         return "sikerült"
     }
 
+    async deleteStudentGroup(ID){
+        return await studentGroupRepository.deleteStudentGroup(ID)
+    }
+
+    async deleteGroup(ID){
+        return await groupRepository.deleteGroup(ID)
+    }
+
     
 }
 module.exports = new adminService(); 

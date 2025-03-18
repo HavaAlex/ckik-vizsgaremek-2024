@@ -108,7 +108,7 @@ exports.CreateGroup = async (req,res,next) => {
     const eredmeny = await adminService.CreatedGroup(newGroup);
    
     if(eredmeny == -1){
-        res.status(500).send("Hibás OM azonosítot adott meg. Csoport létrehozása sikertelen.")
+        res.status(500).send("Az adatbázisban nem szereplő OM azonosítót adott meg. Csoport létrehozása sikertelen.")
         return
     }
     
@@ -125,14 +125,24 @@ exports.addStudentsToGroup = async (req,res,next) => {
 
     const response = await adminService.addStudentsToGroup(newUsers)
     if(response == -1 ){
-        res.status(500).send("Hibás OM azonosítot adott meg. Csoport módosítása sikertelen.")
+        res.status(500).send("Az adatbázisban nem szereplő OM azonosítót adott meg. Csoport módosítása sikertelen.")
         return
     }
     if(response == -2){
-        res.status(500).send("A tanulo a megadott OM azonosítók egyikével már tagja egy csoportnak. Csoport módosítása sikertelen")
+        res.status(500).send("Egy tanulo a megadott OM azonosítók egyikével már tagja egy csoportnak. Csoport módosítása sikertelen")
         return
     }
-    console.log("ILYNE GASZA: ", newUsers)
-    console.log("///////////////////////////////")
     res.status(201).send("elérted")
+}
+
+exports.deleteStudentGroup= async (req,res,next) => {
+    const ID = JSON.parse(req.params.ID);
+    const response = adminService.deleteStudentGroup(ID);
+    res.status(201).json(response);
+}
+
+exports.deleteGroup = async (req,res,next) =>{
+    const ID = JSON.parse(req.params.ID);
+    const response = adminService.deleteGroup(ID);
+    res.status(201).json(response)
 }

@@ -130,7 +130,6 @@ class MessageRepository
         });
     }
     async deleteMessage(ID){
-        console.log("FASZ: ", ID)
         await this.Messages.destroy({
             where: {ID : ID}
         })
