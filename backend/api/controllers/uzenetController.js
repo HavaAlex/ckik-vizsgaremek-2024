@@ -27,10 +27,23 @@ exports.modifyUzenet = async (req, res, next) =>
 {
     
 }
+
+exports.getAllMessages = async (req,res,next) => {
+    const response = await uzenetService.getAllMessages();
+    res.status(201).json(response)
+}
+
+exports.deleteMessage = async (req,res,next) => {
+    const ID = JSON.parse(req.params.ID);
+
+    console.log("EZ A Z ID : ", ID)
+    const response = await uzenetService.deleteMessage(ID);
+    res.status(201).json(response);
+}
+
 exports.createUzenet = async (req, res, next) =>
 {
     let {message,date,receiverlist,receiverGrouplist} = req.body;
-    console.log("createuzenetbevan")
     try
     {
         const newUzenet =
@@ -43,7 +56,7 @@ exports.createUzenet = async (req, res, next) =>
         if(!message){
             res.status(500).send("Szöveg nélkül nem lehet üzenetet küldeni!")
             return
-        }
+        } 
         console.log("EGYIK :", receiverGrouplist)
         console.log("MASKI : ", receiverlist)
         if(receiverlist.length< 1 && receiverGrouplist.length<1){
@@ -80,4 +93,6 @@ exports.createUzenet = async (req, res, next) =>
     {
         next(error);
     }
+
+
 }

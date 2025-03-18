@@ -19,7 +19,8 @@ const SZULO_KEYS = {
 
 const UZENETEK_KEYS = {
     getUzenetek: 'getUzenetek',
-    getPotentialReceivers: 'getPotentialReceivers'
+    getPotentialReceivers: 'getPotentialReceivers',
+    getAllUzenetek:'getAllUzenetek'
 }
 
 const HIANYZASOK_KEYS = {
@@ -56,7 +57,7 @@ const ADMIN_KEYS = {
     modifyUser: 'modifyUser',
     deleteUser: 'deleteUser',
     getGroups: 'getGroups',
-    CreateGroup:'CreateGroup'
+    CreateGroup:'CreateGroup',
 }
 export const QUERY_KEYS = {
     ...USER_KEYS,

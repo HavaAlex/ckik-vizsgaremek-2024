@@ -1,6 +1,8 @@
 const { Op, where } = require("sequelize");
 const db = require("../db/dbContext");
 
+const messageReceiverRepository =  require("../repositories/messageReceiverRepository")
+
 class MessageRepository
 {
     constructor(db)
@@ -16,23 +18,20 @@ class MessageRepository
     {
         const newMessage = await this.Messages.build(message);
         await newMessage.save();
-        const distinctmessageReceivers = new Set(messageReceivers) // nincs distinct ( hiányzik a c# :( )
+        const distinctmessageReceivers = new Set(messageReceivers) 
         for (const element of distinctmessageReceivers) {
             const newMessageReceiver = {
                 MessageID: newMessage.ID,
                 UserID: element,
             }
-            const newerMessageReceiver = await this.MessageReceiver.build(newMessageReceiver);
-
-            await newerMessageReceiver.save();
-            
+            await messageReceiverRepository.createMessageReciever(newMessageReceiver)
         }       
         return newMessage;
     }
     async getPotentialReceivers(userID){
         return await this.User.findAll({
             where: {
-                ID:{[Op.ne]:userID} //nem a sajátja, magának ne tudjon küldeni üzenetet
+                ID:{[Op.ne]:userID} 
             },
         });
     }
@@ -44,7 +43,7 @@ class MessageRepository
                 {
                     model: this.Student,
                     attributes: ['userId'],
-                    through: { attributes: [] }, // Exclude join table attributes
+                    through: { attributes: [] }, 
                 }
             ]
         });
@@ -57,21 +56,29 @@ class MessageRepository
         return groupList;
     }
     
-    async getSentMessages(ID)//megkeresi az összes üzenetet egy felhasználótól
-    { 
-        return await this.Messages.findAll
-        (
+    async getSentMessages(ID) {
+        const messages = await this.Messages.findAll({
+          where: { senderUserID: ID },
+          include: [
             {
-                where:
-                {
-                    [Op.or]: {
-                        senderUserID: ID,
-                    },
-                },
+              model: this.User,
+              as: 'receivers',
+              attributes: ['ID', 'username'],
+              through: { attributes: [] }, 
+            },
+            {
+              model: this.User,
+              as: 'sender',
+              attributes: ['ID', 'username']
             }
-        )
-    }
-    async getMessageByID(messageID)// Ákos/Agócs írta, nincs használva 
+          ]
+        });
+      
+        return messages;
+      }
+      
+      
+    async getMessageByID(messageID)
     {
         return await this.Messages.findAll
         (
@@ -85,24 +92,52 @@ class MessageRepository
     }
     async getReceivedMessages(userID) {
         const messages = await this.Messages.findAll({
-            include: [{
-                model: this.User,
-                through: { attributes: [] }, // Exclude the connection table fields
-                where: { ID: userID }, // Filtering by UserID
-            }]
+          include: [
+            {
+              model: this.User,
+              as: 'receivers',
+              attributes: ['ID', 'username'],
+              through: { attributes: [] },
+              required: true,
+              where: { ID: userID }
+            },
+            {
+              model: this.User,
+              as: 'sender',
+              attributes: ['ID', 'username']
+            }
+          ]
         });
-    
-        for (let k = 0; k < messages.length; k++) {
-            const theOneSender = await this.User.findOne({
-                where: { ID: messages[k].senderUserID },
-                attributes: ["username"]
-            });
-     
-            // Add senderUserName inside dataValues directly
-            messages[k].dataValues.senderUserName = theOneSender //? theOneSender.username : "Unknown";
-        }
         return messages;
+      }
+      
+      
+    async getAllMessages() {
+        return await this.Messages.findAll({
+            include: [
+                {
+                    model: this.User,
+                    as: 'sender',
+                    attributes: ['ID', 'username']
+                },
+                {
+                    model: this.User,
+                    as: 'receivers',
+                    attributes: ['ID', 'username'],
+                    through: { attributes: [] } 
+                }
+            ]
+        });
     }
+    async deleteMessage(ID){
+        console.log("FASZ: ", ID)
+        await this.Messages.destroy({
+            where: {ID : ID}
+        })
+        return "Sikeres törlés"
+    }
+
+    
 
 
 

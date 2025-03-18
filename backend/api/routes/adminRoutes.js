@@ -6,8 +6,10 @@ const userAuth = require("../middlewares/userAuth")
 
 const userController = require("../controllers/userController");
 const adminController = require("../controllers/adminController");
+const uzenetController = require("../controllers/uzenetController")
 
-const adminHandler = require("../middlewares/adminHandler")
+const adminHandler = require("../middlewares/adminHandler");
+const adminService = require("../services/adminService");
 
 router.use(userAuth.verifyToken);
 
@@ -29,5 +31,8 @@ router.delete("/deleteUser/:userID",adminController.deleteUser)
 
 router.get("/getAllGroupsWithStudents",adminController.getAllGroupsWithStudents)
 router.post("/createGroup",adminController.CreateGroup)
+router.post("/addStudentsToGroup",adminController.addStudentsToGroup)
+
+router.delete("/deleteMessage/:ID",uzenetController.deleteMessage)
 
 module.exports = router;

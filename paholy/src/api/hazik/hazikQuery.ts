@@ -121,7 +121,7 @@ export const usegetGroups = () => {
     if (query.error.value) {
         console.error("Lekérdezési hiba:", query.error)
         setError(query.error.value)
-    }
+    } 
     return query
 }
 
@@ -163,7 +163,7 @@ export const useaddAssignment = () => {
         {
             mutationFn: addAssignment,
             onSuccess(){
-                queryClient.refetchQueries({queryKey:[QUERY_KEYS.postAssignment]})
+                queryClient.refetchQueries({queryKey:[QUERY_KEYS.getAssignmentsTeacher]})
             },
             onError(error){
                 const {setError} = useErrorHandler()
@@ -187,7 +187,7 @@ export const usedeleteAssignment = () => {
         {
             mutationFn: deleteAssignment,
             onSuccess(){
-                queryClient.refetchQueries({queryKey:[QUERY_KEYS.deleteAssignment]})
+                queryClient.refetchQueries({queryKey:[QUERY_KEYS.getAssignmentsTeacher]})
             },
             onError(error){
                 const {setError} = useErrorHandler()

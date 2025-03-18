@@ -7,8 +7,11 @@ const UserRepository = require("../repositories/userRepository")
 const GuardianStudentRepository = require("../repositories/guardianStudentRepository")
 const GuardianRepository = require("../repositories/guardianRepository")
 
+const UserService = require("../services/userService")
+
 const bcrypt = require("bcrypt");
 const userRepository = require("../repositories/userRepository");
+const userService = require("../services/userService");
 const salt = 10;
 
 class adminService {
@@ -182,45 +185,79 @@ class adminService {
     {
         const groupsWithStudentsArray = []
         const groups = await groupRepository.getAllGroups();
-        console.log("ÉN VAGYOK A GROUP A GRPO ATZ EGYETLEN GRUP: ", groups)
+        //console.log("ÉN VAGYOK A GROUP A GRPO ATZ EGYETLEN GRUP: ", groups)
         for (let i = 0; i < groups.length; i++) {
             let groupsWithStudents = {
                 group : groups[i],
                 students: await studentRepository.getStudentsByGroupID(groups[i].ID)
             } 
-            console.log("itt van ez a cunyó: ",groupsWithStudents)
+            //console.log("itt van ez a cunyó: ",groupsWithStudents)
             groupsWithStudentsArray.push(groupsWithStudents)
         }
 
-        console.log("VÉGRE ITT VAGYOK A TÖMBNÉK JUHUUUU: ", groupsWithStudentsArray)
+        //console.log("VÉGRE ITT VAGYOK A TÖMBNÉK JUHUUUU: ", groupsWithStudentsArray)
         return groupsWithStudentsArray
 
     }
+
     async CreatedGroup(newGroup){
-        for (let i = 0; i < newGroup.StudentOMIDs.length; i++) {
-            const StudentID = await studentRepository.getStudentByOmId(newGroup.StudentOMIDs[i])
-            console.log(StudentID)
-            if(StudentID == null){
-                return -1
+        console.log("OOOOO: ", newGroup)
+        const usersExist = await UserService.checkIfUsersExist(newGroup.StudentOMIDs)
+        if(!usersExist){
+            console.log("SZAAAAAR : ", usersExist)
+            return -1 
+        }
+        else if(usersExist)
+        {
+            console.log("PERSZE EZ JÓ ELVÉGRE : ", usersExist)
+            const newGroupForGroupTable = {
+                ID: null,
+                name: newGroup.name
+            }
+            const result = await groupRepository.createGroup(newGroupForGroupTable)
+    
+            for (let i = 0; i < newGroup.StudentOMIDs.length; i++) {
+                const founduser = await studentRepository.getStudentByOmId(newGroup.StudentOMIDs[i])
+                const newStudentGroup = {
+                    GroupID: result.ID,
+                    StudentID: founduser.ID
+                }
+                
+                await studentGroupRepository.createStudentGroup(newStudentGroup)
+                
             }
         }
+        
 
-        const newGroupForGroupTable = {
-            ID: null,
-            name: newGroup.name
-        }
-        const result = await groupRepository.createGroup(newGroupForGroupTable)
 
-        for (let i = 0; i < newGroup.StudentOMIDs.length; i++) {
-            const founduser = await studentRepository.getStudentByOmId(newGroup.StudentOMIDs[i])
-            const newStudentGroup = {
-                GroupID: result.ID,
-                StudentID: founduser.ID
-            }
-            
-            await studentGroupRepository.createStudentGroup(newStudentGroup)
-            
-        }
     }
+
+    async addStudentsToGroup(newGroup){
+        const usersExist = await UserService.checkIfUsersExist(newGroup.StudentOMIDs)
+        if(!usersExist){
+            return -1
+        }
+        console.log("AZ ELSŐ N ÁTMENT ")
+        const userNotInGroup = await userService.checkIfUsersAlreadyInGroup(newGroup.StudentOMIDs)
+        console.log("vissza jótt és ez egy : ", userNotInGroup)
+        if(userNotInGroup){
+            return -2
+        }
+        console.log("))))))))))))))))))): ", newGroup)
+        for (let i = 0; i < newGroup.StudentOMIDs.length; i++) {
+            // await studentGroupRepository.createStudentGroup
+            const student = await studentRepository.getStudentByOmId(newGroup.StudentOMIDs[i])
+            console.log("MEGTALÁLTAM : ", student)
+            const newStudentGroup = {
+                GroupID: newGroup.id,
+                StudentID: student.ID
+            }
+            await studentGroupRepository.createStudentGroup(newStudentGroup);
+        }
+        console.log("VAN ILYEN MINDEN JÓ ")
+        return "sikerült"
+    }
+
+    
 }
 module.exports = new adminService(); 
