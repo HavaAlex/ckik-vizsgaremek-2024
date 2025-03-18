@@ -3,7 +3,7 @@ import { useMutation, useQuery } from "@tanstack/vue-query"
 import { useRoute, useRouter } from "vue-router"
 import { QUERY_KEYS } from "@/utils/QueryKeys"
 import { jwtDecode } from "jwt-decode";
-import type { Teacher , Student, Guardian} from '@/api/admin/admin';
+import type { Teacher , Student, Guardian } from '@/api/admin/admin';
 import { useCookieHandler } from "@/stores/cookieHandler";
 
 //import type { Message,PotentialReceiver,newMessage } from "./uzenetek";
@@ -12,123 +12,115 @@ import { useErrorHandler } from "@/stores/errorHandler";
 import type { Group } from "../orarend/orarend";
 
 
-const addTeacherUsers = async (teachers: Teacher[]) : Promise<Teacher[]> =>{
-    const {getCookie} = useCookieHandler() 
+const addTeacherUsers = async (teachers: Teacher[]) : Promise<Teacher[]> => {
+    const { getCookie } = useCookieHandler() 
     const config = {
         headers: { Authorization: `Bearer ${getCookie("alap")}` }
     };
-    const response = await axiosClient.post(`http://localhost:3000/admin/addTeacherUsers`,teachers,config) // ${document.cookie}
-    console.log("admin response: \n",response);
-    console.log("admin response data: \n",response.data)
+    const response = await axiosClient.post(`http://localhost:3000/admin/addTeacherUsers`, teachers, config)
+    console.log("admin response: \n", response);
+    console.log("admin response data: \n", response.data)
     return response.data
 }
 
-export const useaaddTeacherUsers= () => {
-    return useMutation( 
-        {
-            mutationFn: addTeacherUsers,
-            onSuccess(){
-                queryClient.refetchQueries({queryKey:[QUERY_KEYS.addTeacherUsers]})
-            },
-            onError(error){
-                const {setError} = useErrorHandler()
-                setError(error)
-            }
+export const useaaddTeacherUsers = () => {
+    return useMutation({
+        mutationFn: addTeacherUsers,
+        onSuccess() {
+            queryClient.refetchQueries({ queryKey: [QUERY_KEYS.getUsers] })
+        },
+        onError(error) {
+            const { setError } = useErrorHandler()
+            setError(error)
         }
-    )
+    })
 }
 
-const addStudentUsers = async (students: Student[]) : Promise<Student[]> =>{
-    const {getCookie} = useCookieHandler() 
+const addStudentUsers = async (students: Student[]) : Promise<Student[]> => {
+    const { getCookie } = useCookieHandler() 
     const config = {
         headers: { Authorization: `Bearer ${getCookie("alap")}` }
     };
-    const response = await axiosClient.post(`http://localhost:3000/admin/addStudentUsers`,students,config) // ${document.cookie}
-    console.log("admin response: \n",response);
-    console.log("admin response data: \n",response.data)
+    const response = await axiosClient.post(`http://localhost:3000/admin/addStudentUsers`, students, config)
+    console.log("admin response: \n", response);
+    console.log("admin response data: \n", response.data)
     return response.data
 }
 
-export const useaddStudentUsers= () => {
-    return useMutation( 
-        {
-            mutationFn: addStudentUsers,
-            onSuccess(){
-                queryClient.refetchQueries({queryKey:[QUERY_KEYS.addStudentUsers]})
-            },
-            onError(error){
-                const {setError} = useErrorHandler()
-                setError(error)
-            }
+export const useaddStudentUsers = () => {
+    return useMutation({
+        mutationFn: addStudentUsers,
+        onSuccess() {
+            queryClient.refetchQueries({ queryKey: [QUERY_KEYS.getUsers] })
+        },
+        onError(error) {
+            const { setError } = useErrorHandler()
+            setError(error)
         }
-    )
+    })
 }
 
-const addGuardianUsers = async (guardians: Guardian[]) : Promise<Guardian[]> =>{
-    const {getCookie} = useCookieHandler() 
+const addGuardianUsers = async (guardians: Guardian[]) : Promise<Guardian[]> => {
+    const { getCookie } = useCookieHandler() 
     const config = {
         headers: { Authorization: `Bearer ${getCookie("alap")}` }
     };
-    const response = await axiosClient.post(`http://localhost:3000/admin/addGuardianUsers`,guardians,config) // ${document.cookie}
-    console.log("admin response: \n",response);
-    console.log("admin response data: \n",response.data)
+    const response = await axiosClient.post(`http://localhost:3000/admin/addGuardianUsers`, guardians, config)
+    console.log("admin response: \n", response);
+    console.log("admin response data: \n", response.data)
     return response.data
 }
 
-export const useaddGuardianUsers= () => {
-    return useMutation( 
-        {
-            mutationFn: addGuardianUsers,
-            onSuccess(){
-                queryClient.refetchQueries({queryKey:[QUERY_KEYS.addStudentUsers]})
-            },
-            onError(error){
-                const {setError} = useErrorHandler()
-                setError(error)
-            }
+export const useaddGuardianUsers = () => {
+    return useMutation({
+        mutationFn: addGuardianUsers,
+        onSuccess() {
+            queryClient.refetchQueries({ queryKey: [QUERY_KEYS.getUsers] })
+        },
+        onError(error) {
+            const { setError } = useErrorHandler()
+            setError(error)
         }
-    )
+    })
 }
 
-const modifyUser = async (modifiedUser : any) => {
-    const {getCookie} = useCookieHandler() 
+const modifyUser = async (modifiedUser: any) => {
+    const { getCookie } = useCookieHandler() 
     const config = {
         headers: { Authorization: `Bearer ${getCookie("alap")}` }
     };
-    const response = await axiosClient.put(`http://localhost:3000/admin/modifyUser`,modifiedUser,config) // ${document.cookie}
-    console.log("admin response: \n",response);
-    console.log("admin response data: \n",response.data)
+    const response = await axiosClient.put(`http://localhost:3000/admin/modifyUser`, modifiedUser, config)
+    console.log("admin response: \n", response);
+    console.log("admin response data: \n", response.data)
     return response.data
 }
 
-export const usemodifyUser= () => {
-    return useMutation( 
-        {
-            mutationFn: modifyUser,
-            onSuccess(){
-                queryClient.refetchQueries({queryKey:[QUERY_KEYS.modifyUser]})
-            },
-            onError(error){
-                const {setError} = useErrorHandler()
-                setError(error)
-            }
+export const usemodifyUser = () => {
+    return useMutation({
+        mutationFn: modifyUser,
+        onSuccess() {
+            queryClient.refetchQueries({ queryKey: [QUERY_KEYS.getUsers] })
+        },
+        onError(error) {
+            const { setError } = useErrorHandler()
+            setError(error)
         }
-    )
+    })
 }
 
 const getUsers = async () => {
-    const {getCookie} = useCookieHandler() 
+    const { getCookie } = useCookieHandler() 
     const config = {
         headers: { Authorization: `Bearer ${getCookie("alap")}` }
     };
-    const response = await axiosClient.get(`http://localhost:3000/admin/getAllUsers`,config) // ${document.cookie}
-    console.log("admin response: \n",response);
-    console.log("admin response data: \n",response.data)
+    const response = await axiosClient.get(`http://localhost:3000/admin/getAllUsers`, config)
+    console.log("admin response: \n", response);
+    console.log("admin response data: \n", response.data)
     return response.data
 }
 
 export const usegetUsers = () => {
-    const {setError} = useErrorHandler()
+    const { setError } = useErrorHandler()
     const query = useQuery({
         queryKey: [QUERY_KEYS.getUsers],
         queryFn: getUsers,
@@ -142,18 +134,18 @@ export const usegetUsers = () => {
 }
 
 export const getUser = async (userID: number) => {
-    const {getCookie} = useCookieHandler() 
+    const { getCookie } = useCookieHandler() 
     const config = {
-        headers: { Authorization: `Bearer ${getCookie("alap")}`}
+        headers: { Authorization: `Bearer ${getCookie("alap")}` }
     };
-    const response = await axiosClient.get(`http://localhost:3000/admin/getUser/${userID}`,config) // ${document.cookie}
-    console.log("admin response: \n",response);
-    console.log("admin response data: \n",response.data)
+    const response = await axiosClient.get(`http://localhost:3000/admin/getUser/${userID}`, config)
+    console.log("admin response: \n", response);
+    console.log("admin response data: \n", response.data)
     return response.data
 }
 
 export const usegetUser = () => {
-    const {setError} = useErrorHandler()
+    const { setError } = useErrorHandler()
     const query = useQuery({
         queryKey: [QUERY_KEYS.getUser],
         queryFn: getUser,
@@ -166,49 +158,45 @@ export const usegetUser = () => {
     return query
 }
 
-
 export const deleteUser = async (userID: number) => {
-    const {getCookie} = useCookieHandler() 
+    const { getCookie } = useCookieHandler() 
     const config = {
-        headers: { Authorization: `Bearer ${getCookie("alap")}`}
+        headers: { Authorization: `Bearer ${getCookie("alap")}` }
     };
-    const response = await axiosClient.delete(`http://localhost:3000/admin/deleteUser/${userID}`,config) // ${document.cookie}
-    console.log("admin response: \n",response);
-    console.log("admin response data: \n",response.data)
+    const response = await axiosClient.delete(`http://localhost:3000/admin/deleteUser/${userID}`, config)
+    console.log("admin response: \n", response);
+    console.log("admin response data: \n", response.data)
     return response.data
 }
 
 export const usedeleteUser = () => {
-    return useMutation( 
-        {
-            mutationFn: deleteUser,
-            onSuccess(){
-                queryClient.refetchQueries({queryKey:[QUERY_KEYS.deleteUser]})
-            },
-            onError(error){
-                const {setError} = useErrorHandler()
-                setError(error)
-            }
+    return useMutation({
+        mutationFn: deleteUser,
+        onSuccess() {
+            queryClient.refetchQueries({ queryKey: [QUERY_KEYS.getUsers] })
+        },
+        onError(error) {
+            const { setError } = useErrorHandler()
+            setError(error)
         }
-    )
+    })
 }
 
-
 const getGroups = async () => {
-    const {getCookie} = useCookieHandler() 
+    const { getCookie } = useCookieHandler() 
     const config = {
         headers: { Authorization: `Bearer ${getCookie("alap")}` }
     };
-    const response = await axiosClient.get(`http://localhost:3000/admin/getAllGroupsWithStudents`,config) // ${document.cookie}
-    console.log("admin response: \n",response);
-    console.log("admin response data: \n",response.data)
+    const response = await axiosClient.get(`http://localhost:3000/admin/getAllGroupsWithStudents`, config)
+    console.log("admin response: \n", response);
+    console.log("admin response data: \n", response.data)
     return response.data
 }
 
 export const usegetGroups = () => {
-    const {setError} = useErrorHandler()
+    const { setError } = useErrorHandler()
     const query = useQuery({
-        queryKey: [QUERY_KEYS.getUsers],
+        queryKey: [QUERY_KEYS.getGroups],
         queryFn: getGroups,
     })
 
@@ -219,29 +207,55 @@ export const usegetGroups = () => {
     return query
 }
 
-
-const CreateGroup = async (newGroup: CreatedGroup)  =>{
-    const {getCookie} = useCookieHandler() 
+const CreateGroup = async (newGroup: CreatedGroup)  => {
+    const { getCookie } = useCookieHandler() 
     const config = {
         headers: { Authorization: `Bearer ${getCookie("alap")}` }
     };
-    const response = await axiosClient.post(`http://localhost:3000/admin/createGroup`,newGroup,config) // ${document.cookie}
-    console.log("admin response: \n",response);
-    console.log("admin response data: \n",response.data)
+    const response = await axiosClient.post(`http://localhost:3000/admin/createGroup`, newGroup, config)
+    console.log("admin response: \n", response);
+    console.log("admin response data: \n", response.data)
     return response.data
 }
 
-export const useCreateGroup= () => {
-    return useMutation( 
-        {
-            mutationFn: CreateGroup,
-            onSuccess(){
-                queryClient.refetchQueries({queryKey:[QUERY_KEYS.addStudentUsers]})
-            },
-            onError(error){
-                const {setError} = useErrorHandler()
-                setError(error)
-            }
+export const useCreateGroup = () => {
+    return useMutation({
+        mutationFn: CreateGroup,
+        onSuccess() {
+            queryClient.refetchQueries({ queryKey: [QUERY_KEYS.getUsers] })
+        },
+        onError(error) {
+            const { setError } = useErrorHandler()
+            setError(error)
         }
-    )
+    })
+}
+
+
+
+const AddUsersToGroup = async (newUsers: any) => {
+    console.log("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
+    console.log(newUsers)
+    console.log("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
+    const { getCookie } = useCookieHandler() 
+    const config = {
+        headers: { Authorization: `Bearer ${getCookie("alap")}` }
+    };
+    const response = await axiosClient.post(`http://localhost:3000/admin/addStudentsToGroup`, newUsers, config)
+    console.log("admin response: \n", response);
+    console.log("admin response data: \n", response.data)
+    return response.data
+}
+
+export const useAddUsersToGroup = () => {
+    return useMutation({
+        mutationFn: AddUsersToGroup,
+        onSuccess() {
+            queryClient.refetchQueries({ queryKey: [QUERY_KEYS.getGroups] })
+        },
+        onError(error) {
+            const { setError } = useErrorHandler()
+            setError(error)
+        }
+    })
 }

@@ -39,6 +39,31 @@ export const useGetUzenetek = () => {
     return query
 }
  
+const getAllUzenetek = async (): Promise<Message> => {
+    //console.log("LEFUTOK: getUzenetek")
+    const {getCookie} = useCookieHandler()
+    const config = {
+        headers: { Authorization: `Bearer ${getCookie("alap")}` }
+    };
+    //console.log(`localhost:3000/uzenetek/${document.cookie}`)
+    const response = await axiosClient.get(`http://localhost:3000/uzenet/all`,config) // ${document.cookie}
+    return response.data
+}
+export const usegetAllUzenetek = () => {
+    const { setError } = useErrorHandler()
+
+    const query = useQuery({
+        queryKey: [QUERY_KEYS.getAllUzenetek],
+        queryFn: getAllUzenetek,
+    })
+
+    if (query.error.value) {
+        console.error("Lekérdezési hiba:", query.error)
+        setError(query.error.value)
+    }
+
+    return query
+}
 const getPotentialReceivers = async (): Promise<PotentialReceiver> =>{
     console.log("LEFUTOK: getPotentialReceivers")
     const {getCookie} = useCookieHandler()
@@ -67,17 +92,12 @@ export const usegetPotentialReceivers = () => {
 }
 
 const addMessage = async (data: Message) : Promise<Message> =>{
-    //console.log("LEFUTOK: addMessage")
-    //console.log(data)
     data.date = new Date(); //aktuális dátum hozzáadása
     const {getCookie} = useCookieHandler()
     const config = {
         headers: { Authorization: `Bearer ${getCookie("alap")}` }
     }; 
     const response = await axiosClient.post(`http://localhost:3000/uzenet/`,data,config) // ${document.cookie}
-    //console.log("SIKERÜÜÜÜLT")
-    //console.log(response)
-    //console.log(response.data)  
     return response.data
 }
 
@@ -87,6 +107,31 @@ export const useaddMessage = () => {
             mutationFn: addMessage,
             onSuccess(data){
                 queryClient.refetchQueries({queryKey:[QUERY_KEYS.getUzenetek]})
+            },
+            onError(error){
+                const {setError} = useErrorHandler()
+                setError(error)
+            }
+        }
+    )
+}
+
+const deleteMessage = async (ID: Number)=>{
+    const {getCookie} = useCookieHandler()
+    const config = {
+        headers: { Authorization: `Bearer ${getCookie("alap")}` }
+    }; 
+    console.log("ŐŐŐŐŐŐŐŐ ", ID)
+    const response = await axiosClient.delete(`http://localhost:3000/admin/deleteMessage/${ID}`,config) // ${document.cookie}
+    return response.data
+}
+
+export const usedeleteMessage = () => {
+    return useMutation( 
+        {
+            mutationFn: deleteMessage,
+            onSuccess(data){
+                queryClient.refetchQueries({queryKey:[QUERY_KEYS.getAllUzenetek]})
             },
             onError(error){
                 const {setError} = useErrorHandler()

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import type { Teacher, Student, Guardian } from '@/api/admin/admin';
-import * as XLSX from 'xlsx'; // Ensure you have installed the xlsx package
+import * as XLSX from 'xlsx';
 
 import { 
   useaaddTeacherUsers,
@@ -21,32 +21,25 @@ const { mutate: modifyUser } = usemodifyUser();
 const { mutate: deleteUser } = usedeleteUser();
 const { data: userList } = usegetUsers();
 
-// === Sorting and Searching functionality for the table ===
+// ----------------- Sorting and Searching -----------------
 const sortKey = ref<string>('username');
 const sortOrder = ref<'asc' | 'desc'>('asc');
-const searchQuery = ref<string>(''); // New search query variable
+const searchQuery = ref<string>(''); 
 
 const sortedUsers = computed(() => {
   if (!userList.value) return [];
-  // Filter users by username based on the searchQuery
   let filteredUsers = [...userList.value];
   if (searchQuery.value.trim() !== '') {
     filteredUsers = filteredUsers.filter(user =>
       user.username.toLowerCase().includes(searchQuery.value.toLowerCase())
     );
   }
-  // Then sort the filtered list
   return filteredUsers.sort((a, b) => {
     const key = sortKey.value;
     let valA = a[key];
     let valB = b[key];
-    // Normalize strings for comparison
-    if (typeof valA === 'string') {
-      valA = valA.toLowerCase();
-    }
-    if (typeof valB === 'string') {
-      valB = valB.toLowerCase();
-    }
+    if (typeof valA === 'string') valA = valA.toLowerCase();
+    if (typeof valB === 'string') valB = valB.toLowerCase();
     if (valA < valB) return sortOrder.value === 'asc' ? -1 : 1;
     if (valA > valB) return sortOrder.value === 'asc' ? 1 : -1;
     return 0;
@@ -55,7 +48,6 @@ const sortedUsers = computed(() => {
 
 function changeSort(column: string) {
   if (sortKey.value === column) {
-    // Toggle the sort order
     sortOrder.value = sortOrder.value === 'asc' ? 'desc' : 'asc';
   } else {
     sortKey.value = column;
@@ -63,9 +55,9 @@ function changeSort(column: string) {
   }
 }
 
-// ================= Teacher Section =================
+// ----------------- Teacher Section -----------------
+const showTeacherDialog = ref(false);
 const teachers = ref<Teacher[]>([]);
-
 const newTeacher = ref<Teacher>({
   name: '',
   phone: '',
@@ -73,17 +65,19 @@ const newTeacher = ref<Teacher>({
   birth_Date: new Date()
 });
 
-const addTeacher = () => {
+function addTeacher() {
   if (!newTeacher.value.name || !newTeacher.value.phone || !newTeacher.value.email) return;
   teachers.value.push({ ...newTeacher.value });
-  newTeacher.value = { name: '', phone: '', email: '', birth_Date: new Date() }; // Reset form
-};
+  newTeacher.value = { name: '', phone: '', email: '', birth_Date: new Date() };
+}
 
-const removeTeacher = (index: number) => {
+function removeTeacher(index: number) {
   teachers.value.splice(index, 1);
-};
+}
 
-const processFile = (file: File): Promise<Teacher[]> => {
+const selectedFiles = ref<File[]>([]);
+
+function processFile(file: File): Promise<Teacher[]> {
   return new Promise((resolve, reject) => {
     const extension = file.name.split('.').pop()?.toLowerCase();
     const reader = new FileReader();
@@ -129,9 +123,9 @@ const processFile = (file: File): Promise<Teacher[]> => {
       resolve([]);
     }
   });
-};
+}
 
-const sendTeachers = async () => {
+async function sendTeachers() {
   if (selectedFiles.value.length) {
     for (const file of selectedFiles.value) {
       try {
@@ -143,12 +137,11 @@ const sendTeachers = async () => {
     }
   }
   console.log("Teachers array:", teachers.value);
-};
+}
 
-// ================= Student Section =================
-
+// ----------------- Student Section -----------------
+const showStudentDialog = ref(false);
 const students = ref<Student[]>([]);
-
 const newStudent = ref<Student>({
   name: '',
   birth_Date: new Date(),
@@ -158,7 +151,7 @@ const newStudent = ref<Student>({
   OM_ID: ''
 });
 
-const addStudent = () => {
+function addStudent() {
   if (
     !newStudent.value.name || 
     !newStudent.value.address || 
@@ -168,13 +161,15 @@ const addStudent = () => {
   ) return;
   students.value.push({ ...newStudent.value });
   newStudent.value = { name: '', birth_Date: new Date(), address: '', phone: '', email: '', OM_ID: '' };
-};
+}
 
-const removeStudent = (index: number) => {
+function removeStudent(index: number) {
   students.value.splice(index, 1);
-};
+}
 
-const processStudentFile = (file: File): Promise<Student[]> => {
+const selectedStudentFiles = ref<File[]>([]);
+
+function processStudentFile(file: File): Promise<Student[]> {
   return new Promise((resolve, reject) => {
     const extension = file.name.split('.').pop()?.toLowerCase();
     const reader = new FileReader();
@@ -185,7 +180,6 @@ const processStudentFile = (file: File): Promise<Student[]> => {
         const delimiter = extension === 'txt' ? '\t' : ';';
         const lines = text.split(/\r?\n/).filter(line => line.trim() !== '');
         const rows = lines.map(line => line.split(delimiter));
-        // Expecting 6 columns: name, birth_Date, address, phone, email, OM_ID
         const validRows = rows.filter(cols => cols.length >= 6);
         const studentsFromFile: Student[] = validRows.map(cols => ({
           name: cols[0].trim(),
@@ -225,9 +219,9 @@ const processStudentFile = (file: File): Promise<Student[]> => {
       resolve([]);
     }
   });
-};
+}
 
-const sendStudents = async () => {
+async function sendStudents() {
   if (selectedStudentFiles.value.length) {
     for (const file of selectedStudentFiles.value) {
       try {
@@ -239,12 +233,11 @@ const sendStudents = async () => {
     }
   }
   console.log("Students array:", students.value);
-};
+}
 
-// ================= Guardian Section =================
-
+// ----------------- Guardian Section -----------------
+const showParentDialog = ref(false);
 const guardians = ref<Guardian[]>([]);
-
 const newGuardian = ref<Guardian>({
   name: '',
   birth_Date: new Date(),
@@ -256,20 +249,20 @@ const newGuardian = ref<Guardian>({
 
 const newGuardianRelatedOMID = ref('');
 
-const addGuardianRelatedOMID = () => {
+function addGuardianRelatedOMID() {
   if (!newGuardianRelatedOMID.value.trim()) return;
   const omid = Number(newGuardianRelatedOMID.value.trim());
   if (!isNaN(omid)) {
     (newGuardian.value.RelatedStudents as number[]).push(omid);
     newGuardianRelatedOMID.value = '';
   }
-};
+}
 
-const removeGuardianRelatedOMID = (index: number) => {
+function removeGuardianRelatedOMID(index: number) {
   (newGuardian.value.RelatedStudents as number[]).splice(index, 1);
-};
+}
 
-const addGuardian = () => {
+function addGuardian() {
   if (
     !newGuardian.value.name ||
     !newGuardian.value.address ||
@@ -286,14 +279,15 @@ const addGuardian = () => {
     RelatedStudents: [] as unknown as number[]
   };
   newGuardianRelatedOMID.value = '';
-};
+}
 
-const processGuardianFile = (file: File): Promise<Guardian[]> => {
+const selectedGuardianFiles = ref<File[]>([]);
+
+function processGuardianFile(file: File): Promise<Guardian[]> {
   return new Promise((resolve, reject) => {
     const extension = file.name.split('.').pop()?.toLowerCase();
     const reader = new FileReader();
     reader.onerror = () => reject(reader.error);
-
     if (extension === 'csv' || extension === 'txt') {
       reader.onload = () => {
         const text = reader.result as string;
@@ -382,9 +376,9 @@ const processGuardianFile = (file: File): Promise<Guardian[]> => {
       resolve([]);
     }
   });
-};
+}
 
-const sendGuardians = async () => {
+async function sendGuardians() {
   if (selectedGuardianFiles.value.length) {
     for (const file of selectedGuardianFiles.value) {
       try {
@@ -396,14 +390,80 @@ const sendGuardians = async () => {
     }
   }
   console.log("Guardians array:", guardians.value);
-};
+}
 
+// ----------------- Submission Functions -----------------
+
+function submitTeachers() {
+  if (!teachers.value.length) return;
+  addTeacherUsers(teachers.value, {
+    onSuccess: (response) => {
+      console.log("addTeacherUsers response:", response);
+      const textContent = JSON.stringify(response, null, 2);
+      const blob = new Blob([textContent], { type: 'text/plain' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = 'addTeacherUsersResponse.txt';
+      link.click();
+      URL.revokeObjectURL(link.href);
+      teachers.value = [];
+      showTeacherDialog.value = false;
+    },
+    onError: (error) => {
+      console.error("Error uploading teachers:", error);
+    }
+  });
+}
+
+function submitStudents() {
+  if (!students.value.length) return;
+  addStudentUsers(students.value, {
+    onSuccess: (response) => {
+      console.log("addStudentUsers response:", response);
+      const textContent = JSON.stringify(response, null, 2);
+      const blob = new Blob([textContent], { type: 'text/plain' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = 'addStudentUsersResponse.txt';
+      link.click();
+      URL.revokeObjectURL(link.href);
+      students.value = [];
+      showStudentDialog.value = false;
+    },
+    onError: (error) => {
+      console.error("Error uploading students:", error);
+    }
+  });
+}
+
+function submitGuardians() {
+  if (!guardians.value.length) return;
+  addGuardianUsers(guardians.value, {
+    onSuccess: (response) => {
+      console.log("addGuardianUsers response:", response);
+      const textContent = JSON.stringify(response, null, 2);
+      const blob = new Blob([textContent], { type: 'text/plain' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = 'addGuardianUsersResponse.txt';
+      link.click();
+      URL.revokeObjectURL(link.href);
+      guardians.value = [];
+      showParentDialog.value = false;
+    },
+    onError: (error) => {
+      console.error("Error uploading guardians:", error);
+    }
+  });
+}
+
+// ----------------- Dialog and User Functions -----------------
 const viewUserDialog = ref(false);
-const DeleteAssignmentDialog = ref(false);
+const DeleteUserDialog = ref(false);
 const selectedUserForView = ref(null);
 const SelectedUserData = ref<any>(null);
 
-const openSelectedUserDialog = async (user: any) => {
+async function openSelectedUserDialog(user: any) {
   try {
     const data = await getUser(user.ID);
     SelectedUserData.value = { ...data };
@@ -412,61 +472,48 @@ const openSelectedUserDialog = async (user: any) => {
   } catch (error) {
     console.error("Error fetching user data:", error);
   }
-};
+}
 
-const fastdelete = async (user: any) => {
+async function fastdelete(user: any) {
   try {
     const data = await getUser(user.ID);
     SelectedUserData.value = { ...data };
     console.log('Fetched user data:', SelectedUserData.value);
-    DeleteAssignmentDialog.value = true;
+    DeleteUserDialog.value = true;
   } catch (error) {
     console.error("Error fetching user data:", error);
   }
-};
+}
 
-const closeSelectedUserDialog = () => {
+function closeSelectedUserDialog() {
   SelectedUserData.value = {};
   viewUserDialog.value = false;
-};
+}
 
-const uploadChangedUser = async () => {
-  console.log("Ez az egyik lehetőség: ", SelectedUserData);
-  console.log("Viszont ez az igazi  ", SelectedUserData.value);
+async function uploadChangedUser() {
+  console.log("Modifying user:", SelectedUserData.value);
   await modifyUser(SelectedUserData.value);
   SelectedUserData.value = {};
   viewUserDialog.value = false;
-};
+}
 
-const deleteUserfunction = async () => {
+async function deleteUserfunction() {
   await deleteUser(SelectedUserData.value.userSide, {
     onSuccess: (response) => {
-      console.log("eredmény: ", response);
-      // Remove the deleted user from the userList so that the table updates.
+      console.log("Deletion result:", response);
       userList.value = userList.value.filter(user => user.ID !== SelectedUserData.value.ID);
-      DeleteAssignmentDialog.value = false;
+      DeleteUserDialog.value = false;
       viewUserDialog.value = false;
     }
   });
-};
+}
 
 function formatDate(dateString: Date | string) {
   if (!dateString) return "";
   const dateObj = new Date(dateString);
   return dateObj.toISOString().slice(0, 19).replace("T", " ");
 }
-
-// File selection refs
-const selectedFiles = ref<File[]>([]);
-const selectedStudentFiles = ref<File[]>([]);
-const selectedGuardianFiles = ref<File[]>([]);
-
-// Dialog state
-const showStudentDialog = ref(false);
-const showTeacherDialog = ref(false);
-const showParentDialog = ref(false);
-</script>
-
+</script> 
 <template>
   <main>
     <v-container>
@@ -532,7 +579,7 @@ const showParentDialog = ref(false);
         </v-card-actions>
       </v-card>
 
-      <!-- Tanárok dialog (unchanged) -->
+      <!-- Tanárok dialog -->
       <v-dialog v-model="showTeacherDialog" max-width="600">
         <v-card>
           <v-card-title>Tanárok hozzáadása</v-card-title>
@@ -580,12 +627,13 @@ const showParentDialog = ref(false);
           </v-card-text>
           <v-card-actions>
             <v-btn color="secondary" @click="showTeacherDialog = false">Bezárás</v-btn>
-            <v-btn color="primary" @click="addTeacherUsers(teachers); showTeacherDialog = false">Feltöltés az adatbázisba</v-btn>
+            <!-- Call submitTeachers() -->
+            <v-btn color="primary" @click="submitTeachers">Feltöltés az adatbázisba</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
 
-      <!-- Diákok dialog (unchanged) -->
+      <!-- Diákok dialog -->
       <v-dialog v-model="showStudentDialog" max-width="600">
         <v-card>
           <v-card-title>Diákok hozzáadása</v-card-title>
@@ -641,7 +689,8 @@ const showParentDialog = ref(false);
           </v-card-text>
           <v-card-actions>
             <v-btn color="secondary" @click="showStudentDialog = false">Bezárás</v-btn>
-            <v-btn color="primary" @click="addStudentUsers(students); showStudentDialog = false; console.log(students)">Feltöltés az adatbázisba</v-btn>
+            <!-- Call submitStudents() -->
+            <v-btn color="primary" @click="submitStudents">Feltöltés az adatbázisba</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -671,7 +720,12 @@ const showParentDialog = ref(false);
                 </v-col>
                 <v-col cols="12">
                   <!-- Input for manually adding a related student's OM_ID -->
-                  <v-text-field v-model="newGuardianRelatedOMID" label="Diák OM azonosító" hint="Adja meg a diák OM azonosítót" required></v-text-field>
+                  <v-text-field
+                    v-model="newGuardianRelatedOMID"
+                    label="Diák OM azonosító"
+                    hint="Adja meg a diák OM azonosítót"
+                    required
+                  ></v-text-field>
                   <v-btn color="primary" @click="addGuardianRelatedOMID">OM azonosító hozzáadása</v-btn>
                 </v-col>
               </v-row>
@@ -697,7 +751,8 @@ const showParentDialog = ref(false);
             <h1>Gondviselők fájlból történő feltöltése</h1>
             <h3>Kizárólag txt, csv és xlsx fájlok tölthetők fel!</h3>
             <h6>
-              (A txt fájlban az adattagokat tabulátorral elválasztva kell megadni. Az utolsó oszlopban a diák OM azonosítókat vesszővel elválasztva add meg.)
+              (A txt fájlban az adattagokat tabulátorral elválasztva kell megadni. 
+               Az utolsó oszlopban a diák OM azonosítókat vesszővel elválasztva add meg.)
             </h6>
             <v-file-input 
               label="Fájlok feltöltése (egyszerre)"
@@ -724,7 +779,8 @@ const showParentDialog = ref(false);
           </v-card-text>
           <v-card-actions>
             <v-btn color="secondary" @click="showParentDialog = false">Bezárás</v-btn>
-            <v-btn color="primary" @click="addGuardianUsers(guardians); showParentDialog = false">Feltöltés az adatbázisba</v-btn>
+            <!-- Call submitGuardians() -->
+            <v-btn color="primary" @click="submitGuardians">Feltöltés az adatbázisba</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -773,16 +829,16 @@ const showParentDialog = ref(false);
             <v-btn @click="console.log(SelectedUserData)"> CHECK </v-btn>
             <v-btn @click="closeSelectedUserDialog">Bezárás</v-btn>
             <v-btn @click="uploadChangedUser">Módosítás</v-btn>
-            <v-btn @click="DeleteAssignmentDialog = true">Törlés</v-btn>
+            <v-btn @click="DeleteUserDialog = true">Törlés</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
 
-      <v-dialog v-model="DeleteAssignmentDialog" max-width="50vw" theme="dark">
+      <v-dialog v-model="DeleteUserDialog" max-width="50vw" theme="dark">
         <v-card>
           <v-card-title>Biztos törölni akarod?</v-card-title>
           <v-btn @click="deleteUserfunction">Törlés</v-btn>
-          <v-btn @click="DeleteAssignmentDialog = false">Mégse</v-btn>
+          <v-btn @click="DeleteUserDialog = false">Mégse</v-btn>
         </v-card>
       </v-dialog>
 

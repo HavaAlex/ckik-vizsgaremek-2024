@@ -60,35 +60,39 @@ const sendMessage = () => {
 <template>
   <main>
     <!-- Message Dialog -->
-    <v-dialog v-model="dialog" max-width="500">
+    <v-dialog v-model="dialog" style="max-width: 50vw; ">
       <template v-slot:activator="{ props: activatorProps }">
         <v-btn v-bind="activatorProps" color="surface-variant" text="Üzenet írása" variant="flat"></v-btn>
       </template>
 
       <v-card title="Üzenet">
         <p>Címzettek:</p>
-        <v-list-item 
-          v-for="(cuccli, index) in MessageDataRef.receiverlist" 
-          :key="index" 
-          @click="MessageDataRef.receiverlist.splice(index, 1)"
-        >
-          {{ cuccli.name + " (" + cuccli.role + ") (kattintson az eltávolításhoz)" }}
-        </v-list-item>
+        <v-list>
+          <v-list-item 
+            v-for="(cuccli, index) in MessageDataRef.receiverlist" 
+            :key="index" 
+            @click="MessageDataRef.receiverlist.splice(index, 1)"
+            style="max-height: 10vw;"
+          >
+            {{ cuccli.name + " (" + cuccli.role + ") (kattintson az eltávolításhoz)" }}
+          </v-list-item>
 
-        <v-list-item 
-          v-for="(cuccli, index) in MessageDataRef.receiverGrouplist" 
-          :key="index" 
-          @click="MessageDataRef.receiverGrouplist.splice(index, 1)"
-        >
-          {{ cuccli.name + " (csoport)" }}
-        </v-list-item>
+          <v-list-item 
+            v-for="(cuccli, index) in MessageDataRef.receiverGrouplist" 
+            :key="index" 
+            @click="MessageDataRef.receiverGrouplist.splice(index, 1)"
+          >
+            {{ cuccli.name + " (csoport)" }}
+          </v-list-item>
+        </v-list>
+        
 
         <!-- Dropdown for adding receivers -->
-        <v-menu class="appnavbarmenubtn" :close-on-content-click="false">
+        <v-menu :close-on-content-click="false" >
           <template v-slot:activator="{ props }">
-            <v-btn v-bind="props" class="appnavbarmenubtn">Címzettek hozzáadása:</v-btn>
+            <v-btn v-bind="props">Címzettek hozzáadása:</v-btn>
           </template>
-          <v-list>
+          <v-list style="max-height: 25vw;">
             <!-- Search Field -->
             <v-text-field 
               v-model="searchText" 

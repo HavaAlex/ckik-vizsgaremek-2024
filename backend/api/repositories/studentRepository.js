@@ -60,8 +60,6 @@ class StudentRepository
 
     async modifyStudent(ID,student){
         // Assume User is a Sequelize model
-        console.log("biztos ami biztos: ",ID)
-        console.log("studentba  ", student)
         const changedStudent = await this.Students.findOne({ where: { userId: ID } });
         await changedStudent.update({ name: student.name });
         await changedStudent.update({ email: student.email });
@@ -79,14 +77,13 @@ class StudentRepository
         })
     }
     async getStudentsByGroupID(GroupID){
-        console.log("ez alapján keresünk: ", GroupID)
+        //console.log("ez alapján keresünk: ", GroupID)
         const students = []
         const studentIDs = await this.StudentGroups.findAll({
             where:{
                 GroupID : GroupID
             }
         })
-        console.log("Az alábbi eredmény kaptuk: ", studentIDs)
         for (let i = 0; i < studentIDs.length; i++) {
             const student = await this.Students.findOne({
                 where:
@@ -94,15 +91,8 @@ class StudentRepository
                     ID: studentIDs[i].StudentID,
                 }
             })
-
-            console.log("Hozzá az kapcsolódik: ", student)
             students.push(student)
-           
-            
         }
-        console.log("=============================")
-        console.log("megtörtént: ", students)
-        console.log("=============================")
         return students
     }
 }

@@ -15,6 +15,13 @@ class StudentGroupRepository
         
         return newStudentGroup;
     }
+
+    async getStudentGroupByStudentID(ID){
+        const studentGroup = await this.StudentGroups.findOne({
+            where: { StudentID: ID } 
+        })
+        return studentGroup
+    }
 }
 
 module.exports = new StudentGroupRepository(db);

@@ -32,9 +32,20 @@ module.exports = (sequelize, DataTypes) => {
     Student.belongsToMany(Guardian, { through: GuardianStudent });
 
     // egy üzenetnek több címzettje is lehet, egy címzettnek több üzenete is lehet
-    Message.belongsToMany(User, { through: MessageReceiver });
-    User.belongsToMany(Message, { through: MessageReceiver });
-
+    // Message belongs to one User (the sender)
+    Message.belongsTo(User, {
+        as: 'sender',            // <--- ALIAS for the sender
+        foreignKey: 'senderUserID'
+    });
+    
+    // Message belongs to many Users (the receivers) via MessageReceiver
+    Message.belongsToMany(User, {
+        as: 'receivers',         // <--- ALIAS for the receivers
+        through: MessageReceiver,
+        foreignKey: 'MessageID',
+        otherKey: 'UserID'
+    });
+  
     // egy csoportnak több tanulója is lehet, egy tanulónak több csoportja is lehet
     Group.belongsToMany(Student, {through: StudentGroup});
     Student.belongsToMany(Group, {through: StudentGroup});

@@ -23,6 +23,7 @@ router.use(userAuth.verifyToken);
 
 router.get("/", uzenetController.getUzenetek);
 router.get("/uzenetekreceivers", uzenetController.getPotentialReceivers);
-router.post("/", uzenetController.createUzenet);
+router.post("/", uzenetController.createUzenet); 
+router.get("/all",uzenetController.getAllMessages);
 
 module.exports = router;

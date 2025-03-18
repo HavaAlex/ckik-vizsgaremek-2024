@@ -147,8 +147,6 @@ class UserRepository
     }
     async deleteUser(ID,oaz){
         // Assume User is a Sequelize model
-        console.log("biztos ami biztos: ",ID)
-        console.log("Biztos ami biztos 2: ",oaz)
         if(oaz.role == "tanar"){
             await teacherRepository.deleteTeacher(ID)
         }
