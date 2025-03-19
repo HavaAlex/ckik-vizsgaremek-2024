@@ -5,7 +5,8 @@ const studentRepository = require("../repositories/studentRepository")
 const GuardianStudentRepository = require("../repositories/guardianStudentRepository")
 const GuardianRepository = require("../repositories/guardianRepository")
 const adminRepository = require("../repositories/adminRepository")
-const studentGroupRepository = require("../repositories/studentGroupRepository")
+const studentGroupRepository = require("../repositories/studentGroupRepository");
+const guardianStudentRepository = require("../repositories/guardianStudentRepository");
 
 class UserService
 {
@@ -30,7 +31,7 @@ class UserService
 
     async getGuardiansChildren(ID)
     {
-        return await userRepository.getGuardiansChildren(ID);
+        return await studentRepository.getGuardiansChildren(ID);
     }
     async getUserWithAdditionalAttributes(ID,role){
         

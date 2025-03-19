@@ -34,6 +34,7 @@ describe("getGroupMarksTest", () =>
                 address:"Cegléd Ló utca 27",
                 phone:"+36",
                 email:"kreativemailcim@email.hu",
+                OMID:"123",
                 userId: 1
             };
 
@@ -52,6 +53,7 @@ describe("getGroupMarksTest", () =>
                 address:"Cegléd Ló utca 28",
                 phone:"+366",
                 email:"kreativemailcim2@email.hu",
+                OMID:"1234",
                 userId: 2
             };
 
@@ -78,6 +80,7 @@ describe("getGroupMarksTest", () =>
                 studentID:1,
                 Value:5,
                 Multiplier:100,
+                date:Date.now(),
                 subjectName:"Majom programozás",
             };
 
@@ -88,6 +91,7 @@ describe("getGroupMarksTest", () =>
                 studentID:2,
                 Value:3,
                 Multiplier:100,
+                date:Date.now(),
                 subjectName:"Majom programozás",
             };
 

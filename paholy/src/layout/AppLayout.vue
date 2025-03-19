@@ -16,14 +16,18 @@ const cookieHandler = useCookieHandler()
 const { time } = storeToRefs(cookieHandler);
 
 const gyerekStore = useGyerekStore()
+const children = storeToRefs(gyerekStore)
 
 const cookieStatus = cookieHandler.hasValidCookie()
 let role: string = ''
 if (cookieStatus == true){
   const decoded = jwtDecode(document.cookie)
+  console.log(decoded)
   role = decoded.userData.role
   if(role == "szulo"){
-    gyer
+    decoded.userData.children.forEach(element => {
+      gyerekStore.addChild(element)
+    });
   }
   console.log(decoded)
   console.log(role)
@@ -40,7 +44,9 @@ const updateOrientation = () => {
 };
 onMounted(() => {
   window.matchMedia("(orientation: portrait)").addEventListener("change", updateOrientation);
-  cookieHandler.startTimer();
+  if(cookieStatus == true){
+    cookieHandler.startTimer();
+  }
 });
 onUnmounted(() => {
   window.matchMedia("(orientation: portrait)").removeEventListener("change", updateOrientation);
@@ -144,6 +150,11 @@ onUpdated(()=>{
       <v-btn @click="push({name:'GroupManagementView'})" v-if="role=='admin'">
                 Csoportok kezelése
       </v-btn>
+
+      <v-select v-if="role=='szulo'"
+        label="Választott gyermek"
+        :items="children.children.value.map((c)=>c.name)"
+      ></v-select>
       <v-spacer></v-spacer>
       <v-tooltip text="Ennyi idő múlva automatikusan kijelentkezel">
         <template v-slot:activator="{ props }">
