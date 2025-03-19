@@ -41,7 +41,9 @@ const updateOrientation = () => {
 };
 onMounted(() => {
   window.matchMedia("(orientation: portrait)").addEventListener("change", updateOrientation);
-  cookieHandler.startTimer();
+  if(cookieStatus == true){
+    cookieHandler.startTimer();
+  }
 });
 onUnmounted(() => {
   window.matchMedia("(orientation: portrait)").removeEventListener("change", updateOrientation);

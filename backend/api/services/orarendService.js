@@ -9,6 +9,33 @@ class OrarendService
 
     }
 
+
+    async getTeacherLessons(teacherID)
+    {
+        console.log("FAAAAAAAAAAAASZ")
+        const lessons = await orarendRepository.getTeacherLessons(teacherID)
+
+        const disruptions = await orarendRepository.getTeacherDisruptions(teacherID)
+
+        console.log(disruptions+"disruptions")
+
+
+        const disruptionMap = new Map()
+        disruptions.forEach(disruption => {
+            console.log("kicsi fasz")
+            console.log(disruption)
+            const key = `${disruption.day}-${disruption.start_Minute}`
+            disruptionMap.set(key, disruption)
+        })
+
+        const combinedOrarend = lessons.map(lesson => {
+            const key = `${lesson.day}-${lesson.start_Minute}`
+            return disruptionMap.get(key) || lesson
+        })
+        console.log(combinedOrarend)
+        return combinedOrarend
+    }
+
     getLessonOnDate(lessons,date)
     {
         const napok = ['vasarnap','hetfo', 'kedd', 'szerda', 'csutortok', 'pentek', 'szombat']//W3schoolson vasárnappal kezd, de ez lehet nem jó
@@ -25,6 +52,7 @@ class OrarendService
     {
         return await orarendRepository.getDisruptions(groups)
     }
+
 
 
     async createOra()

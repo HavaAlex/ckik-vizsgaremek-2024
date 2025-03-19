@@ -19,7 +19,7 @@ class GuardianStudentRepository
 
     async getGuardiansChildren(guardianId)
     {
-        return GuardianStudent.findAll(
+        return this.GuardianStudent.findAll(
             {
                 where:{
                     GuardianID: guardianId

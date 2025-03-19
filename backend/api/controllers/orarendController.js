@@ -9,8 +9,9 @@ exports.getOrarend = async (req, res, next) =>
     console.log(req.decoded)
     const groups = await csoportService.getGroup(req.decoded.role!="szulo"? req.decoded.ID:req.body.gyerekID)
 
-    const combinedOrarend = await orarendService.getOrarend(groups)
+    const combinedOrarend = req.decoded.role=="tanar"?await orarendService.getTeacherLessons(req.role.ID): await orarendService.getOrarend(groups)
 
+    console.log(combinedOrarend)
     res.status(201).json(combinedOrarend)
     console.log("órarendgetvég")
 }

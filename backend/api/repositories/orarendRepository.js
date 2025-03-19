@@ -33,6 +33,17 @@ class OrarendRepository
 
     }
 
+    async getTeacherLessons(teacherID)//Megkeresi az összes óráját az adott embernek
+    {
+        return await this.Lesson.findAll
+        (
+            {
+                where: {teacherID: teacherID},
+            }
+        )
+
+    }
+
     async getDisruptions(groups)//Megkeresi az összes óráját az adott embernek
     {
         groups = groups.map(group => group.GroupID);
@@ -45,6 +56,17 @@ class OrarendRepository
             }
         )
     }
+
+    async getTeacherDisruptions(teacherID)//Megkeresi az összes óráját az adott embernek
+    {
+        return await this.ClassDisruption.findAll
+        (
+            {
+                where: {teacherID: teacherID},
+            }
+        )
+    }
+
 
     async getDisruptionsForCurrentWeek() {
         const today = moment();
