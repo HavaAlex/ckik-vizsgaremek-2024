@@ -35,10 +35,10 @@ class UserService
     async getUserWithAdditionalAttributes(ID,role){
         
         if(role == "diak"){
-            return await studentRepository.getRoleByUserID(ID)
+            return await studentRepository.getStudentByUserID(ID)
         }
         else if (role == "tanar"){
-            return await teacherRepository.getRoleByUserID(ID)
+            return await teacherRepository.getTeacherByUserID(ID)
         }
         else if (role == "admin"){
             return await adminRepository.getRoleByUserID(ID)

@@ -560,8 +560,8 @@ function formatDate(dateString: Date | string) {
                 <td>{{ user.ID }}</td>
                 <td>{{ user.role }}</td>
                 <td>
-                  <v-btn @click="console.log(user); openSelectedUserDialog(user)">Felhasználó módosítása</v-btn>
-                  <v-btn @click="fastdelete(user)">Felhasználó törlése</v-btn>
+                  <v-btn color="primary" @click="console.log(user); openSelectedUserDialog(user)">Felhasználó módosítása</v-btn>
+                  <v-btn color="error" @click="fastdelete(user)">Felhasználó törlése</v-btn>
                 </td>
               </tr>
             </tbody>
@@ -573,9 +573,9 @@ function formatDate(dateString: Date | string) {
       <v-card>
         <v-card-title>Új felhasználók hozzáadása</v-card-title>
         <v-card-actions>
-          <v-btn @click="showStudentDialog = true">Diákok hozzáadása</v-btn>
-          <v-btn @click="showTeacherDialog = true">Tanárok hozzáadása</v-btn>
-          <v-btn @click="showParentDialog = true">Gondviselők hozzáadása</v-btn>
+          <v-btn color="primary" @click="showStudentDialog = true">Diákok hozzáadása</v-btn>
+          <v-btn color="primary" @click="showTeacherDialog = true">Tanárok hozzáadása</v-btn>
+          <v-btn color="primary" @click="showParentDialog = true">Gondviselők hozzáadása</v-btn>
         </v-card-actions>
       </v-card>
 
@@ -826,10 +826,9 @@ function formatDate(dateString: Date | string) {
             </v-card-text>
           </div>
           <v-card-actions>
-            <v-btn @click="console.log(SelectedUserData)"> CHECK </v-btn>
             <v-btn @click="closeSelectedUserDialog">Bezárás</v-btn>
-            <v-btn @click="uploadChangedUser">Módosítás</v-btn>
-            <v-btn @click="DeleteUserDialog = true">Törlés</v-btn>
+            <v-btn color="primary" @click="uploadChangedUser">Módosítás</v-btn>
+            <v-btn color="error" @click="DeleteUserDialog = true">Törlés</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>

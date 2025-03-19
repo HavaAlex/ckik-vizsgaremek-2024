@@ -1,5 +1,6 @@
 const { endsWith } = require("lodash")
 const adminService = require("../services/adminService")
+const hazikService = require("../services/hazikService")
 
 exports.uploadTeachers = async (req,res,next) =>{
     const teachers = req.body
@@ -137,12 +138,20 @@ exports.addStudentsToGroup = async (req,res,next) => {
 
 exports.deleteStudentGroup= async (req,res,next) => {
     const ID = JSON.parse(req.params.ID);
-    const response = adminService.deleteStudentGroup(ID);
+    const response = await adminService.deleteStudentGroup(ID);
     res.status(201).json(response);
 }
 
 exports.deleteGroup = async (req,res,next) =>{
     const ID = JSON.parse(req.params.ID);
-    const response = adminService.deleteGroup(ID);
+    const response = await adminService.deleteGroup(ID);
     res.status(201).json(response)
+}
+
+exports.getGroupAsignments = async (req,res,next) => {
+    const GroupID = JSON.parse(req.params.GroupID);
+    const result = await hazikService.getAssignmentsAndAnswersByGroupID(GroupID)
+
+    
+    res.status(201).json(result)
 }

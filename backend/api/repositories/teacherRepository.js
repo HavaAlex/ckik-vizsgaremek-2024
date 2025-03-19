@@ -19,7 +19,7 @@ class TeacherRepository
         return newTeacher;
     }
 
-    async getRoleByUserID(ID)
+    async getTeacherByUserID(ID)
     {
         return await this.Teachers.findOne
         (
@@ -27,6 +27,23 @@ class TeacherRepository
                 where:
                 {
                     userId: ID,
+                }
+            }
+        )
+    }
+
+    async getAllTeachers(){
+        return await this.Teachers.findAll({})
+    }
+
+    async getTeacherByID(ID)
+    {
+        return await this.Teachers.findOne
+        (
+            {
+                where:
+                {
+                    ID: ID,
                 }
             }
         )
@@ -50,6 +67,7 @@ class TeacherRepository
             }
         })
     }
+
 }
 
 module.exports = new TeacherRepository(db);

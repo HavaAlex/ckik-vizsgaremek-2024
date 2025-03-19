@@ -20,7 +20,7 @@ class StudentRepository
         return newStudent;
     }
 
-    async getRoleByUserID(ID)
+    async getStudentByUserID(ID)
     {
         return await this.Students.findOne
         (
@@ -28,6 +28,19 @@ class StudentRepository
                 where:
                 {
                     userId: ID,
+                }
+            }
+        )
+    }
+
+    async getStudentByID(ID)
+    {
+        return await this.Students.findOne
+        (
+            {
+                where:
+                {
+                    ID: ID,
                 }
             }
         )
@@ -59,7 +72,6 @@ class StudentRepository
     }
 
     async modifyStudent(ID,student){
-        // Assume User is a Sequelize model
         const changedStudent = await this.Students.findOne({ where: { userId: ID } });
         await changedStudent.update({ name: student.name });
         await changedStudent.update({ email: student.email });

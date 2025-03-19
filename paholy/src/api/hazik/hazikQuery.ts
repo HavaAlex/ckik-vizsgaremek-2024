@@ -16,6 +16,9 @@ const getAssignmentsTeacher = async ()  =>{
         headers: { Authorization: `Bearer ${getCookie("alap")}` }
     };
     const response = await axiosClient.get(`http://localhost:3000/feladat/haziktanar`,config)
+    console.log("///////////////////////////////////////////////////")
+    console.log(response)
+    console.log("///////////////////////////////////////////////////")
     return response.data
 }
 export const usegetAssignmentsTeacher = () => {
@@ -39,6 +42,9 @@ const getAssignmentsStudent = async ()  =>{
         headers: { Authorization: `Bearer ${getCookie("alap")}` }
     };
     const response = await axiosClient.get(`http://localhost:3000/feladat/hazikdiak`,config)
+    console.log("-----------------------------------------------")
+    console.log(response)
+    console.log("-----------------------------------------------")
     return response.data
 }
 export const usegetAssignmentsStudent = () => {

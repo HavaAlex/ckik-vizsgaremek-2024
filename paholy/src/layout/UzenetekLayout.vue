@@ -217,7 +217,7 @@ onUnmounted(() => {
                   <td style="width: 15vw;">{{ formatDate(uzenet.date) }}</td>
                   <td id="szoveg" style="width: 15vw;">{{ uzenet.message }}</td>
                   <td style="width: 15vw;">
-                    <v-btn @click="openDialog(uzenet)">Megtekintés</v-btn>
+                    <v-btn color="primary" @click="openDialog(uzenet)">Megtekintés</v-btn>
                   </td>
                 </tr>
               </tbody>
@@ -270,7 +270,7 @@ onUnmounted(() => {
                   <td style="width: 15vw;">{{ formatDate(uzenet.date) }}</td>
                   <td id="szoveg" style="width: 15vw;">{{ uzenet.message }}</td>
                   <td style="width: 15vw;">
-                    <v-btn @click="openDialog(uzenet)">Megtekintés</v-btn>
+                    <v-btn color="primary" @click="openDialog(uzenet)">Megtekintés</v-btn>
                   </td>
                 </tr>
               </tbody>
@@ -327,8 +327,8 @@ onUnmounted(() => {
                   <td style="width: 15vw;">{{ formatDate(uzenet.date) }}</td>
                   <td id="szoveg" style="width: 15vw;">{{ uzenet.message }}</td>
                   <td style="width: 15vw;">
-                    <v-btn @click="openDialog(uzenet)">Megtekintés</v-btn>
-                    <v-btn @click="openDeleteDialog(uzenet)">Törlés</v-btn>
+                    <v-btn color="primary" @click="openDialog(uzenet)">Megtekintés</v-btn>
+                    <v-btn color="error" @click="openDeleteDialog(uzenet)">Törlés</v-btn>
                   </td>
                 </tr>
               </tbody>

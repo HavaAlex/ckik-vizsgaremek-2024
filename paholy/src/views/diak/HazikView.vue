@@ -166,7 +166,7 @@ const handleOpenAssignment = (selected: OpenAssignment, complassignment: OpenCom
       </thead>
       <tbody>
         <tr v-for="feladat in assignmentStudentList" :key="feladat.feladat.ID">
-          <td>{{ feladat.feladat.senderUserName.name }}</td>
+          <td>{{ feladat.feladat.senderUserName }}</td>
           <td>{{ feladat.feladat.deadline }}</td>
           <td>{{ feladat.feladat.uploadDate }}</td>
           <td class="shortenedDesc">{{ feladat.feladat.desc }}</td>

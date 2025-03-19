@@ -3,7 +3,7 @@ import { useMutation, useQuery } from "@tanstack/vue-query"
 import { useRoute, useRouter } from "vue-router"
 import { QUERY_KEYS } from "@/utils/QueryKeys"
 import { jwtDecode } from "jwt-decode";
-import type { Teacher , Student, Guardian } from '@/api/admin/admin';
+import type { Teacher , Student, Guardian,CreatedGroup } from '@/api/admin/admin';
 import { useCookieHandler } from "@/stores/cookieHandler";
 
 //import type { Message,PotentialReceiver,newMessage } from "./uzenetek";
@@ -11,7 +11,7 @@ import queryClient from "@/lib/queryClient";
 import { useErrorHandler } from "@/stores/errorHandler";
 import type { Group } from "../orarend/orarend";
 
-
+//Tanárok feltöltése
 const addTeacherUsers = async (teachers: Teacher[]) : Promise<Teacher[]> => {
     const { getCookie } = useCookieHandler() 
     const config = {
@@ -35,7 +35,7 @@ export const useaaddTeacherUsers = () => {
         }
     })
 }
-
+//Diákok feltöltése
 const addStudentUsers = async (students: Student[]) : Promise<Student[]> => {
     const { getCookie } = useCookieHandler() 
     const config = {
@@ -59,7 +59,7 @@ export const useaddStudentUsers = () => {
         }
     })
 }
-
+//Szülők/gondviselők feltöltése
 const addGuardianUsers = async (guardians: Guardian[]) : Promise<Guardian[]> => {
     const { getCookie } = useCookieHandler() 
     const config = {
@@ -83,7 +83,7 @@ export const useaddGuardianUsers = () => {
         }
     })
 }
-
+//Felhasználó utólagos módosítása, adminra, studentre, teacherre és guardiannre egyaránt működik
 const modifyUser = async (modifiedUser: any) => {
     const { getCookie } = useCookieHandler() 
     const config = {
@@ -107,7 +107,7 @@ export const usemodifyUser = () => {
         }
     })
 }
-
+//Összes felhasználó lekérése
 const getUsers = async () => {
     const { getCookie } = useCookieHandler() 
     const config = {
@@ -132,7 +132,7 @@ export const usegetUsers = () => {
     }
     return query
 }
-
+// egy felhasználó lekérése
 export const getUser = async (userID: number) => {
     const { getCookie } = useCookieHandler() 
     const config = {
@@ -157,7 +157,7 @@ export const usegetUser = () => {
     }
     return query
 }
-
+//Felhasználó törlése
 export const deleteUser = async (userID: number) => {
     const { getCookie } = useCookieHandler() 
     const config = {
@@ -181,15 +181,13 @@ export const usedeleteUser = () => {
         }
     })
 }
-
+//csoportok lekérése, a benne lévő studentekkel együtt
 const getGroups = async () => {
     const { getCookie } = useCookieHandler() 
     const config = {
         headers: { Authorization: `Bearer ${getCookie("alap")}` }
     };
     const response = await axiosClient.get(`http://localhost:3000/admin/getAllGroupsWithStudents`, config)
-    console.log("admin response: \n", response);
-    console.log("admin response data: \n", response.data)
     return response.data
 }
 
@@ -206,7 +204,7 @@ export const usegetGroups = () => {
     }
     return query
 }
-
+//Csoport létrehozása, diákokkal együtt történik
 const CreateGroup = async (newGroup: CreatedGroup)  => {
     const { getCookie } = useCookieHandler() 
     const config = {
@@ -232,7 +230,7 @@ export const useCreateGroup = () => {
 }
 
 
-
+//Felhasználók utólagos hozzáadása a csoporhoz
 const AddUsersToGroup = async (newUsers: any) => {
     const { getCookie } = useCookieHandler() 
     const config = {
@@ -257,7 +255,7 @@ export const useAddUsersToGroup = () => {
     })
 }
 
-
+//Diák eltávolítása a csoportból (nem törli ki a felhasználót)
 const deleteStudentGroup = async (ID: Number)=>{
     const {getCookie} = useCookieHandler()
     const config = {
@@ -282,7 +280,7 @@ export const usedeleteStudentGroup = () => {
     )
 }
 
-
+//Csoport törlése (Nem törli ki a felhasználókat, de a kapcsolótábla adatait igen)
 const deleteGroup = async (ID: Number)=>{
     const {getCookie} = useCookieHandler()
     const config = {
@@ -305,4 +303,31 @@ export const usedeleteGroup = () => {
             }
         }
     )
+}
+
+//csoporthoz tartozó házifeladatok lekérése
+export const getGroupAsignments = async (GroupID: Number) => {
+    const { getCookie } = useCookieHandler() 
+    const config = {
+        headers: { Authorization: `Bearer ${getCookie("alap")}` }
+    };
+    const response = await axiosClient.get(`http://localhost:3000/admin/getGroupAsignments/${GroupID}`, config)
+    console.log("KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK")
+    console.log(response)
+    console.log("KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK")
+    return response.data
+}
+
+export const usegetGroupAsignments = () => {
+    const { setError } = useErrorHandler()
+    const query = useQuery({
+        queryKey: [QUERY_KEYS.getGroupAsignments],
+        queryFn: getGroupAsignments,
+    })
+
+    if (query.error.value) {
+        console.error("Lekérdezési hiba:", query.error)
+        setError(query.error.value)
+    }
+    return query
 }
