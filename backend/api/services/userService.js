@@ -31,7 +31,7 @@ class UserService
 
     async getGuardiansChildren(ID)
     {
-        return await guardianStudentRepository.getGuardiansChildren(ID);
+        return await studentRepository.getGuardiansChildren(ID);
     }
     async getUserWithAdditionalAttributes(ID,role){
         

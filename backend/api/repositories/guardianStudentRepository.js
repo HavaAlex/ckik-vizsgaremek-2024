@@ -16,21 +16,6 @@ class GuardianStudentRepository
         
         return newGuardianStudent;
     }
-
-    async getGuardiansChildren(guardianId)
-    {
-        return this.GuardianStudent.findAll(
-            {
-                where:{
-                    GuardianID: guardianId
-                },
-                include:{
-                    model:db.student,
-                    attributes:[]
-                }
-            }
-        )
-    }
 }
 
 module.exports = new GuardianStudentRepository(db);

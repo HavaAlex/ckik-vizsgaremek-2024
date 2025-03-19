@@ -1,6 +1,7 @@
 const { forEach } = require("lodash");
 const db = require("../db/dbContext");
-const userRepository = require("./userRepository")
+const userRepository = require("./userRepository");
+const { where } = require("sequelize");
 
 class StudentRepository
 {
@@ -39,6 +40,22 @@ class StudentRepository
                 OMID: OM_ID
             }
         })
+    }
+
+    async getGuardiansChildren(guardianId)
+    {
+        return this.Students.findAll(
+            {
+                include:{
+                    model:db.guardian,
+                    through:db.guardianstudent,
+                    attributes:[],
+                    where:{
+                        ID: guardianId
+                    }
+                }
+            }
+        )
     }
 
     async getGroupMembers(groupID)
