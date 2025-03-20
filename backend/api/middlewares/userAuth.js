@@ -3,7 +3,7 @@ const roleService = require("../services/roleService")
 
 exports.verifyToken = async (req, res, next) =>
 {
-    //console.log(req.headers)
+    console.log(req.headers["authorization"])
     var token = req.headers["authorization"]?.split(" ")[1]; // Bearer <token>
 
     if(!token)

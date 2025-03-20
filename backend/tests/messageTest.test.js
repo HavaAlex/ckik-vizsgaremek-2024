@@ -2,6 +2,7 @@ const request = require("supertest");
 const app = require("../app"); // adjust the path to where your Express app is exported
 const uzenetService = require("../api/services/uzenetService");
 const userRepository = require("../api/repositories/userRepository");
+const jwt = require("jsonwebtoken");
 
 // If you later decide to test group-related functionality, import the group repository as needed.
 // const groupRepository = require("../api/repositories/groupRepository");
@@ -9,7 +10,7 @@ const userRepository = require("../api/repositories/userRepository");
 jest.mock("../api/db/dbContext", () => require("../__mocks__/db"));
 
 describe("Üzenet funkciók tesztelése", () => {
-  let sender, receiver1, receiver2;
+  let sender, receiver1, receiver2, token;
 
   beforeAll(async () => {
     // Sync the in-memory (mock) database
@@ -19,6 +20,8 @@ describe("Üzenet funkciók tesztelése", () => {
     sender = { ID: 10, username: "sender", password: "pass", role: "user" };
     receiver1 = { ID: 11, username: "receiver1", password: "pass", role: "user" };
     receiver2 = { ID: 12, username: "receiver2", password: "pass", role: "user" };
+    token = jwt.sign({ sender }, process.env.JWT_KEY, { expiresIn: "20m" });
+    console.log(process.env.JWT_KEY)
 
     await userRepository.createUser(sender);
     await userRepository.createUser(receiver1);
@@ -26,13 +29,15 @@ describe("Üzenet funkciók tesztelése", () => {
   });
 
   // Helper to set the decoded user (simulate authentication)
-  const setUserHeader = (userID) => ({ "x-user-id": userID });
+  const setUserHeader = () => ({
+          authorization: `Bearer ${token}`
+      });
 
   describe("POST ", () => {
     test("should fail when message is empty", async () => {
       const res = await request(app)
         .post("/uzenet")
-        .set(setUserHeader(sender.ID))
+        .set(setUserHeader())
         .send({
           message: "",
           date: "2000-01-01",
@@ -47,7 +52,7 @@ describe("Üzenet funkciók tesztelése", () => {
     test("should fail when no recipients are provided", async () => {
       const res = await request(app)
         .post("/uzenet")
-        .set(setUserHeader(sender.ID))
+        .set(setUserHeader())
         .send({
           message: "Test üzenet",
           date: "2000-01-01",
@@ -62,7 +67,7 @@ describe("Üzenet funkciók tesztelése", () => {
     test("should create a new message successfully", async () => {
       const res = await request(app)
         .post("/uzenet")
-        .set(setUserHeader(sender.ID))
+        .set(setUserHeader())
         .send({
           message: "Test üzenet",
           date: "2000-01-01",
@@ -81,7 +86,7 @@ describe("Üzenet funkciók tesztelése", () => {
     test("should return messages for the authenticated user", async () => {
       const res = await request(app)
         .get("/uzenet")
-        .set(setUserHeader(sender.ID));
+        .set(setUserHeader());
 
       expect(res.status).toBe(201);
       // Expect an array or object based on your implementation
@@ -93,7 +98,7 @@ describe("Üzenet funkciók tesztelése", () => {
     test("should return potential receivers", async () => {
       const res = await request(app)
         .get("/uzenet/uzenetekreceivers")
-        .set(setUserHeader(sender.ID));
+        .set(setUserHeader());
 
       expect(res.status).toBe(201);
       // Assuming the returned object contains a "singleUsers" key
@@ -117,7 +122,7 @@ describe("Üzenet funkciók tesztelése", () => {
       // First, create a message that we can delete
       const createRes = await request(app)
         .post("/uzenet")
-        .set(setUserHeader(sender.ID))
+        .set(setUserHeader())
         .send({
           message: "Message to delete",
           date: "2000-01-01",
