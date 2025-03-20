@@ -145,7 +145,7 @@ export const usemodifyCompletedAssignment = () => {
         {
             mutationFn: modifyCompletedAssignment,
             onSuccess(){
-                queryClient.refetchQueries({queryKey:[QUERY_KEYS.modifyCompletedAssignment]})
+                queryClient.refetchQueries({queryKey:[QUERY_KEYS.getAssignmentsStudent]})
             },
             onError(error){
                 const {setError} = useErrorHandler()

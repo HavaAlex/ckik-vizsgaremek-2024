@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue';
+import { ref, computed, watch, onMounted, onUnmounted } from 'vue';
 import type { Assignment, OpenAssignment } from '@/api/hazik/hazik';
 import { 
   usegetGroups, 
@@ -201,11 +201,53 @@ const downloadFile = (file: any) => {
   link.click();
   document.body.removeChild(link);
 };
+
+// New helper function to return status style based on the answer status
+const getStatusStyle = (status: string) => {
+  if (status === "Nincs leadva") {
+    return { backgroundColor: "yellow", color: "black", padding: "4px", borderRadius: "4px", display: "inline-block" };
+  } else if (status === "Leadva") {
+    return { backgroundColor: "green", color: "white", padding: "4px", borderRadius: "4px", display: "inline-block" };
+  } else if (status === "Határidő lejárt") {
+    return { backgroundColor: "red", color: "white", padding: "4px", borderRadius: "4px", display: "inline-block" };
+  }
+  return {};
+};
+
+
+
+// Responsive dialog width for viewing answers
+// Responsive dialog width for viewing answers
+const viewAssignmentDialogWidth = ref('50vw');
+// Responsive card height for viewing answers
+const viewAssignmentCardHeight = ref('auto');
+
+const updateDialogSize = () => {
+  // Check if in portrait mode (mobile)
+  if (window.innerHeight > window.innerWidth) {
+    viewAssignmentDialogWidth.value = '80vw';
+    viewAssignmentCardHeight.value = '80vh'; // Card height set to 60vw on mobile
+  } else {
+    viewAssignmentDialogWidth.value = '50vw';
+    viewAssignmentCardHeight.value = 'auto';
+  }
+};
+
+onMounted(() => {
+  updateDialogSize();
+  window.addEventListener('resize', updateDialogSize);
+});
+
+onUnmounted(() => {
+  window.removeEventListener('resize', updateDialogSize);
+});
+
+
 </script>
 
 <template>
-  <main>
-    <v-container>
+  <main style="height: 80vh;">
+    <v-container style="height: 80vh;">
       <v-card>
         <v-card-title>
           <h1 style="padding: 10px;" class="bg-title"> Feladatok</h1>
@@ -256,13 +298,24 @@ const downloadFile = (file: any) => {
       </v-card>
 
       <!-- Dialog for viewing answers -->
-      <v-dialog v-model="ViewAssignmentAnwserDialog" max-width="50vw">
-        <v-card max-width="50vw">
+       <!-- Dialog for viewing answers -->
+       <v-dialog v-model="ViewAssignmentAnwserDialog" :max-width="viewAssignmentDialogWidth">
+        <!-- Here we set the v-card's width inline to match the dialog's width -->
+        <v-card :style="{ width: viewAssignmentDialogWidth, height: viewAssignmentCardHeight }">
           <v-card-title>Feladat:</v-card-title>
           <v-card-text>
-            <p><strong>Feladás dátuma:</strong> {{ formatDate(selectedAssignmentForAnswers?.feladat.uploadDate) }}</p>
-            <p><strong>Határidő:</strong> {{ formatDate(selectedAssignmentForAnswers?.feladat.deadline) }}</p>
-            <p><strong>Feladat leírása:</strong> {{ selectedAssignmentForAnswers?.feladat.desc }}</p>
+            <p>
+              <strong>Feladás dátuma:</strong>
+              {{ formatDate(selectedAssignmentForAnswers?.feladat.uploadDate) }}
+            </p>
+            <p>
+              <strong>Határidő:</strong>
+              {{ formatDate(selectedAssignmentForAnswers?.feladat.deadline) }}
+            </p>
+            <p>
+              <strong>Feladat leírása:</strong>
+              {{ selectedAssignmentForAnswers?.feladat.desc }}
+            </p>
 
             <!-- Assignment files -->
             <div v-if="assignmentFiles.length">
@@ -283,16 +336,17 @@ const downloadFile = (file: any) => {
             <!-- Answers -->
             <v-card-title>Válaszok:</v-card-title>
             <v-list>
-              <!-- Loop over each answer in the selected assignment -->
               <v-list-item
                 v-for="(answer, index) in selectedAssignmentForAnswers?.anwsers"
                 :key="answer.ID"
               >
-                <!-- Basic answer info -->
                 <v-list-item-title>{{ answer.senderUserName.name }}</v-list-item-title>
-                <v-list-item-subtitle>Válasz szövege: {{ answer.textAnswer }}</v-list-item-subtitle>
-
-                <!-- Files for this particular answer -->
+                <div :style="getStatusStyle(answer.status)" class="mt-2">
+                  <strong>Státusz:</strong> {{ answer.status }}
+                </div>
+                <p><strong>Válasz szövege: </strong>{{ answer.textAnswer }}</p>
+                
+                <!-- Files for this answer -->
                 <div v-if="answerFiles[answer.ID] && answerFiles[answer.ID].length">
                   <p><strong>Fájlok:</strong></p>
                   <v-list dense>
@@ -314,7 +368,9 @@ const downloadFile = (file: any) => {
           </v-card-text>
 
           <v-card-actions>
-            <v-btn color="primary" @click="ViewAssignmentAnwserDialog = false">Bezárás</v-btn>
+            <v-btn color="primary" @click="ViewAssignmentAnwserDialog = false">
+              Bezárás
+            </v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>

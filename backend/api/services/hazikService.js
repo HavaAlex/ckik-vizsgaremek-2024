@@ -42,7 +42,7 @@ class HazikService {
                 studentID: studentID,
                 date: new Date(),
                 textAnswer: "",
-                status: "not complated"
+                status: "Nincs leadva"
             };
             await assignmentRepository.createCompletedAssignment(completedAssignmentData);
         }
@@ -73,6 +73,7 @@ class HazikService {
     //        Get Sent Assignments
     // ---------------------------------
     async getsentAssignments(userID) {
+        await this.checkAndUpdateOverdueAssignments();
         // 1) Find the teacher by userID
         const teacher = await teacherRepository.getTeacherByUserID(userID);
         
@@ -107,6 +108,7 @@ class HazikService {
     //      Get Received Assignments
     // ---------------------------------
     async getReceivedAssignments(userID) {
+        await this.checkAndUpdateOverdueAssignments();
         // 1) Find the student row by userID
         const student  = await studentRepository.getStudentByUserID(userID);
         
@@ -137,6 +139,7 @@ class HazikService {
     }
 
     async getAssignmentsAndAnswersByGroupID(groupID) {
+        await this.checkAndUpdateOverdueAssignments();
         const group = await studentRepository.getStudentsByGroupID(groupID);
         if (!group) return [];
     
@@ -241,7 +244,7 @@ class HazikService {
             {
                 textAnswer: completedassignment.textAnswer,
                 date: completedassignment.date,
-                status: completedassignment.status
+                status: "Leadva"
             }
         );
         return updated;
@@ -290,6 +293,43 @@ class HazikService {
         await assignmentRepository.deleteCompletedAssignmentFileByID(ID);
         return "sikerült";
     }
+
+
+    async checkAndUpdateOverdueAssignments() {
+        // 1) Get all completed assignments
+        const allCompletedAssignments = await assignmentRepository.getAllCompletedAssignments();
+    
+        // 2) For each completed assignment, check if the assignment is past its deadline
+        for (const completedAssignment of allCompletedAssignments) {
+            const assignment = await assignmentRepository.getAssignmentByID(completedAssignment.assignmentID);
+            
+            // If no assignment or no deadline, skip
+            if (!assignment || !assignment.deadline) continue;
+    
+            const deadline = assignment.deadline;  // Date object from DB
+            const now = new Date();
+    
+            if (deadline < now) {
+                // 3) Check if there's no textAnswer and no uploaded files
+                const textAnswerIsEmpty = !completedAssignment.textAnswer || completedAssignment.textAnswer.trim() === "";
+    
+                // If the user hasn't uploaded anything, check for completed assignment files
+                if (textAnswerIsEmpty) {
+                    const files = await assignmentRepository.getCompletedAssignmentFilesByCompletedAssignmentID(completedAssignment.ID);
+    
+                    // 4) If no files exist, mark status as "Elkésett"
+                    if (files.length === 0 && completedAssignment.status !== "Határidó lejárt") {
+                        await assignmentRepository.updateCompletedAssignment(completedAssignment.ID, {
+                            status: "Határidó lejárt"
+                        });
+                    }
+                }
+            }
+        }
+    }
+    
+
+
 }
 
 module.exports = new HazikService();

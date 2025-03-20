@@ -112,7 +112,14 @@ exports.CreateGroup = async (req,res,next) => {
         res.status(500).send("Az adatbázisban nem szereplő OM azonosítót adott meg. Csoport létrehozása sikertelen.")
         return
     }
-    
+    if(eredmeny == -2){
+        res.status(500).send("Egy tanulo a megadott OM azonosítók egyikével már tagja egy csoportnak. Csoport létrehozás sikertelen")
+        return
+    }
+    if(eredmeny == -3){
+        res.status(500).send("Ez a csoportnév már foglalt. Csoport létrehozása sikertelen")
+        return
+    }
     res.status(201).json(newGroup)
 }
 

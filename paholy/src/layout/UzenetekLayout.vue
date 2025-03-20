@@ -152,227 +152,453 @@ function formatReceivers(receivers: any) {
   return receivers.map((receiver: any) => receiver.username).join(', ');
 }
 
-// Orientation handling
+
+
+
+//itt kezdődik a forgatásnak a figyelése
 const isPortrait = ref(window.matchMedia("(orientation: portrait)").matches);
 const updateOrientation = () => {
   isPortrait.value = window.matchMedia("(orientation: portrait)").matches;
 };
 onMounted(() => {
   window.matchMedia("(orientation: portrait)").addEventListener("change", updateOrientation);
+  if(document.cookie != ''){
+    const decoded = jwtDecode(getCookie("alap"))
+    push({name:decoded.userData.role+'orarend'})
+  }
 });
 onUnmounted(() => {
   window.matchMedia("(orientation: portrait)").removeEventListener("change", updateOrientation);
-});
+});//itt ér véget
 </script>
 
 <template>
   <main class="main">
-    <v-card class="conainerCard">
-      <v-card-title style="border-radius: 10px; border: 1px; margin-bottom: 10px;">
-        <h1 style="padding: 10px;" class="bg-title">Üzenetek</h1>
-      </v-card-title>
-      
-      <v-card-text>
-        <div style="display:flex; flex-direction: row; justify-content: left; align-items: center">
-          <v-btn class="switchBtn" id="switchBtn1" :disabled="messageView==='kapott'" @click="messageView = 'kapott'">
-            Beérkezett üzenetek
-          </v-btn>
-          <v-btn class="switchBtn" id="switchBtn2" :disabled="messageView==='elkuldott'" @click="messageView = 'elkuldott'">
-            Elküldött üzenetek
-          </v-btn>
-          <v-btn class="switchBtn" id="switchBtn3" v-if="role==='admin'" :disabled="messageView==='osszes'" @click="messageView = 'osszes'">
-            Összes üzenet
-          </v-btn>
-        </div>
-        
-        <!-- Incoming Messages -->
-        <div v-if="messageView==='kapott'">
-          <div v-if="!SentAndReceivedMessages?.kapott || SentAndReceivedMessages.kapott.length === 0">
-            <p>Még nem érkezett üzenete</p>
-            <v-table class="messageTable">
-              <thead>
-                <tr>
-                  <th class="text-center" style="width: 15vw;" @click="sortListBy('sender')">Feladó</th>
-                  <th class="text-center" style="width: 15vw;" @click="sortListBy('date')">Dátum</th>
-                  <th class="text-center" style="width: 15vw;" @click="sortListBy('message')">Üzenet</th>
-                  <th class="text-center" style="width: 15vw;">Interakció</th>
-                </tr>
-              </thead>
-              <tbody></tbody>
-            </v-table>
-          </div>
-          <div v-else>
-            <v-table fixed-header class="messageTable">
-              <thead>
-                <tr>
-                  <th class="text-center" style="width: 15vw;" @click="sortListBy('sender')">Feladó</th>
-                  <th class="text-center" style="width: 15vw;" @click="sortListBy('date')">Dátum</th>
-                  <th class="text-center" style="width: 15vw;" @click="sortListBy('message')">Üzenet</th>
-                  <th class="text-center" style="width: 15vw;">Interakció</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="uzenet in sortedKapott" :key="uzenet.id">
-                  <td style="width: 15vw;">{{ uzenet.sender.username }}</td>
-                  <td style="width: 15vw;">{{ formatDate(uzenet.date) }}</td>
-                  <td id="szoveg" style="width: 15vw;">{{ uzenet.message }}</td>
-                  <td style="width: 15vw;">
-                    <v-btn color="primary" @click="openDialog(uzenet)">Megtekintés</v-btn>
-                  </td>
-                </tr>
-              </tbody>
-            </v-table>
 
-            <!-- Popup Modal for incoming messages -->
-            <v-dialog v-model="dialog" max-width="50vw">
-              <v-card max-width="50vw">
-                <v-card-title>Üzenet részletei</v-card-title>
-                <v-card-text>
-                  <p><strong>Feladó:</strong> {{ selectedMessage?.sender.username }}</p>
-                  <p><strong>Címzettek:</strong> {{ formatReceivers(selectedMessage?.receivers) }}</p>
-                  <p><strong>Dátum:</strong> {{ formatDate(selectedMessage?.date) }}</p>
-                  <p><strong>Üzenet:</strong> {{ selectedMessage?.message }}</p>
-                </v-card-text>
-                <v-card-actions>
-                  <v-btn color="primary" @click="dialog = false">Bezárás</v-btn>
-                </v-card-actions>
-              </v-card>
-            </v-dialog>
-          </div>
-        </div>
+    <div v-if="isPortrait">
+      <v-card class="conainerCard">
+        <v-card-title style="border-radius: 10px; border: 1px; margin-bottom: 10px;">
+          <h1 style="padding: 10px;" class="bg-title">Üzenetek</h1>
+        </v-card-title>
         
-        <!-- Outgoing Messages -->
-        <div v-else-if="messageView==='elkuldott'">
-          <div v-if="!SentAndReceivedMessages?.elkuldott || SentAndReceivedMessages.elkuldott.length === 0">
-            <p>Még nem küldött üzeneteket</p>
-            <v-table class="messageTable">
-              <thead>
-                <tr>
-                  <th class="text-center" style="width: 15vw;" @click="sortListBy('date')">Dátum</th>
-                  <th class="text-center" style="width: 15vw;" @click="sortListBy('message')">Üzenet</th>
-                  <th class="text-center" style="width: 15vw;">Interakció</th>
-                </tr>
-              </thead>
-              <tbody></tbody>
-            </v-table>
+        <v-card-text>
+          <div style="display:flex; flex-direction: row; justify-content: left; align-items: center">
+            <v-btn class="switchBtn" id="switchBtn1" :disabled="messageView==='kapott'" @click="messageView = 'kapott'">
+              Beérkezett <br> üzenetek
+            </v-btn>
+            <v-btn class="switchBtn" id="switchBtn2" :disabled="messageView==='elkuldott'" @click="messageView = 'elkuldott'">
+              Elküldött <br> üzenetek
+            </v-btn>
+            <v-btn class="switchBtn" id="switchBtn3" v-if="role==='admin'" :disabled="messageView==='osszes'" @click="messageView = 'osszes'">
+              Összes <br> üzenet
+            </v-btn>
           </div>
-          <div v-else>
-            <v-table fixed-header class="messageTable">
-              <thead>
-                <tr>
-                  <th class="text-center" style="width: 15vw;" @click="sortListBy('date')">Dátum</th>
-                  <th class="text-center" style="width: 15vw;" @click="sortListBy('message')">Üzenet</th>
-                  <th class="text-center" style="width: 15vw;">Interakció</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="uzenet in sortedElkuldott" :key="uzenet.id">
-                  <td style="width: 15vw;">{{ formatDate(uzenet.date) }}</td>
-                  <td id="szoveg" style="width: 15vw;">{{ uzenet.message }}</td>
-                  <td style="width: 15vw;">
-                    <v-btn color="primary" @click="openDialog(uzenet)">Megtekintés</v-btn>
-                  </td>
-                </tr>
-              </tbody>
-            </v-table>
+          
+          <!-- Incoming Messages -->
+          <div v-if="messageView==='kapott'">
+            <div v-if="!SentAndReceivedMessages?.kapott || SentAndReceivedMessages.kapott.length === 0">
+              <p>Még nem érkezett üzenete</p>
+              <v-table class="messageTable">
+                <thead>
+                  <tr>
+                    <th class="text-center" style="width: 15vw;" @click="sortListBy('sender')">Feladó</th>
+                    <th class="text-center" style="width: 15vw;" @click="sortListBy('date')">Dátum</th>
+                    <th class="text-center" style="width: 15vw;" @click="sortListBy('message')">Üzenet</th>
+                    <th class="text-center" style="width: 15vw;">Interakció</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </v-table>
+            </div>
+            <div v-else>
+              <v-table fixed-header class="messageTable">
+                <thead>
+                  <tr>
+                    <th class="text-center" style="width: 15vw;" @click="sortListBy('sender')">Feladó</th>
+                    <th class="text-center" style="width: 15vw;" @click="sortListBy('date')">Dátum</th>
+                    <th class="text-center" style="width: 15vw;" @click="sortListBy('message')">Üzenet</th>
+                    <th class="text-center" style="width: 15vw;">Interakció</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="uzenet in sortedKapott" :key="uzenet.id">
+                    <td style="width: 15vw;">{{ uzenet.sender.username }}</td>
+                    <td style="width: 15vw;">{{ formatDate(uzenet.date) }}</td>
+                    <td id="szoveg" style="width: 15vw;">{{ uzenet.message }}</td>
+                    <td style="width: 15vw;">
+                      <v-btn color="primary" @click="openDialog(uzenet)">Megtekintés</v-btn>
+                    </td>
+                  </tr>
+                </tbody>
+              </v-table>
 
-            <!-- Popup Modal for outgoing messages -->
-            <v-dialog v-model="dialog" max-width="50vw">
-              <v-card max-width="50vw">
-                <v-card-title>Üzenet részletei</v-card-title>
-                <v-card-text>
-                  <p><strong>Dátum:</strong> {{ formatDate(selectedMessage?.date) }}</p>
-                  <p><strong>Címzettek:</strong> {{ formatReceivers(selectedMessage?.receivers) }}</p>
-                  <p><strong>Üzenet:</strong> {{ selectedMessage?.message }}</p>
-                </v-card-text>
-                <v-card-actions>
-                  <v-btn color="primary" @click="dialog = false">Bezárás</v-btn>
-                </v-card-actions>
-              </v-card>
-            </v-dialog>
+              <!-- Popup Modal for incoming messages -->
+              <v-dialog v-model="dialog" max-width="80vw">
+                <v-card max-width="80vw">
+                  <v-card-title>Üzenet részletei</v-card-title>
+                  <v-card-text>
+                    <p><strong>Feladó:</strong> {{ selectedMessage?.sender.username }}</p>
+                    <p><strong>Címzettek:</strong> {{ formatReceivers(selectedMessage?.receivers) }}</p>
+                    <p><strong>Dátum:</strong> {{ formatDate(selectedMessage?.date) }}</p>
+                    <p><strong>Üzenet:</strong> {{ selectedMessage?.message }}</p>
+                  </v-card-text>
+                  <v-card-actions>
+                    <v-btn color="primary" @click="dialog = false">Bezárás</v-btn>
+                  </v-card-actions>
+                </v-card>
+              </v-dialog>
+            </div>
           </div>
-        </div>
+          
+          <!-- Outgoing Messages -->
+          <div v-else-if="messageView==='elkuldott'">
+            <div v-if="!SentAndReceivedMessages?.elkuldott || SentAndReceivedMessages.elkuldott.length === 0">
+              <p>Még nem küldött üzeneteket</p>
+              <v-table class="messageTable">
+                <thead>
+                  <tr>
+                    <th class="text-center" style="width: 15vw;" @click="sortListBy('date')">Dátum</th>
+                    <th class="text-center" style="width: 15vw;" @click="sortListBy('message')">Üzenet</th>
+                    <th class="text-center" style="width: 15vw;">Interakció</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </v-table>
+            </div>
+            <div v-else>
+              <v-table fixed-header class="messageTable">
+                <thead>
+                  <tr>
+                    <th class="text-center" style="width: 15vw;" @click="sortListBy('date')">Dátum</th>
+                    <th class="text-center" style="width: 15vw;" @click="sortListBy('message')">Üzenet</th>
+                    <th class="text-center" style="width: 15vw;">Interakció</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="uzenet in sortedElkuldott" :key="uzenet.id">
+                    <td style="width: 15vw;">{{ formatDate(uzenet.date) }}</td>
+                    <td id="szoveg" style="width: 15vw;">{{ uzenet.message }}</td>
+                    <td style="width: 15vw;">
+                      <v-btn color="primary" @click="openDialog(uzenet)">Megtekintés</v-btn>
+                    </td>
+                  </tr>
+                </tbody>
+              </v-table>
+
+              <!-- Popup Modal for outgoing messages -->
+              <v-dialog v-model="dialog" max-width="80vw">
+                <v-card max-width="80vw">
+                  <v-card-title>Üzenet részletei</v-card-title>
+                  <v-card-text>
+                    <p><strong>Dátum:</strong> {{ formatDate(selectedMessage?.date) }}</p>
+                    <p><strong>Címzettek:</strong> {{ formatReceivers(selectedMessage?.receivers) }}</p>
+                    <p><strong>Üzenet:</strong> {{ selectedMessage?.message }}</p>
+                  </v-card-text>
+                  <v-card-actions>
+                    <v-btn color="primary" @click="dialog = false">Bezárás</v-btn>
+                  </v-card-actions>
+                </v-card>
+              </v-dialog>
+            </div>
+          </div>
+          
+          <!-- All Messages (Admin only) -->
+          <div v-else-if="messageView==='osszes'">
+            <div v-if="sortedOsszes.length === 0">
+              <p>Nincsenek üzenetek</p>
+              <v-table fixed-header class="messageTable">
+                <thead>
+                  <tr>
+                    <th class="text-center" style="width: 15vw;" @click="sortListBy('sender')">Feladó</th>
+                    <th class="text-center" style="width: 15vw;" @click="sortListBy('date')">Dátum</th>
+                    <th class="text-center" style="width: 15vw;" @click="sortListBy('message')">Üzenet</th>
+                    <th class="text-center" style="width: 15vw;">Interakció</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </v-table>
+            </div>
+            <div v-else>
+              <v-table fixed-header class="messageTable">
+                <thead>
+                  <tr>
+                    <th class="text-center" style="width: 15vw;" @click="sortListBy('sender')">Feladó</th>
+                    <th class="text-center" style="width: 15vw;" @click="sortListBy('date')">Dátum</th>
+                    <th class="text-center" style="width: 15vw;" @click="sortListBy('message')">Üzenet</th>
+                    <th class="text-center" style="width: 15vw;">Interakció</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="uzenet in sortedOsszes" :key="uzenet.id">
+                    <td style="width: 15vw;">
+                      {{ uzenet.sender ? uzenet.sender.username : (uzenet.senderUserName ? uzenet.senderUserName.username : 'Én') }}
+                    </td>
+                    <td style="width: 15vw;">{{ formatDate(uzenet.date) }}</td>
+                    <td id="szoveg" style="width: 15vw;">{{ uzenet.message }}</td>
+                    <td style="width: 15vw;">
+                      <v-btn color="primary" @click="openDialog(uzenet)">Megtekintés</v-btn>
+                      <v-btn color="error" @click="openDeleteDialog(uzenet)">Törlés</v-btn>
+                    </td>
+                  </tr>
+                </tbody>
+              </v-table>
+
+              <!-- Popup Modal for all messages -->
+              <v-dialog v-model="dialog" max-width="80vw">
+                <v-card max-width="80vw">
+                  <v-card-title>Üzenet részletei</v-card-title>
+                  <v-card-text>
+                    <p>
+                      <strong>Feladó:</strong>
+                      {{ selectedMessage?.sender ? selectedMessage.sender.username : (selectedMessage?.senderUserName ? selectedMessage.senderUserName.username : 'Én') }}
+                    </p>
+                    <p><strong>Címzettek:</strong> {{ formatReceivers(selectedMessage?.receivers) }}</p>
+                    <p><strong>Dátum:</strong> {{ formatDate(selectedMessage?.date) }}</p>
+                    <p><strong>Üzenet:</strong> {{ selectedMessage?.message }}</p>
+                  </v-card-text>
+                  <v-card-actions>
+                    <v-btn color="primary" @click="dialog = false">Bezárás</v-btn>
+                  </v-card-actions>
+                </v-card>
+              </v-dialog>
+            </div>
+          </div>
+        </v-card-text>
         
-        <!-- All Messages (Admin only) -->
-        <div v-else-if="messageView==='osszes'">
-          <div v-if="sortedOsszes.length === 0">
-            <p>Nincsenek üzenetek</p>
-            <v-table fixed-header class="messageTable">
-              <thead>
-                <tr>
-                  <th class="text-center" style="width: 15vw;" @click="sortListBy('sender')">Feladó</th>
-                  <th class="text-center" style="width: 15vw;" @click="sortListBy('date')">Dátum</th>
-                  <th class="text-center" style="width: 15vw;" @click="sortListBy('message')">Üzenet</th>
-                  <th class="text-center" style="width: 15vw;">Interakció</th>
-                </tr>
-              </thead>
-              <tbody></tbody>
-            </v-table>
-          </div>
-          <div v-else>
-            <v-table fixed-header class="messageTable">
-              <thead>
-                <tr>
-                  <th class="text-center" style="width: 15vw;" @click="sortListBy('sender')">Feladó</th>
-                  <th class="text-center" style="width: 15vw;" @click="sortListBy('date')">Dátum</th>
-                  <th class="text-center" style="width: 15vw;" @click="sortListBy('message')">Üzenet</th>
-                  <th class="text-center" style="width: 15vw;">Interakció</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="uzenet in sortedOsszes" :key="uzenet.id">
-                  <td style="width: 15vw;">
-                    {{ uzenet.sender ? uzenet.sender.username : (uzenet.senderUserName ? uzenet.senderUserName.username : 'Én') }}
-                  </td>
-                  <td style="width: 15vw;">{{ formatDate(uzenet.date) }}</td>
-                  <td id="szoveg" style="width: 15vw;">{{ uzenet.message }}</td>
-                  <td style="width: 15vw;">
-                    <v-btn color="primary" @click="openDialog(uzenet)">Megtekintés</v-btn>
-                    <v-btn color="error" @click="openDeleteDialog(uzenet)">Törlés</v-btn>
-                  </td>
-                </tr>
-              </tbody>
-            </v-table>
+      </v-card>
 
-            <!-- Popup Modal for all messages -->
-            <v-dialog v-model="dialog" max-width="50vw">
-              <v-card max-width="50vw">
-                <v-card-title>Üzenet részletei</v-card-title>
-                <v-card-text>
-                  <p>
-                    <strong>Feladó:</strong>
-                    {{ selectedMessage?.sender ? selectedMessage.sender.username : (selectedMessage?.senderUserName ? selectedMessage.senderUserName.username : 'Én') }}
-                  </p>
-                  <p><strong>Címzettek:</strong> {{ formatReceivers(selectedMessage?.receivers) }}</p>
-                  <p><strong>Dátum:</strong> {{ formatDate(selectedMessage?.date) }}</p>
-                  <p><strong>Üzenet:</strong> {{ selectedMessage?.message }}</p>
-                </v-card-text>
-                <v-card-actions>
-                  <v-btn color="primary" @click="dialog = false">Bezárás</v-btn>
-                </v-card-actions>
-              </v-card>
-            </v-dialog>
+
+        <!-- Delete Confirmation Popup -->
+      <v-dialog v-model="deleteDialog" max-width="50vw">
+        <v-card max-width="50vw">
+          <v-card-title>Törlés megerősítése</v-card-title>
+          <v-card-text>
+            <p>Biztosan törli az üzenetet?</p>
+          </v-card-text>
+          <v-card-actions>
+            <v-btn color="red" @click="confirmDelete">Törlés</v-btn>
+            <v-btn @click="deleteDialog = false">Mégsem</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+    </div>
+
+
+    <!--                     -->
+
+
+    <div v-else>
+      <v-card class="conainerCard">
+        <v-card-title style="border-radius: 10px; border: 1px; margin-bottom: 10px;">
+          <h1 style="padding: 10px;" class="bg-title">Üzenetek</h1>
+        </v-card-title>
+        
+        <v-card-text>
+          <div style="display:flex; flex-direction: row; justify-content: left; align-items: center">
+            <v-btn class="switchBtn" id="switchBtn1" :disabled="messageView==='kapott'" @click="messageView = 'kapott'">
+              Beérkezett üzenetek
+            </v-btn>
+            <v-btn class="switchBtn" id="switchBtn2" :disabled="messageView==='elkuldott'" @click="messageView = 'elkuldott'">
+              Elküldött üzenetek
+            </v-btn>
+            <v-btn class="switchBtn" id="switchBtn3" v-if="role==='admin'" :disabled="messageView==='osszes'" @click="messageView = 'osszes'">
+              Összes üzenet
+            </v-btn>
           </div>
-        </div>
-      </v-card-text>
-      
-    </v-card>
+          
+          <!-- Incoming Messages -->
+          <div v-if="messageView==='kapott'">
+            <div v-if="!SentAndReceivedMessages?.kapott || SentAndReceivedMessages.kapott.length === 0">
+              <p>Még nem érkezett üzenete</p>
+              <v-table class="messageTable">
+                <thead>
+                  <tr>
+                    <th class="text-center" style="width: 15vw;" @click="sortListBy('sender')">Feladó</th>
+                    <th class="text-center" style="width: 15vw;" @click="sortListBy('date')">Dátum</th>
+                    <th class="text-center" style="width: 15vw;" @click="sortListBy('message')">Üzenet</th>
+                    <th class="text-center" style="width: 15vw;">Interakció</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </v-table>
+            </div>
+            <div v-else>
+              <v-table fixed-header class="messageTable">
+                <thead>
+                  <tr>
+                    <th class="text-center" style="width: 15vw;" @click="sortListBy('sender')">Feladó</th>
+                    <th class="text-center" style="width: 15vw;" @click="sortListBy('date')">Dátum</th>
+                    <th class="text-center" style="width: 15vw;" @click="sortListBy('message')">Üzenet</th>
+                    <th class="text-center" style="width: 15vw;">Interakció</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="uzenet in sortedKapott" :key="uzenet.id">
+                    <td style="width: 15vw;">{{ uzenet.sender.username }}</td>
+                    <td style="width: 15vw;">{{ formatDate(uzenet.date) }}</td>
+                    <td id="szoveg" style="width: 15vw;">{{ uzenet.message }}</td>
+                    <td style="width: 15vw;">
+                      <v-btn color="primary" @click="openDialog(uzenet)">Megtekintés</v-btn>
+                    </td>
+                  </tr>
+                </tbody>
+              </v-table>
+
+              <!-- Popup Modal for incoming messages -->
+              <v-dialog v-model="dialog" max-width="50vw">
+                <v-card max-width="50vw">
+                  <v-card-title>Üzenet részletei</v-card-title>
+                  <v-card-text>
+                    <p><strong>Feladó:</strong> {{ selectedMessage?.sender.username }}</p>
+                    <p><strong>Címzettek:</strong> {{ formatReceivers(selectedMessage?.receivers) }}</p>
+                    <p><strong>Dátum:</strong> {{ formatDate(selectedMessage?.date) }}</p>
+                    <p><strong>Üzenet:</strong> {{ selectedMessage?.message }}</p>
+                  </v-card-text>
+                  <v-card-actions>
+                    <v-btn color="primary" @click="dialog = false">Bezárás</v-btn>
+                  </v-card-actions>
+                </v-card>
+              </v-dialog>
+            </div>
+          </div>
+          
+          <!-- Outgoing Messages -->
+          <div v-else-if="messageView==='elkuldott'">
+            <div v-if="!SentAndReceivedMessages?.elkuldott || SentAndReceivedMessages.elkuldott.length === 0">
+              <p>Még nem küldött üzeneteket</p>
+              <v-table class="messageTable">
+                <thead>
+                  <tr>
+                    <th class="text-center" style="width: 15vw;" @click="sortListBy('date')">Dátum</th>
+                    <th class="text-center" style="width: 15vw;" @click="sortListBy('message')">Üzenet</th>
+                    <th class="text-center" style="width: 15vw;">Interakció</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </v-table>
+            </div>
+            <div v-else>
+              <v-table fixed-header class="messageTable">
+                <thead>
+                  <tr>
+                    <th class="text-center" style="width: 15vw;" @click="sortListBy('date')">Dátum</th>
+                    <th class="text-center" style="width: 15vw;" @click="sortListBy('message')">Üzenet</th>
+                    <th class="text-center" style="width: 15vw;">Interakció</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="uzenet in sortedElkuldott" :key="uzenet.id">
+                    <td style="width: 15vw;">{{ formatDate(uzenet.date) }}</td>
+                    <td id="szoveg" style="width: 15vw;">{{ uzenet.message }}</td>
+                    <td style="width: 15vw;">
+                      <v-btn color="primary" @click="openDialog(uzenet)">Megtekintés</v-btn>
+                    </td>
+                  </tr>
+                </tbody>
+              </v-table>
+
+              <!-- Popup Modal for outgoing messages -->
+              <v-dialog v-model="dialog" max-width="50vw">
+                <v-card max-width="50vw">
+                  <v-card-title>Üzenet részletei</v-card-title>
+                  <v-card-text>
+                    <p><strong>Dátum:</strong> {{ formatDate(selectedMessage?.date) }}</p>
+                    <p><strong>Címzettek:</strong> {{ formatReceivers(selectedMessage?.receivers) }}</p>
+                    <p><strong>Üzenet:</strong> {{ selectedMessage?.message }}</p>
+                  </v-card-text>
+                  <v-card-actions>
+                    <v-btn color="primary" @click="dialog = false">Bezárás</v-btn>
+                  </v-card-actions>
+                </v-card>
+              </v-dialog>
+            </div>
+          </div>
+          
+          <!-- All Messages (Admin only) -->
+          <div v-else-if="messageView==='osszes'">
+            <div v-if="sortedOsszes.length === 0">
+              <p>Nincsenek üzenetek</p>
+              <v-table fixed-header class="messageTable">
+                <thead>
+                  <tr>
+                    <th class="text-center" style="width: 15vw;" @click="sortListBy('sender')">Feladó</th>
+                    <th class="text-center" style="width: 15vw;" @click="sortListBy('date')">Dátum</th>
+                    <th class="text-center" style="width: 15vw;" @click="sortListBy('message')">Üzenet</th>
+                    <th class="text-center" style="width: 15vw;">Interakció</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </v-table>
+            </div>
+            <div v-else>
+              <v-table fixed-header class="messageTable">
+                <thead>
+                  <tr>
+                    <th class="text-center" style="width: 15vw;" @click="sortListBy('sender')">Feladó</th>
+                    <th class="text-center" style="width: 15vw;" @click="sortListBy('date')">Dátum</th>
+                    <th class="text-center" style="width: 15vw;" @click="sortListBy('message')">Üzenet</th>
+                    <th class="text-center" style="width: 15vw;">Interakció</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="uzenet in sortedOsszes" :key="uzenet.id">
+                    <td style="width: 15vw;">
+                      {{ uzenet.sender ? uzenet.sender.username : (uzenet.senderUserName ? uzenet.senderUserName.username : 'Én') }}
+                    </td>
+                    <td style="width: 15vw;">{{ formatDate(uzenet.date) }}</td>
+                    <td id="szoveg" style="width: 15vw;">{{ uzenet.message }}</td>
+                    <td style="width: 15vw;">
+                      <v-btn color="primary" @click="openDialog(uzenet)">Megtekintés</v-btn>
+                      <v-btn color="error" @click="openDeleteDialog(uzenet)">Törlés</v-btn>
+                    </td>
+                  </tr>
+                </tbody>
+              </v-table>
+
+              <!-- Popup Modal for all messages -->
+              <v-dialog v-model="dialog" max-width="50vw">
+                <v-card max-width="50vw">
+                  <v-card-title>Üzenet részletei</v-card-title>
+                  <v-card-text>
+                    <p>
+                      <strong>Feladó:</strong>
+                      {{ selectedMessage?.sender ? selectedMessage.sender.username : (selectedMessage?.senderUserName ? selectedMessage.senderUserName.username : 'Én') }}
+                    </p>
+                    <p><strong>Címzettek:</strong> {{ formatReceivers(selectedMessage?.receivers) }}</p>
+                    <p><strong>Dátum:</strong> {{ formatDate(selectedMessage?.date) }}</p>
+                    <p><strong>Üzenet:</strong> {{ selectedMessage?.message }}</p>
+                  </v-card-text>
+                  <v-card-actions>
+                    <v-btn color="primary" @click="dialog = false">Bezárás</v-btn>
+                  </v-card-actions>
+                </v-card>
+              </v-dialog>
+            </div>
+          </div>
+        </v-card-text>
+        
+      </v-card>
+
+
+        <!-- Delete Confirmation Popup -->
+      <v-dialog v-model="deleteDialog" max-width="50vw">
+        <v-card max-width="50vw">
+          <v-card-title>Törlés megerősítése</v-card-title>
+          <v-card-text>
+            <p>Biztosan törli az üzenetet?</p>
+          </v-card-text>
+          <v-card-actions>
+            <v-btn color="red" @click="confirmDelete">Törlés</v-btn>
+            <v-btn @click="deleteDialog = false">Mégsem</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+    </div>
+    
     
     <RouterView></RouterView>
     
-    <!-- Delete Confirmation Popup -->
-    <v-dialog v-model="deleteDialog" max-width="50vw">
-      <v-card max-width="50vw">
-        <v-card-title>Törlés megerősítése</v-card-title>
-        <v-card-text>
-          <p>Biztosan törli az üzenetet?</p>
-        </v-card-text>
-        <v-card-actions>
-          <v-btn color="red" @click="confirmDelete">Törlés</v-btn>
-          <v-btn @click="deleteDialog = false">Mégsem</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
+    
     
   </main>
 </template>
@@ -397,7 +623,7 @@ onUnmounted(() => {
     width: 95vw !important;
   }
   .switchBtn {
-    width: 50vw !important;
+    width: 30vw !important;
     height: 20vw !important;
   }
   .navigationdrawer {

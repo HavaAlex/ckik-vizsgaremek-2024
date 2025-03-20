@@ -180,6 +180,12 @@ class AssignmentRepository {
             }
         });
     }
+
+
+    async getAllCompletedAssignments() {
+        return await this.CompletedAssignment.findAll();
+    }
+    
 }
 
 module.exports = new AssignmentRepository(db);

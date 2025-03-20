@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref, watch, computed } from 'vue'
 import { usegetGroups, usegetGroupAsignments, getGroupAsignments } from '@/api/admin/adminQuery'
-// Import the composables for file fetching from the teacher API.
 import { usegetAssignmentFiles, usegetCompletedAssignmentFiles } from '@/api/hazik/hazikQuery'
 
 // Destructure the mutate functions from the composables
@@ -21,7 +20,6 @@ const groupAssignments = ref([])
 watch(selectedGroupForFetch, async (newGroupId) => {
   if (newGroupId !== null) {
     console.log("KIVÁLASZTVA:  ", newGroupId)
-    // Call the query function with the selected group ID.
     const result = await getGroupAsignments(newGroupId)
     groupAssignments.value = result
   }
@@ -37,19 +35,15 @@ const answerFiles = ref<Record<number, any[]>>({})
 const answerFilesIDs = ref<any[]>([])
 
 const openAssignmentDetails = async (item: any) => {
-  // Set the selected assignment and open the dialog
   selectedAssignmentForDetails.value = item
   assignmentDetailsDialog.value = true
 
-  // Clear any previous file data
   assignmentFiles.value = []
   answerFiles.value = {}
   answerFilesIDs.value = []
 
-  // Fetch the assignment files only when the dialog is opened
   await fetchAssignmentFiles(item.assignment.ID)
 
-  // If there are answers, gather their IDs and fetch their files
   if (item.answers && item.answers.length) {
     item.answers.forEach((answer: any) => {
       const answerId = answer.id || answer.ID
@@ -78,7 +72,6 @@ const fetchAnswerFiles = async (ids: any[]) => {
     onSuccess: (response: any) => {
       const filesArray = response.data || response
       const filesByAnswer: Record<number, any[]> = {}
-      // Map each answer ID to its corresponding file array from the response.
       ids.forEach((id, index) => {
         filesByAnswer[id] = filesArray[index]
       })
@@ -98,17 +91,14 @@ const openDeleteAssignment = (item: any) => {
 }
 
 const deleteThisAssignment = async () => {
-  // Add your delete assignment API call here. For example:
-  // await deleteAssignment(assignmentToDelete.value.assignment.ID, { onSuccess: () => { ... } })
   console.log("Deleting assignment:", assignmentToDelete.value.assignment.ID)
-  // Remove the assignment from groupAssignments list as a visual update.
   groupAssignments.value = groupAssignments.value.filter(
     (item: any) => item.assignment.ID !== assignmentToDelete.value.assignment.ID
   )
   deleteAssignmentDialog.value = false
 }
 
-// Download file function (same as before)
+// Download file function
 const downloadFile = (file: any) => {
   const byteArray = new Uint8Array(file.buffer.data)
   const blob = new Blob([byteArray], { type: file.mimetype || 'application/octet-stream' })
@@ -126,26 +116,81 @@ function formatDate(dateString: Date | string) {
   const dateObj = new Date(dateString);
   return dateObj.toISOString().slice(0, 19).replace("T", " ");
 }
+
+// -----------------------------
+// Helper function for answer status styling
+// -----------------------------
+const getStatusStyle = (status: string) => {
+  if (status === "Nincs leadva") {
+    return { backgroundColor: "yellow", color: "black", padding: "4px", borderRadius: "4px", display: "inline-block", marginTop: "4px" };
+  } else if (status === "Leadva") {
+    return { backgroundColor: "green", color: "white", padding: "4px", borderRadius: "4px", display: "inline-block", marginTop: "4px" };
+  } else if (status === "Határidő lejárt") {
+    return { backgroundColor: "red", color: "white", padding: "4px", borderRadius: "4px", display: "inline-block", marginTop: "4px" };
+  }
+  return {};
+}
+
+// -----------------------------
+// Orientation and card height handling
+// -----------------------------
+const isPortrait = ref(window.matchMedia("(orientation: portrait)").matches)
+// Set the initial state: open the drawer if not portrait
+const drawer = ref(isPortrait.value ? false : true)
+
+if (window.matchMedia) {
+  const mediaQuery = window.matchMedia("(orientation: portrait)")
+  mediaQuery.addEventListener("change", (e) => {
+    isPortrait.value = e.matches
+  })
+}
+
+// Watch for orientation changes to update the drawer state
+watch(isPortrait, (newValue) => {
+  // Open the drawer in landscape mode, close in portrait mode
+  drawer.value = newValue ? false : true
+})
+
+const cardHeight = computed(() => isPortrait.value ? '80vw' : '40vw')
 </script>
 
 <template>
   <main>
-    <v-navigation-drawer class="bg-secondary">
-      <!-- Bind the radio group with v-model to the selectedGroupForFetch -->
-      <v-radio-group v-model="selectedGroupForFetch" label="Címzett osztály">
-        <v-radio
-          v-for="elem in Groups"
-          :key="elem.group.ID"
-          :label="elem.group.name"
-          :value="elem.group.ID"
-        ></v-radio>
-      </v-radio-group>
-    </v-navigation-drawer>
+    <!-- Portrait mode: Toggle button for the sidebar -->
     <v-container>
-      <v-card style="height: 40vw;">
+      <v-row>
+        <v-col cols="12" v-if="isPortrait">
+          <v-btn color="primary" @click="drawer = true">
+            Menü megnyitása
+          </v-btn>
+        </v-col>
+      </v-row>
+    </v-container>
+
+    <!-- Navigation drawer with radio buttons positioned lower -->
+    <v-navigation-drawer
+      v-model="drawer"
+      class="bg-secondary"
+      :temporary="isPortrait"
+      app
+    >
+      <div style="margin-top: 80px;">
+        <v-radio-group v-model="selectedGroupForFetch" label="Címzett osztály">
+          <v-radio
+            v-for="elem in Groups"
+            :key="elem.group.ID"
+            :label="elem.group.name"
+            :value="elem.group.ID"
+          ></v-radio>
+        </v-radio-group>
+      </div>
+    </v-navigation-drawer>
+
+    <v-container>
+      <v-card :style="{ height: cardHeight }">
         <v-card-title>Kiosztott házi feladatok</v-card-title>
-        <v-card-text>
-          <v-table style="height: 35vw;">
+        <v-card-text style="max-height: 80vh; overflow-y: auto;">
+          <v-table>
             <thead>
               <tr>
                 <th>Feladó tanár</th>
@@ -155,20 +200,18 @@ function formatDate(dateString: Date | string) {
                 <th>Interakció</th>
               </tr>
             </thead>
-            <!-- Render assignments if available -->
             <tbody v-if="groupAssignments && (groupAssignments.length || groupAssignments.value.length)">
               <tr v-for="item in groupAssignments" :key="item.assignment.ID">
                 <td>{{ item.assignment.senderUserName }}</td>
-                <td>{{ item.assignment.uploadDate }}</td>
-                <td>{{ item.assignment.desc }}</td>
-                <td>{{ item.assignment.deadline }}</td>
+                <td>{{ formatDate(item.assignment.uploadDate) }}</td>
+                <td id="szoveg" style="width: 15vw;">{{ item.assignment.desc }}</td>
+                <td>{{ formatDate(item.assignment.deadline) }}</td>
                 <td>
                   <v-btn color="primary" @click="openAssignmentDetails(item)">Részletek</v-btn>
                   <v-btn color="error" @click="openDeleteAssignment(item)">Törlés</v-btn>
                 </td>
               </tr>
             </tbody>
-            <!-- Fallback content if no assignments -->
             <tbody v-else>
               <tr>
                 <td colspan="5">Nincs megjeleníthető házi feladat</td>
@@ -176,10 +219,6 @@ function formatDate(dateString: Date | string) {
             </tbody>
           </v-table>
         </v-card-text>
-        <v-card-actions>
-          <v-btn @click="console.log(Groups)">GROUPS CUCCOK</v-btn>
-          <v-btn @click="console.log(groupAssignments)">DEBUG ASSIGNMENTS</v-btn>
-        </v-card-actions>
       </v-card>
     </v-container>
 
@@ -188,12 +227,10 @@ function formatDate(dateString: Date | string) {
       <v-card>
         <v-card-title>Feladat részletei</v-card-title>
         <v-card-text>
-          <!-- Assignment attributes -->
           <p><strong>Feladás dátuma:</strong> {{ formatDate(selectedAssignmentForDetails?.assignment.uploadDate) }}</p>
           <p><strong>Határidő:</strong> {{ formatDate(selectedAssignmentForDetails?.assignment.deadline) }}</p>
           <p><strong>Leírás:</strong> {{ selectedAssignmentForDetails?.assignment.desc }}</p>
 
-          <!-- Assignment files -->
           <div v-if="assignmentFiles.length">
             <p><strong>Fájlok:</strong></p>
             <v-list>
@@ -210,7 +247,6 @@ function formatDate(dateString: Date | string) {
             <p><strong>Fájlok:</strong> Nincsenek fájlok ehhez a feladathoz.</p>
           </div>
 
-          <!-- Answers -->
           <v-card-title style="margin-top: 20px;">Válaszok</v-card-title>
           <div v-if="selectedAssignmentForDetails?.answers && selectedAssignmentForDetails.answers.length">
             <v-list>
@@ -219,8 +255,12 @@ function formatDate(dateString: Date | string) {
                 :key="answer.ID">
                 <div>
                   <v-list-item-title><strong>{{ answer.senderUserName }}</strong></v-list-item-title>
-                  <v-list-item-subtitle>Válasz: {{ answer.textAnswer }}</v-list-item-subtitle>
-                  <!-- Files for this answer -->
+                  <div :style="getStatusStyle(answer.status)">
+                    <strong>Státusz:</strong> {{ answer.status }}
+                  </div>
+                  <p><strong>Válasz:</strong> {{ answer.textAnswer }}</p>
+                  <!-- New status line for each answer -->
+                  
                   <div v-if="answerFiles[answer.ID] && answerFiles[answer.ID].length">
                     <p><strong>Fájlok:</strong></p>
                     <v-list dense>
@@ -262,3 +302,14 @@ function formatDate(dateString: Date | string) {
     </v-dialog>
   </main>
 </template>
+
+<style lang="css">
+#szoveg {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 15vw;
+  display: inline-block;
+  text-align: center;
+}
+</style>
