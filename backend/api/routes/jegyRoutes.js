@@ -23,6 +23,43 @@ const tanarHandler = require("../middlewares/tanarHandler")
 // Make sure to protect all routes with your auth middleware
 router.use(userAuth.verifyToken);
 
+/**
+ * @swagger
+ * /:
+ *   get:
+ *     tags:
+ *       - Jegyek
+ *     description: Felhasználó jegyeinek lekérdezése
+ *     requestBody:
+ *       required: false
+ *       content:
+ *         application/x-www-form-urlencoded:
+ *           schema:
+ *             $ref: '#/components/schemas/Mark'
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Mark'
+ *     responses:
+ *       201:
+ *         description: Sikeres jegy lekérés
+ *         content:
+ *           application/json:
+ *              example:
+ *                  name: "Fehér Napsugár"
+ *                  password: "hashed password"
+ *                  age: 14
+ *                  updatedAt: "The last time of the user modified their data"
+ *                  createdAt: "The time of the user created"
+ *       400:
+ *         description: Hiba a jegy lekérése közben
+ *         content:
+ *           application/json:
+ *              example:
+ *                  status: "400"
+ *                  message: "The message of the error"
+ * 
+ */
+
 router.get("/", jegyController.getJegyek);
 
 router.use(tanarHandler.checkRole);

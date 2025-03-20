@@ -1,4 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
+
     const User = require("../models/user")(sequelize, DataTypes);
     const Admin = require("../models/admin")(sequelize, DataTypes);
     const Guardian = require("../models/guardian")(sequelize, DataTypes);
@@ -6,6 +7,34 @@ module.exports = (sequelize, DataTypes) => {
     const Teacher = require("../models/teacher")(sequelize, DataTypes);
     const Message = require("../models/message")(sequelize, DataTypes);
    
+    /**
+     * @swagger
+     * components:
+     *   schemas:
+     *     Mark:
+     *       type: object
+     *       required:
+     *         - teacherID
+     *         - studentID
+     *         - Value
+     *         - Multiplier
+     *         - subjectName
+     *         - date
+     *       properties:
+     *         teacherID:
+     *           type: integer
+     *           description: Jegyet adó tanár
+     *           example: 1
+     *         studentID:
+     *           type: integer
+     *           description: Jegyet kapó diák
+     *           example: 1
+     *         Value:
+     *           type: integer
+     *           description: Jegy értéke
+     *           example: 5
+     *       additionalProperties: true
+     */
     const Mark = require("../models/mark")(sequelize, DataTypes);
     const ClassDistruption = require("../models/classDisruption")(sequelize, DataTypes);
     const Group = require("../models/group")(sequelize, DataTypes);

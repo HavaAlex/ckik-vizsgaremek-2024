@@ -9,6 +9,26 @@ const corsOptions ={
     credentials:true,            //access-control-allow-credentials:true
     optionSuccessStatus:200
 }
+
+const swaggerUi = require('swagger-ui-express');
+
+const swaggerJsdoc = require('swagger-jsdoc');
+
+const options = 
+{ 
+  definition: 
+  {
+    openapi: '3.0.0',
+    info: {
+      title: 'Páholy API',
+      version: '1.0.0',
+    },
+  },
+  apis: ["./api/routes/*.js", "./api/models/index.js"],
+};
+
+const openapiSpecification = swaggerJsdoc(options);
+
 app.use(cors(corsOptions));
 
 const paholyRoutes = require("./api/routes/paholyRoutes");
@@ -38,6 +58,8 @@ const errorHandler = require("./api/middlewares/errorHandler");
 app.use(express.json());
 
 app.use(express.urlencoded({extended: true}));
+
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(openapiSpecification));
 
 app.use("/login",loginRoutes)
 
