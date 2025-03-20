@@ -93,15 +93,26 @@ onUpdated(()=>{
               <v-list-item class="appnavbarmenu">
                 <v-btn @click="push({name:role+'uzenetek'})" class="appnavbarmenu">Üzenetek</v-btn>
               </v-list-item>
+              <v-list-item>
+             
+              <v-btn  class="appnavbarmenu" @click="push({name:'UserManagementView'})" v-if="role=='admin' ">
+                        Felhasználók kezelése
+              </v-btn>
+              <v-btn  class="appnavbarmenu" @click="push({name:'GroupManagementView'})" v-if="role=='admin'">
+                        Csoportok kezelése
+              </v-btn>
+
+              </v-list-item>
+              
             </v-list>
           </v-menu>
-
-      
-
-          <!-- Right Side -->
-          <v-btn class="appnavbarbtn" @click="deleteUserStatusFromLocalStorage() ; push({name:'login'})">
-            Kilépés
+          
+          <v-btn class="appnavbarmenubtn" @click="cookieHandler.deleteCookie('alap') ; push({name:'login'})">
+                Kilépés
           </v-btn>
+              
+          <!-- Right Side -->
+          
         </v-container>
       </v-app-bar>
 

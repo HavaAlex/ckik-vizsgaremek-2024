@@ -8,6 +8,7 @@ const GuardianStudentRepository = require("../repositories/guardianStudentReposi
 const GuardianRepository = require("../repositories/guardianRepository")
 
 const UserService = require("../services/userService")
+const GroupService = require("../services/csoportService")
 
 const bcrypt = require("bcrypt");
 const userRepository = require("../repositories/userRepository");
@@ -207,6 +208,22 @@ class adminService {
             console.log("SZAAAAAR : ", usersExist)
             return -1 
         }
+
+        const userNotInGroup = await userService.checkIfUsersAlreadyInGroup(newGroup.StudentOMIDs)
+        console.log("vissza jótt és ez egy : ", userNotInGroup)
+        if(userNotInGroup){
+            return -2
+        }
+        console.log("///////////")
+        console.log(newGroup)
+        console.log("///////////")
+        const groupNameNotTaken = await GroupService.checkIfGroupNameIsNotTaken(newGroup.name)
+        if(!groupNameNotTaken){
+            return -3
+        }
+
+
+
         else if(usersExist)
         {
             console.log("PERSZE EZ JÓ ELVÉGRE : ", usersExist)

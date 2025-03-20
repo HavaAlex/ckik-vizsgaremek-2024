@@ -115,13 +115,12 @@ export const useaddMessage = () => {
         }
     )
 }
-
-const deleteMessage = async (ID: Number)=>{
+//Üzenet törlése (Kizárólag rendszergazdák számára) (kitörli a kapcsolótábla adatait is)
+const deleteMessage = async (ID: Number)=>{ 
     const {getCookie} = useCookieHandler()
     const config = {
         headers: { Authorization: `Bearer ${getCookie("alap")}` }
     }; 
-    console.log("ŐŐŐŐŐŐŐŐ ", ID)
     const response = await axiosClient.delete(`http://localhost:3000/admin/deleteMessage/${ID}`,config) // ${document.cookie}
     return response.data
 }

@@ -165,7 +165,7 @@ const deleteGroupID = ref<number>(-100)
   </v-dialog>
 
   <!-- Group Details Dialog -->
-  <v-dialog v-model="groupDialog" max-width="800">
+  <v-dialog v-model="groupDialog" style="width: 80vw;">
     <v-card v-if="selectedGroup">
       <v-card-title>{{ selectedGroup.name }}</v-card-title>
       <v-card-text>
@@ -187,7 +187,7 @@ const deleteGroupID = ref<number>(-100)
               <td>{{ student.email }}</td>
               <td>{{ student.phone }}</td>
               <td>{{ student.address }}</td>
-              <td><v-btn @click="deleteStudentGroupID = student.ID, deleteStudentGroupDialog = true">Eltávolás a csoportból</v-btn></td>
+              <td><v-btn color="error" @click="deleteStudentGroupID = student.ID, deleteStudentGroupDialog = true">Eltávolás a csoportból</v-btn></td>
             </tr>
           </tbody>
         </v-table>
@@ -208,7 +208,7 @@ const deleteGroupID = ref<number>(-100)
         <v-spacer></v-spacer>
         <v-btn @click="groupDialog = false">Bezárás</v-btn>
         <v-btn color="primary" @click="sendEditedGroup">Hozzáadás</v-btn>
-        <v-btn @click="deleteGroupID= selectedGroup.id,deleteGroupDialog = true">Csoport törlése</v-btn>
+        <v-btn color="error" @click="deleteGroupID= selectedGroup.id,deleteGroupDialog = true">Csoport törlése</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>

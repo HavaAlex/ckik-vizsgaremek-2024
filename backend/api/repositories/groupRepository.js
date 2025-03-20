@@ -50,6 +50,9 @@ class GroupRepository
         })
         return "Diák eltávolítva a csoportból"
     }
+
+
+      
 }
 
 module.exports = new GroupRepository(db);

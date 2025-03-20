@@ -62,10 +62,10 @@ class UserRepository
     async getRole(userID,userType)
     {
         if(userType == "diak"){
-            return await studentRepository.getRoleByUserID(userID)
+            return await studentRepository.getStudentByUserID(userID)
         }
         else if (userType == "tanar"){
-            return await teacherRepository.getRoleByUserID(userID)
+            return await teacherRepository.getTeacherByUserID(userID)
         }
         else if (userType == "admin"){
             return await adminRepository.getRoleByUserID(userID)
