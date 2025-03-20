@@ -9,7 +9,7 @@ exports.getUzenetek = async (req, res, next) =>
 exports.getPotentialReceivers = async (req, res, next) => {
     
     const PotentialReceivers = await uzenetService.getPotentialReceivers(req.decoded.ID)
-    const PotentialReceiversFormed = [];
+    /*const PotentialReceiversFormed = [];
     for (let index = 0; index < PotentialReceivers.singleUsers.length; index++) {
         let newReciever = {
             id : PotentialReceivers.singleUsers[index].ID,
@@ -19,13 +19,8 @@ exports.getPotentialReceivers = async (req, res, next) => {
         PotentialReceiversFormed.push(newReciever)
     }
 
-    PotentialReceivers.singleUsers = PotentialReceiversFormed 
+    PotentialReceivers.singleUsers = PotentialReceiversFormed */
     res.status(201).json(PotentialReceivers);
-}
-
-exports.modifyUzenet = async (req, res, next) =>
-{
-    
 }
 
 exports.getAllMessages = async (req,res,next) => {
@@ -35,8 +30,6 @@ exports.getAllMessages = async (req,res,next) => {
 
 exports.deleteMessage = async (req,res,next) => {
     const ID = JSON.parse(req.params.ID);
-
-    console.log("EZ A Z ID : ", ID)
     const response = await uzenetService.deleteMessage(ID);
     res.status(201).json(response);
 }
@@ -57,8 +50,6 @@ exports.createUzenet = async (req, res, next) =>
             res.status(500).send("Szöveg nélkül nem lehet üzenetet küldeni!")
             return
         } 
-        console.log("EGYIK :", receiverGrouplist)
-        console.log("MASKI : ", receiverlist)
         if(receiverlist.length< 1 && receiverGrouplist.length<1){
             res.status(500).send("Címzettek nélkül nem lehet üzenetet küldeni!")
             return
@@ -66,7 +57,7 @@ exports.createUzenet = async (req, res, next) =>
         cleanedreceiverlist = [];
         
         for (let l = 0; l < receiverlist.length; l++) { //ahogy átjön ez a lista, benne van még a receiverek role-ja és name-je. Csak az ID kell ezért
-            cleanedreceiverlist.push(receiverlist[l].id)//új listát csinálok nekik
+            cleanedreceiverlist.push(receiverlist[l].ID)//új listát csinálok nekik
         }
         if(receiverGrouplist != 'undefined'){
             for (let l = 0; l < receiverGrouplist.length; l++) {
@@ -77,8 +68,6 @@ exports.createUzenet = async (req, res, next) =>
 
             }
         }
-
-
         let cucc = await uzenetService.createUzenet(newUzenet,cleanedreceiverlist);
 
         

@@ -4,7 +4,7 @@
   "description": "paholy_api",
   "main": "index.js",
   "scripts": {
-    "test": "jest",
+    "test": "jest --coverage",
     "restart": "nodemon server.js"
   },
   "author": "",

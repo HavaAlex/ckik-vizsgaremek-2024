@@ -12,10 +12,11 @@ const { mutate: uploadCompletedAssignmentFiles } = useuploadCompletedAssignmentF
 const { mutate: getCompletedAssignmentFiles } = usegetCompletedAssignmentFiles();
 const { mutate: deleteAnswerFile } = usedeleteAnswerFile();
 
-function formatDate(dateString: Date | string) {
+function formatDate(dateString: Date | string | null) {
   if (!dateString) return "";
-  const dateObj = new Date(dateString);
-  return dateObj.toISOString().slice(0, 19).replace("T", " ");
+  const date = new Date(dateString);
+  date.setHours(date.getHours() + 1); // Add one hour
+  return date.toISOString().slice(0, 19).replace("T", " ");
 }
 
 // For viewing assignment details

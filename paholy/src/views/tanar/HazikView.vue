@@ -110,10 +110,11 @@ const resetForm = () => {
   dialog.value = false;
 };
 
-function formatDate(dateString: Date | string) {
+function formatDate(dateString: Date | string | null) {
   if (!dateString) return "";
-  const dateObj = new Date(dateString);
-  return dateObj.toISOString().slice(0, 19).replace("T", " ");
+  const date = new Date(dateString);
+  date.setHours(date.getHours() + 1); // Add one hour
+  return date.toISOString().slice(0, 19).replace("T", " ");
 }
 
 // -------------------------
@@ -246,8 +247,8 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <main style="height: 80vh;">
-    <v-container style="height: 80vh;">
+  <main >
+    <v-container >
       <v-card>
         <v-card-title>
           <h1 style="padding: 10px;" class="bg-title"> Feladatok</h1>

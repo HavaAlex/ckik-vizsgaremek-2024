@@ -89,7 +89,7 @@ exports.modifycompletedassignment = async (req,res,next) => {
     studentID:studentID,
     textAnswer:textAnswer
   }
-  const modositotthazik = await hazikService.modifycompletedassignment(req.decoded.ID,completedassignment)
+  const modositotthazik = await hazikService.modifycompletedassignment(completedassignment)
   res.status(201).json(modositotthazik)
 }
 

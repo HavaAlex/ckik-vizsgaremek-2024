@@ -15,7 +15,7 @@ const searchText = ref('');
 const filteredSingleUsers = computed(() => {
   if (!data.value || !data.value.singleUsers) return [];
   return data.value.singleUsers.filter(user =>
-    user.name.toLowerCase().startsWith(searchText.value.toLowerCase())
+    user.username.toLowerCase().startsWith(searchText.value.toLowerCase())
   );
 });
 
@@ -197,7 +197,7 @@ onUnmounted(() => {
                   @click="MessageDataRef.receiverlist.splice(index, 1)"
                   style="max-height: 10vw;"
                 >
-                  {{ cuccli.name + " (" + cuccli.role + ") (kattintson az eltávolításhoz)" }}
+                  {{ cuccli.username + " (" + cuccli.role + ") (kattintson az eltávolításhoz)" }}
                 </v-list-item>
 
                 <v-list-item 
@@ -231,7 +231,7 @@ onUnmounted(() => {
                     :key="index" 
                     @click="MessageDataRef.receiverlist.push(elem)"
                   >
-                    {{ elem.name + " (" + elem.role + ")" }}
+                    {{ elem.username + " (" + elem.role + ")" }}
                   </v-list-item>
 
                   <!-- Filtered list of groups -->
@@ -243,12 +243,12 @@ onUnmounted(() => {
                     {{ elem.name + " (csoport)" }}
                   </v-list-item>
 
-                  <!-- Message when no matches are found -->
+                  <!-- Message when no matches are found 
                   <v-list-item 
                     v-if="filteredSingleUsers.length === 0 && filteredGroups.length === 0"
                   >
                     Nincsenek ilyen felhasználók/csoportok
-                  </v-list-item>
+                  </v-list-item>-->
                 </v-list>
               </v-menu>
 

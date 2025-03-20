@@ -12,15 +12,11 @@ import { useErrorHandler } from "@/stores/errorHandler";
 
 
 const getUzenetek = async (): Promise<Message> => {
-    //console.log("LEFUTOK: getUzenetek")
     const {getCookie} = useCookieHandler()
     const config = {
         headers: { Authorization: `Bearer ${getCookie("alap")}` }
     };
-    //console.log(`localhost:3000/uzenetek/${document.cookie}`)
     const response = await axiosClient.get(`http://localhost:3000/uzenet/`,config) // ${document.cookie}
-    console.log(response)
-    console.log(response.data)  
     return response.data
 }
 export const useGetUzenetek = () => {
@@ -40,13 +36,14 @@ export const useGetUzenetek = () => {
 }
  
 const getAllUzenetek = async (): Promise<Message> => {
-    //console.log("LEFUTOK: getUzenetek")
+
     const {getCookie} = useCookieHandler()
     const config = {
         headers: { Authorization: `Bearer ${getCookie("alap")}` }
     };
-    //console.log(`localhost:3000/uzenetek/${document.cookie}`)
+
     const response = await axiosClient.get(`http://localhost:3000/uzenet/all`,config) // ${document.cookie}
+    console.log("ECERY: ", response)
     return response.data
 }
 export const usegetAllUzenetek = () => {

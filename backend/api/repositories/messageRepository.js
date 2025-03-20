@@ -29,10 +29,11 @@ class MessageRepository
         return newMessage;
     }
     async getPotentialReceivers(userID){
-        return await this.User.findAll({
+        return await this.User.findAll({ 
             where: {
                 ID:{[Op.ne]:userID} 
             },
+            attributes: ['ID','username','role']
         });
     }
 

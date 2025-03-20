@@ -4,7 +4,7 @@ const message = require("../models/message");
 
 class MessageReceiverRepository
 {
-    constructor(db)
+    constructor(db) 
     {
         this.MessageReceiver = db.messagereceiver;
     }

@@ -34,7 +34,6 @@ const deleteDialog = ref(false);
 const messageToDelete = ref<any | null>(null);
 
 const openDeleteDialog = (message: any) => {
-  console.log("ÉÉÉÉÉÉÉÉ ", message)
   messageToDelete.value = message;
   deleteDialog.value = true;
 };
@@ -144,8 +143,10 @@ const sortedOsszes = computed(() => {
 function formatDate(dateString: Date | string | null) {
   if (!dateString) return "";
   const date = new Date(dateString);
+  date.setHours(date.getHours() + 1); // Add one hour
   return date.toISOString().slice(0, 19).replace("T", " ");
 }
+
 
 function formatReceivers(receivers: any) {
   if (!receivers || !Array.isArray(receivers)) return "";

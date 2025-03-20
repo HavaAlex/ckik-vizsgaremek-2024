@@ -2,14 +2,9 @@ const assignmentRepository = require("../repositories/assignmentRepository");
 const teacherRepository = require("../repositories/teacherRepository")
 const studentRepository = require("../repositories/studentRepository")
 class HazikService {
-    // ---------------------------------
-    //             Groups
-    // ---------------------------------
-    async getGroups() {
-        // Raw group data from the repo
-        const groups = await assignmentRepository.getAllGroupsWithStudents();
 
-        // Service layer transforms data if needed
+    async getGroups() {
+        const groups = await assignmentRepository.getAllGroupsWithStudents();
         const groupList = groups.map(group => ({
             ID: group.ID,
             name: group.name,
@@ -18,23 +13,20 @@ class HazikService {
         return groupList;
     }
 
-    // ---------------------------------
-    //         Create Assignment
-    // ---------------------------------
     async createAssignment(newHazi, groups) {
-        // 1) Convert userID -> teacherID
+
         const teacher = await teacherRepository.getTeacherByUserID(newHazi.teacherID);
         newHazi.teacherID = teacher.ID;
 
-        // 2) Create the assignment
+
         const newAssignment = await assignmentRepository.createAssignment(newHazi);
 
-        // 3) For each group -> for each student -> create a CompletedAssignment record
+
         const allStudentIDs = [];
         for (const grp of groups) {
             allStudentIDs.push(...grp.studentList);
         }
-        const distinctIDs = [...new Set(allStudentIDs)]; // remove duplicates
+        const distinctIDs = [...new Set(allStudentIDs)];
 
         for (const studentID of distinctIDs) {
             const completedAssignmentData = {
@@ -49,10 +41,6 @@ class HazikService {
 
         return newAssignment;
     }
-
-    // ---------------------------------
-    //       Upload Assignment Files
-    // ---------------------------------
     async uploadAssignmentFiles(files, assignmentId) {
         const uploadedFiles = await assignmentRepository.uploadAssignmentFiles(files, assignmentId);
         return {
@@ -69,29 +57,19 @@ class HazikService {
         };
     }
 
-    // ---------------------------------
-    //        Get Sent Assignments
-    // ---------------------------------
+
     async getsentAssignments(userID) {
         await this.checkAndUpdateOverdueAssignments();
-        // 1) Find the teacher by userID
         const teacher = await teacherRepository.getTeacherByUserID(userID);
-        
-
-        // 2) Get all assignments from that teacher
         const assignments = await assignmentRepository.getAssignmentsByTeacherID(teacher.ID);
-
-        // 3) For each assignment, get all completed answers
         const result = [];
         for (const assignment of assignments) {
             const answers = await assignmentRepository.getCompletedAssignmentsByAssignmentID(assignment.ID);
-
-            // 4) For each answer, find the student's name
             for (const ans of answers) {
                 console.log("VANYASZ: ", ans)
                 const student = await studentRepository.getStudentByID(ans.studentID);
                 console.log("STUDNET: ", student)
-                ans.dataValues.senderUserName = student.name; // attach it
+                ans.dataValues.senderUserName = student.name;
             }
             console.log("őőő: ", teacher)
             assignment.dataValues.senderUserName = teacher.name
@@ -104,22 +82,17 @@ class HazikService {
         return result;
     }
 
-    // ---------------------------------
-    //      Get Received Assignments
-    // ---------------------------------
+
     async getReceivedAssignments(userID) {
         await this.checkAndUpdateOverdueAssignments();
-        // 1) Find the student row by userID
-        const student  = await studentRepository.getStudentByUserID(userID);
-        
 
-        // 2) Get completed assignments by that student
+        const student  = await studentRepository.getStudentByUserID(userID);
+
         const completedAssignments = await assignmentRepository.getCompletedAssignmentsByStudentID(student.ID);
 
-        // 3) Build an array of (valasz, feladat)
         const responseArray = [];
         for (const c of completedAssignments) {
-            // get the assignment itself
+
             const assignment = await assignmentRepository.getAssignmentByID(c.assignmentID);
             
 
@@ -129,7 +102,7 @@ class HazikService {
             });
         }
 
-        // 4) For each assignment, find teacher name
+
         for (const item of responseArray) {
             const teacher = await teacherRepository.getTeacherByID(item.feladat.teacherID);
             item.feladat.dataValues.senderUserName = teacher.name;
@@ -153,7 +126,7 @@ class HazikService {
             const completedAssignments = await assignmentRepository.getCompletedAssignmentsByStudentID(sid);
             console.log("Completed assignments: ", completedAssignments);
             
-            // Flatten array immediately
+
             allCompletedAssignments.push(...completedAssignments);
         }
     
@@ -162,10 +135,10 @@ class HazikService {
             return [];
         }
     
-        // Convert completed assignments to plain objects
+
         const plainAssignments = allCompletedAssignments.map(c => c.get({ plain: true }));
     
-        // Get distinct assignment IDs
+
         const assignmentIDs = [...new Set(plainAssignments.map(c => c.assignmentID))];
     
         console.log("DISTINCT ASSIGNMENT IDS: ", assignmentIDs);
@@ -178,7 +151,7 @@ class HazikService {
     
         console.log("Assignments: ", assignments);
     
-        // Add teacher names to assignments
+
         for (const item of assignments) {
             const teacher = await teacherRepository.getTeacherByID(item.dataValues.teacherID);
             if (teacher) {
@@ -193,7 +166,7 @@ class HazikService {
                 ca => ca.dataValues.assignmentID === assignment.dataValues.ID
             );
     
-            // Add student names to answers
+
             for (const ans of relevantAnswers) {
                 const student = await studentRepository.getStudentByID(ans.dataValues.studentID);
                 if (student) {
@@ -202,8 +175,8 @@ class HazikService {
             }
     
             result.push({
-                assignment: assignment.get({ plain: true }), // Convert to plain object
-                answers: relevantAnswers.map(a => a.get({ plain: true })) // Convert answers too
+                assignment: assignment.get({ plain: true }), 
+                answers: relevantAnswers.map(a => a.get({ plain: true }))
             });
         }
     
@@ -216,11 +189,9 @@ class HazikService {
 
 
 
-    // ---------------------------------
-    //   Get Teacher Assignment Files
-    // ---------------------------------
+
     async getTeacherAssignmentFiles(userID) {
-        // Example logic: gather all assignments by this teacher, then gather all files
+
         const teacherArr = await assignmentRepository.getTeacherByUserID(userID);
         const teacherID = teacherArr[0].ID;
 
@@ -234,11 +205,9 @@ class HazikService {
         return allFiles;
     }
 
-    // ---------------------------------
-    //  Modify Completed Assignment
-    // ---------------------------------
-    async modifycompletedassignment(userID, completedassignment) {
-        // userID can be used for authorization checks if needed
+
+    async modifycompletedassignment(completedassignment) {
+
         const updated = await assignmentRepository.updateCompletedAssignment(
             completedassignment.ID,
             {

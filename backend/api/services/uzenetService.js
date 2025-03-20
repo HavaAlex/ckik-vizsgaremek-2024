@@ -13,14 +13,13 @@ class UzenetService
         return osszes
     }
     async getPotentialReceivers(ID){ //kiszedi az összes elérhető felhasználót ( ez jelenleg mindenki, később változhat)
-        
-         
         const overallReceivers = {
             singleUsers : [],
             groups : []
         }
-        overallReceivers.singleUsers = await messageRepository.getPotentialReceivers(ID)
-        overallReceivers.groups = await messageRepository.getPotentialGroups()
+        overallReceivers.singleUsers = await messageRepository.getPotentialReceivers(ID) // tomb, benne lévő elemek attribute-jai: ID, username, password, role
+        overallReceivers.groups = await messageRepository.getPotentialGroups() // tömbb. benne vannak elemek. Azoknak van ID-ja, name-ja és studentList-je
+        console.log("GROPSSSS: ", overallReceivers.singleUsers[0])
         return overallReceivers
     }
     async createUzenet(NewUzenet,newMessageReceivers) {
