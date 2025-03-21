@@ -24,7 +24,17 @@ class UzenetService
     }
     async createUzenet(NewUzenet,newMessageReceivers) {
 
-        return await messageRepository.createMessage(NewUzenet,newMessageReceivers)
+        const result =  await messageRepository.createMessage(NewUzenet,newMessageReceivers)
+           
+        const distinctmessageReceivers = new Set(newMessageReceivers) 
+        for (const element of distinctmessageReceivers) {
+            const newMessageReceiver = {
+                MessageID: result.ID,
+                UserID: element,
+            }
+            await messageReceiverRepository.createMessageReciever(newMessageReceiver)
+        }   
+        return result
     }
 
     async getAllMessages(){

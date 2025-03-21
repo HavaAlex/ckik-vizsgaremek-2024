@@ -35,7 +35,7 @@ router.post("/addStudentsToGroup",adminController.addStudentsToGroup)//Felhaszn�
 router.delete("/deleteStudentGroup/:ID",adminController.deleteStudentGroup)//Diák eltávolítása a csoportból (nem törli ki a felhasználót)
 router.delete("/deleteGroup/:ID",adminController.deleteGroup)//Csoport törlése (Nem törli ki a felhasználókat, de a kapcsolótábla adatait igen)
 router.get("/getGroupAsignments/:GroupID",adminController.getGroupAsignments)//csoporthoz tartozó házifeladatok lekérése
-
+router.get("/allMessage",uzenetController.getAllMessages);
 router.delete("/deleteMessage/:ID",uzenetController.deleteMessage)
 
 module.exports = router;

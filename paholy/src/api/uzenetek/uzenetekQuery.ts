@@ -17,6 +17,7 @@ const getUzenetek = async (): Promise<Message> => {
         headers: { Authorization: `Bearer ${getCookie("alap")}` }
     };
     const response = await axiosClient.get(`http://localhost:3000/uzenet/`,config) // ${document.cookie}
+    console.log("LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL, ", response)
     return response.data
 }
 export const useGetUzenetek = () => {
@@ -42,7 +43,7 @@ const getAllUzenetek = async (): Promise<Message> => {
         headers: { Authorization: `Bearer ${getCookie("alap")}` }
     };
 
-    const response = await axiosClient.get(`http://localhost:3000/uzenet/all`,config) // ${document.cookie}
+    const response = await axiosClient.get(`http://localhost:3000/admin/allMessage`,config) // ${document.cookie}
     console.log("ECERY: ", response)
     return response.data
 }
@@ -128,6 +129,7 @@ export const usedeleteMessage = () => {
             mutationFn: deleteMessage,
             onSuccess(data){
                 queryClient.refetchQueries({queryKey:[QUERY_KEYS.getAllUzenetek]})
+                queryClient.refetchQueries({queryKey:[QUERY_KEYS.getUzenetek]})
             },
             onError(error){
                 const {setError} = useErrorHandler()

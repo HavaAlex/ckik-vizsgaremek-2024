@@ -18,14 +18,6 @@ class MessageRepository
     {
         const newMessage = await this.Messages.build(message);
         await newMessage.save();
-        const distinctmessageReceivers = new Set(messageReceivers) 
-        for (const element of distinctmessageReceivers) {
-            const newMessageReceiver = {
-                MessageID: newMessage.ID,
-                UserID: element,
-            }
-            await messageReceiverRepository.createMessageReciever(newMessageReceiver)
-        }       
         return newMessage;
     }
     async getPotentialReceivers(userID){
@@ -77,20 +69,7 @@ class MessageRepository
       
         return messages;
       }
-      
-      
-    async getMessageByID(messageID)
-    {
-        return await this.Messages.findAll
-        (
-            {
-                where:
-                {
-                    ID:messageID
-                },
-            }
-        )
-    }
+
     async getReceivedMessages(userID) {
         const messages = await this.Messages.findAll({
           include: [

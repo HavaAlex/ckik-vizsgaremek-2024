@@ -39,6 +39,8 @@ exports.createUzenet = async (req, res, next) =>
     let {message,date,receiverlist,receiverGrouplist} = req.body;
     try
     {
+
+        console.log("????????????", receiverGrouplist)
         const newUzenet =
         {
             ID: null,
