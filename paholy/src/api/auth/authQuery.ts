@@ -31,7 +31,9 @@ export const useLogin = () => {
             //console.log(decoded.userData)
             //console.log(Math.floor((decoded.exp*1000-Date.now())/1000))
             setBaseTime(Math.floor((decoded.exp*1000-Date.now())/1000))
-            push({name:decoded.userData.role+'orarend'})
+            console.log("FING")
+            console.log('/orarend/'+decoded.userData.role+"orarend/"+(decoded.userData.role == "szulo"?`${decoded.userData.children[0].ID}`:''))
+            push({path:'/orarend/'+decoded.userData.role+"orarend/"+(decoded.userData.role == "szulo"?`${decoded.userData.children[0].ID}`:'')})
             
         },
         onError(error){
