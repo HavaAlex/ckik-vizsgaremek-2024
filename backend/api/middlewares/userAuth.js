@@ -17,8 +17,11 @@ exports.verifyToken = async (req, res, next) =>
     {
         if(error)
         {
+
+            
             return {error:error};
         }
+        
         return decoded.userData
     });
     if(!decoded|| decoded == undefined || decoded.error){
@@ -27,7 +30,7 @@ exports.verifyToken = async (req, res, next) =>
         return;
     }
     req.decoded = decoded
-    req.role = await roleService.getRole(decoded.ID,decoded.role)
+    req.role = await roleService.getRole(decoded.ID,decoded.role) 
     console.log(decoded)
     console.log(req.role)
     console.log("KÉRÉS")

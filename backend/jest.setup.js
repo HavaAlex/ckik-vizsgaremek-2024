@@ -5,3 +5,4 @@ process.env.DB_PASSWORD =
 process.env.DB_HOST = "localhost"
 process.env.DB_DIALECT = "mysql"
 process.env.JWT_KEY = "kulcs123"
+process.env.NODE_ENV = 'test';
