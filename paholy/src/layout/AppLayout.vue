@@ -4,7 +4,7 @@ import { getUserStatusFromLocalStorage, deleteUserStatusFromLocalStorage} from '
 import Jogosultsagok from '@/views/admin/Jogosultsagok.vue';
 import { useCookieHandler } from '@/stores/cookieHandler';
 import { jwtDecode } from 'jwt-decode';
-import { ref ,onMounted, onUnmounted,onUpdated } from 'vue';
+import { ref ,onMounted, onUnmounted,onUpdated,watch } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useErrorHandler } from '@/stores/errorHandler';
 import { AxiosError } from 'axios';
@@ -16,7 +16,9 @@ const cookieHandler = useCookieHandler()
 const { time } = storeToRefs(cookieHandler);
 
 const gyerekStore = useGyerekStore()
-const children = storeToRefs(gyerekStore)
+const refs = storeToRefs(gyerekStore)
+
+const selectedChild = ref<child|undefined>(undefined)
 
 const cookieStatus = cookieHandler.hasValidCookie()
 let role: string = ''
@@ -25,17 +27,23 @@ if (cookieStatus == true){
   console.log(decoded)
   role = decoded.userData.role
   if(role == "szulo"){
+    gyerekStore.clearChildren()
     decoded.userData.children.forEach(element => {
       gyerekStore.addChild(element)
     });
+    selectedChild.value = refs.children.value.length ? refs.children.value[0].ID : null;
   }
   console.log(decoded)
   console.log(role)
-  push({name:role+'orarend'})
+  push({path:'/orarend/'+decoded.userData.role+"orarend/"+(decoded.userData.role == "szulo"?`${decoded.userData.children[0].ID}`:'')})
 }
 else{
   push({name:"login"})
 }
+
+watch(() => {
+  console.log("selectedChild:", refs.selectedChild);
+});
 
 //itt kezdődik a forgatásnak a figyelése
 const isPortrait = ref(window.matchMedia("(orientation: portrait)").matches);
@@ -79,16 +87,16 @@ onUpdated(()=>{
             </template>
             <v-list>
               <v-list-item class="appnavbarmenu">
-                <v-btn @click="push({name:role+'orarend'})" class="appnavbarmenu">Órarend</v-btn>
+                <v-btn @click="push({name:role+'orarend'+role==szulo?`/${selectedChild.value}`:''})" class="appnavbarmenu">Órarend</v-btn>
               </v-list-item>
               <v-list-item v>
-                <v-btn @click="push({name:role+'hazik'})" class="appnavbarmenu">Házifeladatok/beadandók</v-btn>
+                <v-btn @click="push({name:role+'hazik'+role==szulo?`/${selectedChild.value}`:''})" class="appnavbarmenu">Házifeladatok/beadandók</v-btn>
               </v-list-item>
               <v-list-item class="appnavbarmenu">
-                <v-btn @click="push({name:role+'jegyek'})" class="appnavbarmenu">Osztályzatok</v-btn>
+                <v-btn @click="push({name:role+'jegyek'+role==szulo?`/${selectedChild.value}`:''})" class="appnavbarmenu">Osztályzatok</v-btn>
               </v-list-item>
               <v-list-item class="appnavbarmenu">
-                <v-btn @click="push({name:role+'hianyzasok'})" class="appnavbarmenu">Mulasztások/Hiányzások</v-btn>
+                <v-btn @click="push({name:role+'hianyzasok'+role==szulo?`/${selectedChild.value}`:''})" class="appnavbarmenu">Mulasztások/Hiányzások</v-btn>
               </v-list-item>
               <v-list-item class="appnavbarmenu">
                 <v-btn @click="push({name:role+'uzenetek'})" class="appnavbarmenu">Üzenetek</v-btn>
@@ -162,10 +170,19 @@ onUpdated(()=>{
                 Csoportok kezelése
       </v-btn>
 
-      <v-select v-if="role=='szulo'"
+      <v-select v-if="role=='szulo'" style="height: max-content;"
         label="Választott gyermek"
-        :items="children.children.value.map((c)=>c.name)"
+        density="compact"
+        v-model="selectedChild"
+        item-title="name"
+        item-value="ID"
+        :items="refs.children.value"
+        @update:model-value="(value) => { 
+          push({ path: `/orarend/szuloorarend/${value}` }); 
+          console.log('FASZ'); 
+        }"
       ></v-select>
+      <!--{{ refs.selectedChild }}-->
       <v-spacer></v-spacer>
       <v-tooltip text="Ennyi idő múlva automatikusan kijelentkezel">
         <template v-slot:activator="{ props }">
@@ -187,7 +204,6 @@ onUpdated(()=>{
       </v-col>
     </v-app-bar>
       <v-main class="d-flex align-center justify-center fill-height">
-        
         <RouterView></RouterView>
       </v-main>
     </v-layout>

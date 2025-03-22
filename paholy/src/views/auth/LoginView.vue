@@ -24,7 +24,8 @@ onMounted(() => {
   window.matchMedia("(orientation: portrait)").addEventListener("change", updateOrientation);
   if(document.cookie != ''){
     const decoded = jwtDecode(getCookie("alap"))
-    push({name:decoded.userData.role+'orarend'})
+    console.log("KAKI")
+    push({path:'/orarend/'+decoded.userData.role+"orarend/"+(decoded.userData.role == "szulo"?`${decoded.userData.children[0].ID}`:'')})
   }
 });
 onUnmounted(() => {

@@ -74,7 +74,7 @@ const router = createRouter({
                   component: HazikViewTanulo
               },
               { 
-                  path: 'szulohazik',
+                  path: 'szulohazik/:id',
                   name: 'szulohazik',
                   component: HazikViewSzulo,
                   props:true
@@ -100,7 +100,7 @@ const router = createRouter({
                 name: 'diakhianyzasok',
                 component: HianyzasokViewTanulo
               },
-              {path: 'szulohianyzasok',
+              {path: 'szulohianyzasok/:id',
                 name: 'szulohianyzasok',
                 component: HianyzasokViewSzulo
               },
@@ -126,7 +126,7 @@ const router = createRouter({
                   component: JegyekViewTanulo
               },
               { 
-                  path: 'szulojegyek',
+                  path: 'szulojegyek/:id',
                   name: 'szulojegyek',
                   component: JegyekViewSzulo
               },
@@ -153,7 +153,7 @@ const router = createRouter({
                   component: OrarendViewTanulo
               },
               { 
-                  path: 'szuloorarend',
+                  path: 'szuloorarend/:id',
                   name: 'szuloorarend',
                   component: OrarendViewSzulo
               },

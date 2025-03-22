@@ -16,6 +16,7 @@ const absenceController = require("../controllers/absenceController");
 const jegyController = require("../controllers/jegyController");
 const hazikController = require("../controllers/hazikController");
 const adminController = require("../controllers/adminController");
+const szuloController = require("../controllers/szuloController");
 const szuloHandler = require("../middlewares/szuloHandler")
 const user = require("../models/user");
 
@@ -24,6 +25,9 @@ router.use(userAuth.verifyToken);
 
 router.use(szuloHandler.checkRole)
 
-router.get("/gyerek", userController.getGuardiansChildren);
+router.get("/orarend/:id",szuloController.getOrarend)
+router.get("/jegy/:id",szuloController.getOrarend)
+router.get("/feladat/:id",szuloController.getOrarend)
+router.get("/hianyzas/:id",szuloController.getOrarend)
 
 module.exports = router;

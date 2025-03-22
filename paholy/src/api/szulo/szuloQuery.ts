@@ -7,6 +7,7 @@ import { useCookieHandler } from "@/stores/cookieHandler";
 import type { child } from "./szulo";
 import { useErrorHandler } from "@/stores/errorHandler";
 import { useGyerekStore } from "@/stores/gyerekStore";
+import type { Lesson } from "../orarend/orarend";
 
 const getChildren = async (): Promise<child[]> => {
     const {getCookie} = useCookieHandler()
@@ -38,4 +39,26 @@ export const useGetChildren = () => {
     )
 }
 
+const getOrarend = async (weekStart: string): Promise<Lesson[]> => {
+    const { getCookie } = useCookieHandler()
+    const {params} = useRoute()
+    const config = {
+        headers: { Authorization: `Bearer ${getCookie("alap")}` }
+    };
+    const response = await axiosClient.get(`http://localhost:3000/szulo/orarend/${params.id}`, config)
+    return response.data
+}
 
+export const useGetOrarend = (weekStart: string) => {
+    const { setError } = useErrorHandler()
+    const query = useQuery({
+        queryKey: [QUERY_KEYS.getOrarend, weekStart],
+        queryFn: () => getOrarend(weekStart),
+    })
+
+    if (query.error.value) {
+        console.error("Lekérdezési hiba:", query.error)
+        setError(query.error.value)
+    }
+    return query
+}
