@@ -6,7 +6,8 @@ export type Lesson = {
     start_Minute: number,
     length: number,
     day: string,
-    subjectName: string
+    subjectName: string,
+    excused: boolean
 }
 
 

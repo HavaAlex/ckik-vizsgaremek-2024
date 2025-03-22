@@ -7,12 +7,17 @@ exports.getOrarend = async (req, res, next) =>
     console.log("órarendget")
     console.log("FING")
     console.log(req.decoded)
+    const weekStart = req.query.weekStart
+
+
     const groups = await csoportService.getGroup(req.decoded.role!="szulo"? req.decoded.ID:req.body.gyerekID)
     if(req.decoded.role == "szulo")
     {
         
     }
-    const combinedOrarend = req.decoded.role=="tanar"?await orarendService.getTeacherLessons(req.role.ID): await orarendService.getOrarend(groups)
+
+
+    const combinedOrarend = req.decoded.role=="tanar"?await orarendService.getTeacherLessons(req.role.ID,weekStart): await orarendService.getOrarend(groups,weekStart)
 
     console.log(combinedOrarend)
     res.status(201).json(combinedOrarend)

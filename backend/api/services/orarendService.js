@@ -48,9 +48,9 @@ class OrarendService
         return lessons.find((x)=>x.day == napok[date.getDay()]&& x.start_Hour == date.getHours()-1&&x.start_Minute == date.getMinutes())
     }
 
-    async getDisruptions(groups)
+    async getDisruptions(groups,weekStart)
     {
-        return await orarendRepository.getDisruptions(groups)
+        return await orarendRepository.getDisruptions(groups,weekStart)
     }
 
 
@@ -68,25 +68,31 @@ class OrarendService
     {
 
     }
-    async getOrarend(groups)
-    {
-        const lessons = await this.getLessons(groups)
-
-        const disruptions = await this.getDisruptions(groups)
-
-        console.log(disruptions+"disruptions")
-
-        const disruptionMap = new Map()
+    async getOrarend(groups, weekStart) {
+        const lessons = await this.getLessons(groups);
+        const disruptions = await this.getDisruptions(groups, weekStart);
+    
+        // Create a map of disruptions keyed by day and start_Minute
+        const disruptionMap = new Map();
         disruptions.forEach(disruption => {
-            const key = `${disruption.day}-${disruption.start_Minute}`
-            disruptionMap.set(key, disruption)
-        })
-
+            const key = `${disruption.day}-${disruption.start_Minute}`;
+            disruptionMap.set(key, disruption);
+        });
+    
+        // Combine lessons with disruptions and add an "excused" flag
         const combinedOrarend = lessons.map(lesson => {
-            const key = `${lesson.day}-${lesson.start_Minute}`
-            return disruptionMap.get(key) || lesson
-        })
-        return combinedOrarend
+            const key = `${lesson.day}-${lesson.start_Minute}`;
+            const disruption = disruptionMap.get(key);
+            if (disruption) {
+                // Return the disruption record with excused true
+                return { ...disruption.dataValues, excused: true };
+            } else {
+                // Return the lesson with excused false
+                return { ...lesson.dataValues, excused: false };
+            }
+        });
+        
+        return combinedOrarend;
     }
 }
 

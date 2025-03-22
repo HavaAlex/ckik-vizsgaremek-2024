@@ -10,7 +10,11 @@ const getOrarend = async (weekStart: string): Promise<Lesson[]> => {
     const config = {
         headers: { Authorization: `Bearer ${getCookie("alap")}` }
     };
+    console.log(`http://localhost:3000/orarend?weekStart=${weekStart}`)
     const response = await axiosClient.get(`http://localhost:3000/orarend?weekStart=${weekStart}`, config)
+
+
+    console.log("Orarend lekérdezve:", response.data)
     return response.data
 }
 

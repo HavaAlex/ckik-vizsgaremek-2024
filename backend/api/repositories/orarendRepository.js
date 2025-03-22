@@ -1,5 +1,6 @@
 const db = require("../db/dbContext");
 const classDisruption = require("../models/classDisruption");
+const { Op } = require('sequelize');
 
 class OrarendRepository
 {
@@ -44,17 +45,26 @@ class OrarendRepository
 
     }
 
-    async getDisruptions(groups)//Megkeresi az összes óráját az adott embernek
-    {
+    async getDisruptions(groups, weekStart) {
+        // Map groups to an array of IDs
         groups = groups.map(group => group.GroupID);
         console.log(groups);
         console.log(classDisruption);
-        return await this.ClassDisruption.findAll
-        (
-            {
-                where: {groupID: groups},
+    
+        // Create a date for the end of the week (weekStart is assumed to be a Monday)
+        const startOfWeek = new Date(weekStart);
+        const endOfWeek = new Date(weekStart);
+        endOfWeek.setDate(endOfWeek.getDate() + 6);
+    
+        // Query disruptions that are within the current week
+        return await this.ClassDisruption.findAll({
+            where: {
+                groupID: groups,
+                date: {
+                    [Op.between]: [startOfWeek, endOfWeek]
+                }
             }
-        )
+        });
     }
 
     async getTeacherDisruptions(teacherID)//Megkeresi az összes óráját az adott embernek

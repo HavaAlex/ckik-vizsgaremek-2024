@@ -41,7 +41,7 @@ watch(currentWeekStart, (newWeekStart) => {
       <h1 style="padding: 10px;" class="bg-title">Órarend</h1>
     </v-card>
 
-    <div v-if="lessons.length">
+    <div v-if="lessons !== null">
       <div class="color-picker">
         <label for="lessonColor">Szín megváltoztatása:</label>
         <input type="color" id="lessonColor" v-model="lessonColor" />
@@ -96,10 +96,30 @@ watch(currentWeekStart, (newWeekStart) => {
                     :style="{
                       top: ((lesson.start_Minute - startMinute) / totalMinutes * 100) + '%',
                       height: (lesson.length / totalMinutes * 100) + '%',
-                      backgroundColor: lessonColor
+                      backgroundColor: lesson.excused 
+                        ? (lesson.teacherID !== null ? 'orange' : 'red') 
+                        : lessonColor
                     }"
                   >
-                    {{ lesson.subjectName }}
+                  <div>
+                      <div>
+                        <!-- If teacherID is null, strike through the lesson name -->
+                        <template v-if="lesson.teacherID === null">
+                          <s>{{ lesson.subjectName }}</s>
+                        </template>
+                        <template v-else>
+                          {{ lesson.subjectName }}
+                        </template>
+                      </div>
+                      <!-- If lesson is excused, display "Elmarad" -->
+                      <div v-if="lesson.teacherID == null" style="font-size: 10px; margin-top: 4px;">
+                        Elmarad
+                      </div>
+                      <!-- If teacherID exists and lesson is not excused, display the teacherID -->
+                      <div v-else-if="lesson.teacherID !== null" style="font-size: 10px; margin-top: 4px;">
+                        Teacher: {{ lesson.teacherID }}
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
