@@ -14,9 +14,9 @@ class StudentRepository
 
     async createStudent(student)
     {
-        console.log("BEJÖVÖS: ", student)
+        //console.log("BEJÖVÖS: ", student)
         const newStudent = await this.Students.build(student);
-        console.log("ÚÚK: ", newStudent)
+        //console.log("ÚÚK: ", newStudent)
         await newStudent.save();
         
         return newStudent;

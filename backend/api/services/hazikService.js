@@ -66,12 +66,12 @@ class HazikService {
         for (const assignment of assignments) {
             const answers = await assignmentRepository.getCompletedAssignmentsByAssignmentID(assignment.ID);
             for (const ans of answers) {
-                console.log("VANYASZ: ", ans)
+                //console.log("VANYASZ: ", ans)
                 const student = await studentRepository.getStudentByID(ans.studentID);
-                console.log("STUDNET: ", student)
+                //console.log("STUDNET: ", student)
                 ans.dataValues.senderUserName = student.name;
             }
-            console.log("őőő: ", teacher)
+            //console.log("őőő: ", teacher)
             assignment.dataValues.senderUserName = teacher.name
 
             result.push({

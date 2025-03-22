@@ -134,14 +134,14 @@ describe("getGroupMarksTest", () =>
         test("GetMarksByGroup vissza ad length 1", async () => 
         {
             const eredmeny = await markRepository.getMarksByGroup(2)
-            console.log(eredmeny)
+            //console.log(eredmeny)
             expect(eredmeny.length).toBe( 1);
         });
 
         test("GetMarksByGroup vissza adja az 1-es id-vel rendelkező jegyet", async () => 
         {
             const eredmeny = await markRepository.getMarksByGroup(2)
-            console.log(eredmeny)
+            //console.log(eredmeny)
             expect(eredmeny[0]).toHaveProperty("ID", 1);
         });
     })

@@ -1,5 +1,5 @@
 const request = require("supertest");
-const app = require("../app"); // adjust the path to where your Express app is exported
+const app = require("../app"); 
 const uzenetService = require("../api/services/uzenetService");
 const userRepository = require("../api/repositories/userRepository");
 const teacherRepository = require("../api/repositories/teacherRepository");
@@ -11,8 +11,11 @@ const MessageRepository = require("../api/repositories/messageRepository")
 const jwt = require("jsonwebtoken");
 const adminRepository = require("../api/repositories/adminRepository");
 
-// If you later decide to test group-related functionality, import the group repository as needed.
-// const groupRepository = require("../api/repositories/groupRepository");
+
+
+
+
+
 
 jest.mock("../api/db/dbContext", () => require("../__mocks__/db"));
 
@@ -95,9 +98,6 @@ describe("Üzenet funkciók tesztelése", () => {
 
 
     token = jwt.sign({ userData:user1 }, process.env.JWT_KEY, { expiresIn: "20m" });
-    console.log(process.env.JWT_KEY)
-    console.log("Ő az: ", user1)
-    console.log("megkapja ami jár: ", token)
     await userRepository.createUser(user1);
     await adminRepository.createAdmin(admin);
     
@@ -124,10 +124,6 @@ describe("Üzenet funkciók tesztelése", () => {
     const setUserHeader = () => ({
             authorization: `Bearer ${token}`
     });
-    test("pp",()=>{
-        console.log("UUU")
-        expect(2+2).toBe(5)
-    })
 
       //Admin lekérdezések
     describe("GET allMessages", () => {
@@ -184,3 +180,5 @@ describe("Üzenet funkciók tesztelése", () => {
     });
 
 });
+
+

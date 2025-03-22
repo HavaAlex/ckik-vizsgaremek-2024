@@ -12,10 +12,6 @@ class AssignmentRepository {
         this.CompletedAssignment = db.completedAssignment;
         this.CompletedAssignmentFile = db.completedAssignmentFiles;
     }
-
-    // -------------------------
-    //         Groups
-    // -------------------------
     async getAllGroupsWithStudents() {
         return await this.Group.findAll({
             attributes: ["ID", "name"],
@@ -23,15 +19,13 @@ class AssignmentRepository {
                 {
                     model: this.Student,
                     attributes: ["ID"],
-                    through: { attributes: [] }, // Exclude join table attributes
+                    through: { attributes: [] }, 
                 }
             ]
         });
     }
 
-    // -------------------------
-    //       Assignments
-    // -------------------------
+
     async createAssignment(assignmentData) {
         const newAssignment = this.Assignment.build(assignmentData);
         await newAssignment.save();
@@ -61,9 +55,7 @@ class AssignmentRepository {
         });
     }
 
-    // -------------------------
-    //   Completed Assignments
-    // -------------------------
+
     async createCompletedAssignment(completedAssignmentData) {
         const newCompletedAssignment = this.CompletedAssignment.build(completedAssignmentData);
         await newCompletedAssignment.save();
@@ -71,7 +63,6 @@ class AssignmentRepository {
     }
 
     async getCompletedAssignmentsByStudentID(studentID) {
-        console.log("alábbi student id a mienk: ", studentID)
         return await this.CompletedAssignment.findAll({
             where: {
                 [Op.or]: {
@@ -106,11 +97,9 @@ class AssignmentRepository {
         });
     }
 
-    // -------------------------
-    //    Assignment Files
-    // -------------------------
+
     async uploadAssignmentFiles(files, assignmentId) {
-        // Single query for creation; no loops here – but using Promise.all
+
         const uploadedFiles = await Promise.all(
             files.map(file => {
                 return this.AssignmentFile.create({
@@ -140,9 +129,6 @@ class AssignmentRepository {
         });
     }
 
-    // -------------------------
-    // Completed Assignment Files
-    // -------------------------
     async uploadCompletedAssignmentFiles(files, completedAssignmentId) {
         const uploadedFiles = await Promise.all(
             files.map(file => {

@@ -9,7 +9,10 @@ exports.getGroups = async (req, res, next) =>{
 
 exports.postAssignment = async (req, res, next) =>{
     let {Groups,Description,DeadLine,UploadDate} = req.body;
-
+    console.log("CENYPONTOK: ", Groups)
+    console.log("LERÁÉS ",Description)
+    console.log("halott vonal_ ", DeadLine)
+    console.log("felteltes: ", UploadDate)
     const newHazi = {
         ID: null,
         teacherID: req.decoded.ID,
@@ -17,8 +20,8 @@ exports.postAssignment = async (req, res, next) =>{
         deadline: DeadLine,
         uploadDate: UploadDate
     }
-
-    if(!newHazi.deadline ){
+    console.log("PPP", newHazi)
+    if(!newHazi.deadline){
       res.status(500).send("Nincs határidő megadva")
       return
     }
@@ -35,8 +38,9 @@ exports.postAssignment = async (req, res, next) =>{
       return
     }
     console.log("MINEN OKÉÉÉÉÉ JIPPPIIIII ", newHazi)
-    console.log("JELENLEGI IDŐP ",  Date.now())
     let cucc =  await hazikService.createAssignment(newHazi,Groups);
+    console.log("JIPPPIIIII 2 ", cucc)
+    console.log("JIPPPIIIII 2 ", cucc.ID)
     res.status(200).json(cucc)
 }
 
