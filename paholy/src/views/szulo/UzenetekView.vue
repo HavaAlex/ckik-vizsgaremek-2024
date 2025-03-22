@@ -2,11 +2,16 @@
 import { ref, computed,onMounted, onUnmounted  } from 'vue'
 import type { Message } from '@/api/uzenetek/uzenetek';
 import { useaddMessage, usegetPotentialReceivers } from '@/api/uzenetek/uzenetekQuery';
+import { jwtDecode } from 'jwt-decode';
+import { useCookieHandler } from '@/stores/cookieHandler';
+import { useRouter } from 'vue-router';
 
 const dialog = ref(false);
 const successDialog = ref(false);
 const { mutate: addMessage, isPending } = useaddMessage();
 const { data } = usegetPotentialReceivers();
+const {getCookie} =  useCookieHandler();
+const { push } = useRouter()
 
 // New reactive search text
 const searchText = ref('');

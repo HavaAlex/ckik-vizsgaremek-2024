@@ -45,7 +45,7 @@ const getOrarend = async (weekStart: string): Promise<Lesson[]> => {
     const config = {
         headers: { Authorization: `Bearer ${getCookie("alap")}` }
     };
-    const response = await axiosClient.get(`http://localhost:3000/szulo/orarend/${params.id}`, config)
+    const response = await axiosClient.get(`http://localhost:3000/szulo/orarend/${params.id}/?weekStart=${weekStart}`, config)
     return response.data
 }
 
@@ -61,4 +61,13 @@ export const useGetOrarend = (weekStart: string) => {
         setError(query.error.value)
     }
     return query
+}
+
+export const fetchOrarend = async (weekStart: string): Promise<Lesson[]> => {
+    try {
+        return await getOrarend(weekStart);
+    } catch (error) {
+        console.error("Lekérdezési hiba:", error);
+        throw error;
+    }
 }
