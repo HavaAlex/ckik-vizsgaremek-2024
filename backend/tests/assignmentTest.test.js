@@ -153,14 +153,14 @@ describe("Hazifeladatok tesztelése",()=>{
                 .send({
                   Groups:[{ID: newGroup1.ID, name: "13.c", studentList:[newStudent1.ID, newStudent2.ID]}],
                   Description:"test"
-                  ,DeadLine:"2500-12-12",
+                  ,DeadLine:"2026-12-12",
                   UploadDate:"2020-05-01"
                 });
 
                 //const getres = await assignmentRepository.getAssignmentByID(uploadres.ID)
                 console.log("rezponze: ",uploadres)
                 expect(uploadres.status).toBe(200)
-            },15000)
+            })
 
             console.log("LEFUTR A TESZT")
         })
