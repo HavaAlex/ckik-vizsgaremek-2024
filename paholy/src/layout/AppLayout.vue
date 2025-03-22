@@ -86,32 +86,50 @@ onUpdated(()=>{
               </v-btn>
             </template>
             <v-list>
-              <v-list-item class="appnavbarmenu">
-                <v-btn @click="push({name:role+'orarend'+role==szulo?`/${selectedChild.value}`:''})" class="appnavbarmenu">Órarend</v-btn>
-              </v-list-item>
-              <v-list-item v>
-                <v-btn @click="push({name:role+'hazik'+role==szulo?`/${selectedChild.value}`:''})" class="appnavbarmenu">Házifeladatok/beadandók</v-btn>
-              </v-list-item>
-              <v-list-item class="appnavbarmenu">
-                <v-btn @click="push({name:role+'jegyek'+role==szulo?`/${selectedChild.value}`:''})" class="appnavbarmenu">Osztályzatok</v-btn>
-              </v-list-item>
-              <v-list-item class="appnavbarmenu">
-                <v-btn @click="push({name:role+'hianyzasok'+role==szulo?`/${selectedChild.value}`:''})" class="appnavbarmenu">Mulasztások/Hiányzások</v-btn>
-              </v-list-item>
-              <v-list-item class="appnavbarmenu">
-                <v-btn @click="push({name:role+'uzenetek'})" class="appnavbarmenu">Üzenetek</v-btn>
-              </v-list-item>
-              <v-list-item>
-             
-              <v-btn  class="appnavbarmenu" @click="push({name:'UserManagementView'})" v-if="role=='admin' ">
-                        Felhasználók kezelése
-              </v-btn>
-              <v-btn  class="appnavbarmenu" @click="push({name:'GroupManagementView'})" v-if="role=='admin'">
-                        Csoportok kezelése
-              </v-btn>
+              <div v-if="role=='szulo'">
+                <v-list-item class="appnavbarmenu">
+                  <v-btn @click="push({name:role+'orarend'+role==szulo?`/${selectedChild.value}`:''})" class="appnavbarmenu">Órarend</v-btn>
+                </v-list-item>
+                <v-list-item v>
+                  <v-btn @click="push({name:role+'hazik'+role==szulo?`/${selectedChild.value}`:''})" class="appnavbarmenu">Házifeladatok/beadandók</v-btn>
+                </v-list-item>
+                <v-list-item class="appnavbarmenu">
+                  <v-btn @click="push({name:role+'jegyek'+role==szulo?`/${selectedChild.value}`:''})" class="appnavbarmenu">Osztályzatok</v-btn>
+                </v-list-item>
+                <v-list-item class="appnavbarmenu">
+                  <v-btn @click="push({name:role+'hianyzasok'+role==szulo?`/${selectedChild.value}`:''})" class="appnavbarmenu">Mulasztások/Hiányzások</v-btn>
+                </v-list-item>
+                <v-list-item class="appnavbarmenu">
+                  <v-btn @click="push({name:role+'uzenetek'})" class="appnavbarmenu">Üzenetek</v-btn>
+                </v-list-item>
+                
+              </div>
+              <div v-else>
+                <v-list-item class="appnavbarmenu">
+                  <v-btn @click="push({name:role+'orarend'})" class="appnavbarmenu">Órarend</v-btn>
+                </v-list-item>
+                <v-list-item v>
+                  <v-btn @click="push({name:role+'hazik'})" class="appnavbarmenu">Házifeladatok/beadandók</v-btn>
+                </v-list-item>
+                <v-list-item class="appnavbarmenu">
+                  <v-btn @click="push({name:role+'jegyek'})" class="appnavbarmenu">Osztályzatok</v-btn>
+                </v-list-item>
+                <v-list-item class="appnavbarmenu">
+                  <v-btn @click="push({name:role+'hianyzasok'})" class="appnavbarmenu">Mulasztások/Hiányzások</v-btn>
+                </v-list-item>
+                <v-list-item class="appnavbarmenu">
+                  <v-btn @click="push({name:role+'uzenetek'})" class="appnavbarmenu">Üzenetek</v-btn>
+                </v-list-item>
+           
+                    <v-btn  class="appnavbarmenu" @click="push({name:'UserManagementView'})" v-if="role=='admin' ">
+                            Felhasználók kezelése
+                  </v-btn>
 
-              </v-list-item>
-              
+                  <v-btn  class="appnavbarmenu" @click="push({name:'GroupManagementView'})" v-if="role=='admin'">
+                            Csoportok kezelése
+                  </v-btn>
+         
+              </div>
             </v-list>
           </v-menu>
           
@@ -147,7 +165,7 @@ onUpdated(()=>{
       <v-app-bar class="appnavbar bg-secondary"
         flat
       >
-  
+      
       <v-btn @click="push({name:role+'orarend'})">
                 Órarend
       </v-btn>

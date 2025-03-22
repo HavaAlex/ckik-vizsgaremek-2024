@@ -160,6 +160,8 @@ describe("Hazifeladatok tesztelése",()=>{
                 //const getres = await assignmentRepository.getAssignmentByID(uploadres.ID)
                 console.log("rezponze: ",uploadres)
                 expect(uploadres.status).toBe(200)
+                expect(uploadres.body.teacherID).toBe(teacher1.ID)
+                
             })
 
             console.log("LEFUTR A TESZT")

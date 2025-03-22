@@ -186,42 +186,79 @@ const cardHeight = computed(() => isPortrait.value ? '80vw' : '40vw')
         </v-radio-group>
       </div>
     </v-navigation-drawer>
-
-    <v-container>
-      <v-card :style="{ height: cardHeight }">
-        <v-card-title>Kiosztott házi feladatok</v-card-title>
-        <v-card-text style="max-height: 80vh; overflow-y: auto;">
-          <v-table>
-            <thead>
-              <tr>
-                <th>Feladó tanár</th>
-                <th>Feladás dátuma</th>
-                <th>Leírás</th>
-                <th>Határidő</th>
-                <th>Interakció</th>
-              </tr>
-            </thead>
-            <tbody v-if="groupAssignments && (groupAssignments.length || groupAssignments.value.length)">
-              <tr v-for="item in groupAssignments" :key="item.assignment.ID">
-                <td>{{ item.assignment.senderUserName }}</td>
-                <td>{{ formatDate(item.assignment.uploadDate) }}</td>
-                <td id="szoveg" style="width: 15vw;">{{ item.assignment.desc }}</td>
-                <td>{{ formatDate(item.assignment.deadline) }}</td>
-                <td>
-                  <v-btn color="primary" @click="openAssignmentDetails(item)">Részletek</v-btn>
-                  <v-btn color="error" @click="openDeleteAssignment(item)">Törlés</v-btn>
-                </td>
-              </tr>
-            </tbody>
-            <tbody v-else>
-              <tr>
-                <td colspan="5">Nincs megjeleníthető házi feladat</td>
-              </tr>
-            </tbody>
-          </v-table>
-        </v-card-text>
-      </v-card>
-    </v-container>
+    <div v-if="isPortrait">
+      <v-container>
+        <v-card :style="{ height: cardHeight }">
+          <v-card-title>Kiosztott házi feladatok</v-card-title>
+          <v-card-text style="max-height: 80vh; overflow-y: auto;">
+            <v-table>
+              <thead>
+                <tr>
+                  <th>Feladó tanár</th>
+                  <th>Feladás dátuma</th>
+                  <th>Határidő</th>
+                  <th>Interakció</th>
+                </tr>
+              </thead>
+              <tbody v-if="groupAssignments && (groupAssignments.length || groupAssignments.value.length)">
+                <tr v-for="item in groupAssignments" :key="item.assignment.ID">
+                  <td>{{ item.assignment.senderUserName }}</td>
+                  <td>{{ formatDate(item.assignment.uploadDate) }}</td> 
+                  <td>{{ formatDate(item.assignment.deadline) }}</td>
+                  <td>
+                    <v-btn color="primary" @click="openAssignmentDetails(item)">Részletek</v-btn>
+                    <v-btn color="error" @click="openDeleteAssignment(item)">Törlés</v-btn>
+                  </td>
+                </tr>
+              </tbody>
+              <tbody v-else>
+                <tr>
+                  <td colspan="5">Nincs megjeleníthető házi feladat</td>
+                </tr>
+              </tbody>
+            </v-table>
+          </v-card-text>
+        </v-card>
+      </v-container>
+    </div>
+    <div v-else>
+      <v-container>
+        <v-card :style="{ height: cardHeight }">
+          <v-card-title>Kiosztott házi feladatok</v-card-title>
+          <v-card-text style="max-height: 80vh; overflow-y: auto;">
+            <v-table>
+              <thead>
+                <tr>
+                  <th>Feladó tanár</th>
+                  <th>Feladás dátuma</th>
+                  <th>Leírás</th>
+                  <th>Határidő</th>
+                  <th>Interakció</th>
+                </tr>
+              </thead>
+              <tbody v-if="groupAssignments && (groupAssignments.length || groupAssignments.value.length)">
+                <tr v-for="item in groupAssignments" :key="item.assignment.ID">
+                  <td>{{ item.assignment.senderUserName }}</td>
+                  <td>{{ formatDate(item.assignment.uploadDate) }}</td>
+                  <td id="szoveg" style="width: 15vw;">{{ item.assignment.desc }}</td>
+                  <td>{{ formatDate(item.assignment.deadline) }}</td>
+                  <td>
+                    <v-btn color="primary" @click="openAssignmentDetails(item)">Részletek</v-btn>
+                    <v-btn color="error" @click="openDeleteAssignment(item)">Törlés</v-btn>
+                  </td>
+                </tr>
+              </tbody>
+              <tbody v-else>
+                <tr>
+                  <td colspan="5">Nincs megjeleníthető házi feladat</td>
+                </tr>
+              </tbody>
+            </v-table>
+          </v-card-text>
+        </v-card>
+      </v-container>
+    </div>
+    
 
     <!-- Dialog for viewing assignment details -->
     <v-dialog v-model="assignmentDetailsDialog" max-width="50vw">
