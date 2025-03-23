@@ -16,13 +16,10 @@ const getHianyzasok = async (): Promise<HianyzasValasz> => {
         headers: { Authorization: `Bearer ${getCookie("alap")}` }
     };
     //console.log(`localhost:3000/uzenetek/${document.cookie}`)
-    const response = await axiosClient.get(`http://localhost:3000/hianyzas/`,config) // ${document.cookie}
-    console.log("hianyzasok:")
-    console.log(response)
-    console.log(response.data)  
+    const response = await axiosClient.get(`http://localhost:3000/hianyzas/`,config)
     return response 
 }
-export const useGetHianyzasok = () => {
+export const useGetHianyzasok =  () => {
     const {setError} = useErrorHandler()
     const query = useQuery({
         queryKey: [QUERY_KEYS.getHianyzasok],

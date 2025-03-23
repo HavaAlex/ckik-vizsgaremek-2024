@@ -6,11 +6,22 @@ import { format, startOfWeek, addWeeks } from 'date-fns';
 
 const currentWeekStart = ref(startOfWeek(new Date(), { weekStartsOn: 1 }));
 const days = ["hetfo", "kedd", "szerda", "csutortok", "pentek", "szombat", "vasarnap"];
+const dayKeys = ["hetfo", "kedd", "szerda", "csutortok", "pentek", "szombat", "vasarnap"];
 const lessonColor = ref("#9c0913");
 
 const startMinute = 300;  
 const endMinute = 1440;
 const totalMinutes = endMinute - startMinute;
+
+const dayNames: Record<string, string> = {
+  hetfo: "Hétfő",
+  kedd: "Kedd",
+  szerda: "Szerda",
+  csutortok: "Csütörtök",
+  pentek: "Péntek",
+  szombat: "Szombat",
+  vasarnap: "Vasárnap"
+};
 
 const timeTicks: number[] = [];
 for (let t = startMinute; t <= endMinute; t += 15) {
@@ -23,7 +34,7 @@ async function orarendfeltolt(weekStart: string) {
 }
 
 const teachers = ref<Teacher[]>([]);
-// Instead of an async function, we use a watcher on the teacher query
+
 const teacherQuery = useGetTeachers();
 watch(
   () => teacherQuery.data.value,
@@ -90,8 +101,8 @@ watch(
           </div>
 
           <div class="days-container">
-            <div v-for="day in days" :key="day" class="day-column">
-              <div class="day-header">{{ day }}</div>
+            <div v-for="day in dayKeys" :key="day" class="day-column">
+              <div class="day-header">{{ dayNames[day] }}</div>
               <div class="day-content">
                 <div class="grid-lines">
                   <div
@@ -101,7 +112,6 @@ watch(
                     :style="{ top: ((tick - startMinute) / totalMinutes * 100) + '%' }"
                   ></div>
                 </div>
-
                 <div class="lessons-container">
                   <div
                     v-for="lesson in lessons.filter(l => l.day === day)"
@@ -117,7 +127,6 @@ watch(
                   >
                     <div>
                       <div>
-                        <!-- If teacherID is null, strike through the lesson name -->
                         <template v-if="lesson.teacherID === null">
                           <s>{{ lesson.subjectName }}</s>
                         </template>
@@ -125,11 +134,9 @@ watch(
                           {{ lesson.subjectName }}
                         </template>
                       </div>
-                      <!-- If lesson is excused, display "Elmarad" -->
                       <div v-if="lesson.teacherID == null" style="font-size: 10px; margin-top: 4px;">
                         Elmarad
                       </div>
-                      <!-- If teacherID exists and lesson is not excused, display the teacher's name -->
                       <div v-else-if="lesson.teacherID !== null" style="font-size: 10px; margin-top: 4px;">
                         Teacher: {{ getTeacherName(lesson.teacherID) }}
                       </div>
