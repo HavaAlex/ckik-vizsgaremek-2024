@@ -67,23 +67,17 @@ class OrarendRepository
         });
     }
 
-    async getTeacherDisruptions(teacherID)//Megkeresi az összes óráját az adott embernek
+    async getTeacherDisruptions(teacherID,weekStart)//Megkeresi az összes óráját az adott embernek
     {
-        return await this.ClassDisruption.findAll
-        (
-            {
-                where: {teacherID: teacherID},
-            }
-        )
-    }
-
-
-    async getDisruptionsForCurrentWeek() {
-        const today = moment();
-        const startOfWeek = today.startOf('week').toDate();
-        const endOfWeek = today.endOf('week').toDate();
-
-        return await ClassDisruption.findAll({
+        // Create a date for the end of the week (weekStart is assumed to be a Monday)
+    
+        // Create a date for the end of the week (weekStart is assumed to be a Monday)
+        const startOfWeek = new Date(weekStart);
+        const endOfWeek = new Date(weekStart);
+        endOfWeek.setDate(endOfWeek.getDate() + 6);
+    
+        // Query disruptions that are within the current week
+        return await this.ClassDisruption.findAll({
             where: {
                 date: {
                     [Op.between]: [startOfWeek, endOfWeek]
@@ -91,6 +85,8 @@ class OrarendRepository
             }
         });
     }
+
+
 }
 
 module.exports = new OrarendRepository(db);
