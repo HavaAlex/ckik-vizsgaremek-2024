@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { ref, watch, computed } from 'vue'
 import { usegetGroups, usegetGroupAsignments, getGroupAsignments } from '@/api/admin/adminQuery'
-import { usegetAssignmentFiles, usegetCompletedAssignmentFiles } from '@/api/hazik/hazikQuery'
+import { usegetAssignmentFiles, usegetCompletedAssignmentFiles,usedeleteAssignment } from '@/api/hazik/hazikQuery'
 
 // Destructure the mutate functions from the composables
 const { mutate: getAssignmentFiles } = usegetAssignmentFiles()
 const { mutate: getCompletedAssignmentFiles } = usegetCompletedAssignmentFiles()
+const { mutate: deleteAssignment } = usedeleteAssignment()
 
 // Fetch the list of groups
 const { data: Groups } = usegetGroups()
@@ -95,6 +96,7 @@ const deleteThisAssignment = async () => {
   groupAssignments.value = groupAssignments.value.filter(
     (item: any) => item.assignment.ID !== assignmentToDelete.value.assignment.ID
   )
+  await deleteAssignment(assignmentToDelete.value.assignment.ID)
   deleteAssignmentDialog.value = false
 }
 

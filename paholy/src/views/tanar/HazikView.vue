@@ -87,8 +87,10 @@ const sendAssignment = async () => {
     onSuccess: async (assignmentResponse) => {
       const assignmentId = assignmentResponse.ID;
       if (selectedFiles.value.length > 0) {
+        console.log("legalább ez megy")
         await uploadAssignmentFiles({ files: selectedFiles.value, assignmentId }, {
-          onSuccess: resetForm,
+          
+          onSuccess: resetForm, 
         });
       } else {
         resetForm();
@@ -98,6 +100,7 @@ const sendAssignment = async () => {
 };
 
 const resetForm = () => {
+  console.log("MEG EZ IS AM"),
   AssignmentDataRef.value = {
     Groups: [],
     Description: "",
@@ -281,10 +284,10 @@ onUnmounted(() => {
                 <td>
                   <div style="display: flex; gap: 10px;">
                     <!-- Open answers dialog and fetch assignment files -->
-                    <v-btn @click="openViewAssignmentAnswerDialog(feladat);">
+                    <v-btn color="primary" @click="openViewAssignmentAnswerDialog(feladat);">
                       Válaszok megtekintése
                     </v-btn>
-                    <v-btn @click="openDeleteAssignmentDialog(feladat.feladat.ID)">
+                    <v-btn color="error" @click="openDeleteAssignmentDialog(feladat.feladat.ID)">
                       Törlés
                     </v-btn>
                   </div>
@@ -341,7 +344,7 @@ onUnmounted(() => {
                 v-for="(answer, index) in selectedAssignmentForAnswers?.anwsers"
                 :key="answer.ID"
               >
-                <v-list-item-title>{{ answer.senderUserName.name }}</v-list-item-title>
+                <v-list-item-title>{{ answer.senderUserName }}</v-list-item-title>
                 <div :style="getStatusStyle(answer.status)" class="mt-2">
                   <strong>Státusz:</strong> {{ answer.status }}
                 </div>
@@ -380,7 +383,7 @@ onUnmounted(() => {
       <v-dialog v-model="DeleteAssignmentDialog" max-width="50vw" theme="dark">
         <v-card>
           <v-card-title>Biztos törölni akarod?</v-card-title>
-          <v-btn @click="deleteThis">Törlés</v-btn>
+          <v-btn color="error" @click="deleteThis">Törlés</v-btn>
           <v-btn @click="DeleteAssignmentDialog = false">Mégse</v-btn>
         </v-card>
       </v-dialog>

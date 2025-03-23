@@ -4,15 +4,12 @@ const hazikService = require("../services/hazikService")
 
 exports.getGroups = async (req, res, next) =>{
     const targetGroups = await hazikService.getGroups();
+    console.log("ŰŰŰŰŰŰŰŰÁÁÁÁÁÁÁÁÁŰŰŰŰŰŰŰŰŰ? ", targetGroups)
     res.status(201).json(targetGroups);
 }
 
 exports.postAssignment = async (req, res, next) =>{
     let {Groups,Description,DeadLine,UploadDate} = req.body;
-    console.log("CENYPONTOK: ", Groups)
-    console.log("LERÁÉS ",Description)
-    console.log("halott vonal_ ", DeadLine)
-    console.log("felteltes: ", UploadDate)
     const newHazi = {
         ID: null,
         teacherID: req.decoded.ID,
@@ -20,7 +17,6 @@ exports.postAssignment = async (req, res, next) =>{
         deadline: DeadLine,
         uploadDate: UploadDate
     }
-    console.log("PPP", newHazi)
     if(!newHazi.deadline){
       res.status(500).send("Nincs határidő megadva")
       return
@@ -37,10 +33,8 @@ exports.postAssignment = async (req, res, next) =>{
       res.status(500).send("Nincs megadva leírás")
       return
     }
-    console.log("MINEN OKÉÉÉÉÉ JIPPPIIIII ", newHazi)
+
     let cucc =  await hazikService.createAssignment(newHazi,Groups);
-    console.log("JIPPPIIIII 2 ", cucc)
-    console.log("JIPPPIIIII 2 ", cucc.ID)
     res.status(200).json(cucc)
 }
 
@@ -48,7 +42,12 @@ exports.uploadAssignmentFiles = async (req, res, next) => {
     try {
       const uploadedFiles = req.files;
       const { assignmentId } = req.body; 
+      console.log("Received files:", req.files);
+      console.log("Received body:", req.body);
+      console.log("Received files:", uploadedFiles);
+      console.log("Received body:", assignmentId);
       let nagycucc= await hazikService.uploadAssignmentFiles(uploadedFiles, assignmentId)
+      console.log("ÉNYEMÉNY: ", nagycucc)
       res.status(200).json({ nagycucc });
     } catch (error) {
       console.error("File upload error:", error);
@@ -98,20 +97,24 @@ exports.modifycompletedassignment = async (req,res,next) => {
 }
 
 exports.getAssignmentFiles = async (req,res,next) =>{
-  const {assignmentId} = req.body;
-  const assignmentFilesArray = await hazikService.getAssignmentFiles(assignmentId)
+  const assignmentId = req.body;
+  const keys = Object.keys(assignmentId);
+  const assignmentNumber = parseInt(keys[0], 10);
+  console.log(assignmentNumber)
+  const assignmentFilesArray = await hazikService.getAssignmentFiles(assignmentNumber)
   res.status(201).json(assignmentFilesArray)
 }
 
 exports.getCompletedAssignmentFiles = async (req,res,next) =>{
-  const {assignmentId} = req.body;
-  const assignmentIds = new Set(assignmentId)
+  const assignmentId = req.body;
+  assignmentIds = new Set(assignmentId)
   const completedassignmentFilesArray = await hazikService.getCompletedAssignmentFiles(assignmentIds)
   res.status(201).json(completedassignmentFilesArray)
 }
 
 exports.deleteAssignment = async (req,res,next) =>{
   const assignmentId = req.params.assignmentId;
+  console.log("KITÖRLIIIIIIIIII", assignmentId)
   const cucc = await hazikService.deleteAssignment(assignmentId)
   res.status(201).json(cucc)
 }

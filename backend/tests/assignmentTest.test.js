@@ -94,7 +94,6 @@ describe("Hazifeladatok tesztelése",()=>{
                   ,DeadLine:"",
                   UploadDate:"2020-05-01"
                 });
-                console.log("ÁÁÁ ", uploadres)
                 //const getres = await assignmentRepository.getAssignmentByID(uploadres.ID)
                 expect(uploadres.text).toBe("Nincs határidő megadva")
                 expect(uploadres.status).toBe(500)
@@ -158,14 +157,56 @@ describe("Hazifeladatok tesztelése",()=>{
                 });
 
                 //const getres = await assignmentRepository.getAssignmentByID(uploadres.ID)
-                console.log("rezponze: ",uploadres)
+                //console.log("rezponze: ",uploadres)
                 expect(uploadres.status).toBe(200)
                 expect(uploadres.body.teacherID).toBe(teacher1.ID)
                 
             })
-
-            console.log("LEFUTR A TESZT")
         })
+
+        describe("GET hazikGroups",()=>{
+            test("should return groups",async()=>{
+                const allGroups = await request(app)
+                .get("/feladat/hazikGroups")
+                .set(setUserHeader())
+                expect(Array.isArray(allGroups.body)).toBe(true)
+                expect(allGroups.body[0].ID).toBe(newGroup1.ID)
+                expect(allGroups.body[0].name).toBe(newGroup1.name)
+            })
+        })
+
+        describe("GET haziktanar",()=>{ //korábban már töltötünk fel sikeresen ezért azzal most nem foglalkozunk
+            test("should return all uploaded assignments for this teacher and its answers",async()=>{
+                const sentAssignemnts = await request(app)
+                .get("/feladat/haziktanar")
+                .set(setUserHeader())
+
+                expect(Array.isArray(sentAssignemnts.body)).toBe(true)
+                expect(sentAssignemnts.body[0]).toHaveProperty("feladat")
+                expect(sentAssignemnts.body[0]).toHaveProperty("anwsers")
+                expect(sentAssignemnts.body[0].feladat.teacherID).toBe(teacher1.ID)
+                expect(sentAssignemnts.body[0].anwsers.length).toBe(2)
+            })
+        })
+
+        describe("POST uploadassignmentFiles",()=>{
+            test("sikeresen feltölti", async ()=>{
+                
+                const response = await request(app)
+                .post('/feladat/uploadassignmentfiles')
+                .attach("files", Buffer.from("Dummy file content"), "testfile.txt")
+                .field("assignmentId", "1")
+                .set(setUserHeader())
+            console.log("BEPISILÉS: ", response)
+              expect(response.status).toBe(200);
+              expect(response.body).toEqual({ success: true });
+              
+              
+
+            })
+        })
+
+
 
     })
     /*describe("Diák oldal tesztelése",()=>{
