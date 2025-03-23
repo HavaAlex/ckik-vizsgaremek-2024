@@ -67,3 +67,8 @@ exports.getTeachers = async (req, res, next) =>
     const teachers = await orarendService.getTeachers()
     res.status(201).json(teachers);
 }
+exports.getLessons = async (req, res, next) =>
+{
+    const lessons = await orarendService.getLessons()
+    res.status(201).json(lessons);
+}

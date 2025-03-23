@@ -26,6 +26,7 @@ const UZENETEK_KEYS = {
 
 const HIANYZASOK_KEYS = {
     getHianyzasok: 'getHianyzasok',
+    getLessons: 'getLessons',
 }
 const JEGYEK_KEYS = {
     getJegyek: 'getJegyek',

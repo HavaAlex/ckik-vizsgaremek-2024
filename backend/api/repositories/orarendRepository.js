@@ -92,6 +92,11 @@ class OrarendRepository
             attributes: ['id','name','phone','email','userId']
         });
     }
+
+    async getLessons(){
+        return await this.Lesson.findAll({ 
+        });
+    }
 }
 
 module.exports = new OrarendRepository(db);
