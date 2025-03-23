@@ -10,6 +10,7 @@ const AUTH_KEYS = {
 
 const ORAREND_KEYS = {
     getOrarend: 'getOrarend',
+    getTeachers: 'getTeachers',
 }
 
 const SZULO_KEYS = {
@@ -48,6 +49,7 @@ const HAZIK_KEYS = {
         deleteAssignment:'deleteAssignment',
         deleteAnswerFile:'deleteAnswerFile'
 }
+
 const ADMIN_KEYS = {
     addTeacherUsers: 'addTeacherUsers',
     addStudentUsers: 'addStudentUsers',

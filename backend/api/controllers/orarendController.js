@@ -61,3 +61,9 @@ exports.getTantargyakTanar = async (req, res, next) =>
     res.status(201).json(tantargyak);
     //console.log("TANTARGY VEG")
 }
+
+exports.getTeachers = async (req, res, next) =>
+{
+    const teachers = await orarendService.getTeachers()
+    res.status(201).json(teachers);
+}

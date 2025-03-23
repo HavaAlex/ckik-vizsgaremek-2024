@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { Lesson } from '@/api/orarend/orarend';
-import { fetchOrarend } from '@/api/orarend/orarendQuery';
+import type { Lesson, Teacher } from '@/api/orarend/orarend';
+import { fetchOrarend, useGetTeachers } from '@/api/orarend/orarendQuery';
 import { ref, watch } from 'vue';
 import { format, startOfWeek, addWeeks } from 'date-fns';
 
@@ -17,11 +17,25 @@ for (let t = startMinute; t <= endMinute; t += 15) {
   timeTicks.push(t);
 }
 
-
 const lessons = ref<Lesson[]>([]);
-
 async function orarendfeltolt(weekStart: string) {
   lessons.value = await fetchOrarend(weekStart);
+}
+
+const teachers = ref<Teacher[]>([]);
+// Instead of an async function, we use a watcher on the teacher query
+const teacherQuery = useGetTeachers();
+watch(
+  () => teacherQuery.data.value,
+  (data) => {
+    teachers.value = data || [];
+  },
+  { immediate: true }
+);
+
+function getTeacherName(teacherId: number): string {
+  const teacher = teachers.value.find(t => t.id === teacherId);
+  return teacher ? teacher.name : teacherId.toString();
 }
 
 function changeWeek(weeks: number) {
@@ -30,9 +44,13 @@ function changeWeek(weeks: number) {
   orarendfeltolt(newWeekStart);
 }
 
-watch(currentWeekStart, (newWeekStart) => {
-  orarendfeltolt(format(newWeekStart, 'yyyy-MM-dd'));
-}, { immediate: true });
+watch(
+  currentWeekStart,
+  (newWeekStart) => {
+    orarendfeltolt(format(newWeekStart, 'yyyy-MM-dd'));
+  },
+  { immediate: true }
+);
 </script>
 
 <template>
@@ -64,11 +82,7 @@ watch(currentWeekStart, (newWeekStart) => {
                 :class="['time-tick', { 'hour-tick': tick % 60 === 0 }]"
                 :style="{ top: ((tick - startMinute) / totalMinutes * 100) + '%' }"
               >
-
-                <span
-                  v-if="tick % 60 === 0"
-                  class="time-label-text"
-                >
+                <span v-if="tick % 60 === 0" class="time-label-text">
                   {{ Math.floor(tick / 60) }}:00
                 </span>
               </div>
@@ -101,7 +115,7 @@ watch(currentWeekStart, (newWeekStart) => {
                         : lessonColor
                     }"
                   >
-                  <div>
+                    <div>
                       <div>
                         <!-- If teacherID is null, strike through the lesson name -->
                         <template v-if="lesson.teacherID === null">
@@ -115,9 +129,9 @@ watch(currentWeekStart, (newWeekStart) => {
                       <div v-if="lesson.teacherID == null" style="font-size: 10px; margin-top: 4px;">
                         Elmarad
                       </div>
-                      <!-- If teacherID exists and lesson is not excused, display the teacherID -->
+                      <!-- If teacherID exists and lesson is not excused, display the teacher's name -->
                       <div v-else-if="lesson.teacherID !== null" style="font-size: 10px; margin-top: 4px;">
-                        Teacher: {{ lesson.teacherID }}
+                        Teacher: {{ getTeacherName(lesson.teacherID) }}
                       </div>
                     </div>
                   </div>
@@ -182,7 +196,6 @@ watch(currentWeekStart, (newWeekStart) => {
   border-top: 2px solid #444;
 }
 
-
 .time-label-text {
   position: absolute;
   left: 5px;
@@ -194,7 +207,6 @@ watch(currentWeekStart, (newWeekStart) => {
   border-radius: 3px;
   color: #000; 
 }
-
 
 .days-container {
   display: flex;
@@ -261,7 +273,6 @@ watch(currentWeekStart, (newWeekStart) => {
   overflow: hidden;
   box-sizing: border-box;
 }
-
 
 .week-navigation {
   display: flex;

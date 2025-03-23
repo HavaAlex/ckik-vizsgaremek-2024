@@ -10,6 +10,7 @@ class OrarendRepository
         this.StudentGroups = db.studentgroup;
         this.Lesson = db.lesson;
         this.ClassDisruption = db.classdistruption;
+        this.Teacher= db.teacher
     }
 
     async createGroup(orarend)
@@ -86,7 +87,11 @@ class OrarendRepository
         });
     }
 
-
+    async getTeachers(){
+        return await this.Teacher.findAll({ 
+            attributes: ['id','name','phone','email','userId']
+        });
+    }
 }
 
 module.exports = new OrarendRepository(db);

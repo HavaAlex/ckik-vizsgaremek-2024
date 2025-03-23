@@ -2,7 +2,7 @@ import axiosClient from "@/lib/axios"
 import { useQuery } from "@tanstack/vue-query"
 import { QUERY_KEYS } from "@/utils/QueryKeys"
 import { useCookieHandler } from "@/stores/cookieHandler";
-import type { Lesson } from "./orarend";
+import type { Lesson, Teacher } from "./orarend";
 import { useErrorHandler } from "@/stores/errorHandler";
 
 const getOrarend = async (weekStart: string): Promise<Lesson[]> => {
@@ -39,4 +39,31 @@ export const fetchOrarend = async (weekStart: string): Promise<Lesson[]> => {
         console.error("Lekérdezési hiba:", error);
         throw error;
     }
+}
+
+
+const getTeachers = async (): Promise<Teacher> =>{
+    console.log("LEFUTOK: GetTeachers")
+    const {getCookie} = useCookieHandler()
+    const config = {
+        headers: { Authorization: `Bearer ${getCookie("alap")}` }
+    };
+    const response = await axiosClient.get(`http://localhost:3000/orarend/getTeachers`,config)
+    console.log("anyád:")
+    console.log(response)
+    console.log(response.data)
+    return response.data
+}
+export const useGetTeachers = () => {
+    const { setError } = useErrorHandler()
+    const query = useQuery({
+        queryKey: [QUERY_KEYS.getTeachers],
+        queryFn: getTeachers,
+    })
+
+    if (query.error.value) {
+        console.error("Lekérdezési hiba:", query.error)
+        setError(query.error.value)
+    }
+    return query  
 }

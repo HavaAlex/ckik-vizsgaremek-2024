@@ -114,6 +114,10 @@ async getTeacherLessons(teacherID, weekStart) {
         
         return combinedOrarend;
     }
+
+    async getTeachers(){
+        return await orarendRepository.getTeachers()
+    }
 }
 
 module.exports = new OrarendService();

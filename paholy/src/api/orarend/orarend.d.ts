@@ -15,3 +15,11 @@ export type Group = {
     ID: number,
     name: string
 }
+
+export type Teacher = {
+    ID: number,
+    name: string,
+    phone: string,
+    email: string,
+
+}
