@@ -63,7 +63,9 @@ onUnmounted(() => {
             }" :loading="isPending"> 
                 Bejelentkezés
             </v-btn>
-
+            <v-btn @click="push({name:'changePassword'})">
+              Jelszó megváltoztatása
+            </v-btn>
           
 
         </v-card-actions>

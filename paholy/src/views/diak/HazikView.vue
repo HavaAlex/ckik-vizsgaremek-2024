@@ -19,6 +19,14 @@ function formatDate(dateString: Date | string | null) {
   return date.toISOString().slice(0, 19).replace("T", " ");
 }
 
+// Helper function for status styling
+const getStatusClass = (status: string) => {
+  if(status === "Nincs leadva") return "status-yellow";
+  if(status === "Leadva") return "status-green";
+  if(status === "Határidő lejárt") return "status-red";
+  return "";
+};
+
 // For viewing assignment details
 const selectedAssignment = ref<OpenAssignment>({
   ID: -1,
@@ -166,258 +174,264 @@ onMounted(() => {
 onUnmounted(() => {
   window.matchMedia("(orientation: portrait)").removeEventListener("change", updateOrientation);
 });//itt ér véget
-
-
 </script>
 
 <template>
-  
-    <div v-if="isPortrait">
-      <v-table style="height: 80vw !important; border-radius: 3%;" >
-        <thead>
-          <tr>
-            <th class="text-center" style="width: 10vw;">Feladó tanár</th>
-            <th class="text-center" style="width: 10vw;">Határidő</th>
-            <th class="text-center" style="width: 10vw;">Feltöltési idő</th>
-            <th class="text-center" style="width: 10vw;">Leírás</th>
-            <th class="text-center" style="width: 10vw;">Státusz</th>
-            <th class="text-center" style="width: 10vw;">Interakció</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="feladat in assignmentStudentList" :key="feladat.feladat.ID">
-            <td>{{ feladat.feladat.senderUserName }}</td>
-            <td>{{ formatDate(feladat.feladat.deadline) }}</td>
-            <td>{{ formatDate(feladat.feladat.uploadDate) }}</td>
-            <td class="shortenedDesc">{{ feladat.feladat.desc }}</td>
-            <td>{{ feladat.valasz.status }}</td>
-            <!-- Use the helper function to open assignment details -->
-            <v-btn color="primary" @click="handleOpenAssignment(feladat.feladat, feladat.valasz)">
-              Feladat megtekintése
-            </v-btn>
-          </tr>
-        </tbody>
-      </v-table>
+  <div v-if="isPortrait">
+    <v-table style="height: 80vw !important; border-radius: 3%;">
+      <thead>
+        <tr>
+          <th class="text-center" style="width: 10vw;">Feladó tanár</th>
+          <th class="text-center" style="width: 10vw;">Határidő</th>
+          <th class="text-center" style="width: 10vw;">Feltöltési idő</th>
+          <th class="text-center" style="width: 10vw;">Leírás</th>
+          <th class="text-center" style="width: 10vw;">Státusz</th>
+          <th class="text-center" style="width: 10vw;">Interakció</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="feladat in assignmentStudentList" :key="feladat.feladat.ID">
+          <td>{{ feladat.feladat.senderUserName }}</td>
+          <td>{{ formatDate(feladat.feladat.deadline) }}</td>
+          <td>{{ formatDate(feladat.feladat.uploadDate) }}</td>
+          <td class="shortenedDesc">{{ feladat.feladat.desc }}</td>
+          <td>
+            <span :class="getStatusClass(feladat.valasz.status)">
+              {{ feladat.valasz.status }}
+            </span>
+          </td>
+          <!-- Use the helper function to open assignment details -->
+          <v-btn color="primary" @click="handleOpenAssignment(feladat.feladat, feladat.valasz)">
+            Feladat megtekintése
+          </v-btn>
+        </tr>
+      </tbody>
+    </v-table>
 
+    <v-dialog v-model="ViewAssignmentDialog" max-width="80vw">
+      <v-card max-width="80vw">
+        <v-card-title>Feladat részletei</v-card-title>
+        <v-card-text>
+          <p><strong>Feladás dátuma:</strong> {{ formatDate(selectedAssignment?.uploadDate) }}</p>
+          <p><strong>Dátum:</strong> {{ formatDate(selectedAssignment?.deadline) }}</p>
+          <p><strong>Leírás:</strong> {{ selectedAssignment?.desc }}</p>
 
-      <v-dialog v-model="ViewAssignmentDialog" max-width="80vw" >
-        <v-card max-width="80vw">
-          <v-card-title>Feladat részletei</v-card-title>
-          <v-card-text>
-            <p><strong>Feladás dátuma:</strong> {{ formatDate(selectedAssignment?.uploadDate) }}</p>
-            <p><strong>Dátum:</strong> {{ formatDate(selectedAssignment?.deadline) }}</p>
-            <p><strong>Leírás:</strong> {{ selectedAssignment?.desc }}</p>
+          <!-- Assignment Files Section (Teacher's Files) -->
+          <div v-if="assignmentFiles.length">
+            <p><strong>Fájlok:</strong></p>
+            <v-list-item
+              v-for="(file, index) in assignmentFiles"
+              :key="file.ID"
+              @click="downloadFile(file)"
+              style="cursor: pointer;"
+            >
+              <v-list-item-content>
+                <v-list-item-title>{{ file.filename }}</v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+          </div>
+          <div v-else>
+            <p><strong>Fájlok:</strong> Nincsenek fájlok ehhez a feladathoz.</p>
+          </div>
 
-            <!-- Assignment Files Section (Teacher's Files) -->
-            <div v-if="assignmentFiles.length">
-              <p><strong>Fájlok:</strong></p>
-              <v-list-item
-                v-for="(file, index) in assignmentFiles"
-                :key="file.ID"
-                @click="downloadFile(file)"
-                style="cursor: pointer;"
+          <!-- Completed Assignment Files Section (Student's Files) -->
+          <div v-if="answerFiles[openCompletedAssignment.ID] && answerFiles[openCompletedAssignment.ID].length">
+            <p><strong>Beadott fájlok:</strong></p>
+            <v-list-item
+              v-for="(file, index) in answerFiles[openCompletedAssignment.ID]"
+              :key="file.ID"
+              style="display: flex; align-items: center;"
+            >
+              <v-list-item-content>
+                <v-list-item-title>{{ file.filename }}</v-list-item-title>
+              </v-list-item-content>
+              <v-btn small color="primary" @click="downloadFile(file)">Download</v-btn>
+              <v-btn
+                small
+                color="error"
+                @click="openDeleteAssignmentDialog(file.ID)"
+                :disabled="isDeadlinePast"
               >
-                <v-list-item-content>
-                  <v-list-item-title>{{ file.filename }}</v-list-item-title>
-                </v-list-item-content>
-              </v-list-item>
-            </div>
-            <div v-else>
-              <p><strong>Fájlok:</strong> Nincsenek fájlok ehhez a feladathoz.</p>
-            </div>
+                Delete
+              </v-btn>
+            </v-list-item>
+          </div>
+          <div v-else>
+            <p><strong>Beadott fájlok:</strong> Nincsenek beadott fájlok.</p>
+          </div>
 
-            <!-- Completed Assignment Files Section (Student's Files) -->
-            <div v-if="answerFiles[openCompletedAssignment.ID] && answerFiles[openCompletedAssignment.ID].length">
-              <p><strong>Beadott fájlok:</strong></p>
-              <v-list-item
-                v-for="(file, index) in answerFiles[openCompletedAssignment.ID]"
-                :key="file.ID"
-                style="display: flex; align-items: center;"
-              >
-                <v-list-item-content>
-                  <v-list-item-title>{{ file.filename }}</v-list-item-title>
-                </v-list-item-content>
-                <v-btn small color="primary" @click="downloadFile(file)">Download</v-btn>
-                <v-btn
-                  small
-                  color="error"
-                  @click="openDeleteAssignmentDialog(file.ID)"
-                  :disabled="isDeadlinePast"
-                >
-                  Delete
+          <p><strong>Az ön válasza:</strong></p>
+          <v-textarea placeholder="Ide írhat" v-model="openCompletedAssignment.textAnswer">
+            {{ openCompletedAssignment.textAnswer }}
+          </v-textarea>
+          <v-file-input 
+            label="Fájlok feltöltése (egyszerre töltse fel)"
+            multiple
+            v-model="completedAssignmentFiles"
+            show-size
+            counter
+          ></v-file-input>
+          <p><strong>Utoljára módosítva:</strong> {{ formatDate(openCompletedAssignment.date) }}</p>
+        </v-card-text>
+        <v-card-actions>
+          <v-btn color="primary" @click="ViewAssignmentDialog = false">Bezárás</v-btn>
+          <v-btn @click="modositasmentese" :disabled="isDeadlinePast">Módosítás</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+    <!-- Delete File Confirmation Dialog -->
+    <v-dialog v-model="DeleteAssignmentDialog" max-width="80vw" theme="dark">
+      <v-card>
+        <v-card-title>Biztos törölni akarod?</v-card-title>
+        <v-btn @click="deleteFile">Törlés</v-btn>
+        <v-btn @click="DeleteAssignmentDialog = false">Mégse</v-btn>
+      </v-card>
+    </v-dialog>
+
+    <!-- Success Dialog -->
+    <v-dialog v-model="successDialog" max-width="80vw" theme="dark">
+      <v-card>
+        <v-card-title>Sikeres módosítás</v-card-title>
+        <v-card-text>A módosítás sikeresen megtörtént.</v-card-text>
+        <v-card-actions>
+          <v-btn color="primary" @click="successDialog = false">OK</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+  </div>
+
+  <!-- asztali nézet -->
+  <div v-else>
+    <v-container>
+      <v-card>
+        <v-card-title>Házifeladatok:</v-card-title>
+        <v-card-text>
+          <v-table style="height: 30vw !important;">
+            <thead>
+              <tr>
+                <th class="text-center" style="width: 10vw;">Feladó tanár</th>
+                <th class="text-center" style="width: 10vw;">Határidő</th>
+                <th class="text-center" style="width: 10vw;">Feltöltési idő</th>
+                <th class="text-center" style="width: 10vw;">Leírás</th>
+                <th class="text-center" style="width: 10vw;">Státusz</th>
+                <th class="text-center" style="width: 10vw;">Interakció</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="feladat in assignmentStudentList" :key="feladat.feladat.ID">
+                <td>{{ feladat.feladat.senderUserName }}</td>
+                <td>{{ formatDate(feladat.feladat.deadline) }}</td>
+                <td>{{ formatDate(feladat.feladat.uploadDate) }}</td>
+                <td class="shortenedDesc">{{ feladat.feladat.desc }}</td>
+                <td>
+                  <span :class="getStatusClass(feladat.valasz.status)">
+                    {{ feladat.valasz.status }}
+                  </span>
+                </td>
+                <!-- Use the helper function to open assignment details -->
+                <v-btn color="primary"@click="handleOpenAssignment(feladat.feladat, feladat.valasz)">
+                  Feladat megtekintése
                 </v-btn>
-              </v-list-item>
-            </div>
-            <div v-else>
-              <p><strong>Beadott fájlok:</strong> Nincsenek beadott fájlok.</p>
-            </div>
+              </tr>
+            </tbody>
+          </v-table>
+        </v-card-text>
+      </v-card>
+    </v-container>
 
-            <p><strong>Az ön válasza:</strong></p>
-            <v-textarea placeholder="Ide írhat" v-model="openCompletedAssignment.textAnswer">
-              {{ openCompletedAssignment.textAnswer }}
-            </v-textarea>
-            <v-file-input 
-              label="Fájlok feltöltése (egyszerre töltse fel)"
-              multiple
-              v-model="completedAssignmentFiles"
-              show-size
-              counter
-            ></v-file-input>
-            <p><strong>Utoljára módosítva:</strong> {{ formatDate(openCompletedAssignment.date) }}</p>
-          </v-card-text>
-          <v-card-actions>
-            <v-btn color="primary" @click="ViewAssignmentDialog = false">Bezárás</v-btn>
-            <v-btn @click="modositasmentese" :disabled="isDeadlinePast">Módosítás</v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
+    <v-dialog v-model="ViewAssignmentDialog" max-width="50vw">
+      <v-card max-width="50vw">
+        <v-card-title>Feladat részletei</v-card-title>
+        <v-card-text>
+          <p><strong>Feladás dátuma:</strong> {{ formatDate(selectedAssignment?.uploadDate) }}</p>
+          <p><strong>Dátum:</strong> {{ formatDate(selectedAssignment?.deadline) }}</p>
+          <p><strong>Leírás:</strong> {{ selectedAssignment?.desc }}</p>
 
-      <!-- Delete File Confirmation Dialog -->
-      <v-dialog v-model="DeleteAssignmentDialog" max-width="80vw" theme="dark">
-        <v-card>
-          <v-card-title>Biztos törölni akarod?</v-card-title>
-          <v-btn @click="deleteFile">Törlés</v-btn>
-          <v-btn @click="DeleteAssignmentDialog = false">Mégse</v-btn>
-        </v-card>
-      </v-dialog>
+          <!-- Assignment Files Section (Teacher's Files) -->
+          <div v-if="assignmentFiles.length">
+            <p><strong>Fájlok:</strong></p>
+            <v-list-item
+              v-for="(file, index) in assignmentFiles"
+              :key="file.ID"
+              @click="downloadFile(file)"
+              style="cursor: pointer;"
+            >
+              <v-list-item-content>
+                <v-list-item-title>{{ file.filename }}</v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+          </div>
+          <div v-else>
+            <p><strong>Fájlok:</strong> Nincsenek fájlok ehhez a feladathoz.</p>
+          </div>
 
-      <!-- Success Dialog -->
-      <v-dialog v-model="successDialog" max-width="80vw" theme="dark">
-        <v-card>
-          <v-card-title>Sikeres módosítás</v-card-title>
-          <v-card-text>A módosítás sikeresen megtörtént.</v-card-text>
-          <v-card-actions>
-            <v-btn color="primary" @click="successDialog = false">OK</v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-    </div>
-
-<!--asztali nézet-->
-
-
-    <div v-else>
-      <v-table style="height: 30vw !important;" >
-        <thead>
-          <tr>
-            <th class="text-center" style="width: 10vw;">Feladó tanár</th>
-            <th class="text-center" style="width: 10vw;">Határidő</th>
-            <th class="text-center" style="width: 10vw;">Feltöltési idő</th>
-            <th class="text-center" style="width: 10vw;">Leírás</th>
-            <th class="text-center" style="width: 10vw;">Státusz</th>
-            <th class="text-center" style="width: 10vw;">Interakció</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="feladat in assignmentStudentList" :key="feladat.feladat.ID">
-            <td>{{ feladat.feladat.senderUserName }}</td>
-            <td>{{ formatDate(feladat.feladat.deadline) }}</td>
-            <td>{{ formatDate(feladat.feladat.uploadDate) }}</td>
-            <td class="shortenedDesc">{{ feladat.feladat.desc }}</td>
-            <td>{{ feladat.valasz.status }}</td>
-            <!-- Use the helper function to open assignment details -->
-            <v-btn @click="handleOpenAssignment(feladat.feladat, feladat.valasz)">
-              Feladat megtekintése
-            </v-btn>
-          </tr>
-        </tbody>
-      </v-table>
-
-
-      <v-dialog v-model="ViewAssignmentDialog" max-width="50vw" >
-        <v-card max-width="50vw">
-          <v-card-title>Feladat részletei</v-card-title>
-          <v-card-text>
-            <p><strong>Feladás dátuma:</strong> {{ formatDate(selectedAssignment?.uploadDate) }}</p>
-            <p><strong>Dátum:</strong> {{ formatDate(selectedAssignment?.deadline) }}</p>
-            <p><strong>Leírás:</strong> {{ selectedAssignment?.desc }}</p>
-
-            <!-- Assignment Files Section (Teacher's Files) -->
-            <div v-if="assignmentFiles.length">
-              <p><strong>Fájlok:</strong></p>
-              <v-list-item
-                v-for="(file, index) in assignmentFiles"
-                :key="file.ID"
-                @click="downloadFile(file)"
-                style="cursor: pointer;"
+          <!-- Completed Assignment Files Section (Student's Files) -->
+          <div v-if="answerFiles[openCompletedAssignment.ID] && answerFiles[openCompletedAssignment.ID].length">
+            <p><strong>Beadott fájlok:</strong></p>
+            <v-list-item
+              v-for="(file, index) in answerFiles[openCompletedAssignment.ID]"
+              :key="file.ID"
+              style="display: flex; align-items: center;"
+            >
+              <v-list-item-content>
+                <v-list-item-title>{{ file.filename }}</v-list-item-title>
+              </v-list-item-content>
+              <v-btn small color="primary" @click="downloadFile(file)">Download</v-btn>
+              <v-btn
+                small
+                color="error"
+                @click="openDeleteAssignmentDialog(file.ID)"
+                :disabled="isDeadlinePast"
               >
-                <v-list-item-content>
-                  <v-list-item-title>{{ file.filename }}</v-list-item-title>
-                </v-list-item-content>
-              </v-list-item>
-            </div>
-            <div v-else>
-              <p><strong>Fájlok:</strong> Nincsenek fájlok ehhez a feladathoz.</p>
-            </div>
+                Delete
+              </v-btn>
+            </v-list-item>
+          </div>
+          <div v-else>
+            <p><strong>Beadott fájlok:</strong> Nincsenek beadott fájlok.</p>
+          </div>
 
-            <!-- Completed Assignment Files Section (Student's Files) -->
-            <div v-if="answerFiles[openCompletedAssignment.ID] && answerFiles[openCompletedAssignment.ID].length">
-              <p><strong>Beadott fájlok:</strong></p>
-              <v-list-item
-                v-for="(file, index) in answerFiles[openCompletedAssignment.ID]"
-                :key="file.ID"
-                style="display: flex; align-items: center;"
-              >
-                <v-list-item-content>
-                  <v-list-item-title>{{ file.filename }}</v-list-item-title>
-                </v-list-item-content>
-                <v-btn small color="primary" @click="downloadFile(file)">Download</v-btn>
-                <v-btn
-                  small
-                  color="error"
-                  @click="openDeleteAssignmentDialog(file.ID)"
-                  :disabled="isDeadlinePast"
-                >
-                  Delete
-                </v-btn>
-              </v-list-item>
-            </div>
-            <div v-else>
-              <p><strong>Beadott fájlok:</strong> Nincsenek beadott fájlok.</p>
-            </div>
+          <p><strong>Az ön válasza:</strong></p>
+          <v-textarea placeholder="Ide írhat" v-model="openCompletedAssignment.textAnswer">
+            {{ openCompletedAssignment.textAnswer }}
+          </v-textarea>
+          <v-file-input 
+            label="Fájlok feltöltése (egyszerre töltse fel)"
+            multiple
+            v-model="completedAssignmentFiles"
+            show-size
+            counter
+          ></v-file-input>
+          <p><strong>Utoljára módosítva:</strong> {{ formatDate(openCompletedAssignment.date) }}</p>
+        </v-card-text>
+        <v-card-actions>
+          <v-btn color="primary" @click="ViewAssignmentDialog = false">Bezárás</v-btn>
+          <v-btn @click="modositasmentese" :disabled="isDeadlinePast">Módosítás</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
 
-            <p><strong>Az ön válasza:</strong></p>
-            <v-textarea placeholder="Ide írhat" v-model="openCompletedAssignment.textAnswer">
-              {{ openCompletedAssignment.textAnswer }}
-            </v-textarea>
-            <v-file-input 
-              label="Fájlok feltöltése (egyszerre töltse fel)"
-              multiple
-              v-model="completedAssignmentFiles"
-              show-size
-              counter
-            ></v-file-input>
-            <p><strong>Utoljára módosítva:</strong> {{ formatDate(openCompletedAssignment.date) }}</p>
-          </v-card-text>
-          <v-card-actions>
-            <v-btn color="primary" @click="ViewAssignmentDialog = false">Bezárás</v-btn>
-            <v-btn @click="modositasmentese" :disabled="isDeadlinePast">Módosítás</v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
+    <!-- Delete File Confirmation Dialog -->
+    <v-dialog v-model="DeleteAssignmentDialog" max-width="50vw" theme="dark">
+      <v-card>
+        <v-card-title>Biztos törölni akarod?</v-card-title>
+        <v-btn @click="deleteFile">Törlés</v-btn>
+        <v-btn @click="DeleteAssignmentDialog = false">Mégse</v-btn>
+      </v-card>
+    </v-dialog>
 
-      <!-- Delete File Confirmation Dialog -->
-      <v-dialog v-model="DeleteAssignmentDialog" max-width="50vw" theme="dark">
-        <v-card>
-          <v-card-title>Biztos törölni akarod?</v-card-title>
-          <v-btn @click="deleteFile">Törlés</v-btn>
-          <v-btn @click="DeleteAssignmentDialog = false">Mégse</v-btn>
-        </v-card>
-      </v-dialog>
-
-      <!-- Success Dialog -->
-      <v-dialog v-model="successDialog" max-width="30vw" theme="dark">
-        <v-card>
-          <v-card-title>Sikeres módosítás</v-card-title>
-          <v-card-text>A módosítás sikeresen megtörtént.</v-card-text>
-          <v-card-actions>
-            <v-btn color="primary" @click="successDialog = false">OK</v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-    </div>
-    
-  
+    <!-- Success Dialog -->
+    <v-dialog v-model="successDialog" max-width="30vw" theme="dark">
+      <v-card>
+        <v-card-title>Sikeres módosítás</v-card-title>
+        <v-card-text>A módosítás sikeresen megtörtént.</v-card-text>
+        <v-card-actions>
+          <v-btn color="primary" @click="successDialog = false">OK</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+  </div>
 </template>
 
 <style lang="css">
@@ -427,5 +441,26 @@ onUnmounted(() => {
   text-overflow: ellipsis;
   width: 10vw;
   display: inline-block;
+}
+
+.status-yellow {
+  background-color: yellow;
+  color: black;
+  padding: 2px 5px;
+  border-radius: 4px;
+}
+
+.status-green {
+  background-color: green;
+  color: white;
+  padding: 2px 5px;
+  border-radius: 4px;
+}
+
+.status-red {
+  background-color: red;
+  color: white;
+  padding: 2px 5px;
+  border-radius: 4px;
 }
 </style>

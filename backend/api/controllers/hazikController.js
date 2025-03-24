@@ -84,6 +84,12 @@ exports.getTeacherAssignmentFiles = async (req,res,next) => {
 
 exports.modifycompletedassignment = async (req,res,next) => {
   const {ID,assignmentID,date,status,studentID,textAnswer} = req.body
+  console.log("IDDD: ", ID)
+  console.log("ASMNET ID ", assignmentID)
+  console.log("dete. ",date)
+  console.log("sttusz ", status)
+  console.log("suidnet ID ", studentID)
+  console.log("valasz_ ", textAnswer)
   const completedassignment = {
     ID: ID,
     assignmentID: assignmentID,
@@ -93,15 +99,14 @@ exports.modifycompletedassignment = async (req,res,next) => {
     textAnswer:textAnswer
   }
   const modositotthazik = await hazikService.modifycompletedassignment(completedassignment)
+  console.log(")%)%)%), ", modositotthazik)
   res.status(201).json(modositotthazik)
 }
 
 exports.getAssignmentFiles = async (req,res,next) =>{
-  const assignmentId = req.body;
-  const keys = Object.keys(assignmentId);
-  const assignmentNumber = parseInt(keys[0], 10);
-  console.log(assignmentNumber)
-  const assignmentFilesArray = await hazikService.getAssignmentFiles(assignmentNumber)
+  const assignmentId = parseInt(req.headers.assignmentid);
+  const assignmentFilesArray = await hazikService.getAssignmentFiles(assignmentId)
+  console.log("my lif be like: ",assignmentFilesArray)
   res.status(201).json(assignmentFilesArray)
 }
 
