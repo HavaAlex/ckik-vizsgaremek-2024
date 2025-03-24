@@ -200,7 +200,7 @@ export const usedeleteAssignment = () => {
                 if(role === 'admin'){
                     queryClient.refetchQueries({queryKey:[QUERY_KEYS.getGroupAsignments]})
                 }
-                else{
+                else if(role === 'tanar'){
                     queryClient.refetchQueries({queryKey:[QUERY_KEYS.getAssignmentsTeacher]})
                 }
                 

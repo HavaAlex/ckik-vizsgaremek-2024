@@ -205,7 +205,7 @@ onUnmounted(() => {
                   :key="index" 
                   @click="MessageDataRef.receiverGrouplist.splice(index, 1)"
                 >
-                  {{ cuccli.name + " (csoport)" }}
+                  {{ cuccli.name + " (csoport)  (kattintson az eltávolításhoz)" }}
                 </v-list-item>
               </v-list>
               

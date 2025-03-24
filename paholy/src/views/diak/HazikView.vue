@@ -245,14 +245,14 @@ onUnmounted(() => {
               <v-list-item-content>
                 <v-list-item-title>{{ file.filename }}</v-list-item-title>
               </v-list-item-content>
-              <v-btn small color="primary" @click="downloadFile(file)">Download</v-btn>
+              <v-btn small color="primary" @click="downloadFile(file)">Letöltés</v-btn>
               <v-btn
                 small
                 color="error"
                 @click="openDeleteAssignmentDialog(file.ID)"
                 :disabled="isDeadlinePast"
               >
-                Delete
+                Törlés
               </v-btn>
             </v-list-item>
           </div>
@@ -377,14 +377,14 @@ onUnmounted(() => {
               <v-list-item-content>
                 <v-list-item-title>{{ file.filename }}</v-list-item-title>
               </v-list-item-content>
-              <v-btn small color="primary" @click="downloadFile(file)">Download</v-btn>
+              <v-btn small color="primary" @click="downloadFile(file)">Letöltés</v-btn>
               <v-btn
                 small
                 color="error"
                 @click="openDeleteAssignmentDialog(file.ID)"
                 :disabled="isDeadlinePast"
               >
-                Delete
+                Törlés
               </v-btn>
             </v-list-item>
           </div>

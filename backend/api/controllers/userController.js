@@ -123,14 +123,11 @@ exports.changePassword = async (req,res,next)=>{
         return
     }
 
-    const hashedCurrentPassword = await bcrypt.hash(passwordData.currentpassword, salt)
-    console.log("ez: ", passwordData.currentpassword)
-    console.log("az: ", user.password)
     if(!await bcrypt.compare(passwordData.currentpassword, user.password)){
         res.status(500).send("Az ön által megadott jelszó nem egyezik ennek a felhasználónak a jelszavával")
         return
     }
-    else{
+    else if(await bcrypt.compare(passwordData.currentpassword, user.password)){
         const userReplacement = {
             ID: user.ID,
             username: user.username,
