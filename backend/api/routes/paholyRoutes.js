@@ -70,4 +70,6 @@ router.put("/modifyUser",adminController.modifyUser)
 router.delete("/deleteUser/:userID",adminController.deleteUser)
 //Innentől piszkálhatod ;) uWu
 
+
+
 module.exports = router;

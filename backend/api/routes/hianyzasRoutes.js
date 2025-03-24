@@ -2,7 +2,7 @@ const express = require("express");
 const multer = require("multer");
 const router = express.Router();
 
-//console.log("teszt3");
+
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
@@ -22,5 +22,6 @@ const user = require("../models/user");
 router.use(userAuth.verifyToken);
 
 router.get("/", absenceController.getAbsences);
+router.get("/getStudentsInGroup/:groupID", absenceController.getStudentsInGroup);
 router.post("/", absenceController.getAbsences);//NINCS KÉSZ
 module.exports = router;

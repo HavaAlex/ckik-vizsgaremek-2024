@@ -6,3 +6,9 @@ exports.getAbsences = async (req, res, next) =>
 
     res.status(201).json(absences);
 }
+
+exports.getStudentsInGroup = async (req, res, next) => {
+    const groupID = req.params.groupID;
+
+    const students = await absenceService.getStudentsInGroup(groupID);
+}

@@ -5,7 +5,7 @@ import { QUERY_KEYS } from "@/utils/QueryKeys"
 import { jwtDecode } from "jwt-decode";
 import { useCookieHandler } from "@/stores/cookieHandler";
 
-import type { Hianyzas, Lesson, Teacher } from "./hianyzasok";
+import type { Hianyzas, Lesson, Teacher, GroupMembers } from "./hianyzasok";
 import queryClient from "@/lib/queryClient";
 import { useErrorHandler } from "@/stores/errorHandler";
 
@@ -80,3 +80,43 @@ export const useGetTeachers = () => {
     }
     return query  
 }
+
+
+const getStudentsInGroup = async (groupID: number): Promise<Lesson[]> => {
+    console.log("Itt kellene Indulnia2")
+    const { getCookie } = useCookieHandler()
+    const config = {
+        headers: { Authorization: `Bearer ${getCookie("alap")}` }
+    };
+    const response = await axiosClient.get(`http://localhost:3000/hianyzas/getStudentsInGroup/${groupID}`, config);
+
+
+    console.log("Itt kellene lennie de nincs")
+    console.log(response.data)
+
+    return response.data
+}
+
+export const useGetStudentsInGroup = (groupID: number) => {
+    console.log("Itt kellene Indulnia1")
+    const { setError } = useErrorHandler()
+
+    const query = useQuery({
+        queryKey: [QUERY_KEYS.getAllUzenetek, groupID],
+        queryFn: () => {
+            console.log("Itt kellene meghívódnia a queryFn-nek")
+            return getStudentsInGroup(groupID)
+        },
+        enabled: !!groupID, // Prevents running when groupID is undefined
+        retry: 0, // Disable automatic retries to see errors clearly
+        staleTime: 0, // Forces React Query to refetch every time
+    })
+
+    if (query.error?.value) {
+        console.error("Lekérdezési hiba:", query.error)
+        setError(query.error.value)
+    }
+
+    return query
+}
+

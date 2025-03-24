@@ -37,3 +37,8 @@ export type Lesson = {
     subjectName: string,
     excused: boolean
 }
+
+export type GroupMembers ={
+    groupName:string,
+    members:GroupMember[],
+}
