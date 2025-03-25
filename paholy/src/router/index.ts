@@ -168,7 +168,7 @@ const router = createRouter({
                   component: UzenetView
               },
               { 
-                  path: 'szulo',
+                  path: 'szulo/:id',
                   name: 'szulouzenetek',
                   component: UzenetView
               },
