@@ -48,12 +48,16 @@ const getAssignmentsStudent = async ()  =>{
     const config = {
         headers: { Authorization: `Bearer ${ cookieHandler.getCookie("alap")}` }
     };
+<<<<<<< HEAD
     console.log("FAAAAAAAAAAAASZ")
     console.log(cookieHandler.utolsoDecoded?.userData.value.role)
     const response = await axiosClient.get(cookieHandler.utolsoDecoded?.userData.role == "szulo"?`http://localhost:3000/feladat/hazikdiak${params.id}` :`http://localhost:3000/feladat/hazikdiak`,config)
     console.log("-----------------------------------------------")
     console.log(response)
     console.log("-----------------------------------------------")
+=======
+    const response = await axiosClient.get(`http://localhost:3000/feladat/hazikdiak`,config)
+>>>>>>> 8ae19ba6b941c04a2e4996b69fe64e25243f4233
     return response.data
 }
 export const usegetAssignmentsStudent = () => {
@@ -100,6 +104,7 @@ const getCompletedAssignmentFiles = async (assignmentId:any[]) : Promise<any[]> 
     const config = {
         headers: { Authorization: `Bearer ${getCookie("alap")}` }
     };
+    console.log("UUUUUUUUUUUUUUU ", assignmentId)
     const response = await axiosClient.post(`http://localhost:3000/feladat/getCompletedAssignmentFiles/`,assignmentId ,config)
     console.log("getCompletedAssignmentFiles RESPONSEEEEEEEEEEEE: ", response)
     return response.data

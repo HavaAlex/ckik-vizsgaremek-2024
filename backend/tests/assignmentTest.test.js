@@ -8,6 +8,7 @@ const groupRepository= require("../api/repositories/groupRepository");
 const studentGroupRepository= require("../api/repositories/studentGroupRepository");
 const assignmentRepository = require("../api/repositories/assignmentRepository");
 const jwt = require("jsonwebtoken");
+const { get } = require("lodash");
 jest.mock("../api/db/dbContext", () => require("../__mocks__/db"));
 
 describe("Hazifeladatok tesztelése",()=>{
@@ -223,6 +224,51 @@ describe("Hazifeladatok tesztelése",()=>{
             })
         })
 
+        describe("DELETE /feladat/deleteAssignment/",()=>{
+            test("egyel kevesebb ház lesz miután töröltünk",async()=>{
+                const uploadres2 = await request(app)
+                .post("/feladat/newassignment")
+                .set(setUserHeader())
+                .send({
+                  Groups:[{ID: newGroup1.ID, name: "13.c", studentList:[newStudent1.ID, newStudent2.ID]}],
+                  Description:"test2"
+                  ,DeadLine:"2026-12-12",
+                  UploadDate:"2020-05-01"
+                });
+
+                const uploadres3 = await request(app)
+                .post("/feladat/newassignment")
+                .set(setUserHeader())
+                .send({
+                  Groups:[{ID: newGroup1.ID, name: "13.c", studentList:[newStudent1.ID, newStudent2.ID]}],
+                  Description:"test3"
+                  ,DeadLine:"2026-12-12",
+                  UploadDate:"2020-05-01"
+                });
+
+
+                let sentAssignemnts = await request(app)
+                .get("/feladat/haziktanar")
+                .set(setUserHeader())
+
+                const assignmentId = sentAssignemnts.body[2].feladat.ID
+
+                const lengthBeforeDelete = sentAssignemnts.body.length
+                const deleteRes = await request(app).delete(`/feladat/deleteAssignment/${assignmentId}`).set("Authorization", `Bearer ${token}`);
+                expect(deleteRes.status).toBe(201)
+                expect(deleteRes.body).toBe("sikerült")
+
+
+                sentAssignemnts = await request(app)
+                .get("/feladat/haziktanar")
+                .set(setUserHeader())
+                const lengthAfterDelete = sentAssignemnts.body.length
+ 
+                expect(lengthBeforeDelete-1).toBe(lengthAfterDelete)
+
+            })
+        })
+
         
 
     })
@@ -260,11 +306,62 @@ describe("Hazifeladatok tesztelése",()=>{
                     textAnswer: "TestValasz"
                   });
 
-                console.log("=========== ", modifiedCompletedAssignment)
+                //console.log("=========== ", modifiedCompletedAssignment)
                 expect(modifiedCompletedAssignment.body.assignmentID).toBe(goodtestAssignment.ID)
                 expect(modifiedCompletedAssignment.body.status).toBe("Leadva")
                 expect(modifiedCompletedAssignment.body.textAnswer).toBe("TestValasz")
 
+            })
+        })
+
+        describe("POST uploadCompletedAssignmentFiles",()=>{
+            test("feltölti sikeresen",async ()=>{
+                const response = await request(app)
+                .post('/feladat/uploadcompletedassignmentfiles')
+                .attach("files", Buffer.from("Dummy file content"), "testfile.txt")
+                .attach("files", Buffer.from("Dummy file content2"), "testfile2.txt")
+                .field("completedAssignmentId", "2")
+                .set(setUserHeader())
+                expect(response.status).toBe(200);
+                expect(response.body.nagycucc.message).toBe('Files uploaded successfully');
+                expect(Array.isArray(response.body.nagycucc.uploadedFiles)).toBe(true)
+                expect(response.body.nagycucc.uploadedFiles.length).toBe(2)
+                })
+        })
+
+        describe("POST getCompletedAssignmentFiles",()=>{
+            test("lekéri a 2-es id-jú válasz 2 fájlját", async ()=>{
+                const getRes = await request(app)
+                .post("/feladat/getCompletedAssignmentFiles/").send([2]).set("Authorization", `Bearer ${token}`);
+
+                expect(getRes.status).toBe(201)
+                expect(getRes.body[0].length).toBe(2)
+                console.log("LEMEGY ")
+            })
+        })
+         describe("DELETE deleteCompletedAssignmentFile",()=>{
+            test("Sikeres törlés", async ()=>{
+                console.log("belefut")
+                const getRes = await request(app)
+                .post("/feladat/getCompletedAssignmentFiles/").send([2]).set("Authorization", `Bearer ${token}`);
+                expect(getRes.status).toBe(201)
+                expect(getRes.body[0].length).toBe(2)
+                //console.log("§0§: ",getRes.body[0])
+
+
+                const fileId = getRes.body[0][0].ID
+                console.log("törlendő ", fileId)
+
+                const deleteRes = await request(app).delete(`/feladat/deleteAnswerFile/${fileId}`).set("Authorization", `Bearer ${token}`);
+                expect(deleteRes.status).toBe(201)
+                expect(deleteRes.body).toBe("sikerült")
+
+                const getRes2 = await request(app)
+                .post("/feladat/getCompletedAssignmentFiles/").send([2]).set("Authorization", `Bearer ${token}`);
+                expect(getRes.status).toBe(201)
+                expect(getRes.body[0].length).toBe(2)
+                expect((getRes.body[0].length)-1).toBe(getRes2.body[0].length)
+                //console.log("ŰŰŰŰŰŰ ", deleteRes)
             })
         })
     })

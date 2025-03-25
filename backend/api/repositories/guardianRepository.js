@@ -5,7 +5,6 @@ class GuardianRepository
     constructor(db)
     {
         this.Guardians = db.guardian;
-        console.log(this.Guardians)
     }
 
     async createGuardian(guardian)

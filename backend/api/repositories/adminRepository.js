@@ -40,8 +40,6 @@ class AdminRepository
     }
     
     async modifyAdmin(ID,admin){
-        console.log("biztos ami biztos: ",ID)
-        console.log("adminba  ", admin)
         const changedAdmin = await this.Admins.findOne({ where: { userId: ID } });
         await changedAdmin.update({ name: admin.name });
         await changedAdmin.update({ email: admin.email });

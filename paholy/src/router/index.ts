@@ -28,6 +28,7 @@ import DiakHianyzasView from '@/views/hianyzas/DiakHianyzasView.vue'
 import DiakJegyView from '@/views/jegy/DiakJegyView.vue'
 import TanarJegyView from '@/views/jegy/TanarJegyView.vue'
 import UzenetView from '@/views/uzenet/UzenetView.vue'
+import TanarHianyzasView from '@/views/hianyzas/TanarHianyzasView.vue'
 
 
 
@@ -93,7 +94,7 @@ const router = createRouter({
               },
               {path: 'tanar',
                 name: 'tanarhianyzasok',
-                component: DiakHianyzasView //Ide kéne majd a tanári
+                component: TanarHianyzasView
               },
               { 
                 path: 'admin',

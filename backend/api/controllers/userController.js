@@ -11,6 +11,7 @@ const salt = 10;
 const jwt = require("jsonwebtoken");
 const roleService = require("../services/roleService");
 const { stubTrue } = require("lodash");
+const studentRepository = require("../repositories/studentRepository");
 
 exports.getUser = async (req, res, next) => 
 {
@@ -19,18 +20,17 @@ exports.getUser = async (req, res, next) =>
 
 exports.getUserWithAdditionalAttributes = async (req, res, next ) =>{
     const userID = JSON.parse(req.params.userID);
-    console.log("user a headerből: ", userID)
     const role = await userRepository.getUserByID(userID)
-    console.log("nagyjából ", role)
     const truerole = role.role
-    console.log("pontosan ",truerole)
     const finalUser = {
         userSide: userID,
         userRole: truerole,
         roleSide: await userService.getUserWithAdditionalAttributes(role.ID,truerole)
     }
-    console.log("ez lett: ", finalUser)
-    console.log("KAKAÁSS A GAYTYA : ",finalUser.userRole)
+    if(finalUser.userRole == 'szulo'){
+        const gyerekek = await studentRepository.getGuardiansChildren(finalUser.roleSide.ID)
+        finalUser.belongingStudents = gyerekek;
+    }
     res.status(201).json(finalUser)
 }
 

@@ -237,75 +237,55 @@ const updateDialogSize = () => {
   }
 };
 
-onMounted(() => {
-  updateDialogSize();
-  window.addEventListener('resize', updateDialogSize);
-});
 
-onUnmounted(() => {
-  window.removeEventListener('resize', updateDialogSize);
+//itt kezdődik a forgatásnak a figyelése
+const isPortrait = ref(window.matchMedia("(orientation: portrait)").matches);
+const updateOrientation = () => {
+  isPortrait.value = window.matchMedia("(orientation: portrait)").matches;
+};
+onMounted(() => {
+  window.matchMedia("(orientation: portrait)").addEventListener("change", updateOrientation);
+  if(document.cookie != ''){
+    const decoded = jwtDecode(getCookie("alap"))
+    push({name:decoded.userData.role+'orarend'})
+  }
 });
+onUnmounted(() => {
+  window.matchMedia("(orientation: portrait)").removeEventListener("change", updateOrientation);
+});//itt ér véget
 
 
 </script>
 
 <template>
-  <main >
-    <v-container >
-      <v-card>
-        <v-card-title>
-          <h1 style="padding: 10px;" class="bg-title"> Feladatok</h1>
-        </v-card-title>
-        <v-card-text>
-          <v-table style="height: 30vw !important;">
-            <thead>
-              <tr>
-                <th class="text-center" style="width: 15vw; justify-content: center;">Határidő</th>
-                <th class="text-center" style="width: 15vw; justify-content: center;">Feltöltési idő</th>
-                <th class="text-center" style="width: 15vw; justify-content: center;">Leírás</th>
-                <th class="text-center" style="width: 15vw; justify-content: center;">Interakció</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="feladat in assignmentTeacherList" :key="feladat.feladat.ID">
-                <td>{{ formatDate(feladat.feladat.deadline) }}</td>
-                <td>{{ formatDate(feladat.feladat.uploadDate) }}</td>
-                <td
-                  style="
-                    white-space: nowrap;
-                    overflow: hidden;
-                    text-overflow: ellipsis;
-                    width: 15vw;
-                    display: inline-block;
-                  "
-                >
-                  {{ feladat.feladat.desc }}
-                </td>
-                <td>
-                  <div style="display: flex; gap: 10px;">
-                    <!-- Open answers dialog and fetch assignment files -->
-                    <v-btn color="primary" @click="openViewAssignmentAnswerDialog(feladat);">
-                      Válaszok megtekintése
-                    </v-btn>
-                    <v-btn color="error" @click="openDeleteAssignmentDialog(feladat.feladat.ID)">
-                      Törlés
-                    </v-btn>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </v-table>
-        </v-card-text>
-        <v-card-actions>
-          <v-btn @click="dialog = true">Feladat kitűzése</v-btn>
-        </v-card-actions>
-      </v-card>
-
-      <!-- Dialog for viewing answers -->
-       <!-- Dialog for viewing answers -->
-       <v-dialog v-model="ViewAssignmentAnwserDialog" :max-width="viewAssignmentDialogWidth">
-        <!-- Here we set the v-card's width inline to match the dialog's width -->
-        <v-card :style="{ width: viewAssignmentDialogWidth, height: viewAssignmentCardHeight }">
+  <main>
+    <div v-if="isPortrait">
+      <v-container>
+        <v-card>
+          <v-card-title>Feladatok: </v-card-title>
+          <v-card-text style="overflow-y: auto; max-height: 80vw;">
+            <v-list>
+              <v-list-item v-for="feladat in assignmentTeacherList" :key="feladat.feladat.ID">
+                  <strong>Határidő: </strong>{{ formatDate(feladat.feladat.deadline) }}
+                  <strong>Feltöltési idő: </strong>{{ formatDate(feladat.feladat.uploadDate) }}
+                  <p style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 50vw; display: inline-block;">{{ feladat.feladat.desc }}</p>
+                  <v-btn color="primary" @click="openViewAssignmentAnswerDialog(feladat);">
+                    Válaszok megtekintése
+                  </v-btn>
+                  <v-btn color="error" @click="openDeleteAssignmentDialog(feladat.feladat.ID)">
+                    Törlés
+                  </v-btn>
+                </v-list-item>
+            </v-list>
+          </v-card-text>
+          <v-card-actions>
+            <v-btn @click="dialog = true">Feladat kitűzése</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-container>
+      <!--néző dialog-->
+      <v-dialog v-model="ViewAssignmentAnwserDialog" >
+        <v-card >
           <v-card-title>Feladat:</v-card-title>
           <v-card-text>
             <p>
@@ -321,7 +301,7 @@ onUnmounted(() => {
               {{ selectedAssignmentForAnswers?.feladat.desc }}
             </p>
 
-            <!-- Assignment files -->
+
             <div v-if="assignmentFiles.length">
               <p><strong>Fájlok:</strong></p>
               <v-list-item
@@ -330,27 +310,25 @@ onUnmounted(() => {
                 @click="downloadFile(file)"
                 style="cursor: pointer;"
               >
-                <v-list-item-title>{{ file.filename }} <div>(A fájl letöltéséhez kattintson)</div></v-list-item-title>
+                <v-list-item-title>{{ file.filename }} <div>(A fájl letöltéséhez nyomja meg)</div></v-list-item-title>
               </v-list-item>
             </div>
             <div v-else>
               <p><strong>Fájlok:</strong> Nincsenek fájlok ehhez a feladathoz.</p>
             </div>
-
-            <!-- Answers -->
             <v-card-title>Válaszok:</v-card-title>
             <v-list>
               <v-list-item
                 v-for="(answer, index) in selectedAssignmentForAnswers?.anwsers"
                 :key="answer.ID"
               >
-                <v-list-item-title>{{ answer.senderUserName }}</v-list-item-title>
+                <h3>{{ answer.senderUserName }}</h3>
                 <div :style="getStatusStyle(answer.status)" class="mt-2">
                   <strong>Státusz:</strong> {{ answer.status }}
                 </div>
                 <p><strong>Válasz szövege: </strong>{{ answer.textAnswer }}</p>
                 
-                <!-- Files for this answer -->
+                
                 <div v-if="answerFiles[answer.ID] && answerFiles[answer.ID].length">
                   <p><strong>Fájlok:</strong></p>
                   <v-list dense>
@@ -360,7 +338,7 @@ onUnmounted(() => {
                       @click="downloadFile(file)"
                       style="cursor: pointer;"
                     >
-                      <v-list-item-title>{{ file.filename }}<div>(A fájl letöltéséhez kattintson)</div></v-list-item-title>
+                      <v-list-item-title>{{ file.filename }}<div>(A fájl letöltéséhez nyomja meg)</div></v-list-item-title>
                     </v-list-item>
                   </v-list>
                 </div>
@@ -378,117 +356,325 @@ onUnmounted(() => {
           </v-card-actions>
         </v-card>
       </v-dialog>
+      <!--törlés dialog-->
+      <v-dialog v-model="DeleteAssignmentDialog" max-width="80vw" theme="dark">
+          <v-card>
+            <v-card-title>Biztos törölni akarja?</v-card-title>
+            <v-card-text><div>A kitörölt házifeladat végleg elveszik, nem lehet visszaállítani</div></v-card-text>
+            <v-card-actions>
+              <v-btn color="error" @click="deleteThis">Törlés</v-btn>
+              <v-btn @click="DeleteAssignmentDialog = false">Mégse</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
 
-      <!-- Dialog for deleting assignment -->
-      <v-dialog v-model="DeleteAssignmentDialog" max-width="50vw" theme="dark">
-        <v-card>
-          <v-card-title>Biztos törölni akarja?</v-card-title>
-          <v-card-text><div>A kitörölt házifeladat végleg elveszik, nem lehet visszaállítani</div></v-card-text>
-          <v-card-actions>
-            <v-btn color="error" @click="deleteThis">Törlés</v-btn>
-            <v-btn @click="DeleteAssignmentDialog = false">Mégse</v-btn>
-          </v-card-actions>
-
-        </v-card>
-      </v-dialog>
-
-      <!-- Dialog for sending assignment -->
-      <v-dialog v-model="dialog" style="max-width: 70vw;">
+      <!--új feladat dialog-->
+      <v-dialog v-model="dialog" style="max-width: 100vw;">
         <v-card>
           <v-card-title>Új feladat:</v-card-title>
-          <v-container>
-            <v-row>
-              <!-- Left Column: Radio buttons -->
-              <v-col cols="4">
+          <v-card-text style="overflow-y: auto;">
+            <v-list>
+              <v-list-item >
                 <v-radio-group v-model="selectedGroup" label="Címzett osztály">
-                  <v-radio
-                    v-for="elem in data"
-                    :key="elem.id"
-                    :label="elem.name"
-                    :value="elem"
-                  ></v-radio>
-                </v-radio-group>
-              </v-col>
-
-              <!-- Right Column: Date & Time pickers side by side -->
-              <v-col cols="8">
-                <!-- First row: date picker & time picker side by side -->
-                <v-row>
-                  <v-col>
-                    <!-- :min="minDate" ensures the user cannot pick a date before today -->
-                    <v-date-picker
-                      v-model="date"
-                      :first-day-of-week="1"
-                      scrollable
-                      :min="minDate"
-                    />
-                  </v-col>
-                  <v-col>
-                    <v-time-picker
-
-                      theme="light"
-                      style="background-color: rgb(82, 82, 82);"
-                      @update:modelValue="handleTimeChange"
-                      format="24hr"
-                    />
-                  </v-col>
-                </v-row>
-
-                <!-- Second row: hour & minute select -->
-                <v-row>
-                  <v-col>
-                    <v-select
-                      v-model="hour"
-                      :items="hours"
-                      label="Óra"
-                      density="compact"
-                      variant="outlined"
-                    />
-                  </v-col>
-                  <v-col>
-                    <v-select
-                      v-model="minute"
-                      :items="minutes"
-                      label="Perc"
-                      density="compact"
-                      variant="outlined"
-                    />
-                  </v-col>
-                </v-row>
-              </v-col>
-            </v-row>
-
-            <!-- Deadline info alert below both columns -->
-            <v-row>
-              <v-col>
+                    <v-radio
+                      v-for="elem in data"
+                      :key="elem.id"
+                      :label="elem.name"
+                      :value="elem"
+                    ></v-radio>
+                  </v-radio-group>
+              </v-list-item>
+              <v-list-item style="padding: 0vw;"> 
+                <v-date-picker
+                    style="max-width: 100vw;"
+                    v-model="date"
+                    :first-day-of-week="1"
+                    scrollable
+                    :min="minDate"
+                    locale: hu
+                  />
+              </v-list-item>
+              <v-list-item style="padding: 0vw;">
+                <v-time-picker
+                theme="light"
+                style="background-color: rgb(82, 82, 82); max-width: 80vw;"
+                @update:modelValue="handleTimeChange"
+                format="24hr"
+                
+                />
+                <v-select
+                  v-model="hour"
+                  :items="hours"
+                  label="Óra"
+                  density="compact"
+                  variant="outlined"
+                />
+                <v-select
+                  v-model="minute"
+                  :items="minutes"
+                  label="Perc"
+                  density="compact"
+                  variant="outlined"
+                />
+              </v-list-item>
+              <v-list-item>
                 <v-alert class="mt-4" type="info" variant="outlined">
-                  Beállított határidő: {{ formattedDate }}
-                </v-alert>
-              </v-col>
-            </v-row>
-          </v-container>
-
-          <v-card-text>
-            <v-textarea
-              label="A feladat leírása"
-              v-model="AssignmentDataRef.Description"
-            ></v-textarea>
+                    Beállított határidő: {{ formattedDate }}
+                  </v-alert>
+              </v-list-item>
+              <v-list-item>
+                <v-textarea
+                  label="A feladat leírása"
+                  v-model="AssignmentDataRef.Description"
+                ></v-textarea>
+              </v-list-item>
+              <v-list-item>
+                <v-file-input 
+                  label="Fájlok feltöltése (egyszerre töltse fel)"
+                  multiple
+                  v-model="selectedFiles"
+                  show-size
+                  counter
+                ></v-file-input>
+              </v-list-item>
+            </v-list>
           </v-card-text>
-
-          <v-file-input 
-            label="Fájlok feltöltése (egyszerre töltse fel)"
-            multiple
-            v-model="selectedFiles"
-            show-size
-            counter
-          ></v-file-input>
-
           <v-card-actions>
             <v-btn text="Feladat küldése" @click="sendAssignment" :loading="isPending"></v-btn>
             <v-btn color="primary" @click="dialog = false">Bezárás</v-btn>
           </v-card-actions>
+        
         </v-card>
       </v-dialog>
-    </v-container>
+    </div>
+    <div v-else>
+      <v-container>
+        <v-card>
+          <v-card-title>
+            <h1 style="padding: 10px;" class="bg-title"> Feladatok</h1>
+          </v-card-title>
+          <v-card-text>
+            <v-table style="height: 30vw !important;">
+              <thead>
+                <tr>
+                  <th class="text-center" style="width: 15vw; justify-content: center;">Határidő</th>
+                  <th class="text-center" style="width: 15vw; justify-content: center;">Feltöltési idő</th>
+                  <th class="text-center" style="width: 15vw; justify-content: center;">Leírás</th>
+                  <th class="text-center" style="width: 15vw; justify-content: center;">Interakció</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="feladat in assignmentTeacherList" :key="feladat.feladat.ID">
+                  <td>{{ formatDate(feladat.feladat.deadline) }}</td>
+                  <td>{{ formatDate(feladat.feladat.uploadDate) }}</td>
+                  <td
+                    style="
+                      white-space: nowrap;
+                      overflow: hidden;
+                      text-overflow: ellipsis;
+                      width: 15vw;
+                      display: inline-block;
+                    "
+                  >
+                    {{ feladat.feladat.desc }}
+                  </td>
+                  <td>
+                    <div style="display: flex; gap: 10px;">
+                      <!-- Open answers dialog and fetch assignment files -->
+                      <v-btn color="primary" @click="openViewAssignmentAnswerDialog(feladat);">
+                        Válaszok megtekintése
+                      </v-btn>
+                      <v-btn color="error" @click="openDeleteAssignmentDialog(feladat.feladat.ID)">
+                        Törlés
+                      </v-btn>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </v-table>
+          </v-card-text>
+          <v-card-actions>
+            <v-btn @click="dialog = true">Feladat kitűzése</v-btn>
+          </v-card-actions>
+        </v-card>
+        <v-dialog v-model="ViewAssignmentAnwserDialog" :max-width="viewAssignmentDialogWidth">
+          <v-card :style="{ width: viewAssignmentDialogWidth, height: viewAssignmentCardHeight }">
+            <v-card-title>Feladat:</v-card-title>
+            <v-card-text>
+              <p>
+                <strong>Feladás dátuma:</strong>
+                {{ formatDate(selectedAssignmentForAnswers?.feladat.uploadDate) }}
+              </p>
+              <p>
+                <strong>Határidő:</strong>
+                {{ formatDate(selectedAssignmentForAnswers?.feladat.deadline) }}
+              </p>
+              <p>
+                <strong>Feladat leírása:</strong>
+                {{ selectedAssignmentForAnswers?.feladat.desc }}
+              </p>
+
+              <!-- Assignment files -->
+              <div v-if="assignmentFiles.length">
+                <p><strong>Fájlok:</strong></p>
+                <v-list-item
+                  v-for="(file, index) in assignmentFiles"
+                  :key="file.ID"
+                  @click="downloadFile(file)"
+                  style="cursor: pointer;"
+                >
+                  <v-list-item-title>{{ file.filename }} <div>(A fájl letöltéséhez kattintson)</div></v-list-item-title>
+                </v-list-item>
+              </div>
+              <div v-else>
+                <p><strong>Fájlok:</strong> Nincsenek fájlok ehhez a feladathoz.</p>
+              </div>
+
+              
+              <v-card-title>Válaszok:</v-card-title>
+              <v-list>
+                <v-list-item
+                  v-for="(answer, index) in selectedAssignmentForAnswers?.anwsers"
+                  :key="answer.ID"
+                >
+                  <v-list-item-title>{{ answer.senderUserName }}</v-list-item-title>
+                  <div :style="getStatusStyle(answer.status)" class="mt-2">
+                    <strong>Státusz:</strong> {{ answer.status }}
+                  </div>
+                  <p><strong>Válasz szövege: </strong>{{ answer.textAnswer }}</p>
+                  
+                 
+                  <div v-if="answerFiles[answer.ID] && answerFiles[answer.ID].length">
+                    <p><strong>Fájlok:</strong></p>
+                    <v-list dense>
+                      <v-list-item
+                        v-for="(file, fileIndex) in answerFiles[answer.ID]"
+                        :key="file.ID"
+                        @click="downloadFile(file)"
+                        style="cursor: pointer;"
+                      >
+                        <v-list-item-title>{{ file.filename }}<div>(A fájl letöltéséhez kattintson)</div></v-list-item-title>
+                      </v-list-item>
+                    </v-list>
+                  </div>
+                  <div v-else>
+                    <p><strong>Fájlok:</strong> Nincsenek fájlok ehhez a válaszhoz.</p>
+                  </div>
+                </v-list-item>
+              </v-list>
+            </v-card-text>
+
+            <v-card-actions>
+              <v-btn color="primary" @click="ViewAssignmentAnwserDialog = false">
+                Bezárás
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+
+        <v-dialog v-model="DeleteAssignmentDialog" max-width="50vw" theme="dark">
+          <v-card>
+            <v-card-title>Biztos törölni akarja?</v-card-title>
+            <v-card-text><div>A kitörölt házifeladat végleg elveszik, nem lehet visszaállítani</div></v-card-text>
+            <v-card-actions>
+              <v-btn color="error" @click="deleteThis">Törlés</v-btn>
+              <v-btn @click="DeleteAssignmentDialog = false">Mégse</v-btn>
+            </v-card-actions>
+
+          </v-card>
+        </v-dialog>
+
+        <!-- Új feladat -->
+        <v-dialog v-model="dialog" style="max-width: 70vw;">
+          <v-card>
+            <v-card-title>Új feladat:</v-card-title>
+            <v-container>
+              <v-row>
+                <v-col cols="4">
+                  <v-radio-group v-model="selectedGroup" label="Címzett osztály">
+                    <v-radio
+                      v-for="elem in data"
+                      :key="elem.id"
+                      :label="elem.name"
+                      :value="elem"
+                    ></v-radio>
+                  </v-radio-group>
+                </v-col>
+                <v-col cols="8">
+                  <v-row>
+                    <v-col>
+
+                      <v-date-picker
+                        v-model="date"
+                        :first-day-of-week="1"
+                        scrollable
+                        :min="minDate"
+                      />
+                    </v-col>
+                    <v-col>
+                      <v-time-picker
+
+                        theme="light"
+                        style="background-color: rgb(82, 82, 82);"
+                        @update:modelValue="handleTimeChange"
+                        format="24hr"
+                      />
+                    </v-col>
+                  </v-row>
+                  <v-row>
+                    <v-col>
+                      <v-select
+                        v-model="hour"
+                        :items="hours"
+                        label="Óra"
+                        density="compact"
+                        variant="outlined"
+                      />
+                    </v-col>
+                    <v-col>
+                      <v-select
+                        v-model="minute"
+                        :items="minutes"
+                        label="Perc"
+                        density="compact"
+                        variant="outlined"
+                      />
+                    </v-col>
+                  </v-row>
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col>
+                  <v-alert class="mt-4" type="info" variant="outlined">
+                    Beállított határidő: {{ formattedDate }}
+                  </v-alert>
+                </v-col>
+              </v-row>
+            </v-container>
+
+            <v-card-text>
+              <v-textarea
+                label="A feladat leírása"
+                v-model="AssignmentDataRef.Description"
+              ></v-textarea>
+            </v-card-text>
+
+            <v-file-input 
+              label="Fájlok feltöltése (egyszerre töltse fel)"
+              multiple
+              v-model="selectedFiles"
+              show-size
+              counter
+            ></v-file-input>
+
+            <v-card-actions>
+              <v-btn text="Feladat küldése" @click="sendAssignment" :loading="isPending"></v-btn>
+              <v-btn color="primary" @click="dialog = false">Bezárás</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+      </v-container>
+    </div>
+    
   </main>
 </template>
