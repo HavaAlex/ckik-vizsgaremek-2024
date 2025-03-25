@@ -30,7 +30,7 @@ router.post("/newassignment",tanarHandler.checkRole,  hazikController.postAssign
 
 router.patch("/modifycompletedassignment",hazikController.modifycompletedassignment)
 
-router.post("/getAssignmentFiles/",hazikController.getAssignmentFiles)
+router.get("/getAssignmentFiles/",hazikController.getAssignmentFiles)
 router.post("/getCompletedAssignmentFiles/",hazikController.getCompletedAssignmentFiles)
 router.delete("/deleteAssignment/:assignmentId",tanarHandler.checkRole, hazikController.deleteAssignment)
 router.delete("/deleteAnswerFile/:fileId",hazikController.deleteCompletedAssignmentFile)

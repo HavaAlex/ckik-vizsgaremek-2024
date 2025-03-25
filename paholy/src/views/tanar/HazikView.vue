@@ -330,7 +330,7 @@ onUnmounted(() => {
                 @click="downloadFile(file)"
                 style="cursor: pointer;"
               >
-                <v-list-item-title>{{ file.filename }}</v-list-item-title>
+                <v-list-item-title>{{ file.filename }} <div>(A fájl letöltéséhez kattintson)</div></v-list-item-title>
               </v-list-item>
             </div>
             <div v-else>
@@ -360,7 +360,7 @@ onUnmounted(() => {
                       @click="downloadFile(file)"
                       style="cursor: pointer;"
                     >
-                      <v-list-item-title>{{ file.filename }}</v-list-item-title>
+                      <v-list-item-title>{{ file.filename }}<div>(A fájl letöltéséhez kattintson)</div></v-list-item-title>
                     </v-list-item>
                   </v-list>
                 </div>
@@ -382,14 +382,18 @@ onUnmounted(() => {
       <!-- Dialog for deleting assignment -->
       <v-dialog v-model="DeleteAssignmentDialog" max-width="50vw" theme="dark">
         <v-card>
-          <v-card-title>Biztos törölni akarod?</v-card-title>
-          <v-btn color="error" @click="deleteThis">Törlés</v-btn>
-          <v-btn @click="DeleteAssignmentDialog = false">Mégse</v-btn>
+          <v-card-title>Biztos törölni akarja?</v-card-title>
+          <v-card-text><div>A kitörölt házifeladat végleg elveszik, nem lehet visszaállítani</div></v-card-text>
+          <v-card-actions>
+            <v-btn color="error" @click="deleteThis">Törlés</v-btn>
+            <v-btn @click="DeleteAssignmentDialog = false">Mégse</v-btn>
+          </v-card-actions>
+
         </v-card>
       </v-dialog>
 
       <!-- Dialog for sending assignment -->
-      <v-dialog v-model="dialog">
+      <v-dialog v-model="dialog" style="max-width: 70vw;">
         <v-card>
           <v-card-title>Új feladat:</v-card-title>
           <v-container>
@@ -421,7 +425,9 @@ onUnmounted(() => {
                   </v-col>
                   <v-col>
                     <v-time-picker
-                      style="background-color: black;"
+
+                      theme="light"
+                      style="background-color: rgb(82, 82, 82);"
                       @update:modelValue="handleTimeChange"
                       format="24hr"
                     />

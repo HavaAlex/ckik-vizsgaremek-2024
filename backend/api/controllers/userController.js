@@ -109,7 +109,36 @@ exports.loginUser = async (req, res, next) =>
         res.status(401).send("Helytelen jelszó!");
     }
 }
+exports.changePassword = async (req,res,next)=>{
+    const passwordData = req.body;
+    console.log("lll", passwordData)
+    if(passwordData.currentpassword != passwordData.currentpasswordagain){
+        res.status(500).send("A két jelszó nem egyezik!")
+        return
 
+    }
+    const user = await userRepository.getUser(passwordData.username)
+    if(!user){
+        res.status(500).send("Ezzel a felhasználónévvel nincs felhasználó")
+        return
+    }
+
+    if(!await bcrypt.compare(passwordData.currentpassword, user.password)){
+        res.status(500).send("Az ön által megadott jelszó nem egyezik ennek a felhasználónak a jelszavával")
+        return
+    }
+    else if(await bcrypt.compare(passwordData.currentpassword, user.password)){
+        const userReplacement = {
+            ID: user.ID,
+            username: user.username,
+            password: await bcrypt.hash(passwordData.newpassword, salt),
+            role: user.role
+        }
+        const response = await userRepository.changePassword(userReplacement.ID, userReplacement)
+        res.status(201).json(response)
+    }
+
+}
 exports.getGuardiansChildren = async (req, res, next) =>{
     const children = await userService.getGuardiansChildren(req.role.ID);
     res.status(200).send(children);

@@ -65,10 +65,10 @@ export const usegetAssignmentsStudent = () => {
 const getAssignmentFiles = async (assignmentId:number) : Promise<number> =>{
     const {getCookie} = useCookieHandler()
     const config = {
-        headers: { Authorization: `Bearer ${getCookie("alap")}`/*,assignmentID:assignmentId*/ }
+        headers: { Authorization: `Bearer ${getCookie("alap")}` ,assignmentid: assignmentId}
     };
     console.log("HERe IS  the IIIDD : ", assignmentId)
-    const response = await axiosClient.post(`http://localhost:3000/feladat/getAssignmentFiles/`,assignmentId,config)
+    const response = await axiosClient.get(`http://localhost:3000/feladat/getAssignmentFiles/`,config)
     console.log("getAssignmentFiles RESPONSEEEEEEEEEEEE: ", response)
     return response.data
 }
@@ -200,7 +200,7 @@ export const usedeleteAssignment = () => {
                 if(role === 'admin'){
                     queryClient.refetchQueries({queryKey:[QUERY_KEYS.getGroupAsignments]})
                 }
-                else{
+                else if(role === 'tanar'){
                     queryClient.refetchQueries({queryKey:[QUERY_KEYS.getAssignmentsTeacher]})
                 }
                 
@@ -259,9 +259,6 @@ const uploadAssignmentFiles = async ({
       "Content-Type": "multipart/form-data"
     }
   };
-  for (const [key, value] of formData.entries()) {
-    console.log(`${key}:`, value);
-  }
   await axiosClient.post(`http://localhost:3000/feladat/uploadassignmentfiles`, formData, config);
   console.log("siekr")
 }

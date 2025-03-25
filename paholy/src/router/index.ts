@@ -41,6 +41,7 @@ import AppLayout from '@/layout/AppLayout.vue'
 import Jogosultsagok from '../views/admin/Jogosultsagok.vue'
 
 import LoginView from '../views/auth/LoginView.vue'
+import ChangePassword from '@/views/auth/ChangePassword.vue'
 
 
 
@@ -202,6 +203,11 @@ const router = createRouter({
       path: '/login',
       name: 'login',
       component: LoginView,
+    },
+    {
+      path: '/changePassword',
+      name: 'changePassword',
+      component: ChangePassword,
     },
 
 
