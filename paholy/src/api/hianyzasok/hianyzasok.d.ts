@@ -1,6 +1,13 @@
 export type HianyzasValasz = {
     data:[]
 }
+export type Teacher = {
+    ID: number,
+    name: string,
+    phone: string,
+    email: string,
+
+}
 
 export type Hianyzaskapo ={
     Datum: Date,
@@ -9,6 +16,24 @@ export type Hianyzaskapo ={
     Subject:string,
     keses: number,
 }
-export type Hianyas ={
-    
+
+export type Hianyzas = {
+    ID: number,
+    studentID: number,
+    teacherID: number,
+    lessonID: number,
+    date: date,
+    excused: boolean
+}
+
+export type Lesson = {
+    ID: number,
+    groupID: number,
+    teacherID: number,
+    start_Hour: number,
+    start_Minute: number,
+    length: number,
+    day: string,
+    subjectName: string,
+    excused: boolean
 }

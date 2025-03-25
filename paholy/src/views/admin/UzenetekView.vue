@@ -127,7 +127,7 @@ onUnmounted(() => {
                 :key="index" 
                 @click="MessageDataRef.receiverlist.push(elem)"
               >
-                {{ elem.name + " (" + elem.role + ")" }}
+                {{ elem.username + " (" + elem.role + ")" }}
               </v-list-item>
 
               <!-- Filtered list of groups -->

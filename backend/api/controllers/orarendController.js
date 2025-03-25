@@ -7,9 +7,12 @@ exports.getOrarend = async (req, res, next) =>
     console.log("órarendget")
     console.log("FING")
     console.log(req.decoded)
-    const groups = await csoportService.getGroup(req.role.ID)
-    console.log(groups)
-    const combinedOrarend = req.decoded.role=="tanar"?await orarendService.getTeacherLessons(req.role.ID): await orarendService.getOrarend(groups)
+    const weekStart = req.query.weekStart
+
+
+    const groups = await csoportService.getGroup(req.decoded.ID)
+
+    const combinedOrarend = req.decoded.role=="tanar"?await orarendService.getTeacherLessons(req.role.ID,weekStart): await orarendService.getOrarend(groups,weekStart)
 
     console.log(combinedOrarend)
     res.status(201).json(combinedOrarend)
@@ -52,4 +55,15 @@ exports.getTantargyakTanar = async (req, res, next) =>
     const tantargyak = await lessonService.getTeacherSubjects(req.role.ID)
     res.status(201).json(tantargyak);
     //console.log("TANTARGY VEG")
+}
+
+exports.getTeachers = async (req, res, next) =>
+{
+    const teachers = await orarendService.getTeachers()
+    res.status(201).json(teachers);
+}
+exports.getLessons = async (req, res, next) =>
+{
+    const lessons = await orarendService.getLessons()
+    res.status(201).json(lessons);
 }

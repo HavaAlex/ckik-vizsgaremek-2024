@@ -40,7 +40,6 @@ class AdminRepository
     }
     
     async modifyAdmin(ID,admin){
-        // Assume User is a Sequelize model
         console.log("biztos ami biztos: ",ID)
         console.log("adminba  ", admin)
         const changedAdmin = await this.Admins.findOne({ where: { userId: ID } });

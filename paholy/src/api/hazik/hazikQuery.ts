@@ -6,9 +6,10 @@ import { jwtDecode } from "jwt-decode";
 import type { Assignment , OpenCompletedAssignment} from '@/api/hazik/hazik';
 import { useCookieHandler } from "@/stores/cookieHandler";
 
-//import type { Message,PotentialReceiver,newMessage } from "./uzenetek";
+
 import queryClient from "@/lib/queryClient";
 import { useErrorHandler } from "@/stores/errorHandler";
+
 
 const getAssignmentsTeacher = async ()  =>{
     const {getCookie} = useCookieHandler()
@@ -64,9 +65,10 @@ export const usegetAssignmentsStudent = () => {
 const getAssignmentFiles = async (assignmentId:number) : Promise<number> =>{
     const {getCookie} = useCookieHandler()
     const config = {
-        headers: { Authorization: `Bearer ${getCookie("alap")}`/*,assignmentID:assignmentId*/ }
+        headers: { Authorization: `Bearer ${getCookie("alap")}` ,assignmentid: assignmentId}
     };
-    const response = await axiosClient.post(`http://localhost:3000/feladat/getAssignmentFiles`,{assignmentId} ,config)
+    console.log("HERe IS  the IIIDD : ", assignmentId)
+    const response = await axiosClient.get(`http://localhost:3000/feladat/getAssignmentFiles/`,config)
     console.log("getAssignmentFiles RESPONSEEEEEEEEEEEE: ", response)
     return response.data
 }
@@ -90,7 +92,7 @@ const getCompletedAssignmentFiles = async (assignmentId:any[]) : Promise<any[]> 
     const config = {
         headers: { Authorization: `Bearer ${getCookie("alap")}` }
     };
-    const response = await axiosClient.post(`http://localhost:3000/feladat/getCompletedAssignmentFiles`,{assignmentId} ,config)
+    const response = await axiosClient.post(`http://localhost:3000/feladat/getCompletedAssignmentFiles/`,assignmentId ,config)
     console.log("getCompletedAssignmentFiles RESPONSEEEEEEEEEEEE: ", response)
     return response.data
 }
@@ -193,7 +195,15 @@ export const usedeleteAssignment = () => {
         {
             mutationFn: deleteAssignment,
             onSuccess(){
-                queryClient.refetchQueries({queryKey:[QUERY_KEYS.getAssignmentsTeacher]})
+                const decoded = jwtDecode(getCookie("alap"));
+                const role = decoded.userData.role;
+                if(role === 'admin'){
+                    queryClient.refetchQueries({queryKey:[QUERY_KEYS.getGroupAsignments]})
+                }
+                else if(role === 'tanar'){
+                    queryClient.refetchQueries({queryKey:[QUERY_KEYS.getAssignmentsTeacher]})
+                }
+                
             },
             onError(error){
                 const {setError} = useErrorHandler()
@@ -236,7 +246,7 @@ const uploadAssignmentFiles = async ({
   }): Promise<void> => {
     const formData = new FormData();
 
-  // Now we can loop over `files` directly
+
   files.forEach((file) => {
     formData.append('files', file);
   });
@@ -250,6 +260,7 @@ const uploadAssignmentFiles = async ({
     }
   };
   await axiosClient.post(`http://localhost:3000/feladat/uploadassignmentfiles`, formData, config);
+  console.log("siekr")
 }
 export const useuploadAssignmentFiles = () => {
     return useMutation( 
@@ -287,7 +298,9 @@ const uploadCompletedAssignmentFiles = async ({
       "Content-Type": "multipart/form-data"
     }
   };
+  console.log("FELTÖLTÉS PRÓVA")
   await axiosClient.post(`http://localhost:3000/feladat/uploadcompletedassignmentfiles`, formData, config);
+  console.log("SIKER")
 }
 export const useuploadCompletedAssignmentFiles = () => {
     return useMutation( 

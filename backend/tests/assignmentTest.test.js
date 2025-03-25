@@ -11,8 +11,7 @@ const jwt = require("jsonwebtoken");
 jest.mock("../api/db/dbContext", () => require("../__mocks__/db"));
 
 describe("Hazifeladatok tesztelése",()=>{
-    describe("Tanári oldal tesztelése",()=>{
-        let user1, user2, user3,teacher1, newStudent1,newStudent2,newGroup1,newStudentGroups1,newStudentGroups2,token;
+    let user1, user2, user3,teacher1, newStudent1,newStudent2,newGroup1,newStudentGroups1,newStudentGroups2,token;
         beforeAll(async()=>{
             await require("../__mocks__/db").sequelize.sync({ force: true });
             user1 = { ID: 1, username: "Uborka Ubul", password: "pass", role: "tanar" };
@@ -79,10 +78,14 @@ describe("Hazifeladatok tesztelése",()=>{
             await groupRepository.createGroup(newGroup1);
             await studentGroupRepository.createStudentGroup(newStudentGroups1);
             await studentGroupRepository.createStudentGroup(newStudentGroups2);
-        })
+    })
+    let goodtestAssignment; //egy olyan ami müködik, teszteljük vele a többi funkciót is 
+    describe("Tanári oldal tesztelése",()=>{
+        
         const setUserHeader = () => ({
             authorization: `Bearer ${token}`
         });
+        
         describe("POST newAssignment",()=>{
             test("Should return Nincs határidő megadva",async ()=>{
                 const uploadres = await request(app)
@@ -94,7 +97,6 @@ describe("Hazifeladatok tesztelése",()=>{
                   ,DeadLine:"",
                   UploadDate:"2020-05-01"
                 });
-                console.log("ÁÁÁ ", uploadres)
                 //const getres = await assignmentRepository.getAssignmentByID(uploadres.ID)
                 expect(uploadres.text).toBe("Nincs határidő megadva")
                 expect(uploadres.status).toBe(500)
@@ -158,20 +160,113 @@ describe("Hazifeladatok tesztelése",()=>{
                 });
 
                 //const getres = await assignmentRepository.getAssignmentByID(uploadres.ID)
-                console.log("rezponze: ",uploadres)
+                //console.log("rezponze: ",uploadres)
                 expect(uploadres.status).toBe(200)
                 expect(uploadres.body.teacherID).toBe(teacher1.ID)
+                console.log("gandalsf_: ",uploadres.body)
+                goodtestAssignment = uploadres.body
+                
                 
             })
-
-            console.log("LEFUTR A TESZT")
         })
+
+        describe("GET hazikGroups",()=>{
+            test("should return groups",async()=>{
+                const allGroups = await request(app)
+                .get("/feladat/hazikGroups")
+                .set(setUserHeader())
+                expect(Array.isArray(allGroups.body)).toBe(true)
+                expect(allGroups.body[0].ID).toBe(newGroup1.ID)
+                expect(allGroups.body[0].name).toBe(newGroup1.name)
+            })
+        })
+
+        describe("GET haziktanar",()=>{ //korábban már töltötünk fel sikeresen ezért azzal most nem foglalkozunk
+            test("should return all uploaded assignments for this teacher and its answers",async()=>{
+                const sentAssignemnts = await request(app)
+                .get("/feladat/haziktanar")
+                .set(setUserHeader())
+
+                expect(Array.isArray(sentAssignemnts.body)).toBe(true)
+                expect(sentAssignemnts.body[0]).toHaveProperty("feladat")
+                expect(sentAssignemnts.body[0]).toHaveProperty("anwsers")
+                expect(sentAssignemnts.body[0].feladat.teacherID).toBe(teacher1.ID)
+                expect(sentAssignemnts.body[0].anwsers.length).toBe(2)
+
+                
+            })
+        })
+        
+        describe("POST uploadassignmentFiles",()=>{
+            test("sikeresen feltölti", async ()=>{
+                
+            const response = await request(app)
+            .post('/feladat/uploadassignmentfiles')
+            .attach("files", Buffer.from("Dummy file content"), "testfile.txt")
+            .field("assignmentId", "1")
+            .set(setUserHeader())
+            expect(response.status).toBe(200);
+            expect(response.body.nagycucc.message).toBe("Files uploaded successfully")
+            expect(Array.isArray(response.body.nagycucc.uploadedFiles)).toBe(true)
+            })
+        })
+
+        describe("GET getassignmentFiles",  ()=>{
+            test("sikeres lekérés",async()=>{
+                const response = await request(app)
+                .get("/feladat/getAssignmentFiles/").set("assignmentid", 1).set(setUserHeader())
+                
+                expect(response.body.length).toBe(1)
+                expect(response.body[0].ID).toBe(1)
+                expect(response.body[0].assignmentID).toBe(goodtestAssignment.ID)
+                
+            })
+        })
+
+        
 
     })
-    /*describe("Diák oldal tesztelése",()=>{
+    describe("Diák oldal tesztelése",()=>{
         beforeAll(async()=>{
-            
+            token = jwt.sign({ userData:user3 }, process.env.JWT_KEY, { expiresIn: "20m" });
+            setUserHeader = () => ({
+                authorization: `Bearer ${token}`
+            });
         })
-    })*/
+        describe("GET /feladat/hazikdiak",()=>{
+            test("leszedi ügyesen", async ()=>{
+                const receivedAssignemnts = await request(app)
+                .get("/feladat/hazikdiak")
+                .set(setUserHeader())
+                
+                expect(receivedAssignemnts.status).toBe(201)
+                expect(receivedAssignemnts.body[0]).toHaveProperty("valasz")
+                expect(receivedAssignemnts.body[0]).toHaveProperty("feladat")
+                expect(receivedAssignemnts.body[0].valasz.studentID).toBe(newStudent2.ID)
+                expect(receivedAssignemnts.body[0].feladat.teacherID).toBe(teacher1.ID)
+                expect(receivedAssignemnts.body[0].valasz.status).toBe("Nincs leadva")
+            })
+        })
+        describe("PATCH /feladat/modifycompletedassignment",()=>{
+            test("módosítás megtörténik",async()=>{
+                const modifiedCompletedAssignment = await request(app)
+                .patch("/feladat/modifycompletedassignment")
+                .set(setUserHeader()).send({
+                    ID:2,
+                    assignmentID: goodtestAssignment.ID,
+                    date: Date.now(),
+                    status: "Nincs leadva",
+                    studentID: newStudent2.ID,
+                    textAnswer: "TestValasz"
+                  });
+
+                console.log("=========== ", modifiedCompletedAssignment)
+                expect(modifiedCompletedAssignment.body.assignmentID).toBe(goodtestAssignment.ID)
+                expect(modifiedCompletedAssignment.body.status).toBe("Leadva")
+                expect(modifiedCompletedAssignment.body.textAnswer).toBe("TestValasz")
+
+            })
+        })
+    })
     console.log("LEFUTR A TESZT")
 })

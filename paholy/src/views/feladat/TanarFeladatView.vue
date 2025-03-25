@@ -87,8 +87,10 @@ const sendAssignment = async () => {
     onSuccess: async (assignmentResponse) => {
       const assignmentId = assignmentResponse.ID;
       if (selectedFiles.value.length > 0) {
+        console.log("legalább ez megy")
         await uploadAssignmentFiles({ files: selectedFiles.value, assignmentId }, {
-          onSuccess: resetForm,
+          
+          onSuccess: resetForm, 
         });
       } else {
         resetForm();
@@ -98,6 +100,7 @@ const sendAssignment = async () => {
 };
 
 const resetForm = () => {
+  console.log("MEG EZ IS AM"),
   AssignmentDataRef.value = {
     Groups: [],
     Description: "",
@@ -281,10 +284,10 @@ onUnmounted(() => {
                 <td>
                   <div style="display: flex; gap: 10px;">
                     <!-- Open answers dialog and fetch assignment files -->
-                    <v-btn @click="openViewAssignmentAnswerDialog(feladat);">
+                    <v-btn color="primary" @click="openViewAssignmentAnswerDialog(feladat);">
                       Válaszok megtekintése
                     </v-btn>
-                    <v-btn @click="openDeleteAssignmentDialog(feladat.feladat.ID)">
+                    <v-btn color="error" @click="openDeleteAssignmentDialog(feladat.feladat.ID)">
                       Törlés
                     </v-btn>
                   </div>
@@ -327,7 +330,7 @@ onUnmounted(() => {
                 @click="downloadFile(file)"
                 style="cursor: pointer;"
               >
-                <v-list-item-title>{{ file.filename }}</v-list-item-title>
+                <v-list-item-title>{{ file.filename }} <div>(A fájl letöltéséhez kattintson)</div></v-list-item-title>
               </v-list-item>
             </div>
             <div v-else>
@@ -341,7 +344,7 @@ onUnmounted(() => {
                 v-for="(answer, index) in selectedAssignmentForAnswers?.anwsers"
                 :key="answer.ID"
               >
-                <v-list-item-title>{{ answer.senderUserName.name }}</v-list-item-title>
+                <v-list-item-title>{{ answer.senderUserName }}</v-list-item-title>
                 <div :style="getStatusStyle(answer.status)" class="mt-2">
                   <strong>Státusz:</strong> {{ answer.status }}
                 </div>
@@ -357,7 +360,7 @@ onUnmounted(() => {
                       @click="downloadFile(file)"
                       style="cursor: pointer;"
                     >
-                      <v-list-item-title>{{ file.filename }}</v-list-item-title>
+                      <v-list-item-title>{{ file.filename }}<div>(A fájl letöltéséhez kattintson)</div></v-list-item-title>
                     </v-list-item>
                   </v-list>
                 </div>
@@ -379,14 +382,18 @@ onUnmounted(() => {
       <!-- Dialog for deleting assignment -->
       <v-dialog v-model="DeleteAssignmentDialog" max-width="50vw" theme="dark">
         <v-card>
-          <v-card-title>Biztos törölni akarod?</v-card-title>
-          <v-btn @click="deleteThis">Törlés</v-btn>
-          <v-btn @click="DeleteAssignmentDialog = false">Mégse</v-btn>
+          <v-card-title>Biztos törölni akarja?</v-card-title>
+          <v-card-text><div>A kitörölt házifeladat végleg elveszik, nem lehet visszaállítani</div></v-card-text>
+          <v-card-actions>
+            <v-btn color="error" @click="deleteThis">Törlés</v-btn>
+            <v-btn @click="DeleteAssignmentDialog = false">Mégse</v-btn>
+          </v-card-actions>
+
         </v-card>
       </v-dialog>
 
       <!-- Dialog for sending assignment -->
-      <v-dialog v-model="dialog">
+      <v-dialog v-model="dialog" style="max-width: 70vw;">
         <v-card>
           <v-card-title>Új feladat:</v-card-title>
           <v-container>
@@ -418,7 +425,9 @@ onUnmounted(() => {
                   </v-col>
                   <v-col>
                     <v-time-picker
-                      style="background-color: black;"
+
+                      theme="light"
+                      style="background-color: rgb(82, 82, 82);"
                       @update:modelValue="handleTimeChange"
                       format="24hr"
                     />

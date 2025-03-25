@@ -9,27 +9,6 @@ import UzenetekViewAdmin from '../views/admin/UzenetekView.vue'
 import UserManagementView from '@/views/admin/UserManagementView.vue'
 import GroupManagementView from '@/views/admin/GroupManagementView.vue'
 
-// Gyerek komponens importálása
-import HazikViewTanulo from '../views/diak/HazikView.vue'
-import HianyzasokViewTanulo from '../views/diak/HianyzasokView.vue'
-import JegyekViewTanulo from '../views/diak/JegyekView.vue'
-import OrarendViewTanulo from '../views/diak/OrarendView.vue'
-import UzenetekViewTanulo from '../views/diak/UzenetekView.vue'
-
-// Szulo komponens importálása
-import HazikViewSzulo from '../views/szulo/HazikView.vue'
-import HianyzasokViewSzulo from '../views/szulo/HianyzasokView.vue'
-import JegyekViewSzulo from '../views/szulo/JegyekView.vue'
-import OrarendViewSzulo from '../views/szulo/OrarendView.vue'
-import UzenetekViewSzulo from '../views/szulo/UzenetekView.vue'
-
-// Tanar komponens importálása
-import HazikViewTanar from '../views/tanar/HazikView.vue'
-import HianyzasokViewTanar from '../views/tanar/HianyzasokView.vue'
-import JegyekViewTanar from '../views/tanar/JegyekView.vue'
-import OrarendViewTanar from '../views/tanar/OrarendView.vue'
-import UzenetekViewTanar from '../views/tanar/UzenetekView.vue'
-
 //layoutok
 import UzenetekLayout from '../layout/UzenetekLayout.vue'
 import HazikLayout from '../layout/HazikLayout.vue'
@@ -41,7 +20,14 @@ import AppLayout from '@/layout/AppLayout.vue'
 import Jogosultsagok from '../views/admin/Jogosultsagok.vue'
 
 import LoginView from '../views/auth/LoginView.vue'
-import OrarendView from '@/views/orarend/OrarendView.vue'
+import OrarendView from '@/views/orarend/DiakOrarendView.vue'
+import ChangePassword from '@/views/auth/ChangePassword.vue'
+import DiakFeladatView from '@/views/feladat/DiakFeladatView.vue'
+import TanarFeladatView from '@/views/feladat/TanarFeladatView.vue'
+import DiakHianyzasView from '@/views/hianyzas/DiakHianyzasView.vue'
+import DiakJegyView from '@/views/jegy/DiakJegyView.vue'
+import TanarJegyView from '@/views/jegy/TanarJegyView.vue'
+import UzenetView from '@/views/uzenet/UzenetView.vue'
 
 
 
@@ -55,89 +41,89 @@ const router = createRouter({
       component: AppLayout,
       children: [
         {
-          path: '/UserManagmentView',
+          path: 'UserManagmentView',
           name: 'UserManagementView',
           component: UserManagementView,
         },
         {
-          path: '/GroupManagementView',
+          path: 'GroupManagementView',
           name: 'GroupManagementView',
           component: GroupManagementView
         },
         {
-          path: '/hazik',
-          name: 'hazik',
+          path: 'feladat',
+          name: 'feladat',
           component: HazikLayout, 
           children: [
               { 
-                  path: 'diakhazik',
-                  name: 'diakhazik',
-                  component: HazikViewTanulo
+                  path: 'diak',
+                  name: 'diakfeladatok',
+                  component: DiakFeladatView
               },
               { 
-                  path: 'szulohazik/:id',
-                  name: 'szulohazik',
-                  component: HazikViewSzulo,
+                  path: 'szulofeladat/:id',
+                  name: 'szulofeladatok',
+                  component: DiakFeladatView,
                   props:true
               },
               { 
-                  path: 'tanarhazik',
-                  name: 'tanarhazik',
-                  component: HazikViewTanar
+                  path: 'tanar',
+                  name: 'tanarfeladatok',
+                  component: TanarFeladatView
               },
               { 
-                path: 'adminhazik',
-                name: 'adminhazik',
+                path: 'adminfeladatok',
+                name: 'adminfeladatok',
                 component: HazikViewAdmin
               },
           ]
         },
       
         {
-            path: '/hianyzasok',
-            name: 'hianyzasok',
+            path: 'hianyzas',
+            name: 'hianyzas',
             component: HianyzasokLayout,children:[
-              {path: 'diakhianyzasok',
+              {path: 'diak',
                 name: 'diakhianyzasok',
-                component: HianyzasokViewTanulo
+                component: DiakHianyzasView
               },
-              {path: 'szulohianyzasok/:id',
+              {path: 'szulo/:id',
                 name: 'szulohianyzasok',
-                component: HianyzasokViewSzulo
+                component: DiakHianyzasView
               },
-              {path: 'tanarhianyzasok',
+              {path: 'tanar',
                 name: 'tanarhianyzasok',
-                component: HianyzasokViewTanar
+                component: DiakHianyzasView //Ide kéne majd a tanári
               },
               { 
-                path: 'adminhianyzasok',
+                path: 'admin',
                 name: 'adminhianyzasok',
                 component: HianyzasokViewAdmin
               },
             ]
         },
         {
-          path: '/jegyek',
-          name: 'jegyek',
+          path: '/jegy',
+          name: 'jegy',
           component: JegyekLayout, 
           children: [
               { 
-                  path: 'diakjegyek',
+                  path: 'diak',
                   name: 'diakjegyek',
-                  component: JegyekViewTanulo
+                  component: DiakJegyView
               },
               { 
-                  path: 'szulojegyek/:id',
+                  path: 'szulo/:id',
                   name: 'szulojegyek',
-                  component: JegyekViewSzulo
+                  component: DiakJegyView
               },
               { 
-                  path: 'tanarjegyek',
+                  path: 'tanar',
                   name: 'tanarjegyek',
-                  component: JegyekViewTanar
+                  component: TanarJegyView
               },
               { 
-                path: 'adminjegyek',
+                path: 'admin',
                 name: 'adminjegyek',
                 component: JegyekViewAdmin
               },
@@ -149,49 +135,49 @@ const router = createRouter({
           component: OrarendLayout, 
           children: [
               { 
-                  path: 'diakorarend',
+                  path: 'diak',
                   name: 'diakorarend',
                   component: OrarendView
               },
               { 
-                  path: 'szuloorarend/:id',
+                  path: 'szulo/:id',
                   name: 'szuloorarend',
                   component: OrarendView
               },
               { 
-                  path: 'tanarorarend',
+                  path: 'tanar',
                   name: 'tanarorarend',
                   component: OrarendView
               },
               { 
-                path: 'adminorarend',
+                path: 'admin',
                 name: 'adminorarend',
                 component: OrarendView
               },
           ]
         } ,
         {
-          path: '/uzenetek',
-          name: 'uzenetek',
+          path: '/uzenet',
+          name: 'uzenet',
           component: UzenetekLayout, 
           children: [
               { 
-                  path: 'diakuzenetek',
+                  path: 'diak',
                   name: 'diakuzenetek',
-                  component: UzenetekViewTanulo
+                  component: UzenetView
               },
               { 
-                  path: 'szulouzenetek',
+                  path: 'szulo',
                   name: 'szulouzenetek',
-                  component: UzenetekViewSzulo
+                  component: UzenetView
               },
               { 
-                  path: 'tanaruzenetek',
+                  path: 'tanar',
                   name: 'tanaruzenetek',
-                  component: UzenetekViewTanar
+                  component: UzenetView
               },
               { 
-                path: 'adminuzenetek',
+                path: 'admin',
                 name: 'adminuzenetek',
                 component: UzenetekViewAdmin
             },
@@ -203,6 +189,11 @@ const router = createRouter({
       path: '/login',
       name: 'login',
       component: LoginView,
+    },
+    {
+      path: '/changePassword',
+      name: 'changePassword',
+      component: ChangePassword,
     },
 
 

@@ -6,35 +6,55 @@ class OrarendService
     async getLessons(groups)
     {
         return await orarendRepository.getLessons(groups)
-
     }
 
 
-    async getTeacherLessons(teacherID)
-    {
-        console.log("FAAAAAAAAAAAASZ")
-        const lessons = await orarendRepository.getTeacherLessons(teacherID)
+async getTeacherLessons(teacherID, weekStart) {
+    console.log("FAAAAAAAAAAAASZ");
+    const lessons = await orarendRepository.getTeacherLessons(teacherID);
+    const disruptions = await orarendRepository.getTeacherDisruptions(teacherID, weekStart);
 
-        const disruptions = await orarendRepository.getTeacherDisruptions(teacherID)
+    console.log("disruptions: " + disruptions);
 
-        console.log(disruptions+"disruptions")
+    // Build a map for quick lookup from disruptions based on day and start minute.
+    const disruptionMap = new Map();
+    disruptions.forEach(disruption => {
+        console.log("kicsi fasz");
+        console.log(disruption);
+        const key = `${disruption.day}-${disruption.start_Minute}`;
+        disruptionMap.set(key, disruption);
+    });
 
+    // Create a set of keys from lessons for later reference.
+    const lessonKeys = new Set(lessons.map(lesson => `${lesson.day}-${lesson.start_Minute}`));
 
-        const disruptionMap = new Map()
-        disruptions.forEach(disruption => {
-            console.log("kicsi fasz")
-            console.log(disruption)
-            const key = `${disruption.day}-${disruption.start_Minute}`
-            disruptionMap.set(key, disruption)
-        })
+    // Combine lessons with disruptions where available.
+    const combinedOrarend = lessons.map(lesson => {
+        const key = `${lesson.day}-${lesson.start_Minute}`;
+        const disruption = disruptionMap.get(key);
+        if (disruption) {
+            // Return the disruption record with excused true.
+            return { ...disruption.dataValues, excused: true };
+        } else {
+            // Return the lesson with excused false.
+            return { ...lesson.dataValues, excused: false };
+        }
+    });
 
-        const combinedOrarend = lessons.map(lesson => {
-            const key = `${lesson.day}-${lesson.start_Minute}`
-            return disruptionMap.get(key) || lesson
-        })
-        console.log(combinedOrarend)
-        return combinedOrarend
-    }
+    disruptions.forEach(disruption => {
+        const key = `${disruption.day}-${disruption.start_Minute}`;
+        // Only add the disruption if:
+        // 1. There was no lesson at that key, and
+        // 2. The disruption's teacherID matches the teacherID parameter.
+        if (!lessonKeys.has(key) && disruption.teacherID === teacherID) {
+            combinedOrarend.push({ ...disruption.dataValues, excused: true });
+        }
+    });
+
+    console.log(combinedOrarend);
+    return combinedOrarend;
+}
+
 
     getLessonOnDate(lessons,date)
     {
@@ -48,9 +68,9 @@ class OrarendService
         return lessons.find((x)=>x.day == napok[date.getDay()]&& x.start_Hour == date.getHours()-1&&x.start_Minute == date.getMinutes())
     }
 
-    async getDisruptions(groups)
+    async getDisruptions(groups,weekStart)
     {
-        return await orarendRepository.getDisruptions(groups)
+        return await orarendRepository.getDisruptions(groups,weekStart)
     }
 
 
@@ -68,25 +88,39 @@ class OrarendService
     {
 
     }
-    async getOrarend(groups)
-    {
-        const lessons = await this.getLessons(groups)
-
-        const disruptions = await this.getDisruptions(groups)
-
-        console.log(disruptions+"disruptions")
-
-        const disruptionMap = new Map()
+    async getOrarend(groups, weekStart) {
+        const lessons = await this.getLessons(groups);
+        const disruptions = await this.getDisruptions(groups, weekStart);
+    
+        // Create a map of disruptions keyed by day and start_Minute
+        const disruptionMap = new Map();
         disruptions.forEach(disruption => {
-            const key = `${disruption.day}-${disruption.start_Minute}`
-            disruptionMap.set(key, disruption)
-        })
-
+            const key = `${disruption.day}-${disruption.start_Minute}`;
+            disruptionMap.set(key, disruption);
+        });
+    
+        // Combine lessons with disruptions and add an "excused" flag
         const combinedOrarend = lessons.map(lesson => {
-            const key = `${lesson.day}-${lesson.start_Minute}`
-            return disruptionMap.get(key) || lesson
-        })
-        return combinedOrarend
+            const key = `${lesson.day}-${lesson.start_Minute}`;
+            const disruption = disruptionMap.get(key);
+            if (disruption) {
+                // Return the disruption record with excused true
+                return { ...disruption.dataValues, excused: true };
+            } else {
+                // Return the lesson with excused false
+                return { ...lesson.dataValues, excused: false };
+            }
+        });
+        
+        return combinedOrarend;
+    }
+
+    async getTeachers(){
+        return await orarendRepository.getTeachers()
+    }
+
+    async getLesson(){
+        return await orarendRepository.getLessons()
     }
 }
 

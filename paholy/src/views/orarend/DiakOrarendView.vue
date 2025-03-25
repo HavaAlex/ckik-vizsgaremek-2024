@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { Lesson } from '@/api/orarend/orarend';
-import { fetchOrarend } from '@/api/orarend/orarendQuery';
+import type { Lesson, Teacher } from '@/api/orarend/orarend';
+import { fetchOrarend, useGetTeachers } from '@/api/orarend/orarendQuery';
 import { ref, watch } from 'vue';
 import { format, startOfWeek, addWeeks } from 'date-fns';
 import { useOrarendStore } from '@/stores/orarendStore';
@@ -8,19 +8,47 @@ import { storeToRefs } from 'pinia';
 
 const currentWeekStart = ref(startOfWeek(new Date(), { weekStartsOn: 1 }));
 const days = ["hetfo", "kedd", "szerda", "csutortok", "pentek", "szombat", "vasarnap"];
+const dayKeys = ["hetfo", "kedd", "szerda", "csutortok", "pentek", "szombat", "vasarnap"];
 const lessonColor = ref("#9c0913");
 
 const startMinute = 300;  
 const endMinute = 1440;
 const totalMinutes = endMinute - startMinute;
 
+const dayNames: Record<string, string> = {
+  hetfo: "Hétfő",
+  kedd: "Kedd",
+  szerda: "Szerda",
+  csutortok: "Csütörtök",
+  pentek: "Péntek",
+  szombat: "Szombat",
+  vasarnap: "Vasárnap"
+};
+
 const timeTicks: number[] = [];
 for (let t = startMinute; t <= endMinute; t += 15) {
   timeTicks.push(t);
 }
 
-const orarendStore= useOrarendStore()
+const orarendStore = useOrarendStore()
 const refs = storeToRefs(orarendStore)
+
+
+const teachers = ref<Teacher[]>([]);
+
+const teacherQuery = useGetTeachers();
+watch(
+  () => teacherQuery.data.value,
+  (data) => {
+    teachers.value = data || [];
+  },
+  { immediate: true }
+);
+
+function getTeacherName(teacherId: number): string {
+  const teacher = teachers.value.find(t => t.id === teacherId);
+  return teacher ? teacher.name : teacherId.toString();
+}
 
 function changeWeek(weeks: number) {
   currentWeekStart.value = addWeeks(currentWeekStart.value, weeks);
@@ -28,9 +56,13 @@ function changeWeek(weeks: number) {
   orarendStore.orarendfeltolt(newWeekStart);
 }
 
-watch(currentWeekStart, (newWeekStart) => {
+watch(
+  currentWeekStart,
+  (newWeekStart) => {
     orarendStore.orarendfeltolt(format(newWeekStart, 'yyyy-MM-dd'));
-}, { immediate: true });
+  },
+  { immediate: true }
+);
 </script>
 
 <template>
@@ -39,7 +71,7 @@ watch(currentWeekStart, (newWeekStart) => {
       <h1 style="padding: 10px;" class="bg-title">Órarend</h1>
     </v-card>
 
-    <div v-if="refs.lessons.value.length">
+    <div v-if="refs.lessons.value !== null">
       <div class="color-picker">
         <label for="lessonColor">Szín megváltoztatása:</label>
         <input type="color" id="lessonColor" v-model="lessonColor" />
@@ -62,11 +94,7 @@ watch(currentWeekStart, (newWeekStart) => {
                 :class="['time-tick', { 'hour-tick': tick % 60 === 0 }]"
                 :style="{ top: ((tick - startMinute) / totalMinutes * 100) + '%' }"
               >
-
-                <span
-                  v-if="tick % 60 === 0"
-                  class="time-label-text"
-                >
+                <span v-if="tick % 60 === 0" class="time-label-text">
                   {{ Math.floor(tick / 60) }}:00
                 </span>
               </div>
@@ -74,8 +102,8 @@ watch(currentWeekStart, (newWeekStart) => {
           </div>
 
           <div class="days-container">
-            <div v-for="day in days" :key="day" class="day-column">
-              <div class="day-header">{{ day }}</div>
+            <div v-for="day in dayKeys" :key="day" class="day-column">
+              <div class="day-header">{{ dayNames[day] }}</div>
               <div class="day-content">
                 <div class="grid-lines">
                   <div
@@ -85,7 +113,6 @@ watch(currentWeekStart, (newWeekStart) => {
                     :style="{ top: ((tick - startMinute) / totalMinutes * 100) + '%' }"
                   ></div>
                 </div>
-
                 <div class="lessons-container">
                   <div
                     v-for="lesson in refs.lessons.value.filter(l => l.day === day)"
@@ -94,10 +121,27 @@ watch(currentWeekStart, (newWeekStart) => {
                     :style="{
                       top: ((lesson.start_Minute - startMinute) / totalMinutes * 100) + '%',
                       height: (lesson.length / totalMinutes * 100) + '%',
-                      backgroundColor: lessonColor
+                      backgroundColor: lesson.excused 
+                        ? (lesson.teacherID !== null ? 'orange' : 'red') 
+                        : lessonColor
                     }"
                   >
-                    {{ lesson.subjectName }}
+                    <div>
+                      <div>
+                        <template v-if="lesson.teacherID === null">
+                          <s>{{ lesson.subjectName }}</s>
+                        </template>
+                        <template v-else>
+                          {{ lesson.subjectName }}
+                        </template>
+                      </div>
+                      <div v-if="lesson.teacherID == null" style="font-size: 10px; margin-top: 4px;">
+                        Elmarad
+                      </div>
+                      <div v-else-if="lesson.teacherID !== null" style="font-size: 10px; margin-top: 4px;">
+                        Teacher: {{ getTeacherName(lesson.teacherID) }}
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -160,7 +204,6 @@ watch(currentWeekStart, (newWeekStart) => {
   border-top: 2px solid #444;
 }
 
-
 .time-label-text {
   position: absolute;
   left: 5px;
@@ -172,7 +215,6 @@ watch(currentWeekStart, (newWeekStart) => {
   border-radius: 3px;
   color: #000; 
 }
-
 
 .days-container {
   display: flex;
@@ -239,7 +281,6 @@ watch(currentWeekStart, (newWeekStart) => {
   overflow: hidden;
   box-sizing: border-box;
 }
-
 
 .week-navigation {
   display: flex;

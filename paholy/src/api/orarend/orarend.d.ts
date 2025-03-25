@@ -6,11 +6,20 @@ export type Lesson = {
     start_Minute: number,
     length: number,
     day: string,
-    subjectName: string
+    subjectName: string,
+    excused: boolean
 }
 
 
 export type Group = {
     ID: number,
     name: string
+}
+
+export type Teacher = {
+    ID: number,
+    name: string,
+    phone: string,
+    email: string,
+
 }

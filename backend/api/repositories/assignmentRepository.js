@@ -84,7 +84,6 @@ class AssignmentRepository {
         const record = await this.CompletedAssignment.findOne({
             where: { ID }
         });
-        if (!record) return null;
         await record.update(updatedData);
         return record;
     }

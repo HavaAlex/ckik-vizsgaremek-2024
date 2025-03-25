@@ -35,7 +35,7 @@ if (cookieStatus == true){
   }
   console.log(decoded)
   console.log(role)
-  push({path:'/orarend/'+decoded.userData.role+"orarend/"+(decoded.userData.role == "szulo"?`${decoded.userData.children[0].ID}`:'')})
+  push({path:'/orarend/'+decoded.userData.role+"/"+(decoded.userData.role == "szulo"?`${decoded.userData.children[0].ID}`:'')})
 }
 else{
   push({name:"login"})
@@ -91,7 +91,7 @@ onUpdated(()=>{
                   <v-btn @click="push({name:role+'orarend'+role==szulo?`/${selectedChild.value}`:''})" class="appnavbarmenu">Órarend</v-btn>
                 </v-list-item>
                 <v-list-item v>
-                  <v-btn @click="push({name:role+'hazik'+role==szulo?`/${selectedChild.value}`:''})" class="appnavbarmenu">Házifeladatok/beadandók</v-btn>
+                  <v-btn @click="push({name:role+'feladatok'+role==szulo?`/${selectedChild.value}`:''})" class="appnavbarmenu">Házifeladatok/beadandók</v-btn>
                 </v-list-item>
                 <v-list-item class="appnavbarmenu">
                   <v-btn @click="push({name:role+'jegyek'+role==szulo?`/${selectedChild.value}`:''})" class="appnavbarmenu">Osztályzatok</v-btn>
@@ -109,7 +109,7 @@ onUpdated(()=>{
                   <v-btn @click="push({name:role+'orarend'})" class="appnavbarmenu">Órarend</v-btn>
                 </v-list-item>
                 <v-list-item v>
-                  <v-btn @click="push({name:role+'hazik'})" class="appnavbarmenu">Házifeladatok/beadandók</v-btn>
+                  <v-btn @click="push({name:role+'feladatok'})" class="appnavbarmenu">Házifeladatok/beadandók</v-btn>
                 </v-list-item>
                 <v-list-item class="appnavbarmenu">
                   <v-btn @click="push({name:role+'jegyek'})" class="appnavbarmenu">Osztályzatok</v-btn>
@@ -169,7 +169,7 @@ onUpdated(()=>{
       <v-btn @click="push({name:role+'orarend'})">
                 Órarend
       </v-btn>
-      <v-btn @click="push({name:role+'hazik'})">
+      <v-btn @click="push({name:role+'feladatok'})">
                 Házifeladatok/beadandók
       </v-btn>
       <v-btn @click="push({name:role+'jegyek'})">
@@ -197,7 +197,6 @@ onUpdated(()=>{
         :items="refs.children.value"
         @update:model-value="(value) => { 
           push({ path: `/orarend/szuloorarend/${value}` }); 
-          console.log('FASZ'); 
         }"
       ></v-select>
       <!--{{ refs.selectedChild }}-->

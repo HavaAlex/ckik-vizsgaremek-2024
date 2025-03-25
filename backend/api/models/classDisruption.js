@@ -27,7 +27,7 @@ module.exports = (sequelize, DataTypes) =>
             teacherID:
             {
                 type: DataTypes.INTEGER,
-                allowNull: false,
+                allowNull: true,
             },
             start_Hour:
             {

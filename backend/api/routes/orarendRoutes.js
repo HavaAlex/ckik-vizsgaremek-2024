@@ -9,6 +9,8 @@ const userAuth = require("../middlewares/userAuth")
 router.use(userAuth.verifyToken);
 
 router.get("/", orarendController.getOrarend);
+router.get("/getTeachers", orarendController.getTeachers);
+router.get("/getLessons", orarendController.getLessons);
 
 
 module.exports = router;

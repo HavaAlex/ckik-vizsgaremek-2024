@@ -155,6 +155,13 @@ class UserRepository
         
         return "törölve "
     }
+    async changePassword(ID, userReplacement){
+        const record = await this.Users.findOne({
+            where: { ID }
+        });
+        await record.update(userReplacement);
+        return record;
+    }
 }
 
 module.exports = new UserRepository(db);

@@ -121,7 +121,7 @@ describe("Üzenet funkciók tesztelése", () => {
   });
 
     // Helper to set the decoded user (simulate authentication)
-    const setUserHeader = () => ({
+    let setUserHeader = () => ({
             authorization: `Bearer ${token}`
     });
 
@@ -134,13 +134,38 @@ describe("Üzenet funkciók tesztelése", () => {
             .post("/uzenet")
             .set(setUserHeader())
             .send({
-            message: "Message to delete",
+            message: "Test1",
             date: "2000-01-01",
             receiverlist: [{ ID: user2.ID }],
             receiverGrouplist: []
             });
+            //átrakjuk máshova megnézzük azt is lebírja e kérni ha valaki más küldött
+            token = jwt.sign({ userData:user3 }, process.env.JWT_KEY, { expiresIn: "20m" });
 
-            expect(createRes.status).toBe(201);
+            setUserHeader = () => ({
+                authorization: `Bearer ${token}`
+            });
+        
+            await request(app)
+            .post("/uzenet")
+            .set(setUserHeader())
+            .send({
+            message: "Test2",
+            date: "2000-01-01",
+            receiverlist: [{ ID: user2.ID }],
+            receiverGrouplist: []
+            });
+            //visszatévés hogy hozzáférjünk adminként
+            token = jwt.sign({ userData:user1 }, process.env.JWT_KEY, { expiresIn: "20m" });
+
+            setUserHeader = () => ({
+                authorization: `Bearer ${token}`
+            });
+
+
+
+
+        expect(createRes.status).toBe(201);
 
 
         const res = await request(app)
@@ -149,7 +174,7 @@ describe("Üzenet funkciók tesztelése", () => {
         expect(res.status).toBe(201);
         
         expect(res.body).toBeDefined();
-        expect(res.body).toHaveLength(1)
+        expect(res.body).toHaveLength(2)
         });
     });
 
@@ -168,7 +193,7 @@ describe("Üzenet funkciók tesztelése", () => {
 
         expect(createRes.status).toBe(201);
         const messageID = createRes.body.ID;
-            
+        const lengthBeforeDelete = await request(app).get("/admin/allMessage").set("Authorization", `Bearer ${token}`);
         // Now, delete the message
         const deleteRes = await request(app)
             .delete(`/admin/deleteMessage/${messageID}`).set("Authorization", `Bearer ${token}`);;
@@ -176,6 +201,10 @@ describe("Üzenet funkciók tesztelése", () => {
         expect(deleteRes.status).toBe(201);
         // Assuming your deleteMessage returns an object indicating success, e.g., { success: true }
         expect(deleteRes.body).toBe("Sikeres törlés")
+
+        const lengthAfterDelete = await request(app).get("/admin/allMessage").set("Authorization", `Bearer ${token}`);
+
+        expect(lengthAfterDelete.body.length).toBe(lengthBeforeDelete.body.length-1)
         });
     });
 

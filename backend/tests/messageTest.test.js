@@ -94,7 +94,7 @@ describe("Üzenet funkciók tesztelése", () => {
         StudentID:1,
     }
     token = jwt.sign({ userData:user1 }, process.env.JWT_KEY, { expiresIn: "20m" });
-    console.log(process.env.JWT_KEY)
+    //console.log(process.env.JWT_KEY)
     
     await userRepository.createUser(user1);
     await teacherRepository.createTeacher(teacher1);

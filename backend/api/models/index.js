@@ -1,3 +1,5 @@
+const absence = require("../models/absence");
+
 module.exports = (sequelize, DataTypes) => {
 
     const User = require("../models/user")(sequelize, DataTypes);
@@ -108,6 +110,12 @@ module.exports = (sequelize, DataTypes) => {
 
     Absence.belongsTo(Student, {foreignKey: 'studentID'});
     Student.hasMany(Absence, {foreignKey: 'studentID'});
+
+    Absence.belongsTo(Teacher, {foreignKey: 'teacherID'});
+    Teacher.hasMany(Absence, {foreignKey: 'teacherID'});
+
+    Absence.belongsTo(Lesson, {foreignKey: 'lessonID'});
+    Lesson.hasMany(Absence, {foreignKey: 'lessonID'});
     
     ClassDistruption.belongsTo(Teacher, {foreignKey: 'teacherID'});
     Teacher.hasMany(ClassDistruption, {foreignKey: 'teacherID'});

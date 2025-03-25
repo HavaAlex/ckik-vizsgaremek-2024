@@ -7,6 +7,7 @@ import { jwtDecode, type JwtPayload } from "jwt-decode";
 import { getUserStatusFromLocalStorage, setUserStatusToLocalStorage} from '@/localstorage/localStorageManagment.ts';
 import { useCookieHandler } from "@/stores/cookieHandler"
 import { useErrorHandler } from "@/stores/errorHandler"
+import { registerTS } from "vue/compiler-sfc"
  
 const Login = async (data: LoginData) : Promise<string> => {
     console.log("login elküldve")
@@ -32,8 +33,29 @@ export const useLogin = () => {
             //console.log(Math.floor((decoded.exp*1000-Date.now())/1000))
             setBaseTime(Math.floor((decoded.exp*1000-Date.now())/1000))
             console.log("FING")
-            console.log('/orarend/'+decoded.userData.role+"orarend/"+(decoded.userData.role == "szulo"?`${decoded.userData.children[0].ID}`:''))
-            push({path:'/orarend/'+decoded.userData.role+"orarend/"+(decoded.userData.role == "szulo"?`${decoded.userData.children[0].ID}`:'')})
+            console.log('/orarend/'+decoded.userData.role+"/"+(decoded.userData.role == "szulo"?`${decoded.userData.children[0].ID}`:''))
+            push({path:'/orarend/'+decoded.userData.role+"/"+(decoded.userData.role == "szulo"?`${decoded.userData.children[0].ID}`:'')})
+            
+        },
+        onError(error){
+            const {setError} = useErrorHandler()
+            setError(error)
+        }
+    })
+}
+
+const ChangePassword = async (passwordData:any)=>{
+    const response = await axiosClient.post('http://localhost:3000/login/changePassword/', passwordData)
+    return response.data
+}
+
+export const useChangePassword = () =>{
+    const {push} = useRouter()
+    return useMutation({
+        mutationFn:ChangePassword,
+        onSuccess(){
+
+            push({name: 'login'})
             
         },
         onError(error){

@@ -18,9 +18,7 @@ class HazikService {
         const teacher = await teacherRepository.getTeacherByUserID(newHazi.teacherID);
         newHazi.teacherID = teacher.ID;
 
-        console.log("MEGLEPI: ", newHazi)
         const newAssignment = await assignmentRepository.createAssignment(newHazi);
-        console.log("MEGLEPI PART 2: ", groups)
 
         const allStudentIDs = [];
         for (const grp of groups) {
@@ -36,7 +34,6 @@ class HazikService {
                 textAnswer: "",
                 status: "Nincs leadva"
             };
-            console.log("MEGLEPI PART 3: ", completedAssignmentData)
             await assignmentRepository.createCompletedAssignment(completedAssignmentData);
         }
 

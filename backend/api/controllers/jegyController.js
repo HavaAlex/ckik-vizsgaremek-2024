@@ -17,6 +17,8 @@ exports.getJegyekTanar = async (req, res, next) =>
     //console.log("JEGY KEZD")
     const csoportok = await groupService.getTeacherGroups(req.role.ID)
     const jegyek = [];
+    console.log("FASZ2")
+    console.log(csoportok)
 
     console.log(csoportok)
     for (const element of csoportok) { //csoportok alapján vannak csoportosítva a jegyek, és azon belül tantárgyanként, majd dátum és személy alapján csak frontenden
@@ -63,6 +65,15 @@ exports.getJegyekTanar = async (req, res, next) =>
             mark.studentName = studentInfo.name;
         }
     }*/
+    res.status(201).json(jegyek);
+    //console.log("JEGY VÉG")
+}
+
+exports.getJegyekSzulo = async (req, res, next) =>
+{
+    //console.log("JEGY KEZD")
+    const jegyek = await jegyService.getJegyek(req.params.id)
+    //console.log(jegyek)
     res.status(201).json(jegyek);
     //console.log("JEGY VÉG")
 }
