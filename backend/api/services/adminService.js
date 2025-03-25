@@ -13,6 +13,7 @@ const GroupService = require("../services/csoportService")
 const bcrypt = require("bcrypt");
 const userRepository = require("../repositories/userRepository");
 const userService = require("../services/userService");
+const guardianStudentRepository = require("../repositories/guardianStudentRepository");
 const salt = 10;
 
 class adminService {
@@ -113,7 +114,6 @@ class adminService {
 
         for (let i = 0; i < guardians.length; i++) {
             for (let j = 0; j < guardians[i].RelatedStudents.length; j++) {
-                console.log("ŐT KERESSÜK ADMIN SZERÓ BA ", guardians[i].RelatedStudents[j] )
                 const StudentID = await studentRepository.getStudentByOmId(guardians[i].RelatedStudents[j])
                 console.log(StudentID)
                 if(StudentID == null){
@@ -152,7 +152,6 @@ class adminService {
             }
             newGuardian = await GuardianRepository.createGuardian(newGuardian)
             for (let j = 0; j < guardians[i].RelatedStudents.length; j++) {
-                console.log("ŐT KERESSÜK ADMIN SZERÓ BA ", guardians[i].RelatedStudents[j] )
                 const StudentID = await studentRepository.getStudentByOmId(guardians[i].RelatedStudents[j])
                 console.log(StudentID)
                 
@@ -170,10 +169,17 @@ class adminService {
 
     async getAllUsers(){
         const users = await userRepository.getAllUsers();
-        console.log("mindenki: ", users)
         return users
     }
-    async modifyUser(user){
+    async modifyUser(user, currentUsername){
+        if(currentUsername == user.roleSide.name){
+            const modificationResult = await userRepository.modifyUser(user)
+            return modificationResult
+        }
+        const userNameTaken = await userRepository.getUser(user.roleSide.name)
+        if(userNameTaken){
+            return -2
+        }
         const modificationResult = await userRepository.modifyUser(user)
         return modificationResult
     }   
@@ -205,18 +211,13 @@ class adminService {
         console.log("OOOOO: ", newGroup)
         const usersExist = await UserService.checkIfUsersExist(newGroup.StudentOMIDs)
         if(!usersExist){
-            console.log("SZAAAAAR : ", usersExist)
             return -1 
         }
 
         const userNotInGroup = await userService.checkIfUsersAlreadyInGroup(newGroup.StudentOMIDs)
-        console.log("vissza jótt és ez egy : ", userNotInGroup)
         if(userNotInGroup){
             return -2
         }
-        console.log("///////////")
-        console.log(newGroup)
-        console.log("///////////")
         const groupNameNotTaken = await GroupService.checkIfGroupNameIsNotTaken(newGroup.name)
         if(!groupNameNotTaken){
             return -3
@@ -226,7 +227,6 @@ class adminService {
 
         else if(usersExist)
         {
-            console.log("PERSZE EZ JÓ ELVÉGRE : ", usersExist)
             const newGroupForGroupTable = {
                 ID: null,
                 name: newGroup.name
@@ -254,24 +254,22 @@ class adminService {
         if(!usersExist){
             return -1
         }
-        console.log("AZ ELSŐ N ÁTMENT ")
         const userNotInGroup = await userService.checkIfUsersAlreadyInGroup(newGroup.StudentOMIDs)
-        console.log("vissza jótt és ez egy : ", userNotInGroup)
+
         if(userNotInGroup){
             return -2
         }
-        console.log("))))))))))))))))))): ", newGroup)
         for (let i = 0; i < newGroup.StudentOMIDs.length; i++) {
             // await studentGroupRepository.createStudentGroup
             const student = await studentRepository.getStudentByOmId(newGroup.StudentOMIDs[i])
-            console.log("MEGTALÁLTAM : ", student)
+
             const newStudentGroup = {
                 GroupID: newGroup.id,
                 StudentID: student.ID
             }
             await studentGroupRepository.createStudentGroup(newStudentGroup);
         }
-        console.log("VAN ILYEN MINDEN JÓ ")
+
         return "sikerült"
     }
 
@@ -281,6 +279,19 @@ class adminService {
 
     async deleteGroup(ID){
         return await groupRepository.deleteGroup(ID)
+    }
+
+    async addStudentToGuardian(GuardianID, students){
+        await guardianStudentRepository.deleteGurdianStudentByGuardianID(GuardianID)
+        for (let i = 0; i < students.length; i++) {
+            const newGuardianStudent = {
+                GuardianID: GuardianID,
+                StudentID: students[i].ID
+            }
+            console.log("KAKIÁLS _ ", newGuardianStudent)
+            await guardianStudentRepository.createGuardianStudent(newGuardianStudent)
+        }
+        return "sikeres módosítás"
     }
 
     

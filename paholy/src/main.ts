@@ -6,6 +6,7 @@ import { createPinia } from 'pinia'
 import App from './App.vue'
 import router from './router'
 import vuetify from './lib/vuetify'
+
 import { VueQueryPlugin } from '@tanstack/vue-query'
 import queryClient from './lib/queryClient'
 
@@ -21,6 +22,7 @@ app.config.errorHandler = (err, vm, info) => {
   console.error("Vue component:", vm);
   console.error("Additional info:", info);
 };
+
 
 
 app.mount('#app')

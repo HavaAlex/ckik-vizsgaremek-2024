@@ -194,12 +194,10 @@ describe("Üzenet funkciók tesztelése", () => {
         expect(createRes.status).toBe(201);
         const messageID = createRes.body.ID;
         const lengthBeforeDelete = await request(app).get("/admin/allMessage").set("Authorization", `Bearer ${token}`);
-        // Now, delete the message
         const deleteRes = await request(app)
-            .delete(`/admin/deleteMessage/${messageID}`).set("Authorization", `Bearer ${token}`);;
+            .delete(`/admin/deleteMessage/${messageID}`).set("Authorization", `Bearer ${token}`);
 
         expect(deleteRes.status).toBe(201);
-        // Assuming your deleteMessage returns an object indicating success, e.g., { success: true }
         expect(deleteRes.body).toBe("Sikeres törlés")
 
         const lengthAfterDelete = await request(app).get("/admin/allMessage").set("Authorization", `Bearer ${token}`);

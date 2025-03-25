@@ -15,6 +15,12 @@ class GuardianStudentRepository
         
         return newGuardianStudent;
     }
+    async deleteGurdianStudentByGuardianID(ID){
+        await this.GuardianStudent.destroy({
+            where: {GuardianID : ID}
+        })
+        return "Sikeres törlés"
+    }
 }
 
 module.exports = new GuardianStudentRepository(db);

@@ -62,8 +62,7 @@ router.use(userAuth.verifyToken);
 
 router.get("/", jegyController.getJegyek);
 
-router.use(tanarHandler.checkRole);
-router.post("/", jegyController.createJegy);
-router.get("/csoportjegy", jegyController.getJegyekTanar);
+router.post("/",tanarHandler.checkRole, jegyController.createJegy);
+router.get("/csoportjegy",tanarHandler.checkRole, jegyController.getJegyekTanar);
 
 module.exports = router;

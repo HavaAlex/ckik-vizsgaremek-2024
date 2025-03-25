@@ -121,6 +121,12 @@ class UserRepository
             await teacherRepository.modifyTeacher(user.userSide,user.roleSide)
         }
         else if(user.userRole == "diak"){
+            const alreadyexistingUser = await studentRepository.getStudentByOmId(user.roleSide.OMID)
+            if(alreadyexistingUser){
+                console.log("ez igy mér nem is annyira jó")
+                return -1
+            }
+
            await studentRepository.modifyStudent(user.userSide,user.roleSide)
         }
         else if(user.userRole == "szulo"){
@@ -153,6 +159,13 @@ class UserRepository
         })
         
         return "törölve "
+    }
+    async changePassword(ID, userReplacement){
+        const record = await this.Users.findOne({
+            where: { ID }
+        });
+        await record.update(userReplacement);
+        return record;
     }
 }
 

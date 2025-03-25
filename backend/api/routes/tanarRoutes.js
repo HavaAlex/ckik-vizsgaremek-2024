@@ -21,9 +21,7 @@ const tanarHandler = require("../middlewares/tanarHandler")
 
 router.use(userAuth.verifyToken);
 
-router.use(tanarHandler.checkRole)
-
-router.get("/tantargy", orarendController.getTantargyakTanar);
+router.get("/tantargy",tanarHandler.checkRole, orarendController.getTantargyakTanar);
 
 
 module.exports = router;

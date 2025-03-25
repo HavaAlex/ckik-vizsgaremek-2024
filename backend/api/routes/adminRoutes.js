@@ -13,29 +13,24 @@ const adminService = require("../services/adminService");
 
 router.use(userAuth.verifyToken);
 
-router.use(adminHandler.checkRole);
+router.post("/register/:token",adminHandler.checkRole, userController.createUser);
 
-router.post("/register/:token", userController.createUser);
+router.post("/addTeacherUsers",adminHandler.checkRole,adminController.uploadTeachers)//Tanárok feltöltése
+router.post("/addStudentUsers",adminHandler.checkRole,adminController.uploadStudents)//Diákok feltöltése
+router.post("/addGuardianUsers",adminHandler.checkRole,adminController.addGuardianUsers)//Szülők/gondviselők feltöltése
+router.get("/getAllUsers",adminHandler.checkRole,adminController.getAllUsers)//Összes felhasználó lekérése
+router.get("/getUser/:userID",adminHandler.checkRole,userController.getUserWithAdditionalAttributes)// egy felhasználó lekérése
+router.put("/modifyUser",adminHandler.checkRole,adminController.modifyUser)//Felhasználó utólagos módosítása, adminra, studentre, teacherre és guardiannre egyaránt működik
+router.delete("/deleteUser/:userID",adminHandler.checkRole,adminController.deleteUser)//Felhasználó törlése
+router.post("/addStudentsToGuardian", adminHandler.checkRole, adminController.addStudentsToGuardian)
 
-router.post("/orarendModositas/:token", userController.createUser);
-
-router.post("/osztalyModositas/:token", userController.createUser);
-
-router.post("/addTeacherUsers",adminController.uploadTeachers)//Tanárok feltöltése
-router.post("/addStudentUsers",adminController.uploadStudents)//Diákok feltöltése
-router.post("/addGuardianUsers",adminController.addGuardianUsers)//Szülők/gondviselők feltöltése
-router.get("/getAllUsers",adminController.getAllUsers)//Összes felhasználó lekérése
-router.get("/getUser/:userID",userController.getUserWithAdditionalAttributes)// egy felhasználó lekérése
-router.put("/modifyUser",adminController.modifyUser)//Felhasználó utólagos módosítása, adminra, studentre, teacherre és guardiannre egyaránt működik
-router.delete("/deleteUser/:userID",adminController.deleteUser)//Felhasználó törlése
-
-router.get("/getAllGroupsWithStudents",adminController.getAllGroupsWithStudents)//csoportok lekérése, a benne lévő studentekkel együtt
-router.post("/createGroup",adminController.CreateGroup)//Csoport létrehozása, diákokkal együtt történik
-router.post("/addStudentsToGroup",adminController.addStudentsToGroup)//Felhasználók utólagos hozzáadása a csoporhoz
-router.delete("/deleteStudentGroup/:ID",adminController.deleteStudentGroup)//Diák eltávolítása a csoportból (nem törli ki a felhasználót)
-router.delete("/deleteGroup/:ID",adminController.deleteGroup)//Csoport törlése (Nem törli ki a felhasználókat, de a kapcsolótábla adatait igen)
-router.get("/getGroupAsignments/:GroupID",adminController.getGroupAsignments)//csoporthoz tartozó házifeladatok lekérése
-router.get("/allMessage",uzenetController.getAllMessages);
-router.delete("/deleteMessage/:ID",uzenetController.deleteMessage)
+router.get("/getAllGroupsWithStudents",adminHandler.checkRole,adminController.getAllGroupsWithStudents)//csoportok lekérése, a benne lévő studentekkel együtt
+router.post("/createGroup",adminHandler.checkRole,adminController.CreateGroup)//Csoport létrehozása, diákokkal együtt történik
+router.post("/addStudentsToGroup",adminHandler.checkRole,adminController.addStudentsToGroup)//Felhasználók utólagos hozzáadása a csoporhoz
+router.delete("/deleteStudentGroup/:ID",adminHandler.checkRole,adminController.deleteStudentGroup)//Diák eltávolítása a csoportból (nem törli ki a felhasználót)
+router.delete("/deleteGroup/:ID",adminHandler.checkRole,adminController.deleteGroup)//Csoport törlése (Nem törli ki a felhasználókat, de a kapcsolótábla adatait igen)
+router.get("/getGroupAsignments/:GroupID",adminHandler.checkRole,adminController.getGroupAsignments)//csoporthoz tartozó házifeladatok lekérése
+router.get("/allMessage",adminHandler.checkRole,uzenetController.getAllMessages);
+router.delete("/deleteMessage/:ID",adminHandler.checkRole,uzenetController.deleteMessage)
 
 module.exports = router;
