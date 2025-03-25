@@ -200,19 +200,6 @@ describe("Hazifeladatok tesztelése",()=>{
         describe("POST uploadassignmentFiles",()=>{
             test("sikeresen feltölti", async ()=>{
                 
-<<<<<<< HEAD
-                const response = await request(app)
-                .post('/feladat/uploadassignmentfiles')
-                .attach("files", Buffer.from("Dummy file content"), "testfile.txt")
-                .field("assignmentId", "1")
-                .set(setUserHeader())
-            //console.log("BEPISILÉS: ", response)
-              expect(response.status).toBe(200);
-              expect(response.body).toEqual({ success: true });
-              
-              
-
-=======
             const response = await request(app)
             .post('/feladat/uploadassignmentfiles')
             .attach("files", Buffer.from("Dummy file content"), "testfile.txt")
@@ -221,7 +208,6 @@ describe("Hazifeladatok tesztelése",()=>{
             expect(response.status).toBe(200);
             expect(response.body.nagycucc.message).toBe("Files uploaded successfully")
             expect(Array.isArray(response.body.nagycucc.uploadedFiles)).toBe(true)
->>>>>>> 547123c2dea3783f75db06983b89da628fddc45b
             })
         })
 
@@ -247,10 +233,6 @@ describe("Hazifeladatok tesztelése",()=>{
                 authorization: `Bearer ${token}`
             });
         })
-<<<<<<< HEAD
-    })*/
-    //console.log("LEFUTR A TESZT")
-=======
         describe("GET /feladat/hazikdiak",()=>{
             test("leszedi ügyesen", async ()=>{
                 const receivedAssignemnts = await request(app)
@@ -287,5 +269,4 @@ describe("Hazifeladatok tesztelése",()=>{
         })
     })
     console.log("LEFUTR A TESZT")
->>>>>>> 547123c2dea3783f75db06983b89da628fddc45b
 })
