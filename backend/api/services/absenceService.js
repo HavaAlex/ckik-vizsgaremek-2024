@@ -11,6 +11,11 @@ class HianyzasService
     {
         return await absenceRepository.getStudentsInGroup(groupID);
     }
+
+    async postAbsence(absence)
+    {
+        return await absenceRepository.createAbsence(absence);
+    }
 }
 
 module.exports = new HianyzasService();

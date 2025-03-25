@@ -6,8 +6,19 @@ export type Teacher = {
     name: string,
     phone: string,
     email: string,
-
 }
+
+export type Students = {
+    ID: number,
+    name: string,
+    DoB : Date,
+    address: string,
+    phone: string,
+    email: string,
+    userId: number,
+    OMID: number,
+}
+
 
 export type Hianyzaskapo ={
     Datum: Date,
@@ -41,4 +52,12 @@ export type Lesson = {
 export type GroupMembers ={
     groupName:string,
     members:GroupMember[],
+}
+
+export type Absence = {
+    studentID: number,
+    teacherID: number,
+    lessonID: number,
+    date: Date,
+    absent: boolean
 }

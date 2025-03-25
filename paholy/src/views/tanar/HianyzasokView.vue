@@ -1,11 +1,15 @@
 <script setup lang="ts">
-
 import type { Lesson, Teacher } from '@/api/orarend/orarend';
-import { fetchOrarend, useGetTeachers } from '@/api/orarend/orarendQuery';
-import { useGetStudentsInGroup} from '@/api/hianyzasok/hianyzasokQuery';
+import { fetchOrarend } from '@/api/orarend/orarendQuery';
+import { useGetStudentsInGroup, useAddAbsence } from '@/api/hianyzasok/hianyzasokQuery';
+import type { Students } from '@/api/hianyzasok/hianyzasok';
 
-import { ref, watch } from 'vue';
+import { ref, reactive, watch, computed } from 'vue';
 import { format, startOfWeek, addWeeks } from 'date-fns';
+import type { Student } from '@/api/admin/admin';
+
+
+const {mutate, isPending} = useAddAbsence()
 
 const currentWeekStart = ref(startOfWeek(new Date(), { weekStartsOn: 1 }));
 const days = ["hetfo", "kedd", "szerda", "csutortok", "pentek", "szombat", "vasarnap"];
@@ -37,8 +41,6 @@ async function orarendfeltolt(weekStart: string) {
   lessons.value = await fetchOrarend(weekStart);
 }
 
-
-
 function changeWeek(weeks: number) {
   currentWeekStart.value = addWeeks(currentWeekStart.value, weeks);
   const newWeekStart = format(currentWeekStart.value, 'yyyy-MM-dd');
@@ -53,47 +55,91 @@ watch(
   { immediate: true }
 );
 
-/* Attendance Modal Setup */
-// Reactive variable to hold the lesson that was clicked
+
+
 const selectedLesson = ref<Lesson | null>(null);
 
-// Dummy list of students (replace with real data as needed)
-const students = ref([
-  { id: 1, name: 'Kovács Anna' },
-  { id: 2, name: 'Nagy Béla' },
-  { id: 3, name: 'Tóth Csaba' }
-]);
+const attendance = ref<{ [studentId: number]: { studentID: number; absent: boolean } }>({});
 
-// Store each student's attendance status (e.g., "Itt volt" or "Hiányzott")
-const attendance = ref<Record<number, string>>({});
+const students = ref<Students[]>([]);
 
-console.log(useGetStudentsInGroup(1).data);
+const currentGroupID = ref<number | null>(null);
+
+
+const { data: studentsData } = useGetStudentsInGroup(
+  computed(() => currentGroupID.value),
+  { enabled: computed(() => currentGroupID.value !== null) }
+);
+
+watch(studentsData, (newData) => {
+  if (newData) {
+    students.value = newData;
+    if (selectedLesson.value) {
+      newData.forEach(student => {
+        if (!attendance.value[student.ID]) {
+          attendance.value[student.ID] = { studentID: student.ID, absent: false };
+        }
+      });
+    }
+  }
+});
 
 function openAttendance(lesson: Lesson) {
   selectedLesson.value = lesson;
+  currentGroupID.value = lesson.groupID;
 
-  console.log("Opening attendance for lesson:", lesson);
-  console.log("GroupId being:", lesson.groupID);
 
-  // console.log(useGetStudentsInGroup(lesson.groupID));
-
-  // Reset attendance
-  attendance.value = {};
+  for (const student of students.value) {
+    if (!attendance.value[student.ID]) {
+      attendance.value[student.ID] = { studentID: student.ID, absent: false };
+    }
+  }
 }
 
 function submitAttendance() {
-  // Here you can perform an API call to save the attendance
+  if (!selectedLesson.value) return;
+
+  
   console.log("Lesson:", selectedLesson.value);
   console.log("Attendance:", attendance.value);
-  // Close the modal after logging
+  
+  const absencesToPost = students.value.map((student) => {
+    const isAbsent = attendance.value[student.ID]?.absent;
+
+
+    let date = new Date(currentWeekStart.value); // Ensure it's a Date object
+
+    date.setDate(date.getDate() + dayKeys.indexOf(selectedLesson.value.day));
+
+
+    return {
+      studentID: student.ID,
+      teacherID: selectedLesson.value?.teacherID || currentTeacherId, 
+      lessonID: selectedLesson.value.ID,
+      date: date,
+      absent: isAbsent ? true : false,
+    };
+  });
+
+  absencesToPost.forEach((absence) => {
+    if (absence.absent === true) {
+      const valasz = mutate(absence)
+
+      console.log("Valasz:", valasz);
+      // itt kell a post
+    }
+  });
+
   closeAttendance();
 }
 
 function closeAttendance() {
   selectedLesson.value = null;
-  attendance.value = {};
+  attendance.value = [];
+  currentGroupID.value = null;
 }
 </script>
+
 
 <template>
   <main>
@@ -181,26 +227,28 @@ function closeAttendance() {
     <transition name="fade">
       <div class="attendance-modal" v-if="selectedLesson">
         <div class="modal-content">
-          <h2 class="modal-header">Óra elnaplózása: {{ selectedLesson.subjectName }}</h2>
-          
-          <div v-for="student in students" :key="student.id" class="student-attendance">
+          <h2 class="modal-header">
+            Óra elnaplózása: {{ selectedLesson.subjectName }}
+          </h2>
+
+          <div v-for="student in students" :key="student.ID" class="student-attendance">
             <span class="student-name">{{ student.name }}</span>
-            <div class="attendance-options">
+            <div class="attendance-options" v-if="attendance[student.ID]">
               <label>
                 <input 
                   type="radio" 
-                  :name="'attendance-' + student.id" 
-                  value="Itt volt" 
-                  v-model="attendance[student.id]" 
+                  :name="'attendance-' + student.ID" 
+                  :value="false" 
+                  v-model="attendance[student.ID].absent" 
                 />
                 Itt volt
               </label>
               <label>
                 <input 
                   type="radio" 
-                  :name="'attendance-' + student.id" 
-                  value="Hiányzott" 
-                  v-model="attendance[student.id]" 
+                  :name="'attendance-' + student.ID" 
+                  :value="true" 
+                  v-model="attendance[student.ID].absent" 
                 />
                 Hiányzott
               </label>
@@ -217,7 +265,7 @@ function closeAttendance() {
   </main>
 </template>
 
-<style lang="css">
+<style lang="css" scoped> /* scoped kell hogy nem lehesson "rányomni" az orára másholl*/
 .bg-title {
   color: #000;
 }
@@ -372,7 +420,7 @@ function closeAttendance() {
   opacity: 0;
 }
 
-/* Modal styling with dark/night mode */
+
 .attendance-modal {
   position: fixed;
   top: 0;
@@ -390,10 +438,10 @@ function closeAttendance() {
   border-radius: 10px;
   width: 320px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
-  color: #f1f1f1; /* Light text for contrast */
+  color: #f1f1f1;
 }
 
-/* Header styling for modal */
+
 .modal-header {
   margin-bottom: 15px;
   font-size: 18px;
@@ -401,7 +449,6 @@ function closeAttendance() {
   text-align: center;
 }
 
-/* Layout for the attendance options */
 .student-attendance {
   margin-bottom: 10px;
 }
@@ -417,7 +464,6 @@ function closeAttendance() {
   color: #ffffff;
 }
 
-/* Modal buttons styling */
 .modal-buttons {
   display: flex;
   justify-content: space-between;

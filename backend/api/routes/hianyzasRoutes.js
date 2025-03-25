@@ -23,5 +23,6 @@ router.use(userAuth.verifyToken);
 
 router.get("/", absenceController.getAbsences);
 router.get("/getStudentsInGroup/:groupID", absenceController.getStudentsInGroup);
+router.post("/postAbsence", absenceController.postAbsence);
 router.post("/", absenceController.getAbsences);//NINCS KÉSZ
 module.exports = router;

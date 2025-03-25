@@ -31,25 +31,33 @@ class AbsenceRepository
                 }
             }
         )
-    }
+    } 
+    
     async getStudentsInGroup(groupID) {
         // igen, ez jó szar, de ha szebben akarom akkor nem működik :D (nem tudom miért)
-
+        
         const studentGroups = await this.studentgroup.findAll({
             where: { groupID: groupID },
-            attributes: ['StudentID'],
-            raw: true
         });
-    
 
         const studentIDs = studentGroups.map(sg => sg.StudentID);
-    
+        
         if (studentIDs.length === 0) return []; 
-    
+        
 
-        return await this.Student.findAll({
+        const students = await this.Student.findAll({
             where: { id: studentIDs } 
         });
+
+        return students;
+    }
+    async postAbsence(absence)
+    {
+        const newAbsence = await this.Absences.build(absence);
+
+        await newAbsence.save();
+        
+        return newAbsence;
     }
 }
 
