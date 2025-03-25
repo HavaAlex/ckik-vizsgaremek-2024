@@ -17,6 +17,8 @@ exports.getJegyekTanar = async (req, res, next) =>
     //console.log("JEGY KEZD")
     const csoportok = await groupService.getTeacherGroups(req.role.ID)
     const jegyek = [];
+    console.log("FASZ2")
+    console.log(csoportok)
 
     console.log(csoportok)
     for (const element of csoportok) { //csoportok alapján vannak csoportosítva a jegyek, és azon belül tantárgyanként, majd dátum és személy alapján csak frontenden

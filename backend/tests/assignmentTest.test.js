@@ -197,7 +197,7 @@ describe("Hazifeladatok tesztelése",()=>{
                 .attach("files", Buffer.from("Dummy file content"), "testfile.txt")
                 .field("assignmentId", "1")
                 .set(setUserHeader())
-            console.log("BEPISILÉS: ", response)
+            //console.log("BEPISILÉS: ", response)
               expect(response.status).toBe(200);
               expect(response.body).toEqual({ success: true });
               
@@ -214,5 +214,5 @@ describe("Hazifeladatok tesztelése",()=>{
             
         })
     })*/
-    console.log("LEFUTR A TESZT")
+    //console.log("LEFUTR A TESZT")
 })

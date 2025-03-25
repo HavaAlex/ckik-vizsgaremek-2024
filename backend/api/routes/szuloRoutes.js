@@ -23,11 +23,9 @@ const user = require("../models/user");
 // Make sure to protect all routes with your auth middleware
 router.use(userAuth.verifyToken);
 
-router.use(szuloHandler.checkRole)
-
-router.get("/orarend/:id",szuloController.getOrarend)
-router.get("/jegy/:id",szuloController.getOrarend)
-router.get("/feladat/:id",szuloController.getOrarend)
-router.get("/hianyzas/:id",szuloController.getOrarend)
+router.get("/orarend/:id",szuloHandler.checkRole, szuloController.getOrarend)
+router.get("/jegy/:id",szuloHandler.checkRole,szuloController.getOrarend)
+router.get("/feladat/:id",szuloHandler.checkRole,szuloController.getOrarend)
+router.get("/hianyzas/:id",szuloHandler.checkRole,szuloController.getOrarend)
 
 module.exports = router;

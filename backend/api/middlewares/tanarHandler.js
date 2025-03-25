@@ -7,7 +7,7 @@ exports.checkRole = async (req, res, next) =>
         next()
     }
     else{
-        res.status(400).send("Nincs engedélyed!");
+        res.status(403).send("Nincs engedélyed!");
         return;
     }
 }
