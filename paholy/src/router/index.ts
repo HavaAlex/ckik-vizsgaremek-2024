@@ -41,6 +41,7 @@ import AppLayout from '@/layout/AppLayout.vue'
 import Jogosultsagok from '../views/admin/Jogosultsagok.vue'
 
 import LoginView from '../views/auth/LoginView.vue'
+import OrarendView from '@/views/orarend/OrarendView.vue'
 
 
 
@@ -150,22 +151,22 @@ const router = createRouter({
               { 
                   path: 'diakorarend',
                   name: 'diakorarend',
-                  component: OrarendViewTanulo
+                  component: OrarendView
               },
               { 
                   path: 'szuloorarend/:id',
                   name: 'szuloorarend',
-                  component: OrarendViewSzulo
+                  component: OrarendView
               },
               { 
                   path: 'tanarorarend',
                   name: 'tanarorarend',
-                  component: OrarendViewTanar
+                  component: OrarendView
               },
               { 
                 path: 'adminorarend',
                 name: 'adminorarend',
-                component: OrarendViewAdmin
+                component: OrarendView
               },
           ]
         } ,

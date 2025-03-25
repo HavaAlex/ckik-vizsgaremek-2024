@@ -7,7 +7,8 @@ exports.getOrarend = async (req, res, next) =>
     console.log("órarendget")
     console.log("FING")
     console.log(req.decoded)
-    const groups = await csoportService.getGroup(req.decoded.ID)
+    const groups = await csoportService.getGroup(req.role.ID)
+    console.log(groups)
     const combinedOrarend = req.decoded.role=="tanar"?await orarendService.getTeacherLessons(req.role.ID): await orarendService.getOrarend(groups)
 
     console.log(combinedOrarend)

@@ -1,9 +1,10 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
-import { jwtDecode } from 'jwt-decode'
+import { jwtDecode, type JwtPayload } from 'jwt-decode'
 
 export const useCookieHandler = defineStore('cookieHandler', () => {
   console.log(document.cookie)
+  const utolsoDecoded = ref<JwtPayload>()
   function hasValidCookie() {
     if(document.cookie == undefined || document.cookie == null || document.cookie == ''){
       console.log("Nincs cookie")
@@ -15,6 +16,7 @@ export const useCookieHandler = defineStore('cookieHandler', () => {
       console.log("Cookie lejárt")
       return false
     }
+    utolsoDecoded.value = decoded;
     return true
   }
 
@@ -105,5 +107,5 @@ export const useCookieHandler = defineStore('cookieHandler', () => {
     setCookie(cname,"",d)
   }
 
-  return { hasValidCookie,startTimer,resetTimer,time,setBaseTime,setCookie,getCookie,deleteCookie }
+  return { hasValidCookie,startTimer,resetTimer,time,setBaseTime,setCookie,getCookie,deleteCookie,utolsoDecoded }
 })
