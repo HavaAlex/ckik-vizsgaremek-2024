@@ -1,15 +1,16 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import type { Lesson } from '@/api/orarend/orarend'
-import { fetchOrarend as simaFetch } from '@/api/orarend/orarendQuery'
-import { fetchOrarend as szuloFetch } from '@/api/szulo/szuloQuery'
+import { fetchMarks as simaFetch } from '@/api/jegyek/jegyekQuery'
+import { fetchMarks as szuloFetch } from '@/api/szulo/szuloQuery'
 import { useCookieHandler } from './cookieHandler'
+import type { Mark } from '@/api/jegyek/jegyek'
 
-export const useOrarendStore = defineStore('orarendStore', () => {
+export const useJegyStore = defineStore('jegyStore', () => {
     
-    const lessons = ref<Lesson[]>([]);
+    const marks = ref<Mark[]>([]);
     
-    async function orarendfeltolt(weekStart: string) { //MÁSOLANDÓ
+    async function jegyFeltolt() { //MÁSOLANDÓ
         const cookieHandler = useCookieHandler()
         const valasz = cookieHandler.hasValidCookie()
         if(valasz == false)
@@ -19,12 +20,12 @@ export const useOrarendStore = defineStore('orarendStore', () => {
         const role = cookieHandler.utolsoDecoded?.userData.role
         if(role=="szulo")
         {   
-            lessons.value = await szuloFetch(weekStart);
+            marks.value = await szuloFetch();
         }
         else
         {
-            lessons.value = await simaFetch(weekStart);
+            marks.value = await simaFetch();
         }
     }
-    return {orarendfeltolt,lessons}
+    return {jegyFeltolt,marks}
 })

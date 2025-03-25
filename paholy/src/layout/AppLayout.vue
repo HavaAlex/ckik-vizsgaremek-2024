@@ -196,7 +196,7 @@ onUpdated(()=>{
         item-value="ID"
         :items="refs.children.value"
         @update:model-value="(value) => { 
-          push({ path: `/orarend/szuloorarend/${value}` }); 
+          push({ path: `/orarend/szulo/${value}` }); 
         }"
       ></v-select>
       <!--{{ refs.selectedChild }}-->

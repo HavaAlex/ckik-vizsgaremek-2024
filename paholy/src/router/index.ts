@@ -61,7 +61,7 @@ const router = createRouter({
                   component: DiakFeladatView
               },
               { 
-                  path: 'szulofeladat/:id',
+                  path: 'szulo/:id',
                   name: 'szulofeladatok',
                   component: DiakFeladatView,
                   props:true

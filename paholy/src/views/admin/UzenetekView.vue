@@ -2,6 +2,7 @@
 import { ref, computed,onMounted, onUnmounted  } from 'vue'
 import type { Message } from '@/api/uzenetek/uzenetek';
 import { useaddMessage, usegetPotentialReceivers } from '@/api/uzenetek/uzenetekQuery';
+import { jwtDecode } from 'jwt-decode';
 
 const dialog = ref(false);
 const successDialog = ref(false);
@@ -65,14 +66,11 @@ const updateOrientation = () => {
 };
 onMounted(() => {
   window.matchMedia("(orientation: portrait)").addEventListener("change", updateOrientation);
-  if(document.cookie != ''){
-    const decoded = jwtDecode(getCookie("alap"))
-    push({name:decoded.userData.role+'orarend'})
-  }
 });
 onUnmounted(() => {
   window.matchMedia("(orientation: portrait)").removeEventListener("change", updateOrientation);
 });//itt ér véget
+
 </script>
 
 <template>

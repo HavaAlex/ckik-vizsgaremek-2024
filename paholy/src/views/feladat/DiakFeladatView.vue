@@ -158,10 +158,6 @@ const updateOrientation = () => {
 };
 onMounted(() => {
   window.matchMedia("(orientation: portrait)").addEventListener("change", updateOrientation);
-  if(document.cookie != ''){
-    const decoded = jwtDecode(getCookie("alap"))
-    push({name:decoded.userData.role+'orarend'})
-  }
 });
 onUnmounted(() => {
   window.matchMedia("(orientation: portrait)").removeEventListener("change", updateOrientation);

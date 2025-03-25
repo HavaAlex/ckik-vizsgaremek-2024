@@ -86,6 +86,10 @@ function adatOsszeszedes(){
   for (let index = 0; index < osszTagComputed.value?.members.length; index++) {
     const element = osszTagComputed.value?.members[index];
     console.log(element)
+    if(newMarks.value[index] == undefined)
+    {
+      continue
+    }
     const newMark = ref<Mark>({
       ID:-1,
       studentID: element.ID, // Helyes azonosító hozzárendelés

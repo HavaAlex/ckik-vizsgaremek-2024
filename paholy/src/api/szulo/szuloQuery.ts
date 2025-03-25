@@ -8,6 +8,7 @@ import type { child } from "./szulo";
 import { useErrorHandler } from "@/stores/errorHandler";
 import { useGyerekStore } from "@/stores/gyerekStore";
 import type { Lesson } from "../orarend/orarend";
+import type { Mark } from "../jegyek/jegyek";
 
 const getChildren = async (): Promise<child[]> => {
     const {getCookie} = useCookieHandler()
@@ -70,4 +71,38 @@ export const fetchOrarend = async (weekStart: string): Promise<Lesson[]> => {
         console.error("Lekérdezési hiba:", error);
         throw error;
     }
+}
+
+const getMarks = async () : Promise<Mark[]> => {
+    const {getCookie} = useCookieHandler()
+    const {params} = useRoute()
+    const config = {
+        headers: { Authorization: `Bearer ${getCookie("alap")}` }
+    };
+    const response = await axiosClient.get(`http://localhost:3000/szulo/jegy/${params.id}`,config)
+    return response.data
+}
+
+export const fetchMarks = async (): Promise<Mark[]> => {
+    try {
+        return await getMarks();
+    } catch (error) {
+        console.error("Lekérdezési hiba:", error);
+        throw error;
+    }
+}
+
+export const useGetMarks = () => {
+    const { setError } = useErrorHandler()
+
+    const query = useQuery({
+        queryKey: [QUERY_KEYS.getJegyek],
+        queryFn: getMarks,
+    })
+
+    if (query.error.value) {
+        console.error("Lekérdezési hiba:", query.error)
+        setError(query.error.value)
+    }
+    return query
 }

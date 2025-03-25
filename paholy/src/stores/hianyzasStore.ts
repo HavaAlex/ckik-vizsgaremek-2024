@@ -5,7 +5,7 @@ import { fetchOrarend as simaFetch } from '@/api/orarend/orarendQuery'
 import { fetchOrarend as szuloFetch } from '@/api/szulo/szuloQuery'
 import { useCookieHandler } from './cookieHandler'
 
-export const useOrarendStore = defineStore('orarendStore', () => {
+export const useHianyzasStore = defineStore('hianyzasSotre', () => {
     
     const lessons = ref<Lesson[]>([]);
     

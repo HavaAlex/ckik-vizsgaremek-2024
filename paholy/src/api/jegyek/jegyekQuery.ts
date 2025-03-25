@@ -17,6 +17,15 @@ const getMarks = async () : Promise<Mark[]> => {
     return response.data
 }
 
+export const fetchMarks = async (): Promise<Mark[]> => {
+    try {
+        return await getMarks();
+    } catch (error) {
+        console.error("Lekérdezési hiba:", error);
+        throw error;
+    }
+}
+
 export const useGetMarks = () => {
     const { setError } = useErrorHandler()
 
