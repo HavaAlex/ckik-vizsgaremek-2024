@@ -43,9 +43,6 @@ const getAssignmentsStudent = async ()  =>{
         headers: { Authorization: `Bearer ${getCookie("alap")}` }
     };
     const response = await axiosClient.get(`http://localhost:3000/feladat/hazikdiak`,config)
-    console.log("-----------------------------------------------")
-    console.log(response)
-    console.log("-----------------------------------------------")
     return response.data
 }
 export const usegetAssignmentsStudent = () => {
@@ -92,6 +89,7 @@ const getCompletedAssignmentFiles = async (assignmentId:any[]) : Promise<any[]> 
     const config = {
         headers: { Authorization: `Bearer ${getCookie("alap")}` }
     };
+    console.log("UUUUUUUUUUUUUUU ", assignmentId)
     const response = await axiosClient.post(`http://localhost:3000/feladat/getCompletedAssignmentFiles/`,assignmentId ,config)
     console.log("getCompletedAssignmentFiles RESPONSEEEEEEEEEEEE: ", response)
     return response.data

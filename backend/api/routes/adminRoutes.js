@@ -22,6 +22,7 @@ router.get("/getAllUsers",adminHandler.checkRole,adminController.getAllUsers)//�
 router.get("/getUser/:userID",adminHandler.checkRole,userController.getUserWithAdditionalAttributes)// egy felhasználó lekérése
 router.put("/modifyUser",adminHandler.checkRole,adminController.modifyUser)//Felhasználó utólagos módosítása, adminra, studentre, teacherre és guardiannre egyaránt működik
 router.delete("/deleteUser/:userID",adminHandler.checkRole,adminController.deleteUser)//Felhasználó törlése
+router.post("/addStudentsToGuardian", adminHandler.checkRole, adminController.addStudentsToGuardian)
 
 router.get("/getAllGroupsWithStudents",adminHandler.checkRole,adminController.getAllGroupsWithStudents)//csoportok lekérése, a benne lévő studentekkel együtt
 router.post("/createGroup",adminHandler.checkRole,adminController.CreateGroup)//Csoport létrehozása, diákokkal együtt történik

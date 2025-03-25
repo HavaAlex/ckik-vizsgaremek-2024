@@ -8,10 +8,10 @@ import {
   useaddStudentUsers,
   useaddGuardianUsers,
   usegetUsers,
-  usegetUser,
   getUser,
   usemodifyUser,
-  usedeleteUser
+  usedeleteUser,
+  useAddStudentsToGuardians
 } from '@/api/admin/adminQuery';
 
 const { mutate: addTeacherUsers } = useaaddTeacherUsers();
@@ -19,9 +19,10 @@ const { mutate: addStudentUsers } = useaddStudentUsers();
 const { mutate: addGuardianUsers } = useaddGuardianUsers();
 const { mutate: modifyUser } = usemodifyUser();
 const { mutate: deleteUser } = usedeleteUser();
+const { mutate: AddStudentsToGuardians } = useAddStudentsToGuardians()
 const { data: userList } = usegetUsers();
 
-// ----------------- Sorting and Searching -----------------
+// Rendezése és keresés
 const sortKey = ref<string>('username');
 const sortOrder = ref<'asc' | 'desc'>('asc');
 const searchQuery = ref<string>(''); 
@@ -55,7 +56,7 @@ function changeSort(column: string) {
   }
 }
 
-// ----------------- Teacher Section -----------------
+//Tanár hozzáadás
 const showTeacherDialog = ref(false);
 const teachers = ref<Teacher[]>([]);
 const newTeacher = ref<Teacher>({
@@ -139,7 +140,7 @@ async function sendTeachers() {
   console.log("Teachers array:", teachers.value);
 }
 
-// ----------------- Student Section -----------------
+// Diák hozzáadás
 const showStudentDialog = ref(false);
 const students = ref<Student[]>([]);
 const newStudent = ref<Student>({
@@ -235,7 +236,7 @@ async function sendStudents() {
   console.log("Students array:", students.value);
 }
 
-// ----------------- Guardian Section -----------------
+// Szülő hozzáadás
 const showParentDialog = ref(false);
 const guardians = ref<Guardian[]>([]);
 const newGuardian = ref<Guardian>({
@@ -392,7 +393,7 @@ async function sendGuardians() {
   console.log("Guardians array:", guardians.value);
 }
 
-// ----------------- Submission Functions -----------------
+// ----------------- Új user feltöltés -----------------
 
 function submitTeachers() {
   if (!teachers.value.length) return;
@@ -457,7 +458,6 @@ function submitGuardians() {
   });
 }
 
-// ----------------- Dialog and User Functions -----------------
 const viewUserDialog = ref(false);
 const DeleteUserDialog = ref(false);
 const selectedUserForView = ref(null);
@@ -467,7 +467,6 @@ async function openSelectedUserDialog(user: any) {
   try {
     const data = await getUser(user.ID);
     SelectedUserData.value = { ...data };
-    console.log('Fetched user data:', SelectedUserData.value);
     viewUserDialog.value = true;
   } catch (error) {
     console.error("Error fetching user data:", error);
@@ -478,7 +477,7 @@ async function fastdelete(user: any) {
   try {
     const data = await getUser(user.ID);
     SelectedUserData.value = { ...data };
-    console.log('Fetched user data:', SelectedUserData.value);
+    
     DeleteUserDialog.value = true;
   } catch (error) {
     console.error("Error fetching user data:", error);
@@ -490,12 +489,7 @@ function closeSelectedUserDialog() {
   viewUserDialog.value = false;
 }
 
-async function uploadChangedUser() {
-  console.log("Modifying user:", SelectedUserData.value);
-  await modifyUser(SelectedUserData.value);
-  SelectedUserData.value = {};
-  viewUserDialog.value = false;
-}
+
 
 async function deleteUserfunction() {
   await deleteUser(SelectedUserData.value.userSide, {
@@ -513,14 +507,58 @@ function formatDate(dateString: Date | string) {
   const dateObj = new Date(dateString);
   return dateObj.toISOString().slice(0, 19).replace("T", " ");
 }
+
+
+
+
+const newBelongingOMID = ref<string>('');
+
+
+function addBelongingOMID() {
+  const omid = newBelongingOMID.value.trim();
+  if (!omid) return;
+ 
+  SelectedUserData.value.belongingStudents.push({ OMID: omid });
+  newBelongingOMID.value = '';
+}
+
+
+function removeBelongingStudent(index: number) {
+  SelectedUserData.value.belongingStudents.splice(index, 1);
+}
+
+const uploadedOMIDdata = ref({
+  szuloID:'',
+  newOMIDs: []
+})
+async function updateSzuloOMIDs() {
+  const szuloID = SelectedUserData.value.roleSide.ID;
+  const newOMIDs = SelectedUserData.value.belongingStudents
+    .map(student => student.OMID);
+  console.log("Updating Szulo OMIDs:", { szuloID, newOMIDs });
+  uploadedOMIDdata.value.szuloID = szuloID
+  uploadedOMIDdata.value.newOMIDs = newOMIDs
+  await AddStudentsToGuardians(uploadedOMIDdata)
+}
+
+
+async function uploadChangedUser() {
+  console.log("Modifying user:", SelectedUserData.value);
+  await modifyUser(SelectedUserData.value);
+    if(SelectedUserData.value.belongingStudents){
+    updateSzuloOMIDs()
+  }
+  SelectedUserData.value = {};
+  viewUserDialog.value = false;
+
+}
 </script> 
 <template>
   <main>
     <v-container>
-      <!-- Users Management Card -->
       <v-card>
         <v-card-title>Felhasználók kezelése:</v-card-title>
-        <!-- Search Bar -->
+        <!-- Kereső -->
         <v-card-text>
           <p> Felhasználók száma: {{ userList.length }}</p>
           <v-text-field
@@ -569,14 +607,14 @@ function formatDate(dateString: Date | string) {
         </v-card-text>
       </v-card>
         
-      <!-- New Users Card -->
+      
       <v-card>
         <v-card-title>Új felhasználók hozzáadása</v-card-title>
-        <v-card-actions>
+        <v-card-text>
           <v-btn color="primary" @click="showStudentDialog = true">Diákok hozzáadása</v-btn>
           <v-btn color="primary" @click="showTeacherDialog = true">Tanárok hozzáadása</v-btn>
           <v-btn color="primary" @click="showParentDialog = true">Gondviselők hozzáadása</v-btn>
-        </v-card-actions>
+        </v-card-text>
       </v-card>
 
       <!-- Tanárok dialog -->
@@ -798,14 +836,38 @@ function formatDate(dateString: Date | string) {
               <v-text-field label="Mobiltelefonszám: " v-model="SelectedUserData.roleSide.phone"></v-text-field>
             </v-card-text>
           </div>
+
           <div v-else-if="SelectedUserData.userRole==='szulo'">
             <v-card-text>
               <h3>Felhasználó típusa : {{ SelectedUserData.userRole }}</h3>
               <v-text-field label="Felhasználónév: " v-model="SelectedUserData.roleSide.name"></v-text-field>
               <v-text-field label="Email cím: " v-model="SelectedUserData.roleSide.email"></v-text-field>
               <v-text-field label="Mobiltelefonszám: " v-model="SelectedUserData.roleSide.phone"></v-text-field>
+
+              <v-list>
+                <v-list-item
+                  v-for="(student, index) in SelectedUserData.belongingStudents"
+                  :key="index"
+                  @click="removeBelongingStudent(index)"
+                >
+                  <v-list-item-content>
+                    <v-list-item-title>
+                      {{ student.OMID }} <span v-if="student.name"> - {{ student.name }}  </span> (kattintson az eltávolításhoz)
+                    </v-list-item-title>
+                  </v-list-item-content>
+                </v-list-item>
+              </v-list>
+
+              <!-- New text field and button for adding a new OMID -->
+              <v-text-field 
+                v-model="newBelongingOMID" 
+                label="Új OMID hozzáadása" 
+                type="number"
+              ></v-text-field>
+              <v-btn color="primary" @click="addBelongingOMID">Hozzáadás</v-btn>
             </v-card-text>
           </div>
+
           <div v-else-if="SelectedUserData.userRole==='diak'">
             <v-card-text>
               <h3>Felhasználó típusa : {{ SelectedUserData.userRole }}</h3>
@@ -836,8 +898,12 @@ function formatDate(dateString: Date | string) {
       <v-dialog v-model="DeleteUserDialog" max-width="50vw" theme="dark">
         <v-card>
           <v-card-title>Biztos törölni akarod?</v-card-title>
-          <v-btn @click="deleteUserfunction">Törlés</v-btn>
-          <v-btn @click="DeleteUserDialog = false">Mégse</v-btn>
+          <v-card-text>A felhasználó törlésével minden vele kapcsolatos adat eltűnik és nem lehet visszaállítani</v-card-text>
+          <v-card-actions>
+            <v-btn @click="deleteUserfunction">Törlés</v-btn>
+            <v-btn @click="DeleteUserDialog = false">Mégse</v-btn>
+          </v-card-actions>
+
         </v-card>
       </v-dialog>
 

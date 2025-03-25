@@ -188,7 +188,7 @@ class HazikService {
 
 
 
-    async getTeacherAssignmentFiles(userID) {
+    /*async getTeacherAssignmentFiles(userID) {
 
         const teacherArr = await assignmentRepository.getTeacherByUserID(userID);
         const teacherID = teacherArr[0].ID;
@@ -201,7 +201,7 @@ class HazikService {
             allFiles.push(...files);
         }
         return allFiles;
-    }
+    }*/
 
 
     async modifycompletedassignment(completedassignment) {
@@ -237,25 +237,14 @@ class HazikService {
         return files;
     }
 
-    // ---------------------------------
-    //        Delete Assignment
-    // ---------------------------------
     async deleteAssignment(assignmentID) {
-        // 1) Delete CompletedAssignmentFiles
-        await assignmentRepository.deleteCompletedAssignmentFilesByAssignmentID(assignmentID);
-        // 2) Delete CompletedAssignments
+        console.log("o alapján törlünk", assignmentID)
         await assignmentRepository.deleteCompletedAssignmentsByAssignmentID(assignmentID);
-        // 3) Delete AssignmentFiles
-        await assignmentRepository.deleteAssignmentFilesByAssignmentID(assignmentID);
-        // 4) Delete Assignment
+        //await assignmentRepository.deleteAssignmentFilesByAssignmentID(assignmentID);
         await assignmentRepository.deleteAssignmentByID(assignmentID);
-
         return "sikerült";
     }
 
-    // ---------------------------------
-    //   Delete CompletedAssignmentFile
-    // ---------------------------------
     async deleteCompletedAssignmentFile(ID) {
         await assignmentRepository.deleteCompletedAssignmentFileByID(ID);
         return "sikerült";
@@ -263,28 +252,27 @@ class HazikService {
 
 
     async checkAndUpdateOverdueAssignments() {
-        // 1) Get all completed assignments
+
         const allCompletedAssignments = await assignmentRepository.getAllCompletedAssignments();
-    
-        // 2) For each completed assignment, check if the assignment is past its deadline
+
         for (const completedAssignment of allCompletedAssignments) {
             const assignment = await assignmentRepository.getAssignmentByID(completedAssignment.assignmentID);
             
-            // If no assignment or no deadline, skip
+
             if (!assignment || !assignment.deadline) continue;
     
-            const deadline = assignment.deadline;  // Date object from DB
+            const deadline = assignment.deadline; 
             const now = new Date();
     
             if (deadline < now) {
-                // 3) Check if there's no textAnswer and no uploaded files
+
                 const textAnswerIsEmpty = !completedAssignment.textAnswer || completedAssignment.textAnswer.trim() === "";
     
-                // If the user hasn't uploaded anything, check for completed assignment files
+   
                 if (textAnswerIsEmpty) {
                     const files = await assignmentRepository.getCompletedAssignmentFilesByCompletedAssignmentID(completedAssignment.ID);
     
-                    // 4) If no files exist, mark status as "Elkésett"
+
                     if (files.length === 0 && completedAssignment.status !== "Határidó lejárt") {
                         await assignmentRepository.updateCompletedAssignment(completedAssignment.ID, {
                             status: "Határidó lejárt"
