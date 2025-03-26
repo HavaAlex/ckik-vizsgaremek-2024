@@ -99,14 +99,14 @@ exports.modifycompletedassignment = async (req,res,next) => {
     textAnswer:textAnswer
   }
   const modositotthazik = await hazikService.modifycompletedassignment(completedassignment)
-  console.log(")%)%)%), ", modositotthazik)
+  //console.log(")%)%)%), ", modositotthazik)
   res.status(201).json(modositotthazik)
 }
 
 exports.getAssignmentFiles = async (req,res,next) =>{
   const assignmentId = parseInt(req.headers.assignmentid);
   const assignmentFilesArray = await hazikService.getAssignmentFiles(assignmentId)
-  console.log("my lif be like: ",assignmentFilesArray)
+  //console.log("my lif be like: ",assignmentFilesArray)
   res.status(201).json(assignmentFilesArray)
 }
 

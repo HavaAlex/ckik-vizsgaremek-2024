@@ -93,7 +93,7 @@ class OrarendRepository
         });
     }
 
-    async getLessons(){
+    async getAllLessons(){
         return await this.Lesson.findAll({ 
         });
     }
