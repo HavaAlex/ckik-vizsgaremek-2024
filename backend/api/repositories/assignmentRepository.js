@@ -120,14 +120,6 @@ class AssignmentRepository {
         });
     }
 
-    async deleteAssignmentFilesByAssignmentID(assignmentID) {
-        return await this.AssignmentFile.destroy({
-            where: {
-                assignmentID: assignmentID
-            }
-        });
-    }
-
     async uploadCompletedAssignmentFiles(files, completedAssignmentId) {
         const uploadedFiles = await Promise.all(
             files.map(file => {
@@ -157,16 +149,6 @@ class AssignmentRepository {
             }
         });
     }
-
-    async deleteCompletedAssignmentFilesByAssignmentID(assignmentID) {
-        return await this.CompletedAssignmentFile.destroy({
-            where: {
-                assignmentID: assignmentID
-            }
-        });
-    }
-
-
     async getAllCompletedAssignments() {
         return await this.CompletedAssignment.findAll();
     }

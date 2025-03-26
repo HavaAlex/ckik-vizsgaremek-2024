@@ -15,7 +15,6 @@ class UserRepository
         this.Guardians = db.guardian;
         this.Teachers = db.teacher;
         this.Students = db.student 
-        console.log(this.Users)
     }
 
     async createUser(user)
@@ -82,7 +81,7 @@ class UserRepository
 
     async createUserName(nev){
 
-        console.log("Elötte: ",nev)
+        // console.log("Elötte: ",nev)
         const nameParts = _.deburr(nev.toLowerCase())
                                     .split(" ")
                                     .filter(Boolean);
@@ -97,7 +96,7 @@ class UserRepository
             username = baseUsername + counter;
             userExists = await this.Users.findOne({ where: { username: username } });
         }
-        console.log("utána ", username)
+        // console.log("utána ", username)
         return username;
     }
     async generatePassword() {
@@ -115,13 +114,19 @@ class UserRepository
     }
     async modifyUser(user){
         // Assume User is a Sequelize model
-        console.log("biztos ami biztos: ",user)
+        // console.log("biztos ami biztos: ",user)
         const changedUser = await this.Users.findOne({ where: { id: user.userSide } });
         await changedUser.update({ username: user.roleSide.name });
         if(user.userRole == "tanar"){
             await teacherRepository.modifyTeacher(user.userSide,user.roleSide)
         }
         else if(user.userRole == "diak"){
+            const alreadyexistingUser = await studentRepository.getStudentByOmId(user.roleSide.OMID)
+            if(alreadyexistingUser){
+                console.log("ez igy mér nem is annyira jó")
+                return -1
+            }
+
            await studentRepository.modifyStudent(user.userSide,user.roleSide)
         }
         else if(user.userRole == "szulo"){

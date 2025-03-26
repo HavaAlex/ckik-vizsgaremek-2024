@@ -224,6 +224,26 @@ describe("Timetable test", () =>
                 excused: false
             });
         });
+        test("GetOrarend vissza adja e a megfelelő órákat (1-es ID tanár lekéri az óráit)", async () => 
+            {
+                const res = await request(app)
+                    .get("/orarend")
+                    .set(setUserHeader(token_newUser3))
+                //console.log(res.body)
+                expect(res.status).toBe(201);
+                expect(res.body).toBeInstanceOf(Array);
+                expect(res.body[1]).toStrictEqual({
+                    ID:2,
+                    groupID:2,
+                    teacherID:1,
+                    start_Hour:6,
+                    start_Minute:11,
+                    length:50,
+                    day:'kedd',
+                    subjectName:"Majom Programozás csak menőbb",
+                    excused: false
+                });
+            });
         test("GetTantargyak vissza adja e a megfelelő tantárgyakat (1-es ID tanár lekéri a tantrágyait)", async () => 
         {
             const res = await request(app)

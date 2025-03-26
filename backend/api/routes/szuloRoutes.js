@@ -2,7 +2,7 @@ const express = require("express");
 const multer = require("multer");
 const router = express.Router();
 
-console.log("teszt3");
+
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
@@ -24,8 +24,7 @@ const user = require("../models/user");
 router.use(userAuth.verifyToken);
 
 router.get("/orarend/:id",szuloHandler.checkRole, szuloController.getOrarend)
-router.get("/jegy/:id",szuloHandler.checkRole,szuloController.getOrarend)
-router.get("/feladat/:id",szuloHandler.checkRole,szuloController.getOrarend)
+router.get("/jegy/:id",szuloHandler.checkRole,jegyController.getJegyekSzulo)
 router.get("/hianyzas/:id",szuloHandler.checkRole,szuloController.getOrarend)
 
 module.exports = router;

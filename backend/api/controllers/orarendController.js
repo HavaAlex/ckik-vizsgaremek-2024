@@ -4,20 +4,14 @@ const lessonService = require("../services/lessonService")
 
 exports.getOrarend = async (req, res, next) =>
 {
-    console.log("órarendget")
-    console.log("FING")
-    console.log(req.decoded)
     const weekStart = req.query.weekStart
 
 
     const groups = await csoportService.getGroup(req.decoded.ID)
 
-
     const combinedOrarend = req.decoded.role=="tanar"?await orarendService.getTeacherLessons(req.role.ID,weekStart): await orarendService.getOrarend(groups,weekStart)
 
-    console.log(combinedOrarend)
     res.status(201).json(combinedOrarend)
-    console.log("órarendgetvég")
 }
 
 

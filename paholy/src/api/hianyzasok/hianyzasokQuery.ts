@@ -4,8 +4,8 @@ import { useRoute, useRouter } from "vue-router"
 import { QUERY_KEYS } from "@/utils/QueryKeys"
 import { jwtDecode } from "jwt-decode";
 import { useCookieHandler } from "@/stores/cookieHandler";
-
-import type { Hianyzas, Lesson, Teacher } from "./hianyzasok";
+import { useStatusHandler } from "@/stores/statusHandler"
+import type { Hianyzas, Lesson, Teacher, Absence } from "./hianyzasok";
 import queryClient from "@/lib/queryClient";
 import { useErrorHandler } from "@/stores/errorHandler";
 
@@ -80,3 +80,69 @@ export const useGetTeachers = () => {
     }
     return query  
 }
+
+
+const getStudentsInGroup = async (groupID: number): Promise<Lesson[]> => {
+    console.log("Itt kellene Indulnia2")
+
+    //tudom hogy csunya
+    console.log(groupID.value)
+    const { getCookie } = useCookieHandler()
+    const config = {
+        headers: { Authorization: `Bearer ${getCookie("alap")}` }
+    };
+    const response = await axiosClient.get(`http://localhost:3000/hianyzas/getStudentsInGroup/${groupID.value}`, config);
+
+
+    console.log("Itt kellene lennie de nincs")
+    console.log(response.data)
+
+    return response.data
+}
+
+export const useGetStudentsInGroup = (groupID: number) => {
+    console.log("Itt kellene Indulnia1")
+    const { setError } = useErrorHandler()
+    const query = useQuery({
+        queryKey: [QUERY_KEYS.getStudentsInGroup, groupID],
+        queryFn:() => getStudentsInGroup(groupID),
+    })
+
+    if (query.error.value) {
+        console.error("Lekérdezési hiba:", query.error)
+        setError(query.error.value)
+    }
+    return query  
+}
+
+const addAbsence = async (data : Absence) : Promise<Absence> => {
+    console.log("FELKÜLDÉS")
+    const {getCookie} = useCookieHandler()
+    let config = {
+        headers: {
+          'Authorization': 'Bearer ' + getCookie("alap")
+        }
+    } 
+    const response = await axiosClient.post(`http://localhost:3000/hianyzas/postAbsence`, data,config)
+    return response.data.data
+}
+
+export const useAddAbsence = () => {  
+     
+    return useMutation(
+        {
+            mutationFn: addAbsence,
+            onSuccess(data) {
+                queryClient.refetchQueries({queryKey:[QUERY_KEYS.postAbsence]})
+                console.log(data)
+                const {setStatus} = useStatusHandler()
+                setStatus("Sikeres Hianyzas felvitel!")
+            },
+            onError(error){
+                const {setError} = useErrorHandler()
+                setError(error)
+            }
+        }
+    )
+}
+

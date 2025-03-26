@@ -33,8 +33,8 @@ export const useLogin = () => {
             //console.log(Math.floor((decoded.exp*1000-Date.now())/1000))
             setBaseTime(Math.floor((decoded.exp*1000-Date.now())/1000))
             console.log("FING")
-            console.log('/orarend/'+decoded.userData.role+"orarend/"+(decoded.userData.role == "szulo"?`${decoded.userData.children[0].ID}`:''))
-            push({path:'/orarend/'+decoded.userData.role+"orarend/"+(decoded.userData.role == "szulo"?`${decoded.userData.children[0].ID}`:'')})
+            console.log('/orarend/'+decoded.userData.role+"/"+(decoded.userData.role == "szulo"?`${decoded.userData.children[0].ID}`:''))
+            push({path:'/orarend/'+decoded.userData.role+"/"+(decoded.userData.role == "szulo"?`${decoded.userData.children[0].ID}`:'')})
             
         },
         onError(error){

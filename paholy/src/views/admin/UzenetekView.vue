@@ -2,6 +2,7 @@
 import { ref, computed,onMounted, onUnmounted  } from 'vue'
 import type { Message } from '@/api/uzenetek/uzenetek';
 import { useaddMessage, usegetPotentialReceivers } from '@/api/uzenetek/uzenetekQuery';
+import { jwtDecode } from 'jwt-decode';
 
 const dialog = ref(false);
 const successDialog = ref(false);
@@ -65,26 +66,23 @@ const updateOrientation = () => {
 };
 onMounted(() => {
   window.matchMedia("(orientation: portrait)").addEventListener("change", updateOrientation);
-  if(document.cookie != ''){
-    const decoded = jwtDecode(getCookie("alap"))
-    push({name:decoded.userData.role+'orarend'})
-  }
 });
 onUnmounted(() => {
   window.matchMedia("(orientation: portrait)").removeEventListener("change", updateOrientation);
 });//itt ér véget
+
 </script>
 
 <template>
   <main>
     <div v-if="isPortrait">
-        <!-- Message Dialog -->
-      <v-dialog v-model="dialog" style="max-width: 80vw; max-height: 80vh;">
+        <!-- Felugró ablak -->
+      <v-dialog v-model="dialog">
         <template v-slot:activator="{ props: activatorProps }">
           <v-btn v-bind="activatorProps" color="surface-variant" text="Üzenet írása" variant="flat"></v-btn>
         </template>
 
-        <v-card title="Üzenet" style="max-width: 90vw;max-height: 80vh;">
+        <v-card title="Üzenet">
           <p>Címzettek:</p>
           <v-list>
             <v-list-item 
@@ -93,7 +91,7 @@ onUnmounted(() => {
               @click="MessageDataRef.receiverlist.splice(index, 1)"
               style="max-height: 10vw;"
             >
-              {{ cuccli.name + " (" + cuccli.role + ") (kattintson az eltávolításhoz)" }}
+              {{ cuccli.username + " (" + cuccli.role + ") (Nyomja meg az eltávolításhoz)" }}
             </v-list-item>
 
             <v-list-item 
@@ -101,77 +99,60 @@ onUnmounted(() => {
               :key="index" 
               @click="MessageDataRef.receiverGrouplist.splice(index, 1)"
             >
-              {{ cuccli.name + " (csoport)" }}
+              {{ cuccli.name + " (csoport) (Nyomja meg az eltávolításhoz)" }}
             </v-list-item>
           </v-list>
           
 
-          <!-- Dropdown for adding receivers -->
+          <!-- Hozzáadás dropdown -->
           <v-menu :close-on-content-click="false" >
-            <template v-slot:activator="{ props }">
-              <v-btn v-bind="props">Címzettek hozzáadása:</v-btn>
-            </template>
-            <v-list style="max-height: 60vw;">
-              <!-- Search Field -->
-              <v-text-field 
-                v-model="searchText" 
-                label="Keresés..." 
-                outlined 
-                dense 
-                hide-details
-              ></v-text-field>
+                <template v-slot:activator="{ props }">
+                  <v-btn v-bind="props">Címzettek hozzáadása:</v-btn>
+                </template>
+                <v-list style="max-height: 75vw;">
+  
+                  <v-text-field 
+                    v-model="searchText" 
+                    label="Keresés..." 
+                    outlined 
+                    dense 
+                    hide-details
+                  ></v-text-field>
 
-              <!-- Filtered list of single users -->
-              <v-list-item 
-                v-for="(elem, index) in filteredSingleUsers" 
-                :key="index" 
-                @click="MessageDataRef.receiverlist.push(elem)"
-              >
-                {{ elem.username + " (" + elem.role + ")" }}
-              </v-list-item>
 
-              <!-- Filtered list of groups -->
-              <v-list-item 
-                v-for="(elem, index) in filteredGroups" 
-                :key="index" 
-                @click="MessageDataRef.receiverGrouplist.push(elem)"
-              >
-                {{ elem.name + " (csoport)" }}
-              </v-list-item>
+                  <v-list-item 
+                    v-for="(elem, index) in filteredSingleUsers" 
+                    :key="index" 
+                    @click="MessageDataRef.receiverlist.push(elem)"
+                  >
+                    {{ elem.username + " (" + elem.role + ")" }}
+                  </v-list-item>
 
-              <!-- Message when no matches are found -->
-              <v-list-item 
-                v-if="filteredSingleUsers.length === 0 && filteredGroups.length === 0"
-              >
-                Nincsenek ilyen felhasználók/csoportok
-              </v-list-item>
-            </v-list>
-          </v-menu>
+
+                  <v-list-item 
+                    v-for="(elem, index) in filteredGroups" 
+                    :key="index" 
+                    @click="MessageDataRef.receiverGrouplist.push(elem)"
+                  >
+                    {{ elem.name + " (csoport)" }}
+                  </v-list-item>
+
+
+                </v-list>
+              </v-menu>
 
           <v-card-text>
             <v-textarea label="Az üzenet szövege" v-model="MessageDataRef.message"></v-textarea>
           </v-card-text>
 
           <v-card-actions>
-            <v-table>
-              <tbody>
-                <tr>
-                  <v-btn text="Mégse" @click="dialog = false"></v-btn>
-                </tr>
-                <tr>
-                  <v-btn text="Üzenet elküldése" @click="sendMessage" :loading="isPending"></v-btn>
-                </tr>
-              </tbody>
-            </v-table>
-            
-            
-            
+            <v-btn text="Mégse" @click="dialog = false"></v-btn>
+            <v-btn text="Üzenet elküldése" @click="sendMessage" :loading="isPending"></v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
 
-      <!-- Success Dialog -->
-      <v-dialog v-model="successDialog" max-width="400">
+      <v-dialog v-model="successDialog" >
         <v-card title="Siker!">
           <v-card-text>Az üzenetet sikeresen elküldted.</v-card-text>
           <v-card-actions>
@@ -182,7 +163,7 @@ onUnmounted(() => {
       </v-dialog>
     </div>
     <div v-else>
-      <!-- Message Dialog -->
+
       <v-dialog v-model="dialog" style="max-width: 50vw; ">
             <template v-slot:activator="{ props: activatorProps }">
               <v-btn v-bind="activatorProps" color="surface-variant" text="Üzenet írása" variant="flat"></v-btn>
@@ -210,13 +191,13 @@ onUnmounted(() => {
               </v-list>
               
 
-              <!-- Dropdown for adding receivers -->
+
               <v-menu :close-on-content-click="false" >
                 <template v-slot:activator="{ props }">
                   <v-btn v-bind="props">Címzettek hozzáadása:</v-btn>
                 </template>
                 <v-list style="max-height: 25vw;">
-                  <!-- Search Field -->
+  
                   <v-text-field 
                     v-model="searchText" 
                     label="Keresés..." 
@@ -225,7 +206,7 @@ onUnmounted(() => {
                     hide-details
                   ></v-text-field>
 
-                  <!-- Filtered list of single users -->
+
                   <v-list-item 
                     v-for="(elem, index) in filteredSingleUsers" 
                     :key="index" 
@@ -234,7 +215,7 @@ onUnmounted(() => {
                     {{ elem.username + " (" + elem.role + ")" }}
                   </v-list-item>
 
-                  <!-- Filtered list of groups -->
+
                   <v-list-item 
                     v-for="(elem, index) in filteredGroups" 
                     :key="index" 
@@ -243,12 +224,7 @@ onUnmounted(() => {
                     {{ elem.name + " (csoport)" }}
                   </v-list-item>
 
-                  <!-- Message when no matches are found 
-                  <v-list-item 
-                    v-if="filteredSingleUsers.length === 0 && filteredGroups.length === 0"
-                  >
-                    Nincsenek ilyen felhasználók/csoportok
-                  </v-list-item>-->
+
                 </v-list>
               </v-menu>
 

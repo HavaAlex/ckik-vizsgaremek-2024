@@ -5,7 +5,6 @@ class GuardianStudentRepository
     constructor(db)
     {
         this.GuardianStudent = db.guardianstudent;
-        console.log(this.Guardians)
     }
 
     async createGuardianStudent(guardianstudent)
@@ -15,6 +14,12 @@ class GuardianStudentRepository
         await newGuardianStudent.save();
         
         return newGuardianStudent;
+    }
+    async deleteGurdianStudentByGuardianID(ID){
+        await this.GuardianStudent.destroy({
+            where: {GuardianID : ID}
+        })
+        return "Sikeres törlés"
     }
 }
 

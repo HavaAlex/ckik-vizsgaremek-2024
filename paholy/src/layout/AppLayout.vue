@@ -18,7 +18,7 @@ const { time } = storeToRefs(cookieHandler);
 const gyerekStore = useGyerekStore()
 const refs = storeToRefs(gyerekStore)
 
-const selectedChild = ref<child|undefined>(undefined)
+const selectedChild = ref<number|undefined>(undefined)
 
 const cookieStatus = cookieHandler.hasValidCookie()
 let role: string = ''
@@ -35,7 +35,7 @@ if (cookieStatus == true){
   }
   console.log(decoded)
   console.log(role)
-  push({path:'/orarend/'+decoded.userData.role+"orarend/"+(decoded.userData.role == "szulo"?`${decoded.userData.children[0].ID}`:'')})
+  push({path:'/orarend/'+decoded.userData.role+"/"+(decoded.userData.role == "szulo"?`${decoded.userData.children[0].ID}`:'')})
 }
 else{
   push({name:"login"})
@@ -70,6 +70,8 @@ onUpdated(()=>{
   }
 })
 
+const route= useRoute()
+const selectedChildKey = ref(-1); // Ez biztosítja a komponens újrarenderelését
 
 </script>
 
@@ -88,19 +90,19 @@ onUpdated(()=>{
             <v-list>
               <div v-if="role=='szulo'">
                 <v-list-item class="appnavbarmenu">
-                  <v-btn @click="push({name:role+'orarend'+role==szulo?`/${selectedChild.value}`:''})" class="appnavbarmenu">Órarend</v-btn>
+                  <v-btn @click="push({name:role+'orarend'+role=='szulo'?`/${selectedChild.value}`:''})" class="appnavbarmenu">Órarend</v-btn>
                 </v-list-item>
                 <v-list-item v>
-                  <v-btn @click="push({name:role+'hazik'+role==szulo?`/${selectedChild.value}`:''})" class="appnavbarmenu">Házifeladatok/beadandók</v-btn>
+                  <v-btn @click="push({name:role+'feladatok'+role=='szulo'?`/${selectedChild.value}`:''})" class="appnavbarmenu">Házifeladatok/beadandók</v-btn>
                 </v-list-item>
                 <v-list-item class="appnavbarmenu">
-                  <v-btn @click="push({name:role+'jegyek'+role==szulo?`/${selectedChild.value}`:''})" class="appnavbarmenu">Osztályzatok</v-btn>
+                  <v-btn @click="push({name:role+'jegyek'+role=='szulo'?`/${selectedChild.value}`:''})" class="appnavbarmenu">Osztályzatok</v-btn>
                 </v-list-item>
                 <v-list-item class="appnavbarmenu">
-                  <v-btn @click="push({name:role+'hianyzasok'+role==szulo?`/${selectedChild.value}`:''})" class="appnavbarmenu">Mulasztások/Hiányzások</v-btn>
+                  <v-btn @click="push({name:role+'hianyzasok'+role=='szulo'?`/${selectedChild.value}`:''})" class="appnavbarmenu">Mulasztások/Hiányzások</v-btn>
                 </v-list-item>
                 <v-list-item class="appnavbarmenu">
-                  <v-btn @click="push({name:role+'uzenetek'})" class="appnavbarmenu">Üzenetek</v-btn>
+                  <v-btn @click="push({name:role+'uzenetek'+role=='szulo'?`/${selectedChild.value}`:''})" class="appnavbarmenu">Üzenetek</v-btn>
                 </v-list-item>
                 
               </div>
@@ -109,7 +111,7 @@ onUpdated(()=>{
                   <v-btn @click="push({name:role+'orarend'})" class="appnavbarmenu">Órarend</v-btn>
                 </v-list-item>
                 <v-list-item v>
-                  <v-btn @click="push({name:role+'hazik'})" class="appnavbarmenu">Házifeladatok/beadandók</v-btn>
+                  <v-btn @click="push({name:role+'feladatok'})" class="appnavbarmenu">Házifeladatok/beadandók</v-btn>
                 </v-list-item>
                 <v-list-item class="appnavbarmenu">
                   <v-btn @click="push({name:role+'jegyek'})" class="appnavbarmenu">Osztályzatok</v-btn>
@@ -169,7 +171,7 @@ onUpdated(()=>{
       <v-btn @click="push({name:role+'orarend'})">
                 Órarend
       </v-btn>
-      <v-btn @click="push({name:role+'hazik'})">
+      <v-btn @click="push({name:role+'feladatok'})">
                 Házifeladatok/beadandók
       </v-btn>
       <v-btn @click="push({name:role+'jegyek'})">
@@ -195,9 +197,14 @@ onUpdated(()=>{
         item-title="name"
         item-value="ID"
         :items="refs.children.value"
-        @update:model-value="(value) => { 
-          push({ path: `/orarend/szuloorarend/${value}` }); 
-          console.log('FASZ'); 
+        @update:model-value="async (value) => { 
+          console.log(route.path)
+          let pathSlice = route.path.split('/')
+          let pathReconstructed = pathSlice.slice(0,pathSlice.length-1).join('/')
+          console.log(`${pathReconstructed}/${value}`)
+          push({ path: `${pathReconstructed}/${value}` }).then(()=>{
+            selectedChildKey = value
+          })
         }"
       ></v-select>
       <!--{{ refs.selectedChild }}-->
@@ -222,7 +229,7 @@ onUpdated(()=>{
       </v-col>
     </v-app-bar>
       <v-main class="d-flex align-center justify-center fill-height">
-        <RouterView></RouterView>
+        <RouterView :key="selectedChildKey"></RouterView>
       </v-main>
     </v-layout>
   </div>

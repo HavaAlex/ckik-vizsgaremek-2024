@@ -38,11 +38,19 @@ export const usegetAssignmentsTeacher = () => {
 
 const getAssignmentsStudent = async ()  =>{
     //console.log("LEFUTOK: getGroups")
-    const {getCookie} = useCookieHandler()
+    const cookieHandler= useCookieHandler()
+    const vanE = cookieHandler.hasValidCookie()
+    const {params} = useRoute()
+    if(vanE == false)
+    {
+        return new Error("Lejárt a munkamenet!")
+    }
     const config = {
-        headers: { Authorization: `Bearer ${getCookie("alap")}` }
+        headers: { Authorization: `Bearer ${ cookieHandler.getCookie("alap")}` }
     };
-    const response = await axiosClient.get(`http://localhost:3000/feladat/hazikdiak`,config)
+    console.log("FAAAAAAAAAAAASZ")
+    console.log(cookieHandler.utolsoDecoded?.userData.value.role)
+    const response = await axiosClient.get(cookieHandler.utolsoDecoded?.userData.role == "szulo"?`http://localhost:3000/feladat/hazikdiak${params.id}` :`http://localhost:3000/feladat/hazikdiak`,config)
     console.log("-----------------------------------------------")
     console.log(response)
     console.log("-----------------------------------------------")
@@ -92,6 +100,7 @@ const getCompletedAssignmentFiles = async (assignmentId:any[]) : Promise<any[]> 
     const config = {
         headers: { Authorization: `Bearer ${getCookie("alap")}` }
     };
+    console.log("UUUUUUUUUUUUUUU ", assignmentId)
     const response = await axiosClient.post(`http://localhost:3000/feladat/getCompletedAssignmentFiles/`,assignmentId ,config)
     console.log("getCompletedAssignmentFiles RESPONSEEEEEEEEEEEE: ", response)
     return response.data

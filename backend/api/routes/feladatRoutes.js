@@ -2,7 +2,6 @@ const express = require("express");
 const multer = require("multer");
 const router = express.Router();
 
-console.log("teszt3");
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
@@ -27,6 +26,8 @@ router.get("/hazikGroups", hazikController.getGroups);
 router.get("/haziktanar",tanarHandler.checkRole, hazikController.getsentAssignments);
 router.get("/hazikdiak",hazikController.getReceivedAssignments)
 router.post("/newassignment",tanarHandler.checkRole,  hazikController.postAssignment);
+
+router.get("/hazikdiak/:id",hazikController.getReceivedAssignments)
 
 router.patch("/modifycompletedassignment",hazikController.modifycompletedassignment)
 

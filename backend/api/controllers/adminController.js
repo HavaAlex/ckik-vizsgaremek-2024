@@ -1,10 +1,11 @@
 const { endsWith } = require("lodash")
 const adminService = require("../services/adminService")
 const hazikService = require("../services/hazikService")
+const userRepository = require("../repositories/userRepository")
+const studentRepository = require("../repositories/studentRepository")
 
 exports.uploadTeachers = async (req,res,next) =>{
     const teachers = req.body
-    console.log("ezek azok: ",teachers)
     if(teachers.length < 1){
         res.status(500).send("Nincsenek elemek amiket feltölthetne, adjon hozzá a listához")
         return
@@ -42,7 +43,6 @@ exports.uploadStudents = async (req,res,next) =>{
 
 exports.addGuardianUsers = async (req,res,next) =>{
     const guardians = req.body
-    console.log("Ő A BIGYÓ: ", guardians)
     if(guardians.length < 1){
         res.status(500).send("Nincsenek elemek amiket feltölthetne, adjon hozzá a listához")
         return
@@ -73,8 +73,20 @@ exports.getAllUsers = async (req,res,next) =>{
 
 exports.modifyUser = async (req,res,next) => {
     const modifiedUser = req.body 
-    const result  = await adminService.modifyUser(modifiedUser)
-    res.status(201).json(result)
+    const userWithThisID = await userRepository.getUserByID(modifiedUser.userSide)
+    const result  = await adminService.modifyUser(modifiedUser, userWithThisID.username)
+    if(result == -1){
+        res.status(500).send("Ez az OM azonosító már foglalt")
+        return
+    }
+    else if(result == -2 ){
+        res.status(500).send("Ez a felhasználónév már foglalt")
+        return
+    }
+    else{
+        res.status(201).json(result)
+    }
+    
 }
 
 exports.deleteUser = async (req,res,next) => {
@@ -89,6 +101,28 @@ exports.deleteUser = async (req,res,next) => {
         res.status(201).json(result)
     }
     
+}
+
+exports.addStudentsToGuardian = async(req,res,next) =>{
+
+    const newStudentOMIDs = req.body 
+    console.log("PPPPPP", newStudentOMIDs)
+    const students = [];
+    for (const Id of newStudentOMIDs.newOMIDs) {
+        const student = await studentRepository.getStudentByOmId(Id)
+        
+        if(!student){
+            res.status(500).send("Nincs ilyen OM azonosítójú diák")
+            return
+        }
+        else{
+            students.push(student)
+        }
+
+    }
+    console.log("FANTASTZIKUS BEKERÜLÉS : ", students)
+    const response = await adminService.addStudentToGuardian(newStudentOMIDs.szuloID, students)
+    res.status(201).json(response)
 }
 
 exports.getAllGroupsWithStudents = async (req,res,next) => {

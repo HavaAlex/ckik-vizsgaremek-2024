@@ -1,15 +1,13 @@
 import axiosClient from "@/lib/axios"
 import { useMutation, useQuery } from "@tanstack/vue-query"
-import { useRoute, useRouter } from "vue-router"
 import { QUERY_KEYS } from "@/utils/QueryKeys"
-import { jwtDecode } from "jwt-decode";
 import type { Teacher , Student, Guardian,CreatedGroup } from '@/api/admin/admin';
 import { useCookieHandler } from "@/stores/cookieHandler";
 
 //import type { Message,PotentialReceiver,newMessage } from "./uzenetek";
 import queryClient from "@/lib/queryClient";
 import { useErrorHandler } from "@/stores/errorHandler";
-import type { Group } from "../orarend/orarend";
+
 
 //Tanárok feltöltése
 const addTeacherUsers = async (teachers: Teacher[]) : Promise<Teacher[]> => {
@@ -18,8 +16,6 @@ const addTeacherUsers = async (teachers: Teacher[]) : Promise<Teacher[]> => {
         headers: { Authorization: `Bearer ${getCookie("alap")}` }
     };
     const response = await axiosClient.post(`http://localhost:3000/admin/addTeacherUsers`, teachers, config)
-    console.log("admin response: \n", response);
-    console.log("admin response data: \n", response.data)
     return response.data
 }
 
@@ -42,8 +38,6 @@ const addStudentUsers = async (students: Student[]) : Promise<Student[]> => {
         headers: { Authorization: `Bearer ${getCookie("alap")}` }
     };
     const response = await axiosClient.post(`http://localhost:3000/admin/addStudentUsers`, students, config)
-    console.log("admin response: \n", response);
-    console.log("admin response data: \n", response.data)
     return response.data
 }
 
@@ -66,8 +60,6 @@ const addGuardianUsers = async (guardians: Guardian[]) : Promise<Guardian[]> => 
         headers: { Authorization: `Bearer ${getCookie("alap")}` }
     };
     const response = await axiosClient.post(`http://localhost:3000/admin/addGuardianUsers`, guardians, config)
-    console.log("admin response: \n", response);
-    console.log("admin response data: \n", response.data)
     return response.data
 }
 
@@ -90,8 +82,6 @@ const modifyUser = async (modifiedUser: any) => {
         headers: { Authorization: `Bearer ${getCookie("alap")}` }
     };
     const response = await axiosClient.put(`http://localhost:3000/admin/modifyUser`, modifiedUser, config)
-    console.log("admin response: \n", response);
-    console.log("admin response data: \n", response.data)
     return response.data
 }
 
@@ -114,8 +104,6 @@ const getUsers = async () => {
         headers: { Authorization: `Bearer ${getCookie("alap")}` }
     };
     const response = await axiosClient.get(`http://localhost:3000/admin/getAllUsers`, config)
-    console.log("admin response: \n", response);
-    console.log("admin response data: \n", response.data)
     return response.data
 }
 
@@ -139,8 +127,6 @@ export const getUser = async (userID: number) => {
         headers: { Authorization: `Bearer ${getCookie("alap")}` }
     };
     const response = await axiosClient.get(`http://localhost:3000/admin/getUser/${userID}`, config)
-    console.log("admin response: \n", response);
-    console.log("admin response data: \n", response.data)
     return response.data
 }
 
@@ -164,8 +150,6 @@ export const deleteUser = async (userID: number) => {
         headers: { Authorization: `Bearer ${getCookie("alap")}` }
     };
     const response = await axiosClient.delete(`http://localhost:3000/admin/deleteUser/${userID}`, config)
-    console.log("admin response: \n", response);
-    console.log("admin response data: \n", response.data)
     return response.data
 }
 
@@ -211,8 +195,6 @@ const CreateGroup = async (newGroup: CreatedGroup)  => {
         headers: { Authorization: `Bearer ${getCookie("alap")}` }
     };
     const response = await axiosClient.post(`http://localhost:3000/admin/createGroup`, newGroup, config)
-    console.log("admin response: \n", response);
-    console.log("admin response data: \n", response.data)
     return response.data
 }
 
@@ -237,8 +219,6 @@ const AddUsersToGroup = async (newUsers: any) => {
         headers: { Authorization: `Bearer ${getCookie("alap")}` }
     };
     const response = await axiosClient.post(`http://localhost:3000/admin/addStudentsToGroup`, newUsers, config)
-    console.log("admin response: \n", response);
-    console.log("admin response data: \n", response.data)
     return response.data
 }
 
@@ -247,6 +227,32 @@ export const useAddUsersToGroup = () => {
         mutationFn: AddUsersToGroup,
         onSuccess() {
             queryClient.refetchQueries({ queryKey: [QUERY_KEYS.getGroups] })
+        },
+        onError(error) {
+            const { setError } = useErrorHandler()
+            setError(error)
+        }
+    })
+}
+//diákok utólagos hozzáadása a szülőhöz
+const AddStudentsToGuardians = async (newStudentOMIDs: any) => {
+    const { getCookie } = useCookieHandler() 
+    const config = {
+        headers: { Authorization: `Bearer ${getCookie("alap")}` }
+    };
+    console.log("§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§")
+    console.log(newStudentOMIDs.value)
+    console.log("§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§")
+
+    const response = await axiosClient.post(`http://localhost:3000/admin/addStudentsToGuardian`, newStudentOMIDs.value, config)
+    return response.data
+}
+
+export const useAddStudentsToGuardians = () => {
+    return useMutation({
+        mutationFn: AddStudentsToGuardians,
+        onSuccess() {
+            queryClient.refetchQueries({ queryKey: [QUERY_KEYS.getUsers] })
         },
         onError(error) {
             const { setError } = useErrorHandler()
@@ -312,9 +318,6 @@ export const getGroupAsignments = async (GroupID: Number) => {
         headers: { Authorization: `Bearer ${getCookie("alap")}` }
     };
     const response = await axiosClient.get(`http://localhost:3000/admin/getGroupAsignments/${GroupID}`, config)
-    console.log("KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK")
-    console.log(response)
-    console.log("KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK")
     return response.data
 }
 

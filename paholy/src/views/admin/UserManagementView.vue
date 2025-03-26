@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, onMounted, onUnmounted, computed } from 'vue';
 import type { Teacher, Student, Guardian } from '@/api/admin/admin';
 import * as XLSX from 'xlsx';
 
@@ -8,10 +8,10 @@ import {
   useaddStudentUsers,
   useaddGuardianUsers,
   usegetUsers,
-  usegetUser,
   getUser,
   usemodifyUser,
-  usedeleteUser
+  usedeleteUser,
+  useAddStudentsToGuardians
 } from '@/api/admin/adminQuery';
 
 const { mutate: addTeacherUsers } = useaaddTeacherUsers();
@@ -19,9 +19,10 @@ const { mutate: addStudentUsers } = useaddStudentUsers();
 const { mutate: addGuardianUsers } = useaddGuardianUsers();
 const { mutate: modifyUser } = usemodifyUser();
 const { mutate: deleteUser } = usedeleteUser();
+const { mutate: AddStudentsToGuardians } = useAddStudentsToGuardians()
 const { data: userList } = usegetUsers();
 
-// ----------------- Sorting and Searching -----------------
+// Rendezése és keresés
 const sortKey = ref<string>('username');
 const sortOrder = ref<'asc' | 'desc'>('asc');
 const searchQuery = ref<string>(''); 
@@ -55,7 +56,7 @@ function changeSort(column: string) {
   }
 }
 
-// ----------------- Teacher Section -----------------
+//Tanár hozzáadás
 const showTeacherDialog = ref(false);
 const teachers = ref<Teacher[]>([]);
 const newTeacher = ref<Teacher>({
@@ -139,7 +140,7 @@ async function sendTeachers() {
   console.log("Teachers array:", teachers.value);
 }
 
-// ----------------- Student Section -----------------
+// Diák hozzáadás
 const showStudentDialog = ref(false);
 const students = ref<Student[]>([]);
 const newStudent = ref<Student>({
@@ -235,7 +236,7 @@ async function sendStudents() {
   console.log("Students array:", students.value);
 }
 
-// ----------------- Guardian Section -----------------
+// Szülő hozzáadás
 const showParentDialog = ref(false);
 const guardians = ref<Guardian[]>([]);
 const newGuardian = ref<Guardian>({
@@ -392,7 +393,7 @@ async function sendGuardians() {
   console.log("Guardians array:", guardians.value);
 }
 
-// ----------------- Submission Functions -----------------
+// ----------------- Új user feltöltés -----------------
 
 function submitTeachers() {
   if (!teachers.value.length) return;
@@ -457,7 +458,6 @@ function submitGuardians() {
   });
 }
 
-// ----------------- Dialog and User Functions -----------------
 const viewUserDialog = ref(false);
 const DeleteUserDialog = ref(false);
 const selectedUserForView = ref(null);
@@ -467,7 +467,6 @@ async function openSelectedUserDialog(user: any) {
   try {
     const data = await getUser(user.ID);
     SelectedUserData.value = { ...data };
-    console.log('Fetched user data:', SelectedUserData.value);
     viewUserDialog.value = true;
   } catch (error) {
     console.error("Error fetching user data:", error);
@@ -478,7 +477,7 @@ async function fastdelete(user: any) {
   try {
     const data = await getUser(user.ID);
     SelectedUserData.value = { ...data };
-    console.log('Fetched user data:', SelectedUserData.value);
+    
     DeleteUserDialog.value = true;
   } catch (error) {
     console.error("Error fetching user data:", error);
@@ -490,12 +489,7 @@ function closeSelectedUserDialog() {
   viewUserDialog.value = false;
 }
 
-async function uploadChangedUser() {
-  console.log("Modifying user:", SelectedUserData.value);
-  await modifyUser(SelectedUserData.value);
-  SelectedUserData.value = {};
-  viewUserDialog.value = false;
-}
+
 
 async function deleteUserfunction() {
   await deleteUser(SelectedUserData.value.userSide, {
@@ -513,72 +507,209 @@ function formatDate(dateString: Date | string) {
   const dateObj = new Date(dateString);
   return dateObj.toISOString().slice(0, 19).replace("T", " ");
 }
+
+
+
+
+const newBelongingOMID = ref<string>('');
+
+
+function addBelongingOMID() {
+  const omid = newBelongingOMID.value.trim();
+  if (!omid) return;
+ 
+  SelectedUserData.value.belongingStudents.push({ OMID: omid });
+  newBelongingOMID.value = '';
+}
+
+
+function removeBelongingStudent(index: number) {
+  SelectedUserData.value.belongingStudents.splice(index, 1);
+}
+
+const uploadedOMIDdata = ref({
+  szuloID:'',
+  newOMIDs: []
+})
+async function updateSzuloOMIDs() {
+  const szuloID = SelectedUserData.value.roleSide.ID;
+  console.log("Ő A SZERENCSÉTLEN: ", SelectedUserData.value)
+  const newOMIDs = SelectedUserData.value.belongingStudents
+    .map(student => student.OMID);
+  console.log("Updating Szulo OMIDs:", { szuloID, newOMIDs });
+  uploadedOMIDdata.value.szuloID = szuloID
+  uploadedOMIDdata.value.newOMIDs = newOMIDs
+  await AddStudentsToGuardians(uploadedOMIDdata)
+}
+
+
+async function uploadChangedUser() {
+  console.log("Modifying user:", SelectedUserData.value);
+  await modifyUser(SelectedUserData.value);
+    if(SelectedUserData.value.belongingStudents){
+    updateSzuloOMIDs()
+  }
+  SelectedUserData.value = {};
+  viewUserDialog.value = false;
+
+}
+
+
+
+//itt kezdődik a forgatásnak a figyelése
+const isPortrait = ref(window.matchMedia("(orientation: portrait)").matches);
+const updateOrientation = () => {
+  isPortrait.value = window.matchMedia("(orientation: portrait)").matches;
+};
+onMounted(() => {
+  window.matchMedia("(orientation: portrait)").addEventListener("change", updateOrientation);
+  if(document.cookie != ''){
+    const decoded = jwtDecode(getCookie("alap"))
+    push({name:decoded.userData.role+'orarend'})
+  }
+});
+onUnmounted(() => {
+  window.matchMedia("(orientation: portrait)").removeEventListener("change", updateOrientation);
+});//itt ér véget
+
+
 </script> 
 <template>
   <main>
-    <v-container>
-      <!-- Users Management Card -->
-      <v-card>
-        <v-card-title>Felhasználók kezelése:</v-card-title>
-        <!-- Search Bar -->
-        <v-card-text>
-          <p> Felhasználók száma: {{ userList.length }}</p>
-          <v-text-field
-            v-model="searchQuery"
-            label="Keresés felhasználónév alapján"
-            clearable
-          ></v-text-field>
-        </v-card-text>
-        <v-card-text style="height: 25vw !important; overflow-y: auto;">
-          <v-table>
-            <thead>
-              <tr>
-                <th @click="changeSort('username')">
-                  Név 
-                  <span v-if="sortKey==='username'">
-                    {{ sortOrder==='asc' ? '▲' : '▼' }}
-                  </span>
-                </th>
-                <th @click="changeSort('ID')">
-                  Azonosító 
-                  <span v-if="sortKey==='ID'">
-                    {{ sortOrder==='asc' ? '▲' : '▼' }}
-                  </span>
-                </th>
-                <th @click="changeSort('role')">
-                  Szerepkör 
-                  <span v-if="sortKey==='role'">
-                    {{ sortOrder==='asc' ? '▲' : '▼' }}
-                  </span>
-                </th>
-                <th>Interakció</th>
-              </tr>
-            </thead>
-            <tbody style="height: 23vw !important; overflow-y: auto;">
-              <tr v-for="user in sortedUsers" :key="user.ID">
-                <td>{{ user.username }}</td>
-                <td>{{ user.ID }}</td>
-                <td>{{ user.role }}</td>
-                <td>
-                  <v-btn color="primary" @click="console.log(user); openSelectedUserDialog(user)">Felhasználó módosítása</v-btn>
+    <div v-if="isPortrait">
+      <v-container>
+        <v-card>
+          <v-card-title>Felhasználók kezelése:</v-card-title>
+          <!-- Kereső -->
+          <v-card-text>
+            <p> Felhasználók száma: {{ userList.length }}</p>
+            <v-text-field
+              v-model="searchQuery"
+              label="Keresés felhasználónév alapján"
+              clearable
+            ></v-text-field>
+          </v-card-text>
+          <v-card-text style="height: 80vw !important; overflow-y: auto;">
+            <v-card-text>
+              <v-select
+                v-model="sortKey"
+                :items="['username', 'ID', 'role']"
+                label="Rendezés"
+                @change="changeSort(sortKey)"
+                clearable
+              ></v-select>
+            </v-card-text>
+              <v-list>
+                <v-list-item v-for="user in sortedUsers" :key="user.ID" style="width: 80vw;">
+                  <strong>Felhasználónév: </strong>{{ user.username }}<br>
+                  <strong>Azonosító: </strong>{{ user.ID }}<br>
+                  <strong>Szerepkör: </strong>{{ user.role }}<br>
+                  <v-btn  color="primary" @click="console.log(user); openSelectedUserDialog(user)">Felhasználó módosítása</v-btn><br>
                   <v-btn color="error" @click="fastdelete(user)">Felhasználó törlése</v-btn>
-                </td>
-              </tr>
-            </tbody>
-          </v-table>
-        </v-card-text>
-      </v-card>
+                </v-list-item>
+              </v-list>
+            
+          </v-card-text>
+        </v-card>
+          
         
-      <!-- New Users Card -->
-      <v-card>
-        <v-card-title>Új felhasználók hozzáadása</v-card-title>
-        <v-card-actions>
-          <v-btn color="primary" @click="showStudentDialog = true">Diákok hozzáadása</v-btn>
-          <v-btn color="primary" @click="showTeacherDialog = true">Tanárok hozzáadása</v-btn>
-          <v-btn color="primary" @click="showParentDialog = true">Gondviselők hozzáadása</v-btn>
-        </v-card-actions>
-      </v-card>
+        <v-card>
+          <v-card-title>Új felhasználók hozzáadása</v-card-title>
+          <v-card-text>
+            <v-btn color="primary" @click="showStudentDialog = true">Diákok hozzáadása</v-btn>
+            <v-btn color="primary" @click="showTeacherDialog = true">Tanárok hozzáadása</v-btn>
+            <v-btn color="primary" @click="showParentDialog = true">Gondviselők hozzáadása</v-btn>
+          </v-card-text>
+        </v-card>
+      </v-container>
+      <v-dialog v-model="DeleteUserDialog" max-width="80vw" theme="dark">
+        <v-card>
+          <v-card-title>Biztos törölni akarja?</v-card-title>
+          <v-card-text>A felhasználó törlésével minden vele kapcsolatos adat eltűnik és nem lehet visszaállítani</v-card-text>
+          <v-card-actions>
+            <v-btn @click="deleteUserfunction">Törlés</v-btn>
+            <v-btn @click="DeleteUserDialog = false">Mégse</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
 
+    </div>
+    <div v-else>
+      <v-container>
+        <v-card>
+          <v-card-title>Felhasználók kezelése:</v-card-title>
+          <!-- Kereső -->
+          <v-card-text>
+            <p> Felhasználók száma: {{ userList.length }}</p>
+            <v-text-field
+              v-model="searchQuery"
+              label="Keresés felhasználónév alapján"
+              clearable
+            ></v-text-field>
+          </v-card-text>
+          <v-card-text style="height: 25vw !important; overflow-y: auto;">
+            <v-table>
+              <thead>
+                <tr>
+                  <th @click="changeSort('username')">
+                    Név 
+                    <span v-if="sortKey==='username'">
+                      {{ sortOrder==='asc' ? '▲' : '▼' }}
+                    </span>
+                  </th>
+                  <th @click="changeSort('ID')">
+                    Azonosító 
+                    <span v-if="sortKey==='ID'">
+                      {{ sortOrder==='asc' ? '▲' : '▼' }}
+                    </span>
+                  </th>
+                  <th @click="changeSort('role')">
+                    Szerepkör 
+                    <span v-if="sortKey==='role'">
+                      {{ sortOrder==='asc' ? '▲' : '▼' }}
+                    </span>
+                  </th>
+                  <th>Interakció</th>
+                </tr>
+              </thead>
+              <tbody style="height: 23vw !important; overflow-y: auto;">
+                <tr v-for="user in sortedUsers" :key="user.ID">
+                  <td>{{ user.username }}</td>
+                  <td>{{ user.ID }}</td>
+                  <td>{{ user.role }}</td>
+                  <td>
+                    <v-btn color="primary" @click="console.log(user); openSelectedUserDialog(user)">Felhasználó módosítása</v-btn>
+                    <v-btn color="error" @click="fastdelete(user)">Felhasználó törlése</v-btn>
+                  </td>
+                </tr>
+              </tbody>
+            </v-table>
+          </v-card-text>
+        </v-card>
+          
+        
+        <v-card>
+          <v-card-title>Új felhasználók hozzáadása</v-card-title>
+          <v-card-text>
+            <v-btn color="primary" @click="showStudentDialog = true">Diákok hozzáadása</v-btn>
+            <v-btn color="primary" @click="showTeacherDialog = true">Tanárok hozzáadása</v-btn>
+            <v-btn color="primary" @click="showParentDialog = true">Gondviselők hozzáadása</v-btn>
+          </v-card-text>
+        </v-card>
+      </v-container>
+      <v-dialog v-model="DeleteUserDialog" max-width="50vw" theme="dark">
+        <v-card>
+          <v-card-title>Biztos törölni akarja?</v-card-title>
+          <v-card-text>A felhasználó törlésével minden vele kapcsolatos adat eltűnik és nem lehet visszaállítani</v-card-text>
+          <v-card-actions>
+            <v-btn @click="deleteUserfunction">Törlés</v-btn>
+            <v-btn @click="DeleteUserDialog = false">Mégse</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+
+    </div>
+    
       <!-- Tanárok dialog -->
       <v-dialog v-model="showTeacherDialog" max-width="600">
         <v-card>
@@ -779,7 +910,6 @@ function formatDate(dateString: Date | string) {
           </v-card-text>
           <v-card-actions>
             <v-btn color="secondary" @click="showParentDialog = false">Bezárás</v-btn>
-            <!-- Call submitGuardians() -->
             <v-btn color="primary" @click="submitGuardians">Feltöltés az adatbázisba</v-btn>
           </v-card-actions>
         </v-card>
@@ -798,14 +928,38 @@ function formatDate(dateString: Date | string) {
               <v-text-field label="Mobiltelefonszám: " v-model="SelectedUserData.roleSide.phone"></v-text-field>
             </v-card-text>
           </div>
+
           <div v-else-if="SelectedUserData.userRole==='szulo'">
             <v-card-text>
               <h3>Felhasználó típusa : {{ SelectedUserData.userRole }}</h3>
               <v-text-field label="Felhasználónév: " v-model="SelectedUserData.roleSide.name"></v-text-field>
               <v-text-field label="Email cím: " v-model="SelectedUserData.roleSide.email"></v-text-field>
               <v-text-field label="Mobiltelefonszám: " v-model="SelectedUserData.roleSide.phone"></v-text-field>
+              <p>Ehhez a gondviselőhöz tartozó diákok OM azonosítói:</p>
+              <v-list>
+                <v-list-item
+                  v-for="(student, index) in SelectedUserData.belongingStudents"
+                  :key="index"
+                  @click="removeBelongingStudent(index)"
+                >
+                  <v-list-item-content>
+                    <v-list-item-title>
+                      {{ student.OMID }} <span v-if="student.name"> - {{ student.name }}  </span> (kattintson az eltávolításhoz)
+                    </v-list-item-title>
+                  </v-list-item-content>
+                </v-list-item>
+              </v-list>
+
+              <!-- New text field and button for adding a new OMID -->
+              <v-text-field 
+                v-model="newBelongingOMID" 
+                label="Új OMID hozzáadása" 
+                type="number"
+              ></v-text-field>
+              <v-btn color="primary" @click="addBelongingOMID">Hozzáadás</v-btn>
             </v-card-text>
           </div>
+
           <div v-else-if="SelectedUserData.userRole==='diak'">
             <v-card-text>
               <h3>Felhasználó típusa : {{ SelectedUserData.userRole }}</h3>
@@ -833,14 +987,7 @@ function formatDate(dateString: Date | string) {
         </v-card>
       </v-dialog>
 
-      <v-dialog v-model="DeleteUserDialog" max-width="50vw" theme="dark">
-        <v-card>
-          <v-card-title>Biztos törölni akarod?</v-card-title>
-          <v-btn @click="deleteUserfunction">Törlés</v-btn>
-          <v-btn @click="DeleteUserDialog = false">Mégse</v-btn>
-        </v-card>
-      </v-dialog>
 
-    </v-container>
+    
   </main>
 </template>

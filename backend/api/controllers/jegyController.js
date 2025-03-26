@@ -69,6 +69,15 @@ exports.getJegyekTanar = async (req, res, next) =>
     //console.log("JEGY VÉG")
 }
 
+exports.getJegyekSzulo = async (req, res, next) =>
+{
+    //console.log("JEGY KEZD")
+    const jegyek = await jegyService.getJegyek(req.params.id)
+    //console.log(jegyek)
+    res.status(201).json(jegyek);
+    //console.log("JEGY VÉG")
+}
+
 exports.createJegy = async (req, res, next) =>
 {
     let {studentID,Value,Multiplier,subjectName} = req.body;

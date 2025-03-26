@@ -6,6 +6,16 @@ class HianyzasService
     {
         return await absenceRepository.getAbsencesStudent(ID)
     }
+
+    async getStudentsInGroup(groupID)
+    {
+        return await absenceRepository.getStudentsInGroup(groupID);
+    }
+
+    async postAbsence(absence)
+    {
+        return await absenceRepository.createAbsence(absence);
+    }
 }
 
 module.exports = new HianyzasService();

@@ -7,7 +7,6 @@ class TeacherRepository
     constructor(db)
     {
         this.Teachers = db.teacher;
-        console.log(this.Teachers)
     }
 
     async createTeacher(teacher)
@@ -51,8 +50,8 @@ class TeacherRepository
     
     async modifyTeacher(ID,teacher){
         // Assume User is a Sequelize model
-        console.log("biztos ami biztos: ",ID)
-        console.log("techerbe  ", teacher)
+        // console.log("biztos ami biztos: ",ID)
+        // console.log("techerbe  ", teacher)
         const changedTeacher = await this.Teachers.findOne({ where: { userId: ID } });
         await changedTeacher.update({ name: teacher.name });
         await changedTeacher.update({ email: teacher.email });

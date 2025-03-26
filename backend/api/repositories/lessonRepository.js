@@ -7,7 +7,6 @@ class LessonRepository
     constructor(db)
     {
         this.Lessons = db.lesson;
-        console.log(this.Teachers)
     }
 
     async createLesson(lesson)

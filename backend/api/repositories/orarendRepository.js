@@ -25,7 +25,6 @@ class OrarendRepository
     async getLessons(groups)//Megkeresi az összes óráját az adott embernek
     {
         groups = groups.map(group => group.GroupID);
-        console.log(groups);
         return await this.Lesson.findAll
         (
             {
@@ -49,8 +48,7 @@ class OrarendRepository
     async getDisruptions(groups, weekStart) {
         // Map groups to an array of IDs
         groups = groups.map(group => group.GroupID);
-        console.log(groups);
-        console.log(classDisruption);
+
     
         // Create a date for the end of the week (weekStart is assumed to be a Monday)
         const startOfWeek = new Date(weekStart);
@@ -68,7 +66,7 @@ class OrarendRepository
         });
     }
 
-    async getTeacherDisruptions(teacherID,weekStart)//Megkeresi az összes óráját az adott embernek
+    async getTeacherDisruptions(weekStart)//Megkeresi az összes óráját az adott embernek
     {
         // Create a date for the end of the week (weekStart is assumed to be a Monday)
     
