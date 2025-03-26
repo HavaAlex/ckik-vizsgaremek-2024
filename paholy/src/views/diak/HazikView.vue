@@ -329,7 +329,7 @@ onUnmounted(() => {
           <p><strong>Dátum:</strong> {{ formatDate(selectedAssignment?.deadline) }}</p>
           <p><strong>Leírás:</strong> {{ selectedAssignment?.desc }}</p>
 
-          <!-- Assignment Files Section (Teacher's Files) -->
+
           <div v-if="assignmentFiles.length">
             <p><strong>Fájlok:</strong></p>
             <v-list-item
@@ -347,7 +347,7 @@ onUnmounted(() => {
             <p><strong>Fájlok:</strong> Nincsenek fájlok ehhez a feladathoz.</p>
           </div>
 
-          <!-- Completed Assignment Files Section (Student's Files) -->
+
           <div v-if="answerFiles[openCompletedAssignment.ID] && answerFiles[openCompletedAssignment.ID].length">
             <p><strong>Beadott fájlok:</strong></p>
             <v-list-item
@@ -393,7 +393,7 @@ onUnmounted(() => {
       </v-card>
     </v-dialog>
 
-    <!-- Delete File Confirmation Dialog -->
+
     <v-dialog v-model="DeleteAssignmentDialog" max-width="50vw" theme="dark">
       <v-card>
         <v-card-title>Biztos törölni akarod?</v-card-title>
@@ -402,7 +402,6 @@ onUnmounted(() => {
       </v-card>
     </v-dialog>
 
-    <!-- Success Dialog -->
     <v-dialog v-model="successDialog" max-width="30vw" theme="dark">
       <v-card>
         <v-card-title>Sikeres módosítás</v-card-title>

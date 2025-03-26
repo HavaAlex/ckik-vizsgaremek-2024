@@ -116,23 +116,19 @@ const resetForm = () => {
 function formatDate(dateString: Date | string | null) {
   if (!dateString) return "";
   const date = new Date(dateString);
-  date.setHours(date.getHours() + 1); // Add one hour
+  date.setHours(date.getHours() + 1); 
   return date.toISOString().slice(0, 19).replace("T", " ");
 }
 
-// -------------------------
-// Assignment view & answer dialogs
-// -------------------------
 
-// For viewing answers, we need the full teacher-assignment item (which contains the answers array)
 const selectedAssignmentForAnswers = ref<{ anwsers: any[]; feladat: OpenAssignment } | null>(null);
 const ViewAssignmentAnwserDialog = ref(false);
 
-// Store files for each answer keyed by answer id
+
 const answerFiles = ref<Record<number, any[]>>({});
 const answerFilesIDs = ref<any[]>([]);
 
-// Fetch files for a given answer using its ID
+
 const fetchAnswerFiles = async (answerFilesIDs: any[]) => {
   console.log("Fetching answer files for answer id:", answerFilesIDs);
   await getCompletedAssignmentFiles(answerFilesIDs, {
@@ -266,12 +262,12 @@ onUnmounted(() => {
           <v-card-text style="overflow-y: auto; max-height: 80vw;">
             <v-list>
               <v-list-item v-for="feladat in assignmentTeacherList" :key="feladat.feladat.ID">
-                  <strong>Határidő: </strong>{{ formatDate(feladat.feladat.deadline) }}
+                  <strong>Határidő: </strong>{{ formatDate(feladat.feladat.deadline) }} <br>
                   <strong>Feltöltési idő: </strong>{{ formatDate(feladat.feladat.uploadDate) }}
-                  <p style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 50vw; display: inline-block;">{{ feladat.feladat.desc }}</p>
+                  <p style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 50vw; display: inline-block;">{{ feladat.feladat.desc }}</p><br>
                   <v-btn color="primary" @click="openViewAssignmentAnswerDialog(feladat);">
                     Válaszok megtekintése
-                  </v-btn>
+                  </v-btn><br>
                   <v-btn color="error" @click="openDeleteAssignmentDialog(feladat.feladat.ID)">
                     Törlés
                   </v-btn>

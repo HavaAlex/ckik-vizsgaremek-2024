@@ -78,9 +78,9 @@ watch(
       </div>
 
       <div class="week-navigation">
-        <button @click="changeWeek(-1)">Előző hét</button>
+        <v-btn @click="changeWeek(-1)" color="primary">Előző hét</v-btn>
         <span>{{ format(currentWeekStart, 'yyyy-MM-dd') }}</span>
-        <button @click="changeWeek(1)">Következő hét</button>
+        <v-btn @click="changeWeek(1)" color="primary" >Következő hét</v-btn>
       </div>
 
       <div class="timetable-scrollable">

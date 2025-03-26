@@ -37,10 +37,10 @@ export const usegetAssignmentsTeacher = () => {
 }
 
 const getAssignmentsStudent = async ()  =>{
-    //console.log("LEFUTOK: getGroups")
+    console.log("LEFUTOK: studimudi")
     const cookieHandler= useCookieHandler()
     const vanE = cookieHandler.hasValidCookie()
-    const {params} = useRoute()
+    const route = useRoute()
     if(vanE == false)
     {
         return new Error("Lejárt a munkamenet!")
@@ -49,8 +49,10 @@ const getAssignmentsStudent = async ()  =>{
         headers: { Authorization: `Bearer ${ cookieHandler.getCookie("alap")}` }
     };
     console.log("FAAAAAAAAAAAASZ")
-    console.log(cookieHandler.utolsoDecoded?.userData.value.role)
-    const response = await axiosClient.get(cookieHandler.utolsoDecoded?.userData.role == "szulo"?`http://localhost:3000/feladat/hazikdiak${params.id}` :`http://localhost:3000/feladat/hazikdiak`,config)
+    console.log(cookieHandler.utolsoDecoded)
+    console.log(cookieHandler.utolsoDecoded?.userData.role)
+    console.log("ÉÉÉÉÉÉÉÉ: ", cookieHandler.utolsoDecoded?.userData.role == "szulo"?`http://localhost:3000/feladat/hazikdiak/${route.params.id}` :`http://localhost:3000/feladat/hazikdiak`)
+    const response = await axiosClient.get(cookieHandler.utolsoDecoded?.userData.role == "szulo"?`http://localhost:3000/feladat/hazikdiak/${route.params.id}` :`http://localhost:3000/feladat/hazikdiak`,config)
     console.log("-----------------------------------------------")
     console.log(response)
     console.log("-----------------------------------------------")

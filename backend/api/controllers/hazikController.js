@@ -76,10 +76,6 @@ exports.getReceivedAssignments = async (req,res,next) => {
       res.status(201).json(hazik);
 }
 
-/*exports.getTeacherAssignmentFiles = async (req,res,next) => {
-  const haziFileok = await hazikService.getTeacherAssignmentFiles(req.decoded.ID)
-  res.status(201).json(haziFileok)
-}*/
 
 exports.modifycompletedassignment = async (req,res,next) => {
   const {ID,assignmentID,date,status,studentID,textAnswer} = req.body
