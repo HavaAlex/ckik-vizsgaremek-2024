@@ -112,8 +112,8 @@ async getTeacherLessons(teacherID, weekStart) {
         return await orarendRepository.getTeachers()
     }
 
-    async getLesson(){
-        return await orarendRepository.getLessons()
+    async getAllLessons(){
+        return await orarendRepository.getAllLessons()
     }
 }
 

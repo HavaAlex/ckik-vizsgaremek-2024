@@ -9,15 +9,24 @@ import type { Hianyzas, Lesson, Teacher, Absence } from "./hianyzasok";
 import queryClient from "@/lib/queryClient";
 import { useErrorHandler } from "@/stores/errorHandler";
 
-const getHianyzasok = async (): Promise<Hianyzas> => {
-    console.log("LEFUTOK")
-    const {getCookie} = useCookieHandler()
+const getHianyzasok = async (): Promise<Hianyzas|Error> => {
+    console.log("LEFUTOK: hianyzas")
+    const cookieHandler= useCookieHandler()
+    const vanE = cookieHandler.hasValidCookie()
+    const route = useRoute()
+    if(vanE == false)
+    {
+        return new Error("Lejárt a munkamenet!")
+    }
     const config = {
-        headers: { Authorization: `Bearer ${getCookie("alap")}` }
+        headers: { Authorization: `Bearer ${ cookieHandler.getCookie("alap")}` }
     };
-    //console.log(`localhost:3000/uzenetek/${document.cookie}`)
-    const response = await axiosClient.get(`http://localhost:3000/hianyzas/`,config)
-    return response
+    console.log("FAAAAAAAAAAAASZ")
+    console.log(cookieHandler.utolsoDecoded)
+    console.log(cookieHandler.utolsoDecoded?.userData.role)
+    console.log("ÉÉÉÉÉÉÉÉ: ", cookieHandler.utolsoDecoded?.userData.role == "szulo"?`http://localhost:3000/hianyzas/${route.params.id}` :`http://localhost:3000/hianyzas`)
+    const response = await axiosClient.get(cookieHandler.utolsoDecoded?.userData.role == "szulo"?`http://localhost:3000/hianyzas/${route.params.id}` :`http://localhost:3000/hianyzas`,config)
+    return response.data
 }
 export const useGetHianyzasok =  () => {
     const {setError} = useErrorHandler()

@@ -6,7 +6,6 @@ exports.getOrarend = async (req, res, next) =>
 {
     const weekStart = req.query.weekStart
 
-
     const groups = await csoportService.getGroup(req.decoded.ID)
 
     const combinedOrarend = req.decoded.role=="tanar"?await orarendService.getTeacherLessons(req.role.ID,weekStart): await orarendService.getOrarend(groups,weekStart)
@@ -56,6 +55,6 @@ exports.getTeachers = async (req, res, next) =>
 }
 exports.getLessons = async (req, res, next) =>
 {
-    const lessons = await orarendService.getLessons()
+    const lessons = await orarendService.getAllLessons()
     res.status(201).json(lessons);
 }
