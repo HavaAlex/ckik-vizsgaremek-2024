@@ -24,15 +24,16 @@ router.use(userAuth.verifyToken);
 //Alex dolga (ne piszkáld légyszi)
 router.get("/hazikGroups", hazikController.getGroups);
 router.get("/haziktanar",tanarHandler.checkRole, hazikController.getsentAssignments);
-router.get("/hazikdiak",hazikController.getReceivedAssignments)
+router.get("/hazikdiak",(req,res,next)=>{console.log("KAKA");next()},hazikController.getReceivedAssignments)
 router.post("/newassignment",tanarHandler.checkRole,  hazikController.postAssignment);
 
-router.get("/hazikdiak/:id",hazikController.getReceivedAssignments)
+router.get("/hazikdiak/:id",(req,res,next)=>{console.log("KAKA2");next()},hazikController.getReceivedAssignments)
 
 router.patch("/modifycompletedassignment",hazikController.modifycompletedassignment)
 
 router.get("/getAssignmentFiles/",hazikController.getAssignmentFiles)
 router.post("/getCompletedAssignmentFiles/",hazikController.getCompletedAssignmentFiles)
+router.post("/getCompletedAssignmentFiles/:id",hazikController.getCompletedAssignmentFiles)
 router.delete("/deleteAssignment/:assignmentId",tanarHandler.checkRole, hazikController.deleteAssignment)
 router.delete("/deleteAnswerFile/:fileId",hazikController.deleteCompletedAssignmentFile)
 // <-- IMPORTANT: Use upload.array("files") on this route

@@ -1,6 +1,6 @@
 import axiosClient from "@/lib/axios"
 import { useMutation, useQuery } from "@tanstack/vue-query"
-import { useRoute, useRouter } from "vue-router"
+import {useRoute, useRouter } from "vue-router"
 import { QUERY_KEYS } from "@/utils/QueryKeys"
 import { jwtDecode } from "jwt-decode";
 import type { Assignment , OpenCompletedAssignment} from '@/api/hazik/hazik';
@@ -62,8 +62,7 @@ export const usegetAssignmentsStudent = () => {
     const {setError} = useErrorHandler()
     const query = useQuery({
         queryKey: [QUERY_KEYS.getAssignmentsStudent],
-        queryFn: getAssignmentsStudent,
-    })
+        queryFn:getAssignmentsStudent,})
 
     if (query.error.value) {
         console.error("Lekérdezési hiba:", query.error)
@@ -72,7 +71,7 @@ export const usegetAssignmentsStudent = () => {
     return query
 }
 
-const getAssignmentFiles = async (assignmentId:number) : Promise<number> =>{
+const getAssignmentFiles = async (assignmentId:number) : Promise<any[]> =>{
     const {getCookie} = useCookieHandler()
     const config = {
         headers: { Authorization: `Bearer ${getCookie("alap")}` ,assignmentid: assignmentId}
@@ -86,6 +85,7 @@ export const usegetAssignmentFiles = () => {
     return useMutation( 
         {
             mutationFn: getAssignmentFiles,
+            mutationKey: [QUERY_KEYS.getAssignmentFiles],
             onSuccess(){
                 queryClient.refetchQueries({queryKey:[QUERY_KEYS.getAssignmentFiles]})
             },
@@ -97,13 +97,20 @@ export const usegetAssignmentFiles = () => {
     )
 };
 
-const getCompletedAssignmentFiles = async (assignmentId:any[]) : Promise<any[]> =>{
-    const {getCookie} = useCookieHandler()
+const getCompletedAssignmentFiles = async (assignmentId:any[]) : Promise<any[]|Error> =>{
+    const cookieHandler= useCookieHandler()
+    const vanE = cookieHandler.hasValidCookie()
+    if(vanE == false)
+    {
+        return new Error("Lejárt a munkamenet!")
+    }
     const config = {
-        headers: { Authorization: `Bearer ${getCookie("alap")}` }
+        headers: { Authorization: `Bearer ${ cookieHandler.getCookie("alap")}` }
     };
-    console.log("UUUUUUUUUUUUUUU ", assignmentId)
-    const response = await axiosClient.post(`http://localhost:3000/feladat/getCompletedAssignmentFiles/`,assignmentId ,config)
+    console.log("FAAAAAAAAAAAASZ")
+    console.log(cookieHandler.utolsoDecoded)
+    console.log(cookieHandler.utolsoDecoded?.userData.role)
+    const response = await axiosClient.post(`http://localhost:3000/feladat/getCompletedAssignmentFiles`,assignmentId,config)
     console.log("getCompletedAssignmentFiles RESPONSEEEEEEEEEEEE: ", response)
     return response.data
 }

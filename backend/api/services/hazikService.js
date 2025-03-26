@@ -84,9 +84,7 @@ class HazikService {
     async getReceivedAssignments(userID) {
         await this.checkAndUpdateOverdueAssignments();
 
-        const student  = await studentRepository.getStudentByUserID(userID);
-
-        const completedAssignments = await assignmentRepository.getCompletedAssignmentsByStudentID(student.ID);
+        const completedAssignments = await assignmentRepository.getCompletedAssignmentsByStudentID(userID);
 
         const responseArray = [];
         for (const c of completedAssignments) {
@@ -105,7 +103,7 @@ class HazikService {
             const teacher = await teacherRepository.getTeacherByID(item.feladat.teacherID);
             item.feladat.dataValues.senderUserName = teacher.name;
         }
-
+        console.log(responseArray)
         return responseArray;
     }
 

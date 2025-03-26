@@ -4,7 +4,7 @@ import { getUserStatusFromLocalStorage, deleteUserStatusFromLocalStorage} from '
 import Jogosultsagok from '@/views/admin/Jogosultsagok.vue';
 import { useCookieHandler } from '@/stores/cookieHandler';
 import { jwtDecode } from 'jwt-decode';
-import { ref ,onMounted, onUnmounted,onUpdated,watch } from 'vue';
+import { ref ,onMounted, onUnmounted,onUpdated,watchEffect } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useErrorHandler } from '@/stores/errorHandler';
 import { AxiosError } from 'axios';
@@ -40,10 +40,6 @@ if (cookieStatus == true){
 else{
   push({name:"login"})
 }
-
-watch(() => {
-  console.log("selectedChild:", refs.selectedChild);
-});
 
 //itt kezdődik a forgatásnak a figyelése
 const isPortrait = ref(window.matchMedia("(orientation: portrait)").matches);
@@ -204,6 +200,7 @@ const selectedChildKey = ref(-1); // Ez biztosítja a komponens újrarenderelés
           console.log(`${pathReconstructed}/${value}`)
           push({ path: `${pathReconstructed}/${value}` }).then(()=>{
             selectedChildKey = value
+            console.log('futok')
           })
         }"
       ></v-select>

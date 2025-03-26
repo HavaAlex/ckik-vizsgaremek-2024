@@ -1,15 +1,30 @@
 <script setup lang="ts">
-import { ref, computed,onMounted, onUnmounted  } from 'vue';
+import { ref, computed,onMounted, onUnmounted, watchEffect  } from 'vue';
 import type { Assignment, OpenAssignment, OpenCompletedAssignment } from '@/api/hazik/hazik';
 import { usegetAssignmentsStudent, usemodifyCompletedAssignment, usegetAssignmentFiles,useuploadCompletedAssignmentFiles, usegetCompletedAssignmentFiles, usedeleteAnswerFile } from '@/api/hazik/hazikQuery';
+import { useCookieHandler } from '@/stores/cookieHandler';
 
 const successDialog = ref(false); 
 const { mutate: modifyCompletedAssignment, isPending } = usemodifyCompletedAssignment();
-const { data: assignmentStudentList } = usegetAssignmentsStudent();
+const { data: assignmentStudentList,refetch  } = usegetAssignmentsStudent();
 const { mutate: getAssignmentFiles } = usegetAssignmentFiles();
 const { mutate: uploadCompletedAssignmentFiles } = useuploadCompletedAssignmentFiles();
 const { mutate: getCompletedAssignmentFiles } = usegetCompletedAssignmentFiles();
 const { mutate: deleteAnswerFile } = usedeleteAnswerFile();
+
+const cookieHandler = useCookieHandler()
+const role = ref<string>()
+console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+cookieHandler.hasValidCookie()
+role.value = cookieHandler.utolsoDecoded?.userData.role
+console.log(role.value)
+refetch();
+/*watchEffect(() => {
+  console.log("FFFFFFFFFFFFFUUUUUUUUUUUT")
+  refetch();
+  cookieHandler.hasValidCookie()
+  role.value = cookieHandler.utolsoDecoded?.role
+});*/
 
 function formatDate(dateString: Date | string | null) {
   if (!dateString) return "";
@@ -207,9 +222,7 @@ onUnmounted(() => {
               @click="downloadFile(file)"
               style="cursor: pointer;"
             >
-              <v-list-item-content>
-                <v-list-item-title>{{ file.filename }}</v-list-item-title>
-              </v-list-item-content>
+              <v-list-item-title>{{ file.filename }}</v-list-item-title>
             </v-list-item>
           </div>
           <div v-else>
@@ -224,15 +237,13 @@ onUnmounted(() => {
               :key="file.ID"
               style="display: flex; align-items: center;"
             >
-              <v-list-item-content>
-                <v-list-item-title>{{ file.filename }}</v-list-item-title>
-              </v-list-item-content>
+              <v-list-item-title>{{ file.filename }}</v-list-item-title>
               <v-btn small color="primary" @click="downloadFile(file)">Letöltés</v-btn>
               <v-btn
                 small
                 color="error"
                 @click="openDeleteAssignmentDialog(file.ID)"
-                :disabled="isDeadlinePast"
+                :disabled="isDeadlinePast||role=='szulo'"
               >
                 Törlés
               </v-btn>
@@ -241,12 +252,12 @@ onUnmounted(() => {
           <div v-else>
             <p><strong>Beadott fájlok:</strong> Nincsenek beadott fájlok.</p>
           </div>
-
-          <p><strong>Az ön válasza:</strong></p>
-          <v-textarea placeholder="Ide írhat" v-model="openCompletedAssignment.textAnswer">
+          <p v-if="role=='szulo'"><strong>A gyereke válasza:</strong></p>
+          <p v-else><strong>Az ön válasza:</strong></p>
+          <v-textarea placeholder="Ide írhat" v-model="openCompletedAssignment.textAnswer"  v-bind:disabled="role=='szulo'">
             {{ openCompletedAssignment.textAnswer }}
           </v-textarea>
-          <v-file-input 
+          <v-file-input v-bind:disabled="role=='szulo'||isDeadlinePast"
             label="Fájlok feltöltése (egyszerre töltse fel)"
             multiple
             v-model="completedAssignmentFiles"
@@ -257,7 +268,7 @@ onUnmounted(() => {
         </v-card-text>
         <v-card-actions>
           <v-btn color="primary" @click="ViewAssignmentDialog = false">Bezárás</v-btn>
-          <v-btn @click="modositasmentese" :disabled="isDeadlinePast">Módosítás</v-btn>
+          <v-btn @click="modositasmentese" :disabled="isDeadlinePast||role=='szulo'">Módosítás</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -321,7 +332,7 @@ onUnmounted(() => {
           </div>
           
           <div v-else>
-            NINCS MÉG
+            Nincs semmilyen adat!
           </div>
           
         </v-card-text>
@@ -345,9 +356,7 @@ onUnmounted(() => {
               @click="downloadFile(file)"
               style="cursor: pointer;"
             >
-              <v-list-item-content>
-                <v-list-item-title>{{ file.filename }}</v-list-item-title>
-              </v-list-item-content>
+              <v-list-item-title>{{ file.filename }}</v-list-item-title>
             </v-list-item>
           </div>
           <div v-else>
@@ -362,15 +371,13 @@ onUnmounted(() => {
               :key="file.ID"
               style="display: flex; align-items: center;"
             >
-              <v-list-item-content>
-                <v-list-item-title>{{ file.filename }}</v-list-item-title>
-              </v-list-item-content>
+              <v-list-item-title>{{ file.filename }}</v-list-item-title>
               <v-btn small color="primary" @click="downloadFile(file)">Letöltés</v-btn>
               <v-btn
                 small
                 color="error"
                 @click="openDeleteAssignmentDialog(file.ID)"
-                :disabled="isDeadlinePast"
+                :disabled="isDeadlinePast||role=='szulo'"
               >
                 Törlés
               </v-btn>
@@ -380,11 +387,12 @@ onUnmounted(() => {
             <p><strong>Beadott fájlok:</strong> Nincsenek beadott fájlok.</p>
           </div>
 
-          <p><strong>Az ön válasza:</strong></p>
-          <v-textarea placeholder="Ide írhat" v-model="openCompletedAssignment.textAnswer">
+          <p v-if="role=='szulo'"><strong>A gyereke válasza:</strong></p>
+          <p v-else><strong>Az ön válasza:</strong></p>
+          <v-textarea v-bind:disabled="role=='szulo'||isDeadlinePast" placeholder="Ide írhat" v-model="openCompletedAssignment.textAnswer">
             {{ openCompletedAssignment.textAnswer }}
           </v-textarea>
-          <v-file-input 
+          <v-file-input v-bind:disabled="role=='szulo'||isDeadlinePast"
             label="Fájlok feltöltése (egyszerre töltse fel)"
             multiple
             v-model="completedAssignmentFiles"
@@ -395,7 +403,7 @@ onUnmounted(() => {
         </v-card-text>
         <v-card-actions>
           <v-btn color="primary" @click="ViewAssignmentDialog = false">Bezárás</v-btn>
-          <v-btn @click="modositasmentese" :disabled="isDeadlinePast">Módosítás</v-btn>
+          <v-btn @click="modositasmentese" :disabled="isDeadlinePast||role=='szulo'">Módosítás</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
