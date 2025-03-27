@@ -1,6 +1,5 @@
 <script setup lang="ts">
 </script>
-
 <template>
   <main>
     <v-card style="border-radius: 10px; border: 1px; margin-bottom: 10px;">

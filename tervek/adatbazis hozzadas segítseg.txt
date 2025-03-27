@@ -19,6 +19,7 @@ INSERT INTO `teachers` ( `ID`,`name`,`phone`, `email`,`userID`) VALUES (null,'en
 INSERT INTO `guardians` (  `ID`,`name`,`phone`, `email`,`userID`) VALUES (null, 'jozsi','354563453245','laciapujozsi@gmail.com',5);
 insert into `guardianstudents` (`GuardianID`,`StudentID`) VALUES (1,1);
 insert into `guardianstudents` (`GuardianID`,`StudentID`) VALUES (1,2);
+insert into `guardianstudents` (`GuardianID`,`StudentID`) VALUES (1,3);
 INSERT INTO `admins` ( `ID`,`name`,`phone`, `email`,`userID`) VALUES (null, 'patrik','111111','dagipatrik@gmail.com',6);
 
 INSERT INTO `lessons` (`ID`, `groupID`, `teacherID`, `start_Minute`, `length`, `day`, `subjectName`) VALUES (NULL, 1, 2 , 480, 45, 'kedd','Matematika');
@@ -37,3 +38,8 @@ INSERT INTO `messages` (`ID`, `senderUserID`, `message`, `date`) VALUES (NULL, 3
 INSERT INTO `messagereceivers` (`messageID`, `UserID`) VALUES (1, 3);
 INSERT INTO `messagereceivers` (`messageID`, `UserID`) VALUES (2, 3);
 INSERT INTO `messagereceivers` (`messageID`, `UserID`) VALUES (3, 1);
+
+INSERT INTO `assignments` (`ID`, `teacherID`, `desc`, `deadline`, `uploadDate`) VALUES (NULL, '2', 'Adjatok kakát', '2025-03-28 05:30:00', '2025-03-26 15:47:41')
+
+INSERT INTO `completedassignments` (`ID`, `assignmentID`, `studentID`, `date`, `textAnswer`, `status`) VALUES (NULL, '1', '1', '2025-03-26 15:47:41', '', 'Nincs leadva')
+INSERT INTO `completedassignments` (`ID`, `assignmentID`, `studentID`, `date`, `textAnswer`, `status`) VALUES (NULL, '1', '2', '2025-03-26 15:47:41', '', 'Nincs leadva')

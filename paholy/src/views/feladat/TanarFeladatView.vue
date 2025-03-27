@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, watch, onMounted, onUnmounted } from 'vue';
+import { ref, computed, watch, onMounted, onUnmounted, onUpdated } from 'vue';
 import type { Assignment, OpenAssignment } from '@/api/hazik/hazik';
 import { 
   usegetGroups, 
@@ -241,11 +241,10 @@ const updateOrientation = () => {
 };
 onMounted(() => {
   window.matchMedia("(orientation: portrait)").addEventListener("change", updateOrientation);
-  if(document.cookie != ''){
-    const decoded = jwtDecode(getCookie("alap"))
-    push({name:decoded.userData.role+'orarend'})
-  }
 });
+onUpdated(()=>{
+  console.log(assignmentFiles)
+})
 onUnmounted(() => {
   window.matchMedia("(orientation: portrait)").removeEventListener("change", updateOrientation);
 });//itt ér véget

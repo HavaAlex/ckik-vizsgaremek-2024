@@ -39,6 +39,7 @@ const router = createRouter({
     {
       path: '/',
       name: 'applayout',
+      props:true,
       component: AppLayout,
       children: [
         {
@@ -54,6 +55,7 @@ const router = createRouter({
         {
           path: 'feladat',
           name: 'feladat',
+          props:true,
           component: HazikLayout, 
           children: [
               { 

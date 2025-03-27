@@ -61,23 +61,23 @@ function formatExcused(excused: boolean): string {
 }
 
 const groupedAbsences = computed(() => {
-  if (!data?.value?.data) return {};
+  if (!data?.value) return {};
 
-  return data.value.data.reduce((acc, absence) => {
+  return data.value.reduce((acc, absence) => {
     const dateKey = formatDate(absence.date);
     if (!acc[dateKey]) {
       acc[dateKey] = [];
     }
     acc[dateKey].push(absence);
     return acc;
-  }, {} as Record<string, typeof data.value.data>);
+  }, {} as Record<string, typeof data.value>);
 });
 </script>
 
 <template>
   <main>
     <v-expansion-panels>
-      <template v-if="groupedAbsences">
+      <template v-if="Object.keys(groupedAbsences).length > 0">
         <v-expansion-panel v-for="(absences, date) in groupedAbsences" :key="date">
           <v-expansion-panel-title>
             {{ date }} ({{ absences.length }} hiányzás)
@@ -103,6 +103,11 @@ const groupedAbsences = computed(() => {
             </v-table>
           </v-expansion-panel-text>
         </v-expansion-panel>
+      </template>
+      <template v-else-if="Object.keys(groupedAbsences).length == 0">
+        <v-card style=" padding: 1rem;">
+          Nincs még hiányzása!
+        </v-card>
       </template>
       <template v-else>
         <v-card style="display: flex; justify-content: center;">
