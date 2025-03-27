@@ -27,11 +27,13 @@ const options =
   apis: ["./api/routes/*.js", "./api/models/index.js"],
 };
 
+const swaggerDocument = require('./swagger_output.json')
+app.use('/documentation', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
+
 const openapiSpecification = swaggerJsdoc(options);
 
 app.use(cors(corsOptions));
 
-const paholyRoutes = require("./api/routes/paholyRoutes");
 
 const adminRoutes = require("./api/routes/adminRoutes")
 
@@ -58,8 +60,6 @@ const errorHandler = require("./api/middlewares/errorHandler");
 app.use(express.json());
 
 app.use(express.urlencoded({extended: true}));
-
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(openapiSpecification));
 
 app.use("/login",loginRoutes)
 
