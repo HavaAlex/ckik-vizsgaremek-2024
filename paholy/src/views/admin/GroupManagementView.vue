@@ -20,7 +20,6 @@ const groupDialog = ref(false)
 const editedGroup = ref<{ id: number, StudentOMIDs: number[] }>({ id: 0, StudentOMIDs: [] })
 
 const openGroupDialog = (group: any) => {
-  console.log("Opening group dialog with group:", group); // Debugging
 
   if (!group?.group?.ID) {
     console.error("Group ID is missing!", group);

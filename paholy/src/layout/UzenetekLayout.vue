@@ -49,7 +49,7 @@ const confirmDelete = async () => {
 const messageView = ref<'kapott' | 'elkuldott' | 'osszes'>('kapott');
 
 
-const sortKey = ref<string>(''); // e.g. 'sender', 'date', or 'message'
+const sortKey = ref<string>(''); // 'sender' v 'date', v 'message'
 const sortAsc = ref<boolean>(true);
 
 const sortListBy = (key: string) => {
@@ -84,7 +84,6 @@ const sortedKapott = computed(() => {
         : b.message.localeCompare(a.message)
     );
   }
-  console.log("PPPPPPPP", list)
   return list;
 });
 
@@ -577,7 +576,6 @@ onUnmounted(() => {
     height: 90vw !important;
   }
 }
-/* Landscape mode */
 @media (orientation: landscape) {
   .messageTable {
     height: 30vw !important;

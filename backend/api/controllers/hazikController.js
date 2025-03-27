@@ -34,7 +34,6 @@ exports.postAssignment = async (req, res, next) =>{
     }
 
     let cucc =  await hazikService.createAssignment(newHazi,Groups);
-
     res.status(200).json(cucc)
 }
 
@@ -42,8 +41,11 @@ exports.uploadAssignmentFiles = async (req, res, next) => {
     try {
       const uploadedFiles = req.files;
       const { assignmentId } = req.body; 
+      console.log("a: ", uploadedFiles)
+      console.log("b: ", assignmentId)
       let nagycucc= await hazikService.uploadAssignmentFiles(uploadedFiles, assignmentId)
       console.log("ÉNYEMÉNY: ", nagycucc)
+      console.log("ENYEMÉNY 2: ", nagycucc.uploadedFiles)
       res.status(200).json({ nagycucc });
     } catch (error) {
       console.error("File upload error:", error);
@@ -69,9 +71,6 @@ exports.getsentAssignments = async (req,res,next) =>{
 }
 
 exports.getReceivedAssignments = async (req,res,next) => {
-    console.log("FAAAAAAAAAAASZ")
-    console.log(req.decoded.role)
-    console.log(req.params.id)
       const hazik = await hazikService.getReceivedAssignments(req.decoded.role=="szulo"?req.params.id:req.decoded.ID)
       res.status(201).json(hazik);
 }
@@ -107,7 +106,6 @@ exports.getCompletedAssignmentFiles = async (req,res,next) =>{
 exports.deleteAssignment = async (req,res,next) =>{
   const assignmentId = req.params.assignmentId;
   const cucc = await hazikService.deleteAssignment(assignmentId)
-
   res.status(201).json(cucc)
 }
 exports.deleteCompletedAssignmentFile = async (req,res,next) =>{

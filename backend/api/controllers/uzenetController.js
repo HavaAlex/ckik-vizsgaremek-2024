@@ -3,23 +3,13 @@ const uzenetService = require("../services/uzenetService")
 exports.getUzenetek = async (req, res, next) =>
 {
     const uzenetek = await uzenetService.getUzenetek(req.decoded.ID)
+    console.log("UUU ", uzenetek)
     res.status(201).json(uzenetek);
 } 
 
 exports.getPotentialReceivers = async (req, res, next) => {
     
     const PotentialReceivers = await uzenetService.getPotentialReceivers(req.decoded.ID)
-    /*const PotentialReceiversFormed = [];
-    for (let index = 0; index < PotentialReceivers.singleUsers.length; index++) {
-        let newReciever = {
-            id : PotentialReceivers.singleUsers[index].ID,
-            name : PotentialReceivers.singleUsers[index].username,
-            role : PotentialReceivers.singleUsers[index].role
-        }
-        PotentialReceiversFormed.push(newReciever)
-    }
-
-    PotentialReceivers.singleUsers = PotentialReceiversFormed */
     res.status(201).json(PotentialReceivers);
 }
 
@@ -40,7 +30,6 @@ exports.createUzenet = async (req, res, next) =>
     try
     {
 
-        console.log("????????????", receiverGrouplist)
         const newUzenet =
         {
             ID: null,
@@ -72,7 +61,7 @@ exports.createUzenet = async (req, res, next) =>
         }
         let cucc = await uzenetService.createUzenet(newUzenet,cleanedreceiverlist);
 
-        
+        console.log(" e ", cucc)
         if(cucc){
             res.status(201).json(cucc)
         }

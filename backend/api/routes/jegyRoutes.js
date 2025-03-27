@@ -20,12 +20,12 @@ const user = require("../models/user");
 
 const tanarHandler = require("../middlewares/tanarHandler")
 
-// Make sure to protect all routes with your auth middleware
+
 router.use(userAuth.verifyToken);
 
 /**
  * @swagger
- * /:
+ * /jegy:
  *   get:
  *     tags:
  *       - Jegyek
