@@ -10,8 +10,10 @@ class OrarendService
 
 
 async getTeacherLessons(teacherID, weekStart) {
+
     const lessons = await orarendRepository.getTeacherLessons(teacherID);
-    const disruptions = await orarendRepository.getTeacherDisruptions(teacherID, weekStart);
+    const disruptions = await orarendRepository.getTeacherDisruptions(weekStart);
+
 
     // Build a map for quick lookup from disruptions based on day and start minute.
     const disruptionMap = new Map();

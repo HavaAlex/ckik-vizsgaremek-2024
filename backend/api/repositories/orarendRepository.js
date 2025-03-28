@@ -49,12 +49,11 @@ class OrarendRepository
         // Map groups to an array of IDs
         groups = groups.map(group => group.GroupID);
 
-    
         // Create a date for the end of the week (weekStart is assumed to be a Monday)
         const startOfWeek = new Date(weekStart);
         const endOfWeek = new Date(weekStart);
         endOfWeek.setDate(endOfWeek.getDate() + 6);
-    
+        
         // Query disruptions that are within the current week
         return await this.ClassDisruption.findAll({
             where: {
@@ -66,16 +65,18 @@ class OrarendRepository
         });
     }
 
-    async getTeacherDisruptions(weekStart)//Megkeresi az összes óráját az adott embernek
+    async getTeacherDisruptions(weekStart)
     {
-        // Create a date for the end of the week (weekStart is assumed to be a Monday)
-    
-        // Create a date for the end of the week (weekStart is assumed to be a Monday)
+
+        console.log(weekStart)
+
         const startOfWeek = new Date(weekStart);
         const endOfWeek = new Date(weekStart);
         endOfWeek.setDate(endOfWeek.getDate() + 6);
-    
-        // Query disruptions that are within the current week
+        
+        console.log(startOfWeek)
+        
+
         return await this.ClassDisruption.findAll({
             where: {
                 date: {

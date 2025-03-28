@@ -139,7 +139,7 @@ watch(
                         Elmarad
                       </div>
                       <div v-else-if="lesson.teacherID !== null" style="font-size: 10px; margin-top: 4px;">
-                        Teacher: {{ getTeacherName(lesson.teacherID) }}
+                        Tanár: {{ getTeacherName(lesson.teacherID) }}
                       </div>
                     </div>
                   </div>
