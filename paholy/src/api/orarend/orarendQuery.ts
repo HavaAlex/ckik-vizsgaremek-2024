@@ -49,10 +49,8 @@ const getTeachers = async (): Promise<Teacher> =>{
         headers: { Authorization: `Bearer ${getCookie("alap")}` }
     };
     const response = await axiosClient.get(`http://localhost:3000/orarend/getTeachers`,config)
-    console.log("anyád:")
-    console.log(response)
     console.log(response.data)
-    return response.data.value
+    return response.data
 }
 export const useGetTeachers = () => {
     const { setError } = useErrorHandler()

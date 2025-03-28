@@ -171,6 +171,8 @@ class adminService {
         const users = await userRepository.getAllUsers();
         return users
     }
+
+
     async modifyUser(user, currentUsername){
         if(currentUsername == user.roleSide.name){
             const modificationResult = await userRepository.modifyUser(user)
@@ -292,6 +294,11 @@ class adminService {
             await guardianStudentRepository.createGuardianStudent(newGuardianStudent)
         }
         return "sikeres módosítás"
+    }
+
+    async getAbsences(){
+        const absences = await userRepository.getAbsences();
+        return absences
     }
 
     

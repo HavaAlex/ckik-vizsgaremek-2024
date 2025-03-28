@@ -334,3 +334,27 @@ export const usegetGroupAsignments = () => {
     }
     return query
 }
+
+
+export const getAbsences = async () => {
+    const { getCookie } = useCookieHandler() 
+    const config = {
+        headers: { Authorization: `Bearer ${getCookie("alap")}` }
+    };
+    const response = await axiosClient.get(`http://localhost:3000/admin/getAbsences`, config)
+    return response.data
+}
+
+export const useGetAbsences = () => {
+    const { setError } = useErrorHandler()
+    const query = useQuery({
+        queryKey: [QUERY_KEYS.getGroupAsignments],
+        queryFn: getAbsences,
+    })
+
+    if (query.error.value) {
+        console.error("Lekérdezési hiba:", query.error)
+        setError(query.error.value)
+    }
+    return query
+}
