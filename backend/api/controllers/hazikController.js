@@ -57,7 +57,12 @@ exports.uploadCompletedAssignmentFiles = async (req, res, next) => {
   try {
     const uploadedFiles = req.files;
     const { completedAssignmentId } = req.body; 
+    console.log("a: ", uploadedFiles)
+    console.log("b: ", completedAssignmentId)
     let nagycucc= await hazikService.uploadCompletedAssignmentFiles(uploadedFiles, completedAssignmentId)
+    console.log("c ", nagycucc)
+    console.log("d ", nagycucc.uploadedFiles[0])
+    console.log("ddddd")
     res.status(200).json({ nagycucc });
   } catch (error) {
     console.error("File upload error:", error);

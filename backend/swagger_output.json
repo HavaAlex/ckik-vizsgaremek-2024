@@ -814,7 +814,7 @@
     },
     "/feladat/hazikGroups": {
       "get": {
-        "tags": ["Házifeladatok tanár"],
+        "tags": ["Házifeladatok"],
         "description": "Lekéri az összes csoportot amiknek a tanár típusú felhasználók házifeladatot tud feladni",
         "responses": {
           "201": {
@@ -864,10 +864,9 @@
         }
       }
     },
-
     "/feladat/haziktanar": {
       "get": {
-        "tags": ["Házifeladatok tanár"],
+        "tags": ["Házifeladatok"],
         "description": "Lekéri az összes feladatot amit az adott felhasználó küldött ki",
         "responses": {
           "201": {
@@ -1050,15 +1049,130 @@
         }
       }
     },
-
-
     "/feladat/hazikdiak": {
       "get": {
-        "tags":["Házifeladatok diák"],
+        "tags": ["Házifeladatok"],
         "description": "Lekéri az éppen bejelentkezve lévő diák típusú felhasználónak kiosztott feladatokat",
         "responses": {
           "201": {
-            "description": "Created"
+            "description": "Created",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "valasz": {
+                    "type": "object",
+                    "properties": {
+                      "CompletedAssignment": {
+                        "type": "object",
+                        "properties": {
+                          "dataValues": {
+                            "type": "object",
+                            "properties": {
+                              "ID": {
+                                "type": "integer",
+                                "example": 1
+                              },
+                              "assignmentID": {
+                                "type": "integer",
+                                "example": 1
+                              },
+                              "studentID": {
+                                "type": "integer",
+                                "example": 1
+                              },
+                              "date": {
+                                "type": "string",
+                                "format": "date-time",
+                                "example": "2025-03-25T09:15:34.000Z"
+                              },
+                              "textAnswer": {
+                                "type": "string",
+                                "example": "Kész van minden"
+                              },
+                              "status": {
+                                "type": "string",
+                                "example": "Leadva"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "feladat": {
+                    "type": "object",
+                    "properties": {
+                      "Assignment": {
+                        "type": "object",
+                        "properties": {
+                          "dataValues": {
+                            "type": "object",
+                            "properties": {
+                              "ID": {
+                                "type": "integer",
+                                "example": 1
+                              },
+                              "teacherID": {
+                                "type": "integer",
+                                "example": 1
+                              },
+                              "desc": {
+                                "type": "string",
+                                "example": "Oldd meg x és y feladatot"
+                              },
+                              "deadline": {
+                                "type": "string",
+                                "format": "date-time",
+                                "example": "2025-03-29T16:55:00.000Z"
+                              },
+                              "uploadDate": {
+                                "type": "string",
+                                "format": "date-time",
+                                "example": "2025-03-24T13:54:41.000Z"
+                              },
+                              "senderUserName": {
+                                "type": "string",
+                                "example": "lajos"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "example": [
+                {
+                  "valasz": {
+                    "CompletedAssignment": {
+                      "dataValues": {
+                        "ID": 1,
+                        "assignmentID": 1,
+                        "studentID": 1,
+                        "date": "2025-03-25T09:15:34.000Z",
+                        "textAnswer": "Kész van minden",
+                        "status": "Leadva"
+                      }
+                    }
+                  },
+                  "feladat": {
+                    "Assignment": {
+                      "dataValues": {
+                        "ID": 1,
+                        "teacherID": 1,
+                        "desc": "Oldd meg x és y feladatot",
+                        "deadline": "2025-03-29T16:55:00.000Z",
+                        "uploadDate": "2025-03-24T13:54:41.000Z",
+                        "senderUserName": "lajos"
+                      }
+                    }
+                  }
+                }
+              ]
+            }
           },
           "400": {
             "description": "Bad Request"
@@ -1072,7 +1186,7 @@
     "/feladat/newassignment": {
       "post": {
         "description": "Új feladat feltöltése",
-        "tags": ["Házifeladatok tanár"],
+        "tags": ["Házifeladatok"],
         "parameters": [
           {
             "name": "body",
@@ -1165,10 +1279,10 @@
         }
       }
     },
-
     "/feladat/hazikdiak/{id}": {
       "get": {
-        "description": "",
+        "tags": ["Házifeladatok"],
+        "description": "Lekéri a házifeladatokat egy addot diák ID-je alapján. Ez szölőő oldalon van használva",
         "parameters": [
           {
             "name": "id",
@@ -1179,7 +1293,124 @@
         ],
         "responses": {
           "201": {
-            "description": "Sikeres lekérés"
+            "description": "Created",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "valasz": {
+                    "type": "object",
+                    "properties": {
+                      "CompletedAssignment": {
+                        "type": "object",
+                        "properties": {
+                          "dataValues": {
+                            "type": "object",
+                            "properties": {
+                              "ID": {
+                                "type": "integer",
+                                "example": 1
+                              },
+                              "assignmentID": {
+                                "type": "integer",
+                                "example": 1
+                              },
+                              "studentID": {
+                                "type": "integer",
+                                "example": 1
+                              },
+                              "date": {
+                                "type": "string",
+                                "format": "date-time",
+                                "example": "2025-03-25T09:15:34.000Z"
+                              },
+                              "textAnswer": {
+                                "type": "string",
+                                "example": "Kész van minden"
+                              },
+                              "status": {
+                                "type": "string",
+                                "example": "Leadva"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "feladat": {
+                    "type": "object",
+                    "properties": {
+                      "Assignment": {
+                        "type": "object",
+                        "properties": {
+                          "dataValues": {
+                            "type": "object",
+                            "properties": {
+                              "ID": {
+                                "type": "integer",
+                                "example": 1
+                              },
+                              "teacherID": {
+                                "type": "integer",
+                                "example": 1
+                              },
+                              "desc": {
+                                "type": "string",
+                                "example": "Oldd meg x és y feladatot"
+                              },
+                              "deadline": {
+                                "type": "string",
+                                "format": "date-time",
+                                "example": "2025-03-29T16:55:00.000Z"
+                              },
+                              "uploadDate": {
+                                "type": "string",
+                                "format": "date-time",
+                                "example": "2025-03-24T13:54:41.000Z"
+                              },
+                              "senderUserName": {
+                                "type": "string",
+                                "example": "lajos"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "example": [
+                {
+                  "valasz": {
+                    "CompletedAssignment": {
+                      "dataValues": {
+                        "ID": 1,
+                        "assignmentID": 1,
+                        "studentID": 1,
+                        "date": "2025-03-25T09:15:34.000Z",
+                        "textAnswer": "Kész van minden",
+                        "status": "Leadva"
+                      }
+                    }
+                  },
+                  "feladat": {
+                    "Assignment": {
+                      "dataValues": {
+                        "ID": 1,
+                        "teacherID": 1,
+                        "desc": "Oldd meg x és y feladatot",
+                        "deadline": "2025-03-29T16:55:00.000Z",
+                        "uploadDate": "2025-03-24T13:54:41.000Z",
+                        "senderUserName": "lajos"
+                      }
+                    }
+                  }
+                }
+              ]
+            }
           },
           "400": {
             "description": "Bad Request"
@@ -1192,6 +1423,7 @@
     },
     "/feladat/modifycompletedassignment": {
       "patch": {
+        "tags": ["Házifeladatok"],
         "description": "",
         "parameters": [
           {
@@ -1199,24 +1431,45 @@
             "in": "body",
             "schema": {
               "type": "object",
+              "required": [
+                "ID",
+                "assignmentID",
+                "date",
+                "status",
+                "studentID",
+                "textAnswer"
+              ],
               "properties": {
                 "ID": {
-                  "example": "any"
+                  "type": "integer",
+                  "description": "Annak a válasznak az ID-ja amit éppen módosítunk",
+                  "example": 1
                 },
                 "assignmentID": {
-                  "example": "any"
+                  "type": "integer",
+                  "description": "A feladat ID-ja. A válasz amit módosítunk ehhez a feladathoz tartozik.",
+                  "example": 1
                 },
                 "date": {
-                  "example": "any"
+                  "type": "string",
+                  "format": "date-time",
+                  "description": "A módosítás pillanata",
+                  "example": "2025-03-27T13:48:05.317Z"
                 },
                 "status": {
-                  "example": "any"
+                  "type": "string",
+                  "description": "A válasz jelenlegi státusza",
+                  "example": "Nincs leadva"
                 },
                 "studentID": {
-                  "example": "any"
+                  "type": "integer",
+                  "description": "A diák ID-ja aki választ ír",
+                  "example": 1
                 },
                 "textAnswer": {
-                  "example": "any"
+                  "type": "string",
+                  "description": "A szöveg ami feltöltődik",
+                  "example": "A megoldás 9!"
                 }
               }
             }
@@ -1224,7 +1477,54 @@
         ],
         "responses": {
           "201": {
-            "description": "Created"
+            "description": "Created",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "CompletedAssignment": {
+                  "type": "object",
+                  "properties": {
+                    "dataValues": {
+                      "type": "object",
+                      "properties": {
+                        "ID": {
+                          "type": "integer",
+                          "example": 1
+                        },
+                        "studentID": {
+                          "type": "integer",
+                          "example": 1
+                        },
+                        "date": {
+                          "type": "string",
+                          "format": "date-time",
+                          "example": "2025-03-27T13:48:05.317Z"
+                        },
+                        "textAnswer": {
+                          "type": "string",
+                          "example": "A megoldás 9!"
+                        },
+                        "status": {
+                          "type": "string",
+                          "example": "Leadva"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "example": {
+                "CompletedAssignment": {
+                  "dataValues": {
+                    "ID": 1,
+                    "studentID": 1,
+                    "date": "2025-03-27T13:48:05.317Z",
+                    "textAnswer": "A megoldás 9!",
+                    "status": "Leadva"
+                  }
+                }
+              }
+            }
           },
           "400": {
             "description": "Bad Request"
@@ -1235,48 +1535,138 @@
         }
       }
     },
+
     "/feladat/getAssignmentFiles/": {
       "get": {
-        "description": "",
+        "description": "Lekéri egy adott feladathoz tartozó fájlokat",
+        "tags": ["Házifeladatok"],
         "parameters": [
           {
             "name": "assignmentid",
             "in": "header",
-            "type": "string"
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Az assignment ID-ja, amelyhez a fájlok tartoznak",
+            "example": 4
           }
         ],
         "responses": {
           "201": {
-            "description": "Created"
+            "description": "A fájlok sikeresen lekérve",
+
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "AssignmentFiles":{
+                    "type": "object",
+                    "properties":{
+                      "dataValues":{
+                        "type":"object",
+                        "properties":{
+                          "ID": { "type": "integer", "example": 1 },
+                          "assignmentID": { "type": "integer", "example": 4 },
+                          "buffer":{"example":" <Buffer 31>"},
+                          "mimetype": { "type": "string", "example": "text/plain" },
+                          "filename": { "type": "string", "example": "1.txt" }
+                        }
+                      }
+                    }
+                  }
+
+                }
+              }
+            }
           },
           "400": {
-            "description": "Bad Request"
+            "description": "Bad Request - Hiányzó vagy érvénytelen assignmentid"
           },
           "403": {
-            "description": "Forbidden"
+            "description": "Forbidden - Lejárt a cookie"
           }
         }
       }
     },
     "/feladat/getCompletedAssignmentFiles/": {
       "post": {
-        "description": "",
+        "description": "Leszedi a fájlokat amik a kiválasztott feladathoz tartoznak.",
+        "tags": ["Házifeladatok"],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "assignmentIds",
+            "description": "A feladathoz tartozó ID-k listája",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "integer"
+              },
+              "example": [11, 12]
+            }
+          }
+        ],
         "responses": {
           "201": {
-            "description": "Created"
+            "description": "Sikeres lekérés",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "dataValues": {
+                    "type": "object",
+                    "properties": {
+                      "ID": {
+                        "type": "integer",
+                        "description": "A fájl ID-ja"
+                      },
+                      "assignmentID": {
+                        "type": "integer",
+                        "description": "A completedAssignment ID-ja"
+                      },
+                      "buffer": {
+                        "type": "string",
+                        "format": "byte",
+                        "description": "A fájl tartalma"
+                      },
+                      "mimetype": {
+                        "type": "string",
+                        "description": "A fájl típusa"
+                      },
+                      "filename": {
+                        "type": "string",
+                        "description": "A fájl neve"
+                      }
+                    },
+                    "example": {
+                      "ID": 6,
+                      "assignmentID": 11,
+                      "buffer": "Base64 encoded string of file content",
+                      "mimetype": "text/plain",
+                      "filename": "1.txt"
+                    }
+                  }
+                }
+              }
+            }
           },
           "400": {
-            "description": "Bad Request"
+            "description": "Bad Request."
           },
           "403": {
-            "description": "Forbidden"
+            "description": "Lejárt a cookie"
           }
         }
       }
     },
     "/feladat/deleteAssignment/{assignmentId}": {
       "delete": {
-        "description": "",
+        "description": "Tanár és admin módban érhatő el. ID alapján kitöröl egy feladatot és minden vele kapcsolatos dolgok: fájlokat, válaszokat, válaszfájlokat",
+        "tags": ["Házifeladatok"],
         "parameters": [
           {
             "name": "assignmentId",
@@ -1300,7 +1690,8 @@
     },
     "/feladat/deleteAnswerFile/{fileId}": {
       "delete": {
-        "description": "",
+        "description": "Diák módban érhető el. Ezzel lehet útólagosan kitörölni a válaszként letöltött fájlokat",
+        "tags": ["Házifeladatok"],
         "parameters": [
           {
             "name": "fileId",
@@ -1311,7 +1702,7 @@
         ],
         "responses": {
           "201": {
-            "description": "Created"
+            "description": "Sikeres törlés"
           },
           "400": {
             "description": "Bad Request"
@@ -1324,24 +1715,118 @@
     },
     "/feladat/uploadassignmentfiles": {
       "post": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "assignmentId": {
-                  "example": "any"
+        "description": "Fájl feltöltése, egy adott feladathoz. (csak azután fut le miútán a feladat létre lett hozva",
+        "tags": ["Házifeladatok"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "assignmentId",
+                  "files"
+                ],
+                "properties": {
+                  "assignmentId": {
+                    "type": "string",
+                    "description": "Az ID-ja annak az assignmentnek amihez tartozik/tartozni fog a fájl",
+                    "example": "1"
+                  },
+                  "files": {
+                    "type": "array",
+                    "description": "A fájlok adataik szerint szétbontva",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "fieldname": {
+                          "type": "string",
+                          "example": "files"
+                        },
+                        "originalname": {
+                          "type": "string",
+                          "example": "1.txt"
+                        },
+                        "encoding": {
+                          "type": "string",
+                          "example": "7bit"
+                        },
+                        "mimetype": {
+                          "type": "string",
+                          "example": "text/plain"
+                        },
+                        "buffer": {
+                          "type": "string",
+                          "format": "binary",
+                          "example": "<Buffer 31>"
+                        },
+                        "size": {
+                          "type": "integer",
+                          "example": 1
+                        }
+                      }
+                    }
+                  }
                 }
               }
             }
           }
-        ],
+        },
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Files uploaded successfully"
+                    },
+                    "uploadedFiles": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "AssignmentFiles": {
+                            "type": "object",
+                            "properties": {
+                              "dataValues": {
+                                "type": "object",
+                                "properties": {
+                                  "ID": {
+                                    "type": "integer",
+                                    "example": 1
+                                  },
+                                  "assignmentID": {
+                                    "type": "integer",
+                                    "example": 1
+                                  },
+                                  "buffer": {
+                                    "type": "string",
+                                    "format": "binary",
+                                    "example": "<Buffer 31>"
+                                  },
+                                  "mimetype": {
+                                    "type": "string",
+                                    "example": "text/plain"
+                                  },
+                                  "filename": {
+                                    "type": "string",
+                                    "example": "1.txt"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
           },
           "400": {
             "description": "Bad Request"
@@ -1355,39 +1840,74 @@
         }
       }
     },
+
     "/feladat/uploadcompletedassignmentfiles": {
       "post": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "completedAssignmentId": {
-                  "example": "any"
+        "description": "Fájlok feltöltése a válaszhoz",
+        "tags": ["Házifeladatok"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "required": ["completedAssignmentId", "files"],
+                "properties": {
+                  "completedAssignmentId": {
+                    "type": "string",
+                    "description": "A befejezett házifeladat ID-ja",
+                    "example": "6"
+                  },
+                  "files": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "format": "binary"
+                    },
+                    "description": "A feltöltött fájlok"
+                  }
                 }
               }
             }
           }
-        ],
+        },
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Files uploaded successfully"
+                    },
+                    "uploadedFiles": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "ID": { "type": "integer", "example": 3 },
+                          "assignmentID": { "type": "string", "example": "6" },
+                          "mimetype": { "type": "string", "example": "text/plain" },
+                          "filename": { "type": "string", "example": "1.txt" }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
           },
-          "400": {
-            "description": "Bad Request"
-          },
-          "403": {
-            "description": "Forbidden"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
+          "400": { "description": "Bad Request" },
+          "403": { "description": "Forbidden" },
+          "500": { "description": "Internal Server Error" }
         }
       }
     },
+
+
     "/jegy/": {
       "get": {
         "description": "",

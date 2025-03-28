@@ -11,7 +11,7 @@ const { mutate: getAssignmentFiles } = usegetAssignmentFiles();
 const { mutate: uploadCompletedAssignmentFiles } = useuploadCompletedAssignmentFiles();
 const { mutate: getCompletedAssignmentFiles } = usegetCompletedAssignmentFiles();
 const { mutate: deleteAnswerFile } = usedeleteAnswerFile();
-
+console.log("űűűűű ", assignmentStudentList)
 const cookieHandler = useCookieHandler()
 const role = ref<string>()
 console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!")
@@ -314,6 +314,7 @@ onUnmounted(() => {
               </thead>
               <tbody>
                 <tr v-for="feladat in assignmentStudentList" :key="feladat.feladat.ID">
+                  
                   <td>{{ feladat.feladat.senderUserName }}</td>
                   <td>{{ formatDate(feladat.feladat.deadline) }}</td>
                   <td>{{ formatDate(feladat.feladat.uploadDate) }}</td>
