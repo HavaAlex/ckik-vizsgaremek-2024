@@ -88,7 +88,7 @@ class OrarendRepository
 
     async getTeachers(){
         return await this.Teacher.findAll({ 
-            attributes: ['id','name','phone','email','userId']
+            attributes: ['ID','name','phone','email','userId']
         });
     }
 

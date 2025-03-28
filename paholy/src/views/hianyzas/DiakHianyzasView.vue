@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useGetHianyzasok, useGetLessons, useGetTeachers } from '@/api/hianyzasok/hianyzasokQuery';
 import type { Teacher } from '@/api/hianyzasok/hianyzasok'; 
-import { ref, watch } from 'vue';
+import { ref, watch,onMounted,onUnmounted } from 'vue';
 import { computed } from 'vue';
 
 const { data } = useGetHianyzasok();
@@ -54,6 +54,17 @@ function getSubjectName(lessonID: number): string {
   return lesson ? lesson.subjectName : "N/A";
 }
 
+const isPortrait = ref(window.matchMedia("(orientation: portrait)").matches);
+const updateOrientation = () => {
+  isPortrait.value = window.matchMedia("(orientation: portrait)").matches;
+};
+onMounted(() => {
+  window.matchMedia("(orientation: portrait)").addEventListener("change", updateOrientation);
+});
+onUnmounted(() => {
+  window.matchMedia("(orientation: portrait)").removeEventListener("change", updateOrientation);
+});//itt ér véget
+
 
 
 function formatExcused(excused: boolean): string {
@@ -72,6 +83,7 @@ const groupedAbsences = computed(() => {
     return acc;
   }, {} as Record<string, typeof data.value>);
 });
+
 </script>
 
 <template>
@@ -83,7 +95,7 @@ const groupedAbsences = computed(() => {
             {{ date }} ({{ absences.length }} hiányzás)
           </v-expansion-panel-title>
           <v-expansion-panel-text>
-            <v-table>
+            <v-table v-if="!isPortrait">
               <thead>
                 <tr>
                   <th class="text-center">Tantárgy</th>
@@ -101,6 +113,20 @@ const groupedAbsences = computed(() => {
                 </tr>
               </tbody>
             </v-table>
+            <v-container v-else>
+              <v-row v-for="absence in absences" :key="absence.ID" class="mb-4">
+                <v-col>
+                  <v-card>
+                    <v-card-text>
+                      <div><strong>Tantárgy:</strong> {{ getSubjectName(absence.lessonID) }}</div>
+                      <div><strong>Időtartam:</strong> {{ formatTimeRange(absence.lessonID) }}</div>
+                      <div><strong>Tanár:</strong> {{ getTeacherName(absence.teacherID) }}</div>
+                      <div><strong>Igazolás státusza:</strong> {{ formatExcused(absence.excused) }}</div>
+                    </v-card-text>
+                  </v-card>
+                </v-col>
+              </v-row>
+            </v-container>
           </v-expansion-panel-text>
         </v-expansion-panel>
       </template>

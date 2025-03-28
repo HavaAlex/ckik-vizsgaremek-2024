@@ -46,7 +46,7 @@ watch(
 );
 
 function getTeacherName(teacherId: number): string {
-  const teacher = teachers.value.find(t => t.id === teacherId);
+  const teacher = teachers.value.find(t => t.ID === teacherId);
   return teacher ? teacher.name : teacherId.toString();
 }
 

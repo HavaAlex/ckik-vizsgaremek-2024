@@ -52,7 +52,7 @@ const getTeachers = async (): Promise<Teacher> =>{
     console.log("anyád:")
     console.log(response)
     console.log(response.data)
-    return response.data
+    return response.data.value
 }
 export const useGetTeachers = () => {
     const { setError } = useErrorHandler()
