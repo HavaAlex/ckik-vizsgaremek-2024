@@ -13,7 +13,8 @@
   "paths": {
     "/login/": {
       "post": {
-        "description": "",
+        "description": "Bejelentkezés útja",
+        "tags":["Authorization"],
         "parameters": [
           {
             "name": "body",
@@ -22,10 +23,12 @@
               "type": "object",
               "properties": {
                 "username": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "papp.lajos42"
                 },
                 "password": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "Jelszó123"
                 }
               }
             }
@@ -49,7 +52,8 @@
     },
     "/login/changePassword": {
       "post": {
-        "description": "",
+        "description": "Jelszó megváltoztatása az előző jelszó használatával",
+        "tags":["Authorization"],
         "parameters": [
           {
             "name": "body",
@@ -58,16 +62,20 @@
               "type": "object",
               "properties": {
                 "currentpassword": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "Jelszó123"
                 },
                 "currentpasswordagain": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "Jelszó123"
                 },
                 "username": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "papp.lajos42"
                 },
                 "newpassword": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "Újjelszó123"
                 }
               }
             }
@@ -85,10 +93,332 @@
     },
     "/uzenet/": {
       "get": {
-        "description": "",
+        "description": "Üzenetek lekérése user ID alapján",
+        "tags": ["Üzenetek"],
         "responses": {
           "201": {
-            "description": "Created"
+            "description": "Lekérve",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "elkuldott": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "Message": {
+                        "type": "object",
+                        "properties": {
+                          "dataValues": {
+                            "type": "object",
+                            "properties": {
+                              "ID": {
+                                "type": "integer",
+                                "example": 1
+                              },
+                              "senderUserID": {
+                                "type": "integer",
+                                "example": 3
+                              },
+                              "message": {
+                                "type": "string",
+                                "example": "Példa üzenet"
+                              },
+                              "date": {
+                                "type": "string",
+                                "format": "date-time",
+                                "example": "2025-03-24T16:54:41.000Z"
+                              },
+                              "receivers": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "User": {
+                                      "type": "object",
+                                      "properties": {
+                                        "dataValues": {
+                                          "type": "object",
+                                          "properties": {
+                                            "ID": {
+                                              "type": "integer",
+                                              "example": 1
+                                            },
+                                            "username": {
+                                              "type": "string",
+                                              "example": "laci"
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              },
+                              "sender": {
+                                "type": "object",
+                                "properties": {
+                                  "User": {
+                                    "type": "object",
+                                    "properties": {
+                                      "dataValues": {
+                                        "type": "object",
+                                        "properties": {
+                                          "ID": {
+                                            "type": "integer",
+                                            "example": 3
+                                          },
+                                          "username": {
+                                            "type": "string",
+                                            "example": "lajos"
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "example": [
+                    {
+                      "Message": {
+                        "dataValues": {
+                          "ID": 1,
+                          "senderUserID": 3,
+                          "message": "Példa üzenet",
+                          "date": "2025-03-24T16:54:41.000Z",
+                          "receivers": [
+                            {
+                              "User": {
+                                "dataValues": {
+                                  "ID": 1,
+                                  "username": "laci"
+                                }
+                              }
+                            },
+                            {
+                              "User": {
+                                "dataValues": {
+                                  "ID": 2,
+                                  "username": "rebeka"
+                                }
+                              }
+                            }
+                          ],
+                          "sender": {
+                            "User": {
+                              "dataValues": {
+                                "ID": 3,
+                                "username": "lajos"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "Message": {
+                        "dataValues": {
+                          "ID": 1,
+                          "senderUserID": 3,
+                          "message": "Példa üzenet2",
+                          "date": "2025-03-26T16:54:41.000Z",
+                          "receivers": [
+                            {
+                              "User": {
+                                "dataValues": {
+                                  "ID": 1,
+                                  "username": "laci"
+                                }
+                              }
+                            },
+                            {
+                              "User": {
+                                "dataValues": {
+                                  "ID": 2,
+                                  "username": "rebeka"
+                                }
+                              }
+                            }
+                          ],
+                          "sender": {
+                            "User": {
+                              "dataValues": {
+                                "ID": 3,
+                                "username": "lajos"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                },
+                "kapott": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "Message": {
+                        "type": "object",
+                        "properties": {
+                          "dataValues": {
+                            "type": "object",
+                            "properties": {
+                              "ID": {
+                                "type": "integer",
+                                "example": 1
+                              },
+                              "senderUserID": {
+                                "type": "integer",
+                                "example": 1
+                              },
+                              "message": {
+                                "type": "string",
+                                "example": "Példa üzenet 3"
+                              },
+                              "date": {
+                                "type": "string",
+                                "format": "date-time",
+                                "example": "2025-03-24T16:54:41.000Z"
+                              },
+                              "receivers": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "User": {
+                                      "type": "object",
+                                      "properties": {
+                                        "dataValues": {
+                                          "type": "object",
+                                          "properties": {
+                                            "ID": {
+                                              "type": "integer",
+                                              "example": 3
+                                            },
+                                            "username": {
+                                              "type": "string",
+                                              "example": "lajos"
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              },
+                              "sender": {
+                                "type": "object",
+                                "properties": {
+                                  "User": {
+                                    "type": "object",
+                                    "properties": {
+                                      "dataValues": {
+                                        "type": "object",
+                                        "properties": {
+                                          "ID": {
+                                            "type": "integer",
+                                            "example": 1
+                                          },
+                                          "username": {
+                                            "type": "string",
+                                            "example": "laci"
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "example": [
+                    {
+                      "Message": {
+                        "dataValues": {
+                          "ID": 1,
+                          "senderUserID": 1,
+                          "message": "Példa üzenet 3",
+                          "date": "2025-03-24T16:54:41.000Z",
+                          "receivers": [
+                            {
+                              "User": {
+                                "dataValues": {
+                                  "ID": 3,
+                                  "username": "lajos"
+                                }
+                              }
+                            },
+                            {
+                              "User": {
+                                "dataValues": {
+                                  "ID": 2,
+                                  "username": "rebeka"
+                                }
+                              }
+                            }
+                          ],
+                          "sender": {
+                            "User": {
+                              "dataValues": {
+                                "ID": 1,
+                                "username": "laci"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "Message": {
+                        "dataValues": {
+                          "ID": 1,
+                          "senderUserID": 1,
+                          "message": "Példa üzenet 4",
+                          "date": "2025-03-26T16:54:41.000Z",
+                          "receivers": [
+                            {
+                              "User": {
+                                "dataValues": {
+                                  "ID": 3,
+                                  "username": "lajos"
+                                }
+                              }
+                            },
+                            {
+                              "User": {
+                                "dataValues": {
+                                  "ID": 2,
+                                  "username": "rebeka"
+                                }
+                              }
+                            }
+                          ],
+                          "sender": {
+                            "User": {
+                              "dataValues": {
+                                "ID": 1,
+                                "username": "laci"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
           },
           "400": {
             "description": "Bad Request"
@@ -99,7 +429,8 @@
         }
       },
       "post": {
-        "description": "",
+        "description": "Új üzenet küldése",
+        "tags": ["Üzenetek"],
         "parameters": [
           {
             "name": "body",
@@ -108,16 +439,41 @@
               "type": "object",
               "properties": {
                 "message": {
-                  "example": "any"
+                  "type": "string",
+                  "description": "Az üzenet szövege",
+                  "example": "Mi a hézag hapsikám?"
                 },
                 "date": {
-                  "example": "any"
+                  "type": "string",
+                  "format": "date-time",
+                  "example": "2025-03-24T16:54:41.000Z"
                 },
                 "receiverlist": {
-                  "example": "any"
+                  "type": "array",
+                  "description": "egyes felhasználók akik nem tartoznak egy csoportokhoz",
+                  "example": [
+                    {
+                      "ID": 4,
+                      "username": "jozsi",
+                      "role": "szulo"
+                    },
+                    {
+                      "ID": 5,
+                      "username": "patrik",
+                      "role": "admin"
+                    }
+                  ]
                 },
                 "receiverGrouplist": {
-                  "example": "any"
+                  "type": "array",
+                  "description": "egy tömbb amiben a csoportok vannak benne amiknek az üzentet küldik el",
+                  "example": [
+                    {
+                      "ID": 1,
+                      "name": "1.b",
+                      "studentList": [1, 2]
+                    }
+                  ]
                 }
               }
             }
@@ -125,7 +481,16 @@
         ],
         "responses": {
           "201": {
-            "description": "Created"
+            "description": "Created",
+            "schema": {
+              "type": "object",
+              "example": {
+                "ID": 10,
+                "senderUserID": 1,
+                "message": "Mi a hézag hapsikám?",
+                "date": "2025-03-24T16:54:41.000Z"
+              }
+            }
           },
           "400": {
             "description": "Bad Request"
@@ -139,12 +504,128 @@
         }
       }
     },
+
     "/uzenet/uzenetekreceivers": {
       "get": {
-        "description": "",
+        "description": "Egy tömbb amiben szerepel minden felhasználó, illetve csoport a benne lévő diákok ID-jaival együtt",
+        "tags": ["Üzenetek"],
         "responses": {
           "201": {
-            "description": "Created"
+            "description": "Created",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "singleUsers": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "User": {
+                        "type": "object",
+                        "properties": {
+                          "dataValues": {
+                            "type": "object",
+                            "properties": {
+                              "ID": {
+                                "type": "integer",
+                                "example": 1
+                              },
+                              "username": {
+                                "type": "string",
+                                "example": "laci"
+                              },
+                              "role": {
+                                "type": "string",
+                                "example": "diak"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "example": [
+                    {
+                      "User": {
+                        "dataValues": {
+                          "ID": 1,
+                          "username": "laci",
+                          "role": "diak"
+                        }
+                      }
+                    },
+                    {
+                      "User": {
+                        "dataValues": {
+                          "ID": 2,
+                          "username": "rebeka",
+                          "role": "diak"
+                        }
+                      }
+                    }
+                  ]
+                },
+                "groups": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "ID": {
+                        "type": "integer",
+                        "example": 1
+                      },
+                      "name": {
+                        "type": "string",
+                        "example": "1.b"
+                      },
+                      "studentList": {
+                        "type": "array",
+                        "items": {
+                          "type": "integer"
+                        },
+                        "example": [1, 2]
+                      }
+                    }
+                  },
+                  "example": [
+                    {
+                      "ID": 1,
+                      "name": "1.b",
+                      "studentList": [1, 2]
+                    }
+                  ]
+                }
+              },
+              "example": {
+                "singleUsers": [
+                  {
+                    "User": {
+                      "dataValues": {
+                        "ID": 1,
+                        "username": "laci",
+                        "role": "diak"
+                      }
+                    }
+                  },
+                  {
+                    "User": {
+                      "dataValues": {
+                        "ID": 2,
+                        "username": "rebeka",
+                        "role": "diak"
+                      }
+                    }
+                  }
+                ],
+                "groups": [
+                  {
+                    "ID": 1,
+                    "name": "1.b",
+                    "studentList": [1, 2]
+                  }
+                ]
+              }
+            }
           },
           "400": {
             "description": "Bad Request"
@@ -155,6 +636,7 @@
         }
       }
     },
+
     "/orarend/": {
       "get": {
         "description": "",
@@ -332,10 +814,46 @@
     },
     "/feladat/hazikGroups": {
       "get": {
-        "description": "",
+        "tags": ["Házifeladatok tanár"],
+        "description": "Lekéri az összes csoportot amiknek a tanár típusú felhasználók házifeladatot tud feladni",
         "responses": {
           "201": {
-            "description": "Created"
+            "description": "Sikeres lekérés",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "ID": {
+                    "type": "integer",
+                    "example": 1
+                  },
+                  "name": {
+                    "type": "string",
+                    "example": "1.b"
+                  },
+                  "studentList": {
+                    "type": "array",
+                    "items": {
+                      "type": "integer"
+                    },
+                    "example": [1, 2]
+                  }
+                }
+              },
+              "example": [
+                {
+                  "ID": 1,
+                  "name": "1.b",
+                  "studentList": [1, 2]
+                },
+                {
+                  "ID": 2,
+                  "name": "1.a",
+                  "studentList": [3, 4]
+                }
+              ]
+            }
           },
           "400": {
             "description": "Bad Request"
@@ -346,12 +864,182 @@
         }
       }
     },
+
     "/feladat/haziktanar": {
       "get": {
-        "description": "",
+        "tags": ["Házifeladatok tanár"],
+        "description": "Lekéri az összes feladatot amit az adott felhasználó küldött ki",
         "responses": {
           "201": {
-            "description": "Created"
+            "description": "Created",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "feladat": {
+                    "type": "object",
+                    "properties": {
+                      "Assignment": {
+                        "type": "object",
+                        "properties": {
+                          "dataValues": {
+                            "type": "object",
+                            "properties": {
+                              "ID": {
+                                "type": "integer",
+                                "example": 1
+                              },
+                              "senderUserID": {
+                                "type": "integer",
+                                "example": 3
+                              },
+                              "desc": {
+                                "type": "string",
+                                "example": "Oldd meg x és y feladatot"
+                              },
+                              "deadline": {
+                                "type": "string",
+                                "format": "date-time",
+                                "example": "2025-03-29T16:55:00.000Z"
+                              },
+                              "uploadDate": {
+                                "type": "string",
+                                "format": "date-time",
+                                "example": "2025-03-24T13:54:41.000Z"
+                              },
+                              "senderUserName": {
+                                "type": "string",
+                                "example": "lajos"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "anwsers": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "CompletedAssignment": {
+                          "type": "object",
+                          "properties": {
+                            "dataValues": {
+                              "type": "object",
+                              "properties": {
+                                "ID": {
+                                  "type": "integer",
+                                  "example": 1
+                                },
+                                "assignmentID": {
+                                  "type": "integer",
+                                  "example": 1
+                                },
+                                "studentID": {
+                                  "type": "integer",
+                                  "example": 1
+                                },
+                                "date": {
+                                  "type": "string",
+                                  "format": "date-time",
+                                  "example": "2025-03-25T09:15:34.000Z"
+                                },
+                                "textAnswer": {
+                                  "type": "string",
+                                  "example": "Kész van minden"
+                                },
+                                "status": {
+                                  "type": "string",
+                                  "example": "Leadva"
+                                },
+                                "senderUserName": {
+                                  "type": "string",
+                                  "example": "laci"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "example": [
+                      {
+                        "CompletedAssignment": {
+                          "dataValues": {
+                            "ID": 1,
+                            "assignmentID": 1,
+                            "studentID": 1,
+                            "date": "2025-03-25T09:15:34.000Z",
+                            "textAnswer": "Kész van minden",
+                            "status": "Leadva",
+                            "senderUserName": "laci"
+                          }
+                        }
+                      },
+                      {
+                        "CompletedAssignment": {
+                          "dataValues": {
+                            "ID": 2,
+                            "assignmentID": 1,
+                            "studentID": 2,
+                            "date": "2025-03-24T13:54:41.000Z",
+                            "textAnswer": "",
+                            "status": "Nincs leadva",
+                            "senderUserName": "rebeka"
+                          }
+                        }
+                      }
+                    ]
+                  }
+                }
+              },
+              "example": [
+                {
+                  "feladat": {
+                    "Assignment": {
+                      "dataValues": {
+                        "ID": 1,
+                        "senderUserID": 3,
+                        "desc": "Oldd meg x és y feladatot",
+                        "deadline": "2025-03-29T16:55:00.000Z",
+                        "uploadDate": "2025-03-24T13:54:41.000Z",
+                        "senderUserName": "lajos"
+                      }
+                    }
+                  },
+                  "anwsers": [
+                    {
+                      "CompletedAssignment": {
+                        "dataValues": {
+                          "ID": 1,
+                          "assignmentID": 1,
+                          "studentID": 1,
+                          "date": "2025-03-25T09:15:34.000Z",
+                          "textAnswer": "Kész van minden",
+                          "status": "Leadva",
+                          "senderUserName": "laci"
+                        }
+                      }
+                    },
+                    {
+                      "CompletedAssignment": {
+                        "dataValues": {
+                          "ID": 2,
+                          "assignmentID": 1,
+                          "studentID": 2,
+                          "date": "2025-03-24T13:54:41.000Z",
+                          "textAnswer": "",
+                          "status": "Nincs leadva",
+                          "senderUserName": "rebeka"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
           },
           "400": {
             "description": "Bad Request"
@@ -362,9 +1050,12 @@
         }
       }
     },
+
+
     "/feladat/hazikdiak": {
       "get": {
-        "description": "",
+        "tags":["Házifeladatok diák"],
+        "description": "Lekéri az éppen bejelentkezve lévő diák típusú felhasználónak kiosztott feladatokat",
         "responses": {
           "201": {
             "description": "Created"
@@ -380,7 +1071,8 @@
     },
     "/feladat/newassignment": {
       "post": {
-        "description": "",
+        "description": "Új feladat feltöltése",
+        "tags": ["Házifeladatok tanár"],
         "parameters": [
           {
             "name": "body",
@@ -389,24 +1081,77 @@
               "type": "object",
               "properties": {
                 "Groups": {
-                  "example": "any"
+                  "type": "array",
+                  "description": "Az osztály akinek ki lett osztva (azért tömb hogyha meggondoljuk magunkat, hogy több osztálynak is lehessen házit küldeni, ne legyen annyi dolgunk)",
+                  "example": [
+                    {
+                      "ID": 1,
+                      "name": "1.b",
+                      "studentList": [1, 2]
+                    }
+                  ]
                 },
                 "Description": {
-                  "example": "any"
+                  "type": "string",
+                  "description": "A feladat leírása",
+                  "example": "Oldd meg yz feladatot."
                 },
                 "DeadLine": {
-                  "example": "any"
+                  "type": "string",
+                  "format": "date-time",
+                  "description": "Határidő idő amit frontendről kapunk",
+                  "example": "2025-03-30T01:17:00.000Z"
                 },
                 "UploadDate": {
-                  "example": "any"
+                  "type": "string",
+                  "format": "date-time",
+                  "description": "Feltöltési idő amit frontendről kapunk",
+                  "example": "2025-03-27T13:30:38.234Z"
                 }
               }
             }
           }
         ],
         "responses": {
-          "200": {
-            "description": "OK"
+          "201": {
+            "description": "Assignment created",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "Assignment": {
+                  "type": "object",
+                  "properties": {
+                    "dataValues": {
+                      "type": "object",
+                      "properties": {
+                        "ID": {
+                          "type": "integer",
+                          "example": 1
+                        },
+                        "teacherID": {
+                          "type": "integer",
+                          "example": 1
+                        },
+                        "desc": {
+                          "type": "string",
+                          "example": "Oldd meg yz feladatot."
+                        },
+                        "deadline": {
+                          "type": "string",
+                          "format": "date-time",
+                          "example": "2025-03-30T01:17:00.000Z"
+                        },
+                        "uploadDate": {
+                          "type": "string",
+                          "format": "date-time",
+                          "example": "2025-03-27T13:30:38.234Z"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
           },
           "400": {
             "description": "Bad Request"
@@ -420,6 +1165,7 @@
         }
       }
     },
+
     "/feladat/hazikdiak/{id}": {
       "get": {
         "description": "",
@@ -433,7 +1179,7 @@
         ],
         "responses": {
           "201": {
-            "description": "Created"
+            "description": "Sikeres lekérés"
           },
           "400": {
             "description": "Bad Request"

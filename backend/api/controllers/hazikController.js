@@ -67,6 +67,7 @@ exports.uploadCompletedAssignmentFiles = async (req, res, next) => {
 
 exports.getsentAssignments = async (req,res,next) =>{
       const hazik = await hazikService.getsentAssignments(req.decoded.ID)
+      //console.log("ll ", hazik[0].anwsers)
       res.status(201).json(hazik);
 }
 
