@@ -1,4 +1,6 @@
+const groupRepository = require("../repositories/groupRepository");
 const orarendRepository  = require("../repositories/orarendRepository");
+const roleService = require("./roleService");
 
 class OrarendService
 {
@@ -66,23 +68,10 @@ async getTeacherLessons(teacherID, weekStart) {
         return await orarendRepository.getDisruptions(groups,weekStart)
     }
 
-
-
-    async createOra()
-    {
-
-    }
-    
-    async createOrarend()
-    {
-
-    }
-    async getOra()
-    {
-
-    }
     async getOrarend(groups, weekStart) {
+        console.log(groups,"22222222222222222")
         const lessons = await this.getLessons(groups);
+        console.log(lessons,"3333333333333333")
         const disruptions = await this.getDisruptions(groups, weekStart);
     
         // Create a map of disruptions keyed by day and start_Minute
@@ -106,6 +95,25 @@ async getTeacherLessons(teacherID, weekStart) {
         });
         
         return combinedOrarend;
+    }
+
+    async validateLesson(lesson)
+    {
+        try{
+            const response = await roleService.getRole(lesson.teacherID,"teacher")
+        }
+        catch(error)
+        {
+            return {message:"Nincs ilyen tanár: "+lesson.teacherID}
+        }
+        try{
+            const response = await groupRepository.getGroupByID(lesson.groupID)
+        }
+        catch(error)
+        {
+            return {message:"Nincs ilyen csoport: "+lesson.groupID}
+        }
+        return true
     }
 
     async getTeachers(){

@@ -7,6 +7,7 @@ const userAuth = require("../middlewares/userAuth")
 const userController = require("../controllers/userController");
 const adminController = require("../controllers/adminController");
 const uzenetController = require("../controllers/uzenetController")
+const orarendController = require("../controllers/orarendController")
 
 const adminHandler = require("../middlewares/adminHandler");
 const adminService = require("../services/adminService");
@@ -32,5 +33,8 @@ router.delete("/deleteGroup/:ID",adminHandler.checkRole,adminController.deleteGr
 router.get("/getGroupAsignments/:GroupID",adminHandler.checkRole,adminController.getGroupAsignments)//csoporthoz tartozó házifeladatok lekérése
 router.get("/allMessage",adminHandler.checkRole,uzenetController.getAllMessages);
 router.delete("/deleteMessage/:ID",adminHandler.checkRole,uzenetController.deleteMessage)
+router.get("/timetable/:id",adminHandler.checkRole,adminController.getOrarend);
+router.get("/allgroups",adminHandler.checkRole,adminController.getAllGroups);
+router.post("/createlessons/",adminHandler.checkRole,orarendController.createLessons)
 
 module.exports = router;

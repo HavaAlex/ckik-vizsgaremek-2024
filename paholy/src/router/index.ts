@@ -155,7 +155,7 @@ const router = createRouter({
               { 
                 path: 'admin',
                 name: 'adminorarend',
-                component: OrarendView
+                component: OrarendViewAdmin
               },
           ]
         } ,

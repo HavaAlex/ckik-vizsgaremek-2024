@@ -3,6 +3,8 @@ const adminService = require("../services/adminService")
 const hazikService = require("../services/hazikService")
 const userRepository = require("../repositories/userRepository")
 const studentRepository = require("../repositories/studentRepository")
+const orarendService = require("../services/orarendService")
+const groupRepository = require("../repositories/groupRepository")
 
 exports.uploadTeachers = async (req,res,next) =>{
     const teachers = req.body
@@ -129,6 +131,11 @@ exports.getAllGroupsWithStudents = async (req,res,next) => {
     const eredmeny = await adminService.getAllGroupsWithStudents();
     res.status(201).json(eredmeny)
 }
+
+exports.getAllGroups = async (req,res,next) => {
+    const response = await adminService.getAllGroups();
+    res.status(201).json(response)
+}
 exports.CreateGroup = async (req,res,next) => {
     const newGroup = req.body 
     
@@ -195,4 +202,24 @@ exports.getGroupAsignments = async (req,res,next) => {
 
     
     res.status(201).json(result)
+}
+
+exports.getOrarend = async (req, res, next) =>
+{
+    const weekStart = req.query.weekStart
+    console.log(req.params.id+"!!")
+    let group = await groupRepository.getGroupByID(req.params.id)
+
+    console.log(group,"767346")
+
+    let combinedOrarend;
+    try{
+        combinedOrarend = await orarendService.getOrarend([group],weekStart)
+        console.log(combinedOrarend)
+        res.status(201).json(combinedOrarend)
+    }
+    catch(error)
+    {
+        next(error)
+    }   
 }

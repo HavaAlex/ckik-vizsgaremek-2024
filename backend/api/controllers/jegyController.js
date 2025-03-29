@@ -92,7 +92,6 @@ exports.createJegy = async (req, res, next) =>
             Value:Value,
             Multiplier:Multiplier,
             subjectName:subjectName,
-            date: Date.UTC(),
         }
         console.log(newJegy)
         console.log(req.body)

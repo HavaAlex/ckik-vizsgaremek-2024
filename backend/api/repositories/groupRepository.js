@@ -29,7 +29,7 @@ class GroupRepository
     }
 
     
-    async getGroup(studentID)//Megkeresi az összes csoportját az adott embernek
+    async getGroupsOfStudent(studentID)//Megkeresi az összes csoportját az adott embernek
     {
         return await db.studentgroup.findAll
         (
@@ -39,9 +39,20 @@ class GroupRepository
         )
     }
 
+    async getGroupByID(groupID)//Megkeresi az összes csoportját az adott embernek
+    {
+        console.log(groupID+"%%")
+        return await this.Groups.findOne
+        (
+            {
+                where: {ID: Number(groupID)},
+            }
+        )
+    }
+
     async getAllGroups()
     {
-        return await db.group.findAll({})
+        return await this.Groups.findAll({})
     }
 
     async deleteGroup(ID){

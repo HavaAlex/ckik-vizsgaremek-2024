@@ -18,7 +18,7 @@ const { time } = storeToRefs(cookieHandler);
 const gyerekStore = useGyerekStore()
 const refs = storeToRefs(gyerekStore)
 
-const selectedChild = ref<number|undefined>(undefined)
+const selectedChild = ref<number>(-1)
 
 const cookieStatus = cookieHandler.hasValidCookie()
 let role: string = ''
@@ -31,7 +31,7 @@ if (cookieStatus == true){
     decoded.userData.children.forEach(element => {
       gyerekStore.addChild(element)
     });
-    selectedChild.value = refs.children.value.length ? refs.children.value[0].ID : null;
+    selectedChild.value = refs.children.value.length ? refs.children.value[0].ID : -1;
   }
   console.log(decoded)
   console.log(role)
@@ -74,7 +74,7 @@ const selectedChildKey = ref(-1); // Ez biztosítja a komponens újrarenderelés
 <template>
   <div v-if="isPortrait">
     <v-layout>
-      <v-app-bar height="48" flat class="appnavbar bg-secondary">
+      <v-app-bar flat class="appnavbar bg-secondary" density="compact">
         <v-container class="d-flex align-center justify-space-between">
           <!-- Left Side -->
           <v-menu class="appnavbarmenubtn">
@@ -86,19 +86,19 @@ const selectedChildKey = ref(-1); // Ez biztosítja a komponens újrarenderelés
             <v-list>
               <div v-if="role=='szulo'">
                 <v-list-item class="appnavbarmenu">
-                  <v-btn @click="push({name:role+'orarend'+role=='szulo'?`/${selectedChild.value}`:''})" class="appnavbarmenu">Órarend</v-btn>
+                  <v-btn @click="push({name:role+'orarend'+role=='szulo'?`/${selectedChild}`:''})" class="appnavbarmenu">Órarend</v-btn>
                 </v-list-item>
                 <v-list-item v>
-                  <v-btn @click="push({name:role+'feladatok'+role=='szulo'?`/${selectedChild.value}`:''})" class="appnavbarmenu">Házifeladatok/beadandók</v-btn>
+                  <v-btn @click="push({name:role+'feladatok'+role=='szulo'?`/${selectedChild}`:''})" class="appnavbarmenu">Házifeladatok/beadandók</v-btn>
                 </v-list-item>
                 <v-list-item class="appnavbarmenu">
-                  <v-btn @click="push({name:role+'jegyek'+role=='szulo'?`/${selectedChild.value}`:''})" class="appnavbarmenu">Osztályzatok</v-btn>
+                  <v-btn @click="push({name:role+'jegyek'+role=='szulo'?`/${selectedChild}`:''})" class="appnavbarmenu">Osztályzatok</v-btn>
                 </v-list-item>
                 <v-list-item class="appnavbarmenu">
-                  <v-btn @click="push({name:role+'hianyzasok'+role=='szulo'?`/${selectedChild.value}`:''})" class="appnavbarmenu">Mulasztások/Hiányzások</v-btn>
+                  <v-btn @click="push({name:role+'hianyzasok'+role=='szulo'?`/${selectedChild}`:''})" class="appnavbarmenu">Mulasztások/Hiányzások</v-btn>
                 </v-list-item>
                 <v-list-item class="appnavbarmenu">
-                  <v-btn @click="push({name:role+'uzenetek'+role=='szulo'?`/${selectedChild.value}`:''})" class="appnavbarmenu">Üzenetek</v-btn>
+                  <v-btn @click="push({name:role+'uzenetek'+role=='szulo'?`/${selectedChild}`:''})" class="appnavbarmenu">Üzenetek</v-btn>
                 </v-list-item>
                 
               </div>
@@ -143,7 +143,7 @@ const selectedChildKey = ref(-1); // Ez biztosítja a komponens újrarenderelés
       <div>
       
       <v-app-bar
-        height="48"
+        height="fit-content"
         location="bottom"
         flat
       >
@@ -216,7 +216,7 @@ const selectedChildKey = ref(-1); // Ez biztosítja a komponens újrarenderelés
       </v-btn>
     </v-app-bar>
     <v-app-bar
-      height="48"
+      height="fit-content"
       location="bottom"
       flat
     >
@@ -246,18 +246,17 @@ const selectedChildKey = ref(-1); // Ez biztosítja a komponens újrarenderelés
 
   @media (orientation: portrait) {
     .appnavbar{
-      height: 20vw;
       width: 100vw;
       border-bottom: 50vw !important;
     }
     .appnavbarmenubtn{
-      height: 25vw !important;
+      height: 5vw !important;
       width: 50vw !important;
       font-size: 5vw !important;
       color: white;
     }
     .appnavbarmenu{
-      height: 30vw !important;
+      height: 13vw !important;
       font-size: 5vw !important;
       width: 90vw;
     }
@@ -265,7 +264,7 @@ const selectedChildKey = ref(-1); // Ez biztosítja a komponens újrarenderelés
       border-top: 25vw !important;
     }
     .appnavbarbtn{
-      height: 30vw !important;
+      height: 13vw !important;
       width: 50vw !important;
       font-size: 5vw !important;
     }

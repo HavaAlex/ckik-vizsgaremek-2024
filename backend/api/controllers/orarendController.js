@@ -1,12 +1,14 @@
 const orarendService = require("../services/orarendService")
 const csoportService = require("../services/csoportService")
 const lessonService = require("../services/lessonService")
+const orarendRepository = require("../repositories/orarendRepository")
+const lessonRepository = require("../repositories/lessonRepository")
 
 exports.getOrarend = async (req, res, next) =>
 {
     const weekStart = req.query.weekStart
 
-    const groups = await csoportService.getGroup(req.decoded.ID)
+    const groups = await csoportService.getGroupsOfStudent(req.decoded.ID)
 
     const combinedOrarend = req.decoded.role=="tanar"?await orarendService.getTeacherLessons(req.role.ID,weekStart): await orarendService.getOrarend(groups,weekStart)
 
@@ -14,29 +16,44 @@ exports.getOrarend = async (req, res, next) =>
 }
 
 
-exports.createOrarend = async (req, res, next) =>
+exports.createLessons = async (req, res, next) =>
 {
-    let {oraIDk} = req.body;
-
-    price = Number(price);
-
+    let lessons = req.body;
+    let uploaded = []
     try
     {
-        var newToy =
-        {
-            name: name,
-            price: price,
-            company: company,
-            shopID: shopID,
-        }
+        lessons.forEach(async element => {
+            const errorMsg = validateLesson(element)
+            if(errorMsg!=true)
+            {
+                res.status(400).json(errorMsg)
+                return
+            }
+        });
 
-        newToy = await toyService.createToy(newToy);
+        lessons.forEach(async element => {
+            var newLesson =
+            {
+                ID: undefined,
+                groupID: element.groupID,
+                teacherID: element.teacherID,
+                start_Hour:element.start_Hour,
+                start_Minute:element.start_Minute,
+                length:element.length,
+                day:element.day,
+                subjectName:element.subjectName
+            }
+            newLesson = await lessonRepository.createLesson(newLesson);
+            updat
+        });
 
-        res.status(201).json(newToy);
+        newLesson = await jegyService.createJegy(newJegy);
+        uploaded.push(newLesson);
+        res.status(201).json(uploaded);
     }
     catch(error)
     {
-        next(error);
+        next(error)
     }
 }
 

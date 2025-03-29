@@ -13,8 +13,8 @@ class GroupService
         return await GroupRepository.createGroup();
     }
 
-    async getGroup(studentID) {
-        return await GroupRepository.getGroup(studentID)
+    async getGroupsOfStudent(studentID) {
+        return await GroupRepository.getGroupsOfStudent(studentID)
     }
 
     async checkIfGroupNameIsNotTaken(name){

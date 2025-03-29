@@ -43,13 +43,13 @@ module.exports = (sequelize, DataTypes) =>
             date:
             {
                 type: DataTypes.DATE,
-                allowNull: false,
+                defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
             },
 
         },
 
         {
-            sequelize,
+            sequelize:sequelize,
             modelName: "Marks",
             timestamps: false,
         }

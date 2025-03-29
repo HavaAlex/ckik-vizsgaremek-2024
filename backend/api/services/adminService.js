@@ -293,7 +293,9 @@ class adminService {
         }
         return "sikeres módosítás"
     }
-
-    
+    async getAllGroups()
+    {
+        return await groupRepository.getAllGroups()
+    }
 }
 module.exports = new adminService(); 

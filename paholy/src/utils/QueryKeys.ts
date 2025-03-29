@@ -63,7 +63,9 @@ const ADMIN_KEYS = {
     deleteUser: 'deleteUser',
     getGroups: 'getGroups',
     CreateGroup:'CreateGroup',
-    getGroupAsignments:'getGroupAsignments'
+    getGroupAsignments:'getGroupAsignments',
+    getTimetable:'getTimetable',
+    getAllGroups:'getAllGroups'
 }
 export const QUERY_KEYS = {
     ...USER_KEYS,

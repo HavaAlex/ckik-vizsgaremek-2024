@@ -7,6 +7,7 @@ import { useCookieHandler } from "@/stores/cookieHandler";
 //import type { Message,PotentialReceiver,newMessage } from "./uzenetek";
 import queryClient from "@/lib/queryClient";
 import { useErrorHandler } from "@/stores/errorHandler";
+import type { Group, Lesson } from "../orarend/orarend";
 
 
 //Tanárok feltöltése
@@ -326,6 +327,69 @@ export const usegetGroupAsignments = () => {
     const query = useQuery({
         queryKey: [QUERY_KEYS.getGroupAsignments],
         queryFn: getGroupAsignments,
+    })
+
+    if (query.error.value) {
+        console.error("Lekérdezési hiba:", query.error)
+        setError(query.error.value)
+    }
+    return query
+}
+
+const getOrarend = async (weekStart: string,groupID:number): Promise<Lesson[]> => {
+    const { getCookie } = useCookieHandler()
+    const config = {
+        headers: { Authorization: `Bearer ${getCookie("alap")}` }
+    };
+    console.log(`http://localhost:3000/admin/timetable/${groupID}?weekStart=${weekStart}`)
+    const response = await axiosClient.get(`http://localhost:3000/admin/timetable/${groupID}?weekStart=${weekStart}`, config)
+
+
+    console.log("Orarend lekérdezve:", response.data)
+    return response.data
+}
+
+export const useGetOrarend = (weekStart: string,groupID:number) => {
+    const { setError } = useErrorHandler()
+    const query = useQuery({
+        queryKey: [QUERY_KEYS.getTimetable, weekStart],
+        queryFn: () => getOrarend(weekStart,groupID),
+    })
+
+    if (query.error.value) {
+        console.error("Lekérdezési hiba:", query.error)
+        setError(query.error.value)
+    }
+    return query
+}
+
+export const fetchOrarend = async (weekStart: string,groupID:number): Promise<Lesson[]> => {
+    try {
+        return await getOrarend(weekStart,groupID);
+    } catch (error) {
+        console.error("Lekérdezési hiba:", error);
+        throw error;
+    }
+}
+
+const getAllGroups = async (): Promise<Group[]> => {
+    const { getCookie } = useCookieHandler()
+    const config = {
+        headers: { Authorization: `Bearer ${getCookie("alap")}` }
+    };
+    console.log(`http://localhost:3000/admin/allgroups`)
+    const response = await axiosClient.get(`http://localhost:3000/admin/allgroups`, config)
+
+
+    console.log("Groupok lekérdezve:", response.data)
+    return response.data
+}
+
+export const useGetAllGroups = () => {
+    const { setError } = useErrorHandler()
+    const query = useQuery({
+        queryKey: [QUERY_KEYS.getAllGroups],
+        queryFn: () => getAllGroups(),
     })
 
     if (query.error.value) {

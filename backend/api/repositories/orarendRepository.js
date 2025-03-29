@@ -24,7 +24,7 @@ class OrarendRepository
     
     async getLessons(groups)//Megkeresi az összes óráját az adott embernek
     {
-        groups = groups.map(group => group.GroupID);
+        groups = groups.map(group => group.GroupID||group.ID);
         return await this.Lesson.findAll
         (
             {

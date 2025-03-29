@@ -34,7 +34,6 @@ const openapiSpecification = swaggerJsdoc(options);
 
 app.use(cors(corsOptions));
 
-
 const adminRoutes = require("./api/routes/adminRoutes")
 
 const loginRoutes = require("./api/routes/loginRoutes")
