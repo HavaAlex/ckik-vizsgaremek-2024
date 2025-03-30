@@ -19,10 +19,14 @@ router.post("/addTeacherUsers",adminHandler.checkRole,adminController.uploadTeac
 router.post("/addStudentUsers",adminHandler.checkRole,adminController.uploadStudents)//Diákok feltöltése
 router.post("/addGuardianUsers",adminHandler.checkRole,adminController.addGuardianUsers)//Szülők/gondviselők feltöltése
 router.get("/getAllUsers",adminHandler.checkRole,adminController.getAllUsers)//Összes felhasználó lekérése
+router.get("/getAllStudents",adminHandler.checkRole,adminController.getAllStudents)//Összes Diák lekérése
 router.get("/getUser/:userID",adminHandler.checkRole,userController.getUserWithAdditionalAttributes)// egy felhasználó lekérése
 router.put("/modifyUser",adminHandler.checkRole,adminController.modifyUser)//Felhasználó utólagos módosítása, adminra, studentre, teacherre és guardiannre egyaránt működik
+router.put("/modifyAbsence",adminHandler.checkRole,adminController.modifyAbsence)//Egy hiányzás leigozálasa vagy annak viszavonása
 router.delete("/deleteUser/:userID",adminHandler.checkRole,adminController.deleteUser)//Felhasználó törlése
+router.delete("/deleteAbsence/:userID",adminHandler.checkRole,adminController.deleteAbsence)//Hiányzás törlése
 router.post("/addStudentsToGuardian", adminHandler.checkRole, adminController.addStudentsToGuardian)
+router.get("/getAbsences/",adminHandler.checkRole, adminController.getAbsences),
 
 router.get("/getAllGroupsWithStudents",adminHandler.checkRole,adminController.getAllGroupsWithStudents)//csoportok lekérése, a benne lévő studentekkel együtt
 router.post("/createGroup",adminHandler.checkRole,adminController.CreateGroup)//Csoport létrehozása, diákokkal együtt történik

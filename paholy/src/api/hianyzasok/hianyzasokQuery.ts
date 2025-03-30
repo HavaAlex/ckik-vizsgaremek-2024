@@ -133,6 +133,8 @@ const addAbsence = async (data : Absence) : Promise<Absence> => {
         }
     } 
     const response = await axiosClient.post(`http://localhost:3000/hianyzas/postAbsence`, data,config)
+
+    console.log(response.data)
     return response.data.data
 }
 

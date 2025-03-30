@@ -4,15 +4,13 @@ import { fetchOrarend } from '@/api/orarend/orarendQuery';
 import { useGetStudentsInGroup, useAddAbsence } from '@/api/hianyzasok/hianyzasokQuery';
 import type { Students } from '@/api/hianyzasok/hianyzasok';
 
-import { ref, reactive, watch, computed } from 'vue';
+import { ref, watch, computed } from 'vue';
 import { format, startOfWeek, addWeeks } from 'date-fns';
-import type { Student } from '@/api/admin/admin';
 
 
-const {mutate, isPending} = useAddAbsence()
+const {mutate} = useAddAbsence()
 
 const currentWeekStart = ref(startOfWeek(new Date(), { weekStartsOn: 1 }));
-const days = ["hetfo", "kedd", "szerda", "csutortok", "pentek", "szombat", "vasarnap"];
 const dayKeys = ["hetfo", "kedd", "szerda", "csutortok", "pentek", "szombat", "vasarnap"];
 const lessonColor = ref("#9c0913");
 const currentTeacherId = 123;

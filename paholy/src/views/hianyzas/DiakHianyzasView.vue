@@ -20,7 +20,7 @@ watch(
 );
 
 function getTeacherName(teacherId: number): string {
-  const teacher = teachers.value.find(t => t.id === teacherId);
+  const teacher = teachers.value.find(t => t.ID === teacherId);
   return teacher ? teacher.name : teacherId.toString();
 }
 function formatDate(dateStr: string): string {
@@ -73,7 +73,7 @@ function formatExcused(excused: boolean): string {
 
 const groupedAbsences = computed(() => {
   if (!data?.value) return {};
-
+  
   return data.value.reduce((acc, absence) => {
     const dateKey = formatDate(absence.date);
     if (!acc[dateKey]) {
@@ -132,7 +132,7 @@ const groupedAbsences = computed(() => {
       </template>
       <template v-else-if="Object.keys(groupedAbsences).length == 0">
         <v-card style=" padding: 1rem;">
-          Nincs még hiányzása!
+          Nincs még hiányzás
         </v-card>
       </template>
       <template v-else>

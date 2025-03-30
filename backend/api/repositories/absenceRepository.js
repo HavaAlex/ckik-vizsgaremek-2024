@@ -34,7 +34,6 @@ class AbsenceRepository
     } 
     
     async getStudentsInGroup(groupID) {
-        // igen, ez jó szar, de ha szebben akarom akkor nem működik :D (nem tudom miért)
         
         const studentGroups = await this.studentgroup.findAll({
             where: { groupID: groupID },
@@ -51,6 +50,8 @@ class AbsenceRepository
 
         return students;
     }
+
+    
     async postAbsence(absence)
     {
         const newAbsence = await this.Absences.build(absence);
@@ -59,6 +60,26 @@ class AbsenceRepository
         
         return newAbsence;
     }
+
+    async getAbsences()
+    {
+        return await this.Absences.findAll();
+    }
+
+    async approveAbsence(absenceToBeModified)
+    {
+        const absence = await this.Absences.findOne({ where: { ID: absenceToBeModified.ID } });
+        await absence.update({ excused: true});
+        return absence
+    }
+
+    async disapproveAbsence(absenceToBeModified)
+    {
+        const absence = await this.Absences.findOne({ where: { ID: absenceToBeModified.ID } });
+        await absence.update({ excused: false});
+        return absence
+    }
+
 }
 
 module.exports = new AbsenceRepository(db);
