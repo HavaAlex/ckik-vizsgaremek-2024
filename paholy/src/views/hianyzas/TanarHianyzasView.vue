@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { Lesson, Teacher } from '@/api/orarend/orarend';
 import { fetchOrarend } from '@/api/orarend/orarendQuery';
-import { useGetStudentsInGroup, useAddAbsence } from '@/api/hianyzasok/hianyzasokQuery';
+import { useGetStudentsInGroup, useAddAbsence,useGetAbsences } from '@/api/hianyzasok/hianyzasokQuery';
 import type { Students } from '@/api/hianyzasok/hianyzasok';
 
 import { ref, watch, onMounted, onUnmounted, computed } from 'vue';
@@ -18,6 +18,17 @@ const currentTeacherId = 123;
 const startMinute = 300;  
 const endMinute = 1440;
 const totalMinutes = endMinute - startMinute;
+
+
+const absences = ref<any[]>([]);
+const absenceQuery = useGetAbsences();
+watch(
+  () => absenceQuery.data.value,
+  (data) => {
+    absences.value = data || [];
+  },
+  { immediate: true }
+);
 
 
 const portraitDayIndex = ref(0);

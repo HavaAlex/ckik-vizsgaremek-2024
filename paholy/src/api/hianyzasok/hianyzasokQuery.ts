@@ -153,3 +153,27 @@ export const useAddAbsence = () => {
     )
 }
 
+
+export const getAbsences = async () => {
+    const { getCookie } = useCookieHandler() 
+    const config = {
+        headers: { Authorization: `Bearer ${getCookie("alap")}` }
+    };
+    const response = await axiosClient.get(`http://localhost:3000/hianyzas/getAllAbsences`, config)
+    return response.data
+}
+
+export const useGetAbsences = () => {
+    const { setError } = useErrorHandler()
+    const query = useQuery({
+        queryKey: [QUERY_KEYS.getAbsences],
+        queryFn: getAbsences,
+    })
+
+    if (query.error.value) {
+        console.error("Lekérdezési hiba:", query.error)
+        setError(query.error.value)
+    }
+    return query
+}
+

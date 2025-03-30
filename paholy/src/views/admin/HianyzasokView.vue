@@ -22,6 +22,8 @@ watch(
   { immediate: true }
 );
 
+console.log(absences)
+
 function formatExcused(excused: boolean): string {
   return excused ? 'Igazolva' : 'Igazolatlan';
 }
