@@ -107,7 +107,9 @@ const groupedAbsences = computed(() => {
     return acc;
   }, {} as Record<string, any[]>);
 });
-
+console.log("=============7")
+console.log(groupedAbsences)
+console.log("=============7")
 const DeleteAbsenceDialog = ref(false);
 const SelectedAbsence = ref<any>(null);
 
@@ -154,89 +156,161 @@ async function approval(absence: any) {
 
 <template>
   <main>
-    <div>
-      <h1>Kiosztott osztályzatok</h1>
-      <template v-if="Object.keys(groupedAbsences).length > 0">
-        <!-- Wrap your expansion panels in v-expansion-panels -->
-        <v-expansion-panels>
-          <v-expansion-panel v-for="(absences, date) in groupedAbsences" :key="date">
-            <v-expansion-panel-title>
-              {{ date }} ({{ absences.length }} hiányzás)
-            </v-expansion-panel-title>
-            <v-expansion-panel-text>
-              <!-- Replacement code inserted here -->
-              <v-table v-if="!isPortrait">
-                <thead>
-                  <tr>
-                    <th class="text-center">OMID</th>
-                    <th class="text-center">Diák neve</th>
-                    <th class="text-center">Tantárgy</th>
-                    <th class="text-center">Időtartam</th>
-                    <th class="text-center">Tanár</th>
-                    <th class="text-center">Igazolás státusza</th>
-                    <th class="text-center">Interakció</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-for="absence in absences" :key="absence.ID">
-                    <td class="text-center">{{ getStudentOMID(absence.studentID) }}</td>
-                    <td class="text-center">{{ getStudentName(absence.studentID) }}</td>
-                    <td class="text-center">{{ getSubjectName(absence.lessonID) }}</td>
-                    <td class="text-center">{{ formatTimeRange(absence.lessonID) }}</td>
-                    <td class="text-center">{{ getTeacherName(absence.teacherID) }}</td>
-                    <td class="text-center">{{ formatExcused(absence.excused) }}</td>
-                    <td>
-                          <v-btn v-if="!absence.excused" color="green" style="margin-right: 10px;" @click="approval(absence)">Leigazolás</v-btn>
-                          <v-btn v-else color="primary" style="margin-right: 10px;" @click="approval(absence)">Igazolás visszavonása</v-btn>
-                          <v-btn color="error" @click="fastdelete(absence)">Törlés</v-btn>
-                    </td>
-                  </tr>
-                </tbody>
-              </v-table>
-              <v-container v-else>
-                <v-row v-for="absence in absences" :key="absence.ID" class="mb-4">
-                  <v-col>
-                    <v-card>
-                      <v-card-text>
-                        <div><strong>OMID:</strong> {{ getStudentOMID(absence.studentID) }}</div>
-                        <div><strong>Diák neve:</strong> {{ getStudentName(absence.studentID) }}</div>
-                        <div><strong>Tantárgy:</strong> {{ getSubjectName(absence.lessonID) }}</div>
-                        <div><strong>Időtartam:</strong> {{ formatTimeRange(absence.lessonID) }}</div>
-                        <div><strong>Tanár:</strong> {{ getTeacherName(absence.teacherID) }}</div>
-                        <div><strong>Igazolás státusza:</strong> {{ formatExcused(absence.excused) }}</div>
-                        <div>
-                          <v-btn v-if="!absence.excused" color="primary" style="margin-right: 10px;" @click="approval(absence)">Leigazolás</v-btn>
-                          <v-btn v-else color="primary" style="margin-right: 10px;" @click="approval(absence)">Igazolás visszavonása</v-btn>
-                          <v-btn color="error" @click="fastdelete(absence)">Törlés</v-btn>
-                        </div>
-                      </v-card-text>
-                    </v-card>
-                  </v-col>
-                </v-row>
-              </v-container>
-            </v-expansion-panel-text>
-          </v-expansion-panel>
-        </v-expansion-panels>
-      </template>
-      <template v-else-if="Object.keys(groupedAbsences).length == 0">
-        <v-card style="padding: 1rem;">
-          Nincs még hiányzás
+    <div v-if="isPortrait">
+      <v-card>
+        <v-card-title>Hiányzások</v-card-title>
+          <v-card-text style="height: 80vw !important; overflow-y: auto;">
+            <template v-if="Object.keys(groupedAbsences).length > 0">
+        
+              <!-- Wrap your expansion panels in v-expansion-panels -->
+              <v-expansion-panels>
+                <v-expansion-panel v-for="(absences, date) in groupedAbsences" :key="date">
+                  <v-expansion-panel-title>
+                    {{ date }} ({{ absences.length }} hiányzás)
+                  </v-expansion-panel-title>
+                  <v-expansion-panel-text>
+                    <!-- Replacement code inserted here -->
+                    <v-table v-if="!isPortrait">
+                      <thead>
+                        <tr>
+                          <th class="text-center">OMID</th>
+                          <th class="text-center">Tantárgy</th>
+                          <th class="text-center">Időtartam</th>
+                          <th class="text-center">Tanár</th>
+                          <th class="text-center">Igazolás státusza</th>
+                          <th class="text-center">Interakció</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr v-for="absence in absences" :key="absence.ID">
+                          <td class="text-center">{{ getStudentName(absence.studentID) }}</td>
+                          <td class="text-center">{{ getSubjectName(absence.lessonID) }}</td>
+                          <td class="text-center">{{ formatTimeRange(absence.lessonID) }}</td>
+                          <td class="text-center">{{ getTeacherName(absence.teacherID) }}</td>
+                          <td class="text-center">{{ formatExcused(absence.excused) }}</td>
+                          <td>
+                                <v-btn v-if="!absence.excused" color="green" style="margin-right: 10px;" @click="approval(absence)">Leigazolás</v-btn>
+                                <v-btn v-else color="primary" style="margin-right: 10px;" @click="approval(absence)">Igazolás visszavonása</v-btn>
+                                <v-btn color="error" @click="fastdelete(absence)">Törlés</v-btn>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </v-table>
+                    <v-container v-else>
+                      <v-row v-for="absence in absences" :key="absence.ID" class="mb-4">
+                        <v-col>
+                          <v-card>
+                            <v-card-text>
+                              <div><strong>OMID:</strong> {{ getStudentName(absence.studentID) }}</div>
+                              <div><strong>Tantárgy:</strong> {{ getSubjectName(absence.lessonID) }}</div>
+                              <div><strong>Időtartam:</strong> {{ formatTimeRange(absence.lessonID) }}</div>
+                              <div><strong>Tanár:</strong> {{ getTeacherName(absence.teacherID) }}</div>
+                              <div><strong>Igazolás státusza:</strong> {{ formatExcused(absence.excused) }}</div>
+                              <div>
+                                <v-btn v-if="!absence.excused" color="primary" style="margin-right: 10px;" @click="approval(absence)">Leigazolás</v-btn>
+                                <v-btn v-else color="primary" style="margin-right: 10px;" @click="approval(absence)">gazolás visszavonása</v-btn>
+                                <v-btn color="error" @click="fastdelete(absence)">Törlés</v-btn>
+                              </div>
+                            </v-card-text>
+                          </v-card>
+                        </v-col>
+                      </v-row>
+                    </v-container>
+                  </v-expansion-panel-text>
+                </v-expansion-panel>
+              </v-expansion-panels>
+            </template>
+            <template v-else-if="Object.keys(groupedAbsences).length == 0">
+              <v-card style="padding: 1rem;">
+                Nincs még hiányzás
+              </v-card>
+            </template>
+          </v-card-text>
         </v-card>
-      </template>
+    </div>
+    <div v-else>
+      <v-card>
+        <v-card-title>Hiányzások</v-card-title>
+        <v-card-text style="height: 40vw !important; overflow-y: auto;">
+          <template v-if="Object.keys(groupedAbsences).length > 0">
+      
+            <!-- Wrap your expansion panels in v-expansion-panels -->
+            <v-expansion-panels>
+              <v-expansion-panel v-for="(absences, date) in groupedAbsences" :key="date">
+                <v-expansion-panel-title>
+                  {{ date }} ({{ absences.length }} hiányzás)
+                </v-expansion-panel-title>
+                <v-expansion-panel-text>
+                  <!-- Replacement code inserted here -->
+                  <v-table v-if="!isPortrait">
+                    <thead>
+                      <tr>
+                        <th class="text-center">OMID</th>
+                        <th class="text-center">Tantárgy</th>
+                        <th class="text-center">Időtartam</th>
+                        <th class="text-center">Tanár</th>
+                        <th class="text-center">Igazolás státusza</th>
+                        <th class="text-center">Interakció</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr v-for="absence in absences" :key="absence.ID">
+                        <td class="text-center">{{ getStudentName(absence.studentID) }}</td>
+                        <td class="text-center">{{ getSubjectName(absence.lessonID) }}</td>
+                        <td class="text-center">{{ formatTimeRange(absence.lessonID) }}</td>
+                        <td class="text-center">{{ getTeacherName(absence.teacherID) }}</td>
+                        <td class="text-center">{{ formatExcused(absence.excused) }}</td>
+                        <td>
+                              <v-btn v-if="!absence.excused" color="green" style="margin-right: 10px;" @click="approval(absence)">Leigazolás</v-btn>
+                              <v-btn v-else color="primary" style="margin-right: 10px;" @click="approval(absence)">Igazolás visszavonása</v-btn>
+                              <v-btn color="error" @click="fastdelete(absence)">Törlés</v-btn>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </v-table>
+                  <v-container v-else>
+                    <v-row v-for="absence in absences" :key="absence.ID" class="mb-4">
+                      <v-col>
+                        <v-card>
+                          <v-card-text>
+                            <div><strong>OMID:</strong> {{ getStudentName(absence.studentID) }}</div>
+                            <div><strong>Tantárgy:</strong> {{ getSubjectName(absence.lessonID) }}</div>
+                            <div><strong>Időtartam:</strong> {{ formatTimeRange(absence.lessonID) }}</div>
+                            <div><strong>Tanár:</strong> {{ getTeacherName(absence.teacherID) }}</div>
+                            <div><strong>Igazolás státusza:</strong> {{ formatExcused(absence.excused) }}</div>
+                            <div>
+                              <v-btn v-if="!absence.excused" color="primary" style="margin-right: 10px;" @click="approval(absence)">Leigazolás</v-btn>
+                              <v-btn v-else color="primary" style="margin-right: 10px;" @click="approval(absence)">gazolás visszavonása</v-btn>
+                              <v-btn color="error" @click="fastdelete(absence)">Törlés</v-btn>
+                            </div>
+                          </v-card-text>
+                        </v-card>
+                      </v-col>
+                    </v-row>
+                  </v-container>
+                </v-expansion-panel-text>
+              </v-expansion-panel>
+            </v-expansion-panels>
+          </template>
+          <template v-else-if="Object.keys(groupedAbsences).length == 0">
+            <v-card style="padding: 1rem;">
+              Nincs még hiányzás
+            </v-card>
+          </template>
+        </v-card-text>
+      </v-card>
 
-      <v-dialog v-model="DeleteAbsenceDialog" max-width="80vw" theme="dark">
+    </div>
+
+    <v-dialog v-model="DeleteAbsenceDialog" max-width="80vw" theme="dark">
         <v-card>
           <v-card-title>Biztos törölni akarja?</v-card-title>
-          <v-card-text>A felhasználó törlésével minden vele kapcsolatos adat eltűnik és nem lehet visszaállítani</v-card-text>
           <v-card-actions>
             <v-btn @click="deleteAbsenceFunction()">Törlés</v-btn>
             <v-btn @click="DeleteAbsenceDialog = false">Mégse</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
-
-
-    </div>
   </main>
 </template>
 
