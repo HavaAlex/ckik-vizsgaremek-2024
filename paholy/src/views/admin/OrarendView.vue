@@ -423,8 +423,6 @@ const disruptionDate = ref<string>(new Date().toISOString().split("T")[0]);
       </v-navigation-drawer>
       <v-tabs-window v-model="tab">
         <v-tabs-window-item value="one">
-          <v-card>
-          <v-card-item>
 
             <!--ÓRAREND VIEW KEZDETE-->
             <v-card style="border-radius: 10px; margin-bottom: 10px; margin-top: 620px;">
@@ -651,13 +649,8 @@ const disruptionDate = ref<string>(new Date().toISOString().split("T")[0]);
                 </v-card>
               </v-dialog>
             </template>
-
-          </v-card-item>
-          </v-card>
         </v-tabs-window-item>
         <v-tabs-window-item value="two">
-          <v-card>
-          <v-card-item style="max-height: 50vw; overflow-y: auto; background-color: unset !important; ">
               <v-card>
                 <v-card-title>Óra hozzáadás</v-card-title>
                 <v-card-text>
@@ -743,9 +736,6 @@ const disruptionDate = ref<string>(new Date().toISOString().split("T")[0]);
                   <v-btn color="primary" @click="submitLessons">Feltöltés az adatbázisba</v-btn>
                 </v-card-actions>
               </v-card>
-
-          </v-card-item>
-          </v-card>
           <!---->
           <br>
         </v-tabs-window-item>

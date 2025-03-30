@@ -66,7 +66,11 @@ class OrarendRepository
                 date: {
                     [Op.between]: [startOfWeek, endOfWeek]
                 }
-            }
+            },
+            include:[{
+                model:db.teacher,
+                attributes:["name"]
+            }]
         });
     }
 
