@@ -273,14 +273,19 @@ function addLesson() {
   }
 }
 
-const drawer = ref<boolean>(false)
+const drawer = ref<boolean>(true)
 
 
 const selectedLesson = ref<Lesson>();
 
-const lessonDialog = ref<boolean>();
+const lessonDialog = ref<boolean>(false);
 
-const disruptionDialog = ref<boolean>();
+const disruptionDialog = ref<boolean>(false);
+
+const modifyDialog = ref<boolean>(false);
+
+const deleteDialog = ref<boolean>(false);
+
 
 function openLesson(lesson: Lesson) {
   lessonDialog.value = true
@@ -418,13 +423,8 @@ const disruptionDate = ref<string>(new Date().toISOString().split("T")[0]);
       </v-navigation-drawer>
       <v-tabs-window v-model="tab">
         <v-tabs-window-item value="one">
-          <v-card>
-          <v-card-item>
 
             <!--ÓRAREND VIEW KEZDETE-->
-            <v-card style="border-radius: 10px; margin-bottom: 10px; margin-top: 620px;">
-              <h1 style="padding: 10px;" class="bg-title">Órarend</h1>
-            </v-card>
 
             <div v-if="refs.lessons.value !== null">
               <div class="color-picker">
@@ -495,7 +495,7 @@ const disruptionDate = ref<string>(new Date().toISOString().split("T")[0]);
                                 Elmarad
                               </div>
                               <div v-else-if="lesson.teacherID !== null" style="font-size: 10px; margin-top: 4px;">
-                                Teacher: {{ getTeacherName(lesson.teacherID) }}
+                                Tanár: {{ lesson.Teacher.name }}
                               </div>
                             </div>
                           </div>
@@ -574,8 +574,8 @@ const disruptionDate = ref<string>(new Date().toISOString().split("T")[0]);
                   </v-card-item>
                   <v-card-actions class="d-flex flex-column">
                     <v-btn color="yellow" block @click="()=>{openDisruption()}">Óra helyettesítése</v-btn>
-                    <v-btn color="yellow" block @click="()=>{modifyLesson(lessonCopy);closeLesson()}">Óra módosítása</v-btn>
-                    <v-btn color="red" block @click="()=>{deleteLesson(lessonCopy.ID);closeLesson()}">Óra törlése</v-btn>
+                    <v-btn color="yellow" block @click="()=>{modifyDialog = true}">Óra módosítása</v-btn>
+                    <v-btn color="red" block @click="()=>{deleteDialog = true}">Óra törlése</v-btn>
                     <v-btn color="grey" block @click="()=>{closeLesson();}">Bezárás</v-btn>
                   </v-card-actions>
                 </v-card>
@@ -613,12 +613,41 @@ const disruptionDate = ref<string>(new Date().toISOString().split("T")[0]);
               </v-dialog>
             </template>
 
-          </v-card-item>
-          </v-card>
+            <template>
+              <v-dialog v-model="deleteDialog" max-width="500px">
+                <v-card>
+                  <v-card-title>
+                    Óra törlése: {{ lessonCopy?.subjectName }}
+                  </v-card-title>
+                  <v-card-text>
+                    Biztosan törölni akarod?
+                  </v-card-text>
+                  <v-card-actions class="d-flex flex-column">
+                    <v-btn color="red" block @click="()=>{deleteLesson(lessonCopy.ID);deleteDialog = false;closeLesson(); }">Óra törlése</v-btn>
+                    <v-btn color="grey" block @click="deleteDialog = false">Nem</v-btn>
+                  </v-card-actions>
+                </v-card>
+              </v-dialog>
+            </template>
+
+            <template>
+              <v-dialog v-model="modifyDialog" max-width="500px">
+                <v-card>
+                  <v-card-title>
+                    Óra módosítása: {{ lessonCopy?.subjectName }}
+                  </v-card-title>
+                  <v-card-text>
+                    Biztosan módosítani akarod?
+                  </v-card-text>
+                  <v-card-actions class="d-flex flex-column">
+                    <v-btn color="yellow" block @click="()=>{modifyLesson(lessonCopy);modifyDialog = false;closeLesson(); }">Óra módosítása</v-btn>
+                    <v-btn color="grey" block @click="modifyDialog = false">Nem</v-btn>
+                  </v-card-actions>
+                </v-card>
+              </v-dialog>
+            </template>
         </v-tabs-window-item>
         <v-tabs-window-item value="two">
-          <v-card>
-          <v-card-item style="max-height: 50vw; overflow-y: auto; background-color: unset !important; ">
               <v-card>
                 <v-card-title>Óra hozzáadás</v-card-title>
                 <v-card-text>
@@ -704,9 +733,6 @@ const disruptionDate = ref<string>(new Date().toISOString().split("T")[0]);
                   <v-btn color="primary" @click="submitLessons">Feltöltés az adatbázisba</v-btn>
                 </v-card-actions>
               </v-card>
-
-          </v-card-item>
-          </v-card>
           <!---->
           <br>
         </v-tabs-window-item>

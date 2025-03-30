@@ -8,10 +8,10 @@ const successDialog = ref(false);
 const { mutate: addMessage, isPending } = useaddMessage();
 const { data } = usegetPotentialReceivers();
 
-// New reactive search text
+
 const searchText = ref('');
 
-// Computed property to filter single users by their name's first letters
+
 const filteredSingleUsers = computed(() => {
   if (!data.value || !data.value.singleUsers) return [];
   return data.value.singleUsers.filter(user =>
@@ -19,7 +19,7 @@ const filteredSingleUsers = computed(() => {
   );
 });
 
-// Computed property to filter groups by their name's first letters
+
 const filteredGroups = computed(() => {
   if (!data.value || !data.value.groups) return [];
   return data.value.groups.filter(group =>
@@ -34,11 +34,11 @@ const MessageDataRef = ref<Message>({
   receiverGrouplist: []
 });
 
-// Function to handle message sending
+
 const sendMessage = () => {
   addMessage(MessageDataRef.value, {
     onSuccess: () => {
-      // Reset input fields and clear search bar
+      
       MessageDataRef.value = {
         message: '',
         date: new Date("0000-12-12"),
@@ -47,10 +47,10 @@ const sendMessage = () => {
       };
       searchText.value = '';
 
-      // Show success popup
+      
       successDialog.value = true;
 
-      // Close the message dialog
+      
       dialog.value = false;
     }
   });

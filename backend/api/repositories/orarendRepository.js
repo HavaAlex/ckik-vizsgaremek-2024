@@ -1,6 +1,7 @@
 const db = require("../db/dbContext");
 const classDisruption = require("../models/classDisruption");
-const { Op } = require('sequelize');
+const { Op } = require("sequelize");
+
 
 class OrarendRepository
 {
@@ -29,6 +30,10 @@ class OrarendRepository
         (
             {
                 where: {groupID: groups},
+                include:[{
+                    model:db.teacher,
+                    attributes:["name"]
+                }]
             }
         )
 
@@ -61,7 +66,11 @@ class OrarendRepository
                 date: {
                     [Op.between]: [startOfWeek, endOfWeek]
                 }
-            }
+            },
+            include:[{
+                model:db.teacher,
+                attributes:["name"]
+            }]
         });
     }
 
