@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { useGetAllGroups } from '@/api/admin/adminQuery';
+import type { Disruption, Teacher } from '@/api/admin/admin';
+import { useGetAllGroups,useAddLessons, useGetAllTeachers, useModifyLesson, useAddDisruption, useDeleteLesson } from '@/api/admin/adminQuery';
 import type { NewMark, MarkAttribute, Mark } from '@/api/jegyek/jegyek';
 import { useAddMark, usegetGroupMarks, useGetGroupMembers, useGetSubjects, useGetTeacherGroups } from '@/api/jegyek/jegyekQuery';
-import type { Group, NewLesson, Teacher } from '@/api/orarend/orarend';
+import type { Group, Lesson } from '@/api/orarend/orarend';
 import { useGetTeachers } from '@/api/orarend/orarendQuery';
 import queryClient from '@/lib/queryClient';
 import { useOrarendStore } from '@/stores/orarendStore';
@@ -11,20 +12,61 @@ import { addWeeks, format, startOfWeek } from 'date-fns';
 import { storeToRefs } from 'pinia';
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import * as XLSX from 'xlsx';
 
 const {data:csoportok} = useGetAllGroups()
-const computedCsoportok = computed(() => csoportok?.value ?? []);
-const selectedCsoport= ref<number>(computedCsoportok.value[0]?.ID||-1);
+const {data:tanarok} = useGetAllTeachers()
+const { mutate: addLessons, } = useAddLessons();
+const { mutate: modifyLesson } = useModifyLesson();
+const { mutate: addDisruption } = useAddDisruption();
+const { mutate: deleteLesson } = useDeleteLesson();
 
-const NewLessonRef = ref<NewLesson>({
+
+const computedCsoportok = computed(() =>{
+  if(csoportok?.value&&selectedCsoport.value==-1)
+  {
+    selectedCsoport.value = csoportok?.value[0].ID
+    NewLessonRef.value.groupID = csoportok?.value[0].ID
+    const newWeekStart = format(currentWeekStart.value, 'yyyy-MM-dd');
+    queryClient.refetchQueries({ queryKey: [QUERY_KEYS.getTimetable,newWeekStart] })
+    orarendStore.orarendfeltoltAdmin(newWeekStart,selectedCsoport.value);
+  }
+  return csoportok?.value?? []
+});
+
+const computedTanarok = computed(() =>{
+  if(tanarok?.value&&NewLessonRef.value.teacherID==-1)
+  {
+    NewLessonRef.value.teacherID = tanarok?.value[0].ID
+  }
+  return tanarok?.value?? []
+});
+
+const selectedCsoport= ref<number>(-1);
+
+const NewLessonRef = ref<Lesson>({
+    ID:-1,
     groupID: -1,
     teacherID: -1,
     start_Hour: 0,
     start_Minute: 0, 
     length:0,
-    day:"",
-    subjectName:""
+    day:"hetfo",
+    subjectName:"",
+    excused:false,
 })
+
+const lessonCopy = ref<Lesson>({
+    ID:-1,
+    groupID: -1,
+    teacherID: -1,
+    start_Hour: 0,
+    start_Minute: 0, 
+    length:0,
+    day:"hetfo",
+    subjectName:"",
+    excused:false,
+});
 
 const tab = ref<string>("one");
 
@@ -35,16 +77,7 @@ const groupBy = <T, K extends keyof any>(arr: T[], key: (i: T) => K) =>
     return groups;
   }, {} as Record<K, T[]>);
 
-const newLessons = ref<NewLesson[]>([]);
-
-
-const lessonUpload = async () =>
-{
-  for(let index = 0; index < newLessons.value.length; index++){
-  }
-  newLessons.value = [];
-}
-
+const newLessons = ref<Lesson[]>([]);
 
 const honapLista = [9,10,11,12,1,2,3,4,5,6,7,8]
 const honapNevLista = ["Szeptember","Október","November","December","Január","Február","Március","Április","Május","Június","Július","Augusztus"]
@@ -63,7 +96,7 @@ onUnmounted(() => {
 
 //ÓRAREND VIEW KEZDETE
 const currentWeekStart = ref(startOfWeek(new Date(), { weekStartsOn: 1 }));
-const days = ["hetfo", "kedd", "szerda", "csutortok", "pentek", "szombat", "vasarnap"];
+const days = [{name:"Hétfő",key:"hetfo"},{name:"Kedd",key:"kedd"},{name:"Szerda",key:"szerda"},{name:"Csütörtök",key:"csutortok"},{name:"Péntek",key:"pentek"},{name:"Szombat",key:"szombat"},{name:"Vasárnap",key:"vasarnap"},];
 const dayKeys = ["hetfo", "kedd", "szerda", "csutortok", "pentek", "szombat", "vasarnap"];
 const lessonColor = ref("#9c0913");
 
@@ -102,28 +135,176 @@ watch(
 );
 
 function getTeacherName(teacherId: number): string {
-  const teacher = teachers.value.find(t => t.id === teacherId);
+  const teacher = teachers.value.find(t => t.ID === teacherId);
   return teacher ? teacher.name : teacherId.toString();
 }
 
 function changeWeek(weeks: number) {
   currentWeekStart.value = addWeeks(currentWeekStart.value, weeks);
-  const newWeekStart = format(currentWeekStart.value, 'yyyy-MM-dd');
-  queryClient.refetchQueries({ queryKey: [QUERY_KEYS.getTimetable,newWeekStart] })
-  orarendStore.orarendfeltoltAdmin(newWeekStart,selectedCsoport.value);
+  //const newWeekStart = format(currentWeekStart.value, 'yyyy-MM-dd');
+  //queryClient.refetchQueries({ queryKey: [QUERY_KEYS.getTimetable,newWeekStart] })
+  //orarendStore.orarendfeltoltAdmin(newWeekStart,selectedCsoport.value);
 }
 
 watch(
   currentWeekStart,
   (newWeekStart) => {
-    orarendStore.orarendfeltoltAdmin(format(newWeekStart, 'yyyy-MM-dd'),selectedCsoport.value);
+    if(selectedCsoport.value!=-1)
+    {
+      orarendStore.orarendfeltoltAdmin(format(newWeekStart, 'yyyy-MM-dd'),selectedCsoport.value);
+    }
   },
   { immediate: true }
 );
 //ÓRAREND VIEW VÉGE
 
+const lessons = ref<Lesson[]>([]);
+
+const selectedFiles = ref<File[]>([]);
+
+function removeLesson(index: number) {
+  lessons.value.splice(index, 1);
+}
+
+function submitLessons() {
+  if (!lessons.value.length) return;
+  addLessons(lessons.value, {
+    onSuccess: (response) => {
+      console.log("addLessons response:", response);
+      const textContent = JSON.stringify(response, null, 2);
+      const blob = new Blob([textContent], { type: 'text/plain' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = 'addLessonsResponse.txt';
+      link.click();
+      URL.revokeObjectURL(link.href);
+      lessons.value = [];
+    },
+    onError: (error) => {
+      console.error("Error uploading lessons:", error);
+    }
+  });
+}
+
+function processFile(file: File): Promise<Lesson[]> {
+  return new Promise((resolve, reject) => {
+    const extension = file.name.split('.').pop()?.toLowerCase();
+    const reader = new FileReader();
+    reader.onerror = () => reject(reader.error);
+    if (extension === 'csv' || extension === 'txt') {
+      reader.onload = () => {
+        const text = reader.result as string;
+        const delimiter = extension === 'txt' ? '\t' : ';';
+        const lines = text.split(/\r?\n/).filter(line => line.trim() !== '');
+        const rows = lines.map(line => line.split(delimiter));
+        const validRows = rows.filter(cols => cols.length >= 4);
+        const lessonsFromFile: Lesson[] = validRows.map(cols => ({
+          ID:-1,
+          groupID: Number(cols[0].trim()),
+          teacherID: Number(cols[1].trim()),
+          start_Hour: Number(cols[2].trim()),
+          start_Minute: Number(cols[3].trim()),
+          length: Number(cols[4].trim()),
+          day: cols[5].trim(),
+          subjectName: cols[6].trim(),
+          excused:false,
+        }));
+        resolve(lessonsFromFile);
+      };
+      reader.readAsText(file);
+    } else if (extension === 'xlsx') {
+      reader.onload = () => {
+        const data = reader.result;
+        const workbook = XLSX.read(data, { type: 'binary' });
+        const sheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[sheetName];
+        const jsonData: any[][] = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+        const lessonsFromFile: Lesson[] = [];
+        jsonData.forEach(row => {
+          if (row && row.length >= 4) {
+            lessonsFromFile.push({
+              ID:-1,
+              groupID: Number(String(row[0]).trim()),
+              teacherID: Number(String(row[1]).trim()),
+              start_Hour: Number(String(row[2]).trim()),
+              start_Minute: Number(String(row[3]).trim()),
+              length: Number(String(row[4]).trim()),
+              day: String(row[5]).trim(),
+              subjectName: String(row[6]).trim(),
+              excused:false,
+            });
+          }
+        });
+        resolve(lessonsFromFile);
+      };
+      reader.readAsBinaryString(file);
+    } else {
+      resolve([]);
+    }
+  });
+}
+
+async function sendLessons() {
+  if (selectedFiles.value.length) {
+    for (const file of selectedFiles.value) {
+      try {
+        const lessonsFromFile = await processFile(file);
+        lessons.value.push(...lessonsFromFile);
+      } catch (error) {
+        console.error(`Error processing file ${file.name}:`, error);
+      }
+    }
+  }
+  console.log("Lessons array:", lessons.value);
+}
+
+function addLesson() {
+  lessons.value.push(NewLessonRef.value);
+  NewLessonRef.value = {
+      ID:-1,
+      groupID: computedCsoportok.value[0].ID,
+      teacherID: computedTanarok.value[0].ID,
+      start_Hour: 0,
+      start_Minute: 0, 
+      length:0,
+      day:"hetfo",
+      subjectName:"",
+      excused:false,
+  }
+}
+
 const drawer = ref<boolean>(false)
 
+
+const selectedLesson = ref<Lesson>();
+
+const lessonDialog = ref<boolean>();
+
+const disruptionDialog = ref<boolean>();
+
+function openLesson(lesson: Lesson) {
+  lessonDialog.value = true
+  selectedLesson.value = lesson;
+  lessonCopy.value = JSON.parse(JSON.stringify(lesson));
+  lessonCopy.value.start_Hour = Math.floor(lessonCopy.value.start_Minute/60)
+  lessonCopy.value.start_Minute = lessonCopy.value.start_Minute%60
+}
+
+function closeLesson() {
+  lessonDialog.value = false
+  selectedLesson.value = undefined;
+}
+
+
+function openDisruption() {
+  disruptionDialog.value = true
+}
+
+function closeDisruption() {
+  disruptionDialog.value = false
+}
+
+const disruptionDate = ref<string>(new Date().toISOString().split("T")[0]);
 
 </script>
 
@@ -200,7 +381,7 @@ const drawer = ref<boolean>(false)
         <v-card style="margin-bottom: 10px;">
           <v-tabs v-model="tab">
             <v-tab value="one">Megtekintés</v-tab>
-            <v-tab value="two">Beírás</v-tab>
+            <v-tab value="two">Feltöltés</v-tab>
           </v-tabs>
         </v-card>
         <v-card>
@@ -229,21 +410,8 @@ const drawer = ref<boolean>(false)
               <br>
             </v-tabs-window-item>
             <v-tabs-window-item value="two">
-              <v-list-item title="Órarend felvitel: "></v-list-item>
-              <v-divider></v-divider>
-              <h3>Csoportok:</h3>
-              <v-select
-              v-if="computedCsoportok.length>0"
-              v-model="selectedCsoport"
-              item-title="name"
-              item-value="ID"
-              :items="computedCsoportok"
-              label="Válasszon osztályt!"
-              ></v-select>
-              <v-card v-else>
-                "Nincsenek megjeleníthető csoportok!"
-              </v-card>
-              <br>
+              <v-list-item title="Órarend felvitel"></v-list-item>
+  
             </v-tabs-window-item>
         </v-tabs-window>
       </v-card>
@@ -312,6 +480,7 @@ const drawer = ref<boolean>(false)
                                 ? (lesson.teacherID !== null ? 'orange' : 'red') 
                                 : lessonColor
                             }"
+                            @click="openLesson(lesson)"
                           >
                             <div>
                               <div>
@@ -341,13 +510,201 @@ const drawer = ref<boolean>(false)
             <v-card style="justify-content: center" v-else>
               <v-progress-circular indeterminate :size="37"></v-progress-circular>
             </v-card>
+
+
+
             <!--ÓRAREND VIEW VÉGE-->
+
+            <template>
+              <v-dialog v-model="lessonDialog" max-width="500px">
+                <v-card>
+                  <v-card-title>
+                    Óra elnaplózása: {{ lessonCopy?.subjectName }}
+                  </v-card-title>
+                  <v-card-item>
+                    <v-row>
+                      <v-col cols="12">
+                        <v-select
+                          v-if="computedTanarok.length > 0"
+                          v-model="lessonCopy.teacherID"
+                          item-title="name"
+                          item-value="ID"
+                          :items="computedTanarok"
+                          label="Órát tartó tanár"
+                        ></v-select>
+                        <v-card v-else>
+                          "Nincsenek megjeleníthető tanárok!"
+                        </v-card>
+                      </v-col>
+                      <v-col cols="12">
+                        <v-select
+                          v-if="computedCsoportok.length > 0"
+                          v-model="lessonCopy.groupID"
+                          item-title="name"
+                          item-value="ID"
+                          :items="computedCsoportok"
+                          label="Csoport"
+                        ></v-select>
+                        <v-card v-else>
+                          "Nincsenek megjeleníthető csoportok!"
+                        </v-card>
+                      </v-col>
+                      <v-col cols="12">
+                        <v-text-field v-model="lessonCopy.start_Hour" label="Óra kezdete (óra)"></v-text-field>
+                      </v-col>
+                      <v-col cols="12">
+                        <v-text-field v-model="lessonCopy.start_Minute" label="Óra kezdete (perc)"></v-text-field>
+                      </v-col>
+                      <v-col cols="12">
+                        <v-text-field v-model="lessonCopy.length" label="Óra hossza (percben)"></v-text-field>
+                      </v-col>
+                      <v-col cols="12">
+                        <v-select
+                          v-model="lessonCopy.day"
+                          item-title="name"
+                          item-value="key"
+                          :items="days"
+                          label="Nap (héten melyik napon)"
+                        ></v-select>
+                      </v-col>
+                      <v-col cols="12">
+                        <v-text-field v-model="lessonCopy.subjectName" label="Tantárgy" required></v-text-field>
+                      </v-col>
+                    </v-row>
+                  </v-card-item>
+                  <v-card-actions class="d-flex flex-column">
+                    <v-btn color="yellow" block @click="()=>{openDisruption()}">Óra helyettesítése</v-btn>
+                    <v-btn color="yellow" block @click="()=>{modifyLesson(lessonCopy);closeLesson()}">Óra módosítása</v-btn>
+                    <v-btn color="red" block @click="()=>{deleteLesson(lessonCopy.ID);closeLesson()}">Óra törlése</v-btn>
+                    <v-btn color="grey" block @click="()=>{closeLesson();}">Bezárás</v-btn>
+                  </v-card-actions>
+                </v-card>
+              </v-dialog>
+            </template>
+
+            <template>
+              <v-dialog v-model="disruptionDialog" max-width="500px">
+                <v-card>
+                  <v-card-title>
+                    Óra elnaplózása: {{ lessonCopy?.subjectName }}
+                  </v-card-title>
+                  <v-card-item>
+                    <v-row>
+                      <v-col cols="12">
+                        <v-text-field v-model="disruptionDate" label="Dátum(év,hónap,nap) vesszőkkel elválasztva"></v-text-field>
+                      </v-col>
+                    </v-row>
+                  </v-card-item>
+                  <v-card-actions class="d-flex flex-column">
+                    <v-btn color="yellow" block @click="()=>{addDisruption({
+                      ID:-1,
+                      date:new Date(disruptionDate),
+                      groupID: lessonCopy.groupID,
+                      teacherID: lessonCopy.teacherID,
+                      start_Hour: lessonCopy.start_Hour,
+                      start_Minute: lessonCopy.start_Minute, 
+                      length:lessonCopy.length,
+                      day:lessonCopy.day,
+                      subjectName:lessonCopy.subjectName
+                    });closeDisruption();closeLesson(); }">Óra helyettesítése</v-btn>
+                    <v-btn color="grey" block @click="closeDisruption">Bezárás</v-btn>
+                  </v-card-actions>
+                </v-card>
+              </v-dialog>
+            </template>
+
           </v-card-item>
           </v-card>
         </v-tabs-window-item>
         <v-tabs-window-item value="two">
           <v-card>
-          <v-card-item style="padding: 0; width: 100vw;">
+          <v-card-item style="max-height: 50vw; overflow-y: auto; background-color: unset !important; ">
+              <v-card>
+                <v-card-title>Óra hozzáadás</v-card-title>
+                <v-card-text>
+                  <h1>Órák manuális hozzáadása:</h1>
+                  <v-container>
+                    <v-row>
+                      <v-col cols="12">
+                        <v-select required
+                        v-if="computedTanarok.length>0"
+                        v-model="NewLessonRef.teacherID"
+                        item-title="name"
+                        item-value="ID"
+                        :items="computedTanarok"
+                        label="Órát tartó tanár"
+                        ></v-select>
+                        <v-card v-else>
+                          "Nincsenek megjeleníthető tanárok!"
+                        </v-card>
+                      </v-col>
+                      <v-col cols="12">
+                        <v-select required
+                        v-if="computedCsoportok.length>0"
+                        v-model="NewLessonRef.groupID"
+                        item-title="name"
+                        item-value="ID"
+                        :items="computedCsoportok"
+                        label="Csoport"
+                        ></v-select>
+                        <v-card v-else>
+                          "Nincsenek megjeleníthető csoportok!"
+                        </v-card>
+                      </v-col>
+                      <v-col cols="12">
+                        <v-text-field v-model="NewLessonRef.start_Hour" label="Óra kezdete (óra)" required></v-text-field>
+                      </v-col>
+                      <v-col cols="12">
+                        <v-text-field v-model="NewLessonRef.start_Minute" label="Óra kezdete (perc)" required></v-text-field>
+                      </v-col>
+                      <v-col cols="12">
+                        <v-text-field v-model="NewLessonRef.length" label="Óra hossza (percben)" required></v-text-field>
+                      </v-col>
+                      <v-col cols="12">
+                        <v-select required
+                        v-model="NewLessonRef.day"
+                        item-title="name"
+                        item-value="key"
+                        :items="days"
+                        label="Nap (héten melyik napon)"
+                        ></v-select>
+                      </v-col>
+                      <v-col cols="12">
+                        <v-text-field v-model="NewLessonRef.subjectName" label="Tantárgy" required></v-text-field>
+                      </v-col>
+                      <v-col cols="12">
+                        <v-btn color="primary" @click="addLesson()">Óra feltöltése</v-btn>
+                      </v-col>
+                    </v-row>
+                  </v-container>
+                  
+                  <h1>Órák fájlból történő feltöltése</h1>
+                  <h3>Kizárólag txt, csv és xlsx fájlok tölthetők fel!</h3>
+                  <h6>(A txt fájlban az adattagokat tabulátorral elválasztva kell megadni)</h6>
+                  <v-file-input 
+                    label="Fájlok feltöltése (egyszerre)"
+                    multiple
+                    v-model="selectedFiles"
+                    accept=".txt, .csv, .xlsx"
+                    show-size
+                    counter
+                  ></v-file-input>
+                  <v-btn color="primary" :disabled="teachers.length === 0 && selectedFiles.length === 0" @click="sendLessons">Fájlok beolvasása</v-btn>
+                </v-card-text>
+                
+                <v-card-text>
+                  <h1>Bekerülő órák listája:</h1>
+                  <v-list>
+                    <v-list-item v-for="(lesson, index) in lessons" :key="index" @click="removeLesson(index)">
+                      <v-list-item-title>{{ lesson.subjectName }} - {{ lesson.groupID }} - {{ lesson.teacherID }}</v-list-item-title>
+                    </v-list-item>
+                  </v-list>
+                </v-card-text>
+                <v-card-actions>
+                  <v-btn color="primary" @click="submitLessons">Feltöltés az adatbázisba</v-btn>
+                </v-card-actions>
+              </v-card>
+
           </v-card-item>
           </v-card>
           <!---->

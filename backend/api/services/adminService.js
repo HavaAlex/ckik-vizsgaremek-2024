@@ -9,11 +9,14 @@ const GuardianRepository = require("../repositories/guardianRepository")
 
 const UserService = require("../services/userService")
 const GroupService = require("../services/csoportService")
+const orarendService = require("../services/orarendService")
 
 const bcrypt = require("bcrypt");
 const userRepository = require("../repositories/userRepository");
 const userService = require("../services/userService");
 const guardianStudentRepository = require("../repositories/guardianStudentRepository");
+const lessonRepository = require("../repositories/lessonRepository");
+const disruptionRepository = require("../repositories/disruptionRepository");
 const salt = 10;
 
 class adminService {
@@ -296,6 +299,66 @@ class adminService {
     async getAllGroups()
     {
         return await groupRepository.getAllGroups()
+    }
+
+    async uploadLessons(lessons) {
+        const uploaded = [];
+    
+        lessons.forEach(element => {
+            orarendService.validateLesson(element);
+        });
+    
+        const lessonPromises = lessons.map(async element => {
+            let newLesson = {
+                ID: undefined,
+                groupID: element.groupID,
+                teacherID: element.teacherID,
+                start_Hour: element.start_Hour,
+                start_Minute: Number(element.start_Minute) + Number(element.start_Hour) * 60,
+                length: element.length,
+                day: element.day,
+                subjectName: element.subjectName
+            };
+            newLesson = await lessonRepository.createLesson(newLesson);
+            //console.log(newLesson, "!!!!!!!!!!!!!!!!!!!!!!!!!!");
+            uploaded.push(newLesson);
+            return newLesson;
+        });
+    
+        await Promise.all(lessonPromises);
+    
+        //console.log("adminService: vége a felöltésnek4", uploaded);
+        return uploaded;
+    }
+
+    async uploadDisruption(disruption) {
+    
+        let newDisruption = {
+            ID: undefined,
+            date: disruption.date,
+            groupID: disruption.groupID,
+            teacherID: disruption.teacherID,
+            start_Hour: disruption.start_Hour,
+            start_Minute: Number(disruption.start_Minute) + Number(disruption.start_Hour) * 60,
+            length: disruption.length,
+            day: disruption.day,
+            subjectName: disruption.subjectName
+        };
+        newDisruption = await disruptionRepository.createDisruption(newDisruption);
+        return newDisruption;
+    }
+    
+    async getAllTeachers()
+    {
+        return await teacherRepository.getAllTeachers()
+    }
+
+    async modifyLesson(modifiedLesson){
+        return await lessonRepository.modifyLesson(modifiedLesson)
+    }   
+
+    async deleteLesson(ID){
+        return await lessonRepository.deleteLesson(ID)
     }
 }
 module.exports = new adminService(); 

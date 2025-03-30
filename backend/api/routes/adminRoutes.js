@@ -35,6 +35,10 @@ router.get("/allMessage",adminHandler.checkRole,uzenetController.getAllMessages)
 router.delete("/deleteMessage/:ID",adminHandler.checkRole,uzenetController.deleteMessage)
 router.get("/timetable/:id",adminHandler.checkRole,adminController.getOrarend);
 router.get("/allgroups",adminHandler.checkRole,adminController.getAllGroups);
-router.post("/createlessons/",adminHandler.checkRole,orarendController.createLessons)
+router.post("/addLessons",adminHandler.checkRole,adminController.uploadLessons)
+router.get("/allteachers",adminHandler.checkRole,adminController.getAllTeachers);
+router.put("/addDisruption",adminHandler.checkRole,adminController.uploadDisruption)
+router.delete("/deleteLesson/:ID",adminHandler.checkRole,adminController.deleteLesson)
+router.post("/modifyLesson/",adminHandler.checkRole,adminController.modifyLesson)
 
 module.exports = router;

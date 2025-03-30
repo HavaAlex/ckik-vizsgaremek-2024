@@ -41,7 +41,6 @@ class GroupRepository
 
     async getGroupByID(groupID)//Megkeresi az összes csoportját az adott embernek
     {
-        console.log(groupID+"%%")
         return await this.Groups.findOne
         (
             {

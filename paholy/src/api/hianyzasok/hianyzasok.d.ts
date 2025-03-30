@@ -2,7 +2,6 @@ export type HianyzasValasz = {
     data:[]
 }
 export type Teacher = {
-    ID: number,
     name: string,
     phone: string,
     email: string,

@@ -5,6 +5,7 @@ const userRepository = require("../repositories/userRepository")
 const studentRepository = require("../repositories/studentRepository")
 const orarendService = require("../services/orarendService")
 const groupRepository = require("../repositories/groupRepository")
+const lessonRepository = require("../repositories/lessonRepository")
 
 exports.uploadTeachers = async (req,res,next) =>{
     const teachers = req.body
@@ -222,4 +223,78 @@ exports.getOrarend = async (req, res, next) =>
     {
         next(error)
     }   
+}
+
+
+exports.getAllTeachers = async (req,res,next) => {
+    const response = await adminService.getAllTeachers();
+    res.status(201).json(response)
+}
+
+
+exports.uploadLessons = async (req, res, next) =>
+{
+    console.log(req.body)
+    const lessons = req.body;
+    try
+    {
+        const response = await adminService.uploadLessons(lessons)
+        //console.log("adminController: vége a kérésnek!",response)
+        if(response.message)
+        {
+            res.status(400).json(response)
+        }
+        else
+        {
+            res.status(201).json(response);
+        }
+    }
+    catch(error)
+    {
+        next(error)
+    }
+}
+
+
+exports.uploadDisruption = async (req, res, next) =>
+{
+    console.log(req.body,"ITT IDE HE")
+    const disruption = req.body;
+    try
+    {
+        const response = await adminService.uploadDisruption(disruption)
+        //console.log("adminController: vége a kérésnek!",response)
+        if(response.message)
+        {
+            res.status(400).json(response)
+        }
+        else
+        {
+            res.status(201).json(response);
+        }
+    }
+    catch(error)
+    {
+        next(error)
+    }
+}
+
+exports.modifyLesson = async (req,res,next) => {
+    const modifiedLesson = req.body 
+    console.log(modifiedLesson,"ITT IDE HE")
+    try{
+        const response  = await adminService.modifyLesson(modifiedLesson)
+        res.status(201).json(response)
+    }
+    catch(error){
+        next(error)
+    }
+    
+}
+
+
+exports.deleteLesson= async (req,res,next) => {
+    const ID = JSON.parse(req.params.ID);
+    const response = await adminService.deleteLesson(ID);
+    res.status(201).json(response);
 }

@@ -60,6 +60,7 @@ function changeSort(column: string) {
 const showTeacherDialog = ref(false);
 const teachers = ref<Teacher[]>([]);
 const newTeacher = ref<Teacher>({
+  ID:-1,
   name: '',
   phone: '',
   email: '',
@@ -69,7 +70,7 @@ const newTeacher = ref<Teacher>({
 function addTeacher() {
   if (!newTeacher.value.name || !newTeacher.value.phone || !newTeacher.value.email) return;
   teachers.value.push({ ...newTeacher.value });
-  newTeacher.value = { name: '', phone: '', email: '', birth_Date: new Date() };
+  newTeacher.value = {ID:-1, name: '', phone: '', email: '', birth_Date: new Date() };
 }
 
 function removeTeacher(index: number) {
@@ -91,6 +92,7 @@ function processFile(file: File): Promise<Teacher[]> {
         const rows = lines.map(line => line.split(delimiter));
         const validRows = rows.filter(cols => cols.length >= 4);
         const teachersFromFile: Teacher[] = validRows.map(cols => ({
+          ID:-1,
           name: cols[0].trim(),
           phone: cols[1].trim(),
           email: cols[2].trim(),
@@ -110,6 +112,7 @@ function processFile(file: File): Promise<Teacher[]> {
         jsonData.forEach(row => {
           if (row && row.length >= 4) {
             teachersFromFile.push({
+              ID:-1,
               name: String(row[0]).trim(),
               phone: String(row[1]).trim(),
               email: String(row[2]).trim(),
@@ -563,10 +566,6 @@ const updateOrientation = () => {
 };
 onMounted(() => {
   window.matchMedia("(orientation: portrait)").addEventListener("change", updateOrientation);
-  if(document.cookie != ''){
-    const decoded = jwtDecode(getCookie("alap"))
-    push({name:decoded.userData.role+'orarend'})
-  }
 });
 onUnmounted(() => {
   window.matchMedia("(orientation: portrait)").removeEventListener("change", updateOrientation);

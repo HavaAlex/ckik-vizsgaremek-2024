@@ -47,7 +47,7 @@ class OrarendRepository
 
     async getDisruptions(groups, weekStart) {
         // Map groups to an array of IDs
-        groups = groups.map(group => group.GroupID);
+        groups = groups.map(group => group.GroupID||group.ID);
 
     
         // Create a date for the end of the week (weekStart is assumed to be a Monday)

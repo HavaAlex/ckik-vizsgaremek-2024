@@ -1,5 +1,6 @@
 const groupRepository = require("../repositories/groupRepository");
 const orarendRepository  = require("../repositories/orarendRepository");
+const teacherRepository = require("../repositories/teacherRepository");
 const roleService = require("./roleService");
 
 class OrarendService
@@ -99,21 +100,16 @@ async getTeacherLessons(teacherID, weekStart) {
 
     async validateLesson(lesson)
     {
-        try{
-            const response = await roleService.getRole(lesson.teacherID,"teacher")
-        }
-        catch(error)
+        const responseTeacher = await teacherRepository.getTeacherByID(lesson.teacherID,"teacher")
+        if(responseTeacher.length == 0)
         {
-            return {message:"Nincs ilyen tanár: "+lesson.teacherID}
+            throw new Error("Nincs ilyen tanár: "+lesson.teacherID)
         }
-        try{
-            const response = await groupRepository.getGroupByID(lesson.groupID)
-        }
-        catch(error)
+        const responseGroup = await groupRepository.getGroupByID(lesson.groupID)
+        if(responseGroup.length == 0)
         {
-            return {message:"Nincs ilyen csoport: "+lesson.groupID}
+            throw new Error("Nincs ilyen csoport: "+lesson.groupID)
         }
-        return true
     }
 
     async getTeachers(){

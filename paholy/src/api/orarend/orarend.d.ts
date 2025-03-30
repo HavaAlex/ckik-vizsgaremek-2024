@@ -10,16 +10,6 @@ export type Lesson = {
     excused: boolean
 }
 
-export type NewLesson = {
-    groupID: number,
-    teacherID: number,
-    start_Hour: number,
-    start_Minute: number, 
-    length:number,
-    day:string,
-    subjectName:string
-}
-
 
 export type Group = {
     ID: number,
