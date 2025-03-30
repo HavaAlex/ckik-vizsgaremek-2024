@@ -33,6 +33,32 @@ export const useaaddTeacherUsers = () => {
         }
     })
 }
+
+//Összes felhasználó lekérése
+const getStudents = async () => {
+    const { getCookie } = useCookieHandler() 
+    const config = {
+        headers: { Authorization: `Bearer ${getCookie("alap")}` }
+    };
+    const response = await axiosClient.get(`http://localhost:3000/admin/getAllStudents`, config)
+    console.log(response.data)
+    return response.data
+}
+
+export const useGetStudents = () => {
+    const { setError } = useErrorHandler()
+    const query = useQuery({
+        queryKey: [QUERY_KEYS.getUsers],
+        queryFn: getStudents,
+    })
+
+    if (query.error.value) {
+        console.error("Lekérdezési hiba:", query.error)
+        setError(query.error.value)
+    }
+    return query
+}
+
 //Diákok feltöltése
 const addStudentUsers = async (students: Student[]) : Promise<Student[]> => {
     const { getCookie } = useCookieHandler() 
@@ -519,6 +545,77 @@ export const useAddDisruption = () => {
             queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.getTimetable] })
             const {setStatus} = useStatusHandler()
             setStatus("Sikeres óra módosítás!")
+        },
+        onError(error) {
+            const { setError } = useErrorHandler()
+            setError(error)
+        }
+    })
+}
+
+export const getAbsences = async () => {
+    const { getCookie } = useCookieHandler() 
+    const config = {
+        headers: { Authorization: `Bearer ${getCookie("alap")}` }
+    };
+    const response = await axiosClient.get(`http://localhost:3000/admin/getAbsences`, config)
+    return response.data
+}
+
+export const useGetAbsences = () => {
+    const { setError } = useErrorHandler()
+    const query = useQuery({
+        queryKey: [QUERY_KEYS.getAbsences],
+        queryFn: getAbsences,
+    })
+
+    if (query.error.value) {
+        console.error("Lekérdezési hiba:", query.error)
+        setError(query.error.value)
+    }
+    return query
+}
+
+
+export const deleteAbsence = async (absenceID: number) => {
+
+    const { getCookie } = useCookieHandler() 
+    const config = {
+        headers: { Authorization: `Bearer ${getCookie("alap")}` }
+    };
+    const response = await axiosClient.delete(`http://localhost:3000/admin/deleteAbsence/${absenceID}`, config)
+    return response.data
+}
+
+export const useDeleteAbsence = () => {
+    return useMutation({
+        mutationFn: deleteAbsence,
+        onSuccess() {
+            queryClient.refetchQueries({ queryKey: [QUERY_KEYS.deleteAbsence] })
+        },
+        onError(error) {
+            const { setError } = useErrorHandler()
+            setError(error)
+        }
+    })
+}
+
+
+const modifyAbsence = async (absenceToBeModified: any) => {
+    console.log(absenceToBeModified)
+    const { getCookie } = useCookieHandler() 
+    const config = {
+        headers: { Authorization: `Bearer ${getCookie("alap")}` }
+    };
+    const response = await axiosClient.put(`http://localhost:3000/admin/modifyAbsence`, absenceToBeModified, config)
+    return response.data
+}
+
+export const useModifyAbsence = () => {
+    return useMutation({
+        mutationFn: modifyAbsence,
+        onSuccess() {
+            queryClient.refetchQueries({ queryKey: [QUERY_KEYS.modifyAbsence] })
         },
         onError(error) {
             const { setError } = useErrorHandler()

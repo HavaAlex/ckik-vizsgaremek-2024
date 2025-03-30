@@ -179,27 +179,6 @@ class HazikService {
         console.log("Final Result: ", result);
         return result;
     }
-    
-      
-
-
-
-
-
-    /*async getTeacherAssignmentFiles(userID) {
-
-        const teacherArr = await assignmentRepository.getTeacherByUserID(userID);
-        const teacherID = teacherArr[0].ID;
-
-        const assignments = await assignmentRepository.getAssignmentsByTeacherID(teacherID);
-
-        const allFiles = [];
-        for (const assignment of assignments) {
-            const files = await assignmentRepository.getAssignmentFiles(assignment.ID);
-            allFiles.push(...files);
-        }
-        return allFiles;
-    }*/
 
 
     async modifycompletedassignment(completedassignment) {
@@ -271,9 +250,9 @@ class HazikService {
                     const files = await assignmentRepository.getCompletedAssignmentFilesByCompletedAssignmentID(completedAssignment.ID);
     
 
-                    if (files.length === 0 && completedAssignment.status !== "Határidó lejárt") {
+                    if (files.length === 0 && completedAssignment.status !== "Határidő lejárt") {
                         await assignmentRepository.updateCompletedAssignment(completedAssignment.ID, {
-                            status: "Határidó lejárt"
+                            status: "Határidő lejárt"
                         });
                     }
                 }

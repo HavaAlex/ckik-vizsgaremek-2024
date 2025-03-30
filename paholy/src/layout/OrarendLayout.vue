@@ -16,7 +16,7 @@
   width: 100%;
   height: 1200px;
   max-height: max-content;
-  overflow: auto;
+  /* overflow: auto; */
 }
 
 .timetable-container {
@@ -36,6 +36,7 @@
   height: 30px;
   border-bottom: 1px solid #ccc;
 }
+
 .time-labels-content {
   position: relative;
   flex: 1;
@@ -152,4 +153,18 @@
 .color-picker label {
   color: #000;
 }
+
+.day-header-portrait {
+  width: 100%;
+  text-align: center;
+  font-weight: bold;
+  border-bottom: 1px solid #ccc;
+  background-color: #f5f5f5;
+  color: #000;
+  height: 30px;
+  line-height: 30px;
+  margin-bottom: 10px;
+}
+
+
 </style>

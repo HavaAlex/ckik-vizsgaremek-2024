@@ -2,7 +2,7 @@ const absenceRepository = require("../repositories/absenceRepository");
 
 class HianyzasService
 {
-    async getAbsences(ID)
+    async getAbsencesStudent(ID)
     {
         return await absenceRepository.getAbsencesStudent(ID)
     }
@@ -10,6 +10,11 @@ class HianyzasService
     async getStudentsInGroup(groupID)
     {
         return await absenceRepository.getStudentsInGroup(groupID);
+    }
+
+    async getAbsences()
+    {
+        return await absenceRepository.getAbsences();
     }
 
     async postAbsence(absence)

@@ -21,10 +21,6 @@ const getHianyzasok = async (): Promise<Hianyzas|Error> => {
     const config = {
         headers: { Authorization: `Bearer ${ cookieHandler.getCookie("alap")}` }
     };
-    console.log("FAAAAAAAAAAAASZ")
-    console.log(cookieHandler.utolsoDecoded)
-    console.log(cookieHandler.utolsoDecoded?.userData.role)
-    console.log("ÉÉÉÉÉÉÉÉ: ", cookieHandler.utolsoDecoded?.userData.role == "szulo"?`http://localhost:3000/hianyzas/${route.params.id}` :`http://localhost:3000/hianyzas`)
     const response = await axiosClient.get(cookieHandler.utolsoDecoded?.userData.role == "szulo"?`http://localhost:3000/hianyzas/${route.params.id}` :`http://localhost:3000/hianyzas`,config)
     return response.data
 }
@@ -133,6 +129,8 @@ const addAbsence = async (data : Absence) : Promise<Absence> => {
         }
     } 
     const response = await axiosClient.post(`http://localhost:3000/hianyzas/postAbsence`, data,config)
+
+    console.log(response.data)
     return response.data.data
 }
 
@@ -145,7 +143,7 @@ export const useAddAbsence = () => {
                 queryClient.refetchQueries({queryKey:[QUERY_KEYS.postAbsence]})
                 console.log(data)
                 const {setStatus} = useStatusHandler()
-                setStatus("Sikeres Hianyzas felvitel!")
+                setStatus("Sikeres hiányzás felvitel!")
             },
             onError(error){
                 const {setError} = useErrorHandler()
@@ -153,5 +151,29 @@ export const useAddAbsence = () => {
             }
         }
     )
+}
+
+
+export const getAbsences = async () => {
+    const { getCookie } = useCookieHandler() 
+    const config = {
+        headers: { Authorization: `Bearer ${getCookie("alap")}` }
+    };
+    const response = await axiosClient.get(`http://localhost:3000/hianyzas/getAllAbsences`, config)
+    return response.data
+}
+
+export const useGetAbsences = () => {
+    const { setError } = useErrorHandler()
+    const query = useQuery({
+        queryKey: [QUERY_KEYS.getAbsences],
+        queryFn: getAbsences,
+    })
+
+    if (query.error.value) {
+        console.error("Lekérdezési hiba:", query.error)
+        setError(query.error.value)
+    }
+    return query
 }
 

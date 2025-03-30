@@ -6,6 +6,7 @@ const studentGroupRepository = require("../repositories/studentGroupRepository")
 const UserRepository = require("../repositories/userRepository")
 const GuardianStudentRepository = require("../repositories/guardianStudentRepository")
 const GuardianRepository = require("../repositories/guardianRepository")
+const AbsenceRepository = require("../repositories/absenceRepository")
 
 const UserService = require("../services/userService")
 const GroupService = require("../services/csoportService")
@@ -17,6 +18,8 @@ const userService = require("../services/userService");
 const guardianStudentRepository = require("../repositories/guardianStudentRepository");
 const lessonRepository = require("../repositories/lessonRepository");
 const disruptionRepository = require("../repositories/disruptionRepository");
+const absence = require("../models/absence");
+const absenceRepository = require("../repositories/absenceRepository");
 const salt = 10;
 
 class adminService {
@@ -174,6 +177,12 @@ class adminService {
         const users = await userRepository.getAllUsers();
         return users
     }
+
+    async getAllStudents(){
+        return await studentRepository.getAllStudents()
+    }
+
+
     async modifyUser(user, currentUsername){
         if(currentUsername == user.roleSide.name){
             const modificationResult = await userRepository.modifyUser(user)
@@ -191,27 +200,31 @@ class adminService {
         return await userRepository.deleteUser(ID, user)
     }
 
+    async deleteAbsence(ID){
+        return await userRepository.deleteAbsence(ID)
+    }
+
     async getAllGroupsWithStudents()
     {
         const groupsWithStudentsArray = []
         const groups = await groupRepository.getAllGroups();
-        //console.log("ÉN VAGYOK A GROUP A GRPO ATZ EGYETLEN GRUP: ", groups)
+
         for (let i = 0; i < groups.length; i++) {
             let groupsWithStudents = {
                 group : groups[i],
                 students: await studentRepository.getStudentsByGroupID(groups[i].ID)
             } 
-            //console.log("itt van ez a cunyó: ",groupsWithStudents)
+
             groupsWithStudentsArray.push(groupsWithStudents)
         }
 
-        //console.log("VÉGRE ITT VAGYOK A TÖMBNÉK JUHUUUU: ", groupsWithStudentsArray)
+
         return groupsWithStudentsArray
 
     }
 
     async CreatedGroup(newGroup){
-        console.log("OOOOO: ", newGroup)
+
         const usersExist = await UserService.checkIfUsersExist(newGroup.StudentOMIDs)
         if(!usersExist){
             return -1 
@@ -301,9 +314,23 @@ class adminService {
         return await groupRepository.getAllGroups()
     }
 
+    async getAbsences(){
+        const absences = await absenceRepository.getAbsences();
+        return absences
+    }
+
+    async approveAbsence(absenceToBeModified){
+        const absences = await absenceRepository.approveAbsence(absenceToBeModified);
+        return absences
+    }
+
+    async disapproveAbsence(absenceToBeModified){
+        const absences = await absenceRepository.disapproveAbsence(absenceToBeModified);
+        return absences
+    }
+
     async uploadLessons(lessons) {
         const uploaded = [];
-    
         lessons.forEach(element => {
             orarendService.validateLesson(element);
         });

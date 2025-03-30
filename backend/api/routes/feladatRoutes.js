@@ -281,7 +281,6 @@ router.post("/getCompletedAssignmentFiles/",hazikController.getCompletedAssignme
  */
 router.delete("/deleteAssignment/:assignmentId", tanarHandler.checkRole, hazikController.deleteAssignment);
 
-router.delete("/deleteAssignment/:assignmentId",tanarHandler.checkRole, hazikController.deleteAssignment)
 
 
 router.delete("/deleteAnswerFile/:fileId",hazikController.deleteCompletedAssignmentFile)
@@ -343,11 +342,6 @@ router.post(
   hazikController.uploadAssignmentFiles
 );
 
-router.post(
-  "/uploadassignmentfiles",
-  upload.array("files"),
-  hazikController.uploadAssignmentFiles
-);
 
 router.post(
   "/uploadcompletedassignmentfiles",

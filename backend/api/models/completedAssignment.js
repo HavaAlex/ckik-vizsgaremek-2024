@@ -34,7 +34,7 @@ module.exports = (sequelize, DataTypes) =>
                 allowNull: false,
             },
             status: {
-                type: DataTypes.ENUM('Leadva','Nincs leadva','Elkésett'),
+                type: DataTypes.ENUM('Leadva','Nincs leadva','Határidő lejárt'),
                 allowNull: false,
             },
         },

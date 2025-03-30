@@ -1,0 +1,155 @@
+INSERT INTO `users` (`ID`, `username`, `password`, `role`) VALUES (NULL, 'litvan.laci', '$2b$10$xgg6/sn4VR5Kjwn4Kp1KVOifnsH6lJ6w4ehY.0DKceYfG6j51x1Qy', 'diak');
+INSERT INTO `users` (`ID`, `username`, `password`, `role`) VALUES (NULL, 'uborka.ubul', '$2b$10$xgg6/sn4VR5Kjwn4Kp1KVOifnsH6lJ6w4ehY.0DKceYfG6j51x1Qy', 'diak');
+INSERT INTO `users` (`ID`, `username`, `password`, `role`) VALUES (NULL, 'kalapacs.karoly', '$2b$10$xgg6/sn4VR5Kjwn4Kp1KVOifnsH6lJ6w4ehY.0DKceYfG6j51x1Qy', 'diak');
+INSERT INTO `users` (`ID`, `username`, `password`, `role`) VALUES (NULL, 'cinege.cecil', '$2b$10$xgg6/sn4VR5Kjwn4Kp1KVOifnsH6lJ6w4ehY.0DKceYfG6j51x1Qy', 'diak');
+INSERT INTO `users` (`ID`, `username`, `password`, `role`) VALUES (NULL, 'elemer.eniko', '$2b$10$xgg6/sn4VR5Kjwn4Kp1KVOifnsH6lJ6w4ehY.0DKceYfG6j51x1Qy', 'diak');
+INSERT INTO `users` (`ID`, `username`, `password`, `role`) VALUES (NULL, 'antal.aniko', '$2b$10$xgg6/sn4VR5Kjwn4Kp1KVOifnsH6lJ6w4ehY.0DKceYfG6j51x1Qy', 'diak');
+INSERT INTO `users` (`ID`, `username`, `password`, `role`) VALUES (NULL, 'cinege.katalin', '$2b$10$xgg6/sn4VR5Kjwn4Kp1KVOifnsH6lJ6w4ehY.0DKceYfG6j51x1Qy', 'diak');
+INSERT INTO `users` (`ID`, `username`, `password`, `role`) VALUES (NULL, 'ordas.odon', '$2b$10$xgg6/sn4VR5Kjwn4Kp1KVOifnsH6lJ6w4ehY.0DKceYfG6j51x1Qy', 'diak');
+INSERT INTO `users` (`ID`, `username`, `password`, `role`) VALUES (NULL, 'papp.petra', '$2b$10$xgg6/sn4VR5Kjwn4Kp1KVOifnsH6lJ6w4ehY.0DKceYfG6j51x1Qy', 'diak');
+INSERT INTO `users` (`ID`, `username`, `password`, `role`) VALUES (NULL, 'rokus.robert', '$2b$10$xgg6/sn4VR5Kjwn4Kp1KVOifnsH6lJ6w4ehY.0DKceYfG6j51x1Qy', 'diak');
+INSERT INTO `users` (`ID`, `username`, `password`, `role`) VALUES (NULL, 'palacsinta.peter', '$2b$10$xgg6/sn4VR5Kjwn4Kp1KVOifnsH6lJ6w4ehY.0DKceYfG6j51x1Qy', 'diak');
+
+INSERT INTO `students` ( `ID`, `name`, `DoB`, `address`, `phone`, `email`, `userID`, `OMID`) VALUES (null, 'litvan.laci','2018-04-06','Cegléd Kossúth Sándor u. 2','36301234567','litvan.laci@gmail.com',1,1231231);
+INSERT INTO `students` ( `ID`, `name`, `DoB`, `address`, `phone`, `email`, `userID`, `OMID`) VALUES (null, 'uborka.ubul','2018-09-02','Cegléd Kossúth Sándor u. 3','36301234567','uborka.ubul@gmail.com',2,1231232);
+INSERT INTO `students` ( `ID`, `name`, `DoB`, `address`, `phone`, `email`, `userID`, `OMID`) VALUES (null, 'kalapacs.karoly','2018-05-13','Cegléd Kossúth Sándor u. 4','36301234567','kalapacs.karoly@gmail.com',3,1231233);
+INSERT INTO `students` ( `ID`, `name`, `DoB`, `address`, `phone`, `email`, `userID`, `OMID`) VALUES (null, 'cinege.cecil','2018-04-19','Cegléd Kossúth Sándor u. 5','36301234567','cinege.cecil@gmail.com',4,1231234);
+INSERT INTO `students` ( `ID`, `name`, `DoB`, `address`, `phone`, `email`, `userID`, `OMID`) VALUES (null, 'elemer.eniko','2018-11-23','Cegléd Kossúth Sándor u. 6','36301234567','elemer.eniko@gmail.com',5,1231235);
+INSERT INTO `students` ( `ID`, `name`, `DoB`, `address`, `phone`, `email`, `userID`, `OMID`) VALUES (null, 'antal.aniko','2018-02-18','Cegléd Kossúth Sándor u. 7','36301234567','antal.aniko@gmail.com',6,1231236);
+INSERT INTO `students` ( `ID`, `name`, `DoB`, `address`, `phone`, `email`, `userID`, `OMID`) VALUES (null, 'cinege.katalin','2018-07-08','Cegléd Kossúth Sándor u. 11','36301234567','cinege.katalin@gmail.com',7,1231237);
+INSERT INTO `students` ( `ID`, `name`, `DoB`, `address`, `phone`, `email`, `userID`, `OMID`) VALUES (null, 'ordas.odon','2018-01-15','Cegléd Kossúth Sándor u. 8','36301234567','ordas.odon@gmail.com',8,1231238);
+INSERT INTO `students` ( `ID`, `name`, `DoB`, `address`, `phone`, `email`, `userID`, `OMID`) VALUES (null, 'papp.petra','2018-09-01','Cegléd Kossúth Sándor u. 9','36301234567','papp.petrat@gmail.com',9,1231239);
+INSERT INTO `students` ( `ID`, `name`, `DoB`, `address`, `phone`, `email`, `userID`, `OMID`) VALUES (null, 'rokus.robert','2018-10-10','Cegléd Kossúth Sándor u. 9','36301234567','rokus.robert@gmail.com',10,12312310);
+INSERT INTO `students` ( `ID`, `name`, `DoB`, `address`, `phone`, `email`, `userID`, `OMID`) VALUES (null, 'palacsinta.peter','2018-06-06','Cegléd Kossúth Sándor u. 10','36301234567','palacsinta.peter@gmail.com',11,12312311);
+
+INSERT INTO `groups` (`ID`, `name`) VALUES (NULL,'1.a');
+INSERT INTO `groups` (`ID`, `name`) VALUES (NULL,'1.b');
+INSERT INTO `studentgroups` (`GroupID`, `StudentID`) VALUES (1,1);
+INSERT INTO `studentgroups` (`GroupID`, `StudentID`) VALUES (1,2);
+INSERT INTO `studentgroups` (`GroupID`, `StudentID`) VALUES (1,3);
+INSERT INTO `studentgroups` (`GroupID`, `StudentID`) VALUES (1,4);
+INSERT INTO `studentgroups` (`GroupID`, `StudentID`) VALUES (1,5);
+INSERT INTO `studentgroups` (`GroupID`, `StudentID`) VALUES (1,6);
+INSERT INTO `studentgroups` (`GroupID`, `StudentID`) VALUES (2,7);
+INSERT INTO `studentgroups` (`GroupID`, `StudentID`) VALUES (2,8);
+INSERT INTO `studentgroups` (`GroupID`, `StudentID`) VALUES (2,9);
+INSERT INTO `studentgroups` (`GroupID`, `StudentID`) VALUES (2,10);
+INSERT INTO `studentgroups` (`GroupID`, `StudentID`) VALUES (2,11);
+
+
+
+
+INSERT INTO `users` (`ID`, `username`, `password`, `role`) VALUES (NULL, 'papp.lajos', '$2b$10$xgg6/sn4VR5Kjwn4Kp1KVOifnsH6lJ6w4ehY.0DKceYfG6j51x1Qy', 'tanar');
+INSERT INTO `users` (`ID`, `username`, `password`, `role`) VALUES (NULL, 'cegledi.eniko', '$2b$10$xgg6/sn4VR5Kjwn4Kp1KVOifnsH6lJ6w4ehY.0DKceYfG6j51x1Qy', 'tanar');
+INSERT INTO `users` (`ID`, `username`, `password`, `role`) VALUES (NULL, 'kovacsne.hajdu.jolan', '$2b$10$xgg6/sn4VR5Kjwn4Kp1KVOifnsH6lJ6w4ehY.0DKceYfG6j51x1Qy', 'tanar');
+
+
+INSERT INTO `teachers` ( `ID`,`name`,`phone`, `email`,`userID`) VALUES (null,'papp.lajos', '36301234567','papp.lajos@gmail.com',12);
+INSERT INTO `teachers` ( `ID`,`name`,`phone`, `email`,`userID`) VALUES (null,'cegledi.eniko', '36301234567','cegledi.eniko@gmail.com',13);
+INSERT INTO `teachers` ( `ID`,`name`,`phone`, `email`,`userID`) VALUES (null,'kovacsne.hajdu.jolan', '36301234567','kovacsne.hajdu.jolan@gmail.com',14);
+
+
+INSERT INTO `users` (`ID`, `username`, `password`, `role`) VALUES (NULL, 'litvan.jeno', '$2b$10$xgg6/sn4VR5Kjwn4Kp1KVOifnsH6lJ6w4ehY.0DKceYfG6j51x1Qy', 'szulo');
+INSERT INTO `users` (`ID`, `username`, `password`, `role`) VALUES (NULL, 'uborkane.matilda', '$2b$10$xgg6/sn4VR5Kjwn4Kp1KVOifnsH6lJ6w4ehY.0DKceYfG6j51x1Qy', 'szulo');
+INSERT INTO `users` (`ID`, `username`, `password`, `role`) VALUES (NULL, 'kalapacs.bence', '$2b$10$xgg6/sn4VR5Kjwn4Kp1KVOifnsH6lJ6w4ehY.0DKceYfG6j51x1Qy', 'szulo');
+INSERT INTO `users` (`ID`, `username`, `password`, `role`) VALUES (NULL, 'cinegene.sara', '$2b$10$xgg6/sn4VR5Kjwn4Kp1KVOifnsH6lJ6w4ehY.0DKceYfG6j51x1Qy', 'szulo');
+INSERT INTO `users` (`ID`, `username`, `password`, `role`) VALUES (NULL, 'elemer.emil', '$2b$10$xgg6/sn4VR5Kjwn4Kp1KVOifnsH6lJ6w4ehY.0DKceYfG6j51x1Qy', 'szulo');
+INSERT INTO `users` (`ID`, `username`, `password`, `role`) VALUES (NULL, 'antal.andras', '$2b$10$xgg6/sn4VR5Kjwn4Kp1KVOifnsH6lJ6w4ehY.0DKceYfG6j51x1Qy', 'szulo');
+INSERT INTO `users` (`ID`, `username`, `password`, `role`) VALUES (NULL, 'ordas.kristof', '$2b$10$xgg6/sn4VR5Kjwn4Kp1KVOifnsH6lJ6w4ehY.0DKceYfG6j51x1Qy', 'szulo');
+INSERT INTO `users` (`ID`, `username`, `password`, `role`) VALUES (NULL, 'papp.terez', '$2b$10$xgg6/sn4VR5Kjwn4Kp1KVOifnsH6lJ6w4ehY.0DKceYfG6j51x1Qy', 'szulo');
+INSERT INTO `users` (`ID`, `username`, `password`, `role`) VALUES (NULL, 'rokus.jozsef', '$2b$10$xgg6/sn4VR5Kjwn4Kp1KVOifnsH6lJ6w4ehY.0DKceYfG6j51x1Qy', 'szulo');
+INSERT INTO `users` (`ID`, `username`, `password`, `role`) VALUES (NULL, 'palacsinta.pedro', '$2b$10$xgg6/sn4VR5Kjwn4Kp1KVOifnsH6lJ6w4ehY.0DKceYfG6j51x1Qy', 'szulo');
+
+INSERT INTO `guardians` (  `ID`,`name`,`phone`, `email`,`userID`) VALUES (null, 'litvan.jeno','36301234567','litvan.jeno@gmail.com',15);
+INSERT INTO `guardians` (  `ID`,`name`,`phone`, `email`,`userID`) VALUES (null, 'uborkane.matilda','36301234567','uborkane.matilda@gmail.com',16);
+INSERT INTO `guardians` (  `ID`,`name`,`phone`, `email`,`userID`) VALUES (null, 'kalapacs.bence','36301234567','kalapacs.bence@gmail.com',17);
+INSERT INTO `guardians` (  `ID`,`name`,`phone`, `email`,`userID`) VALUES (null, 'cinegene.sara','36301234567','cinegene.sara@gmail.com',18);
+INSERT INTO `guardians` (  `ID`,`name`,`phone`, `email`,`userID`) VALUES (null, 'elemer.emil','36301234567','elemer.emil@gmail.com',19);
+INSERT INTO `guardians` (  `ID`,`name`,`phone`, `email`,`userID`) VALUES (null, 'antal.andras','36301234567','antal.andras@gmail.com',20);
+INSERT INTO `guardians` (  `ID`,`name`,`phone`, `email`,`userID`) VALUES (null, 'ordas.kristof','36301234567','ordas.kristof@gmail.com',21);
+INSERT INTO `guardians` (  `ID`,`name`,`phone`, `email`,`userID`) VALUES (null, 'papp.terez','36301234567','papp.terez@gmail.com',22);
+INSERT INTO `guardians` (  `ID`,`name`,`phone`, `email`,`userID`) VALUES (null, 'rokus.jozsef','36301234567','rokus.jozsef@gmail.com',23);
+INSERT INTO `guardians` (  `ID`,`name`,`phone`, `email`,`userID`) VALUES (null, 'palacsinta.pedro','36301234567','palacsinta.pedro@gmail.com',24);
+
+insert into `guardianstudents` (`GuardianID`,`StudentID`) VALUES (1,1);
+insert into `guardianstudents` (`GuardianID`,`StudentID`) VALUES (2,2);
+insert into `guardianstudents` (`GuardianID`,`StudentID`) VALUES (3,3);
+insert into `guardianstudents` (`GuardianID`,`StudentID`) VALUES (4,4);
+insert into `guardianstudents` (`GuardianID`,`StudentID`) VALUES (4,7);
+insert into `guardianstudents` (`GuardianID`,`StudentID`) VALUES (5,5);
+insert into `guardianstudents` (`GuardianID`,`StudentID`) VALUES (6,6);
+insert into `guardianstudents` (`GuardianID`,`StudentID`) VALUES (7,8);
+insert into `guardianstudents` (`GuardianID`,`StudentID`) VALUES (8,9);
+insert into `guardianstudents` (`GuardianID`,`StudentID`) VALUES (9,10);
+
+INSERT INTO `users` (`ID`, `username`, `password`, `role`) VALUES (NULL, 'szabo.patrik', '$2b$10$xgg6/sn4VR5Kjwn4Kp1KVOifnsH6lJ6w4ehY.0DKceYfG6j51x1Qy', 'admin');
+INSERT INTO `admins` ( `ID`,`name`,`phone`, `email`,`userID`) VALUES (null, 'szabo.patrik','36301234567','szabo.patrik@gmail.com',25);
+
+
+INSERT INTO `lessons` (`ID`, `groupID`, `teacherID`, `start_Minute`, `length`, `day`, `subjectName`) VALUES (NULL, 1, 2, 480, 45, 'hetfo','Matematika');
+INSERT INTO `lessons` (`ID`, `groupID`, `teacherID`, `start_Minute`, `length`, `day`, `subjectName`) VALUES (NULL, 1, 1, 535, 45, 'hetfo','Magyar nyelv és Irodalom');
+INSERT INTO `lessons` (`ID`, `groupID`, `teacherID`, `start_Minute`, `length`, `day`, `subjectName`) VALUES (NULL, 1, 1 , 590, 45, 'hetfo','Magyar nyelv és Irodalom');
+INSERT INTO `lessons` (`ID`, `groupID`, `teacherID`, `start_Minute`, `length`, `day`, `subjectName`) VALUES (NULL, 1, 3,  645,45, 'hetfo','Környezetismeret');
+INSERT INTO `lessons` (`ID`, `groupID`, `teacherID`, `start_Minute`, `length`, `day`, `subjectName`) VALUES (NULL, 1, 2 , 700, 45, 'hetfo','Testnevelés');
+
+INSERT INTO `lessons` (`ID`, `groupID`, `teacherID`, `start_Minute`, `length`, `day`, `subjectName`) VALUES (NULL, 1, 2, 535, 45, 'kedd','Matematika');
+INSERT INTO `lessons` (`ID`, `groupID`, `teacherID`, `start_Minute`, `length`, `day`, `subjectName`) VALUES (NULL, 1, 1, 480, 45, 'kedd','Magyar nyelv és Irodalom');
+INSERT INTO `lessons` (`ID`, `groupID`, `teacherID`, `start_Minute`, `length`, `day`, `subjectName`) VALUES (NULL, 1, 1 , 755, 45, 'kedd','Magyar nyelv és Irodalom');
+INSERT INTO `lessons` (`ID`, `groupID`, `teacherID`, `start_Minute`, `length`, `day`, `subjectName`) VALUES (NULL, 1, 3,  645,45, 'kedd','Környezetismeret');
+INSERT INTO `lessons` (`ID`, `groupID`, `teacherID`, `start_Minute`, `length`, `day`, `subjectName`) VALUES (NULL, 1, 2 , 700, 45, 'kedd','Testnevelés');
+
+INSERT INTO `lessons` (`ID`, `groupID`, `teacherID`, `start_Minute`, `length`, `day`, `subjectName`) VALUES (NULL, 1, 2, 590, 45, 'szerda','Matematika');
+INSERT INTO `lessons` (`ID`, `groupID`, `teacherID`, `start_Minute`, `length`, `day`, `subjectName`) VALUES (NULL, 1, 1, 535, 45, 'szerda','Magyar nyelv és Irodalom');
+INSERT INTO `lessons` (`ID`, `groupID`, `teacherID`, `start_Minute`, `length`, `day`, `subjectName`) VALUES (NULL, 1, 1 , 700, 45, 'szerda','Magyar nyelv és Irodalom');
+INSERT INTO `lessons` (`ID`, `groupID`, `teacherID`, `start_Minute`, `length`, `day`, `subjectName`) VALUES (NULL, 1, 3, 645,45, 'szerda','Környezetismeret');
+INSERT INTO `lessons` (`ID`, `groupID`, `teacherID`, `start_Minute`, `length`, `day`, `subjectName`) VALUES (NULL, 1, 2 , 480, 45, 'szerda','Testnevelés');
+
+INSERT INTO `lessons` (`ID`, `groupID`, `teacherID`, `start_Minute`, `length`, `day`, `subjectName`) VALUES (NULL, 1, 2, 645, 45, 'csutortok','Matematika');
+INSERT INTO `lessons` (`ID`, `groupID`, `teacherID`, `start_Minute`, `length`, `day`, `subjectName`) VALUES (NULL, 1, 1, 535, 45, 'csutortok','Magyar nyelv és Irodalom');
+INSERT INTO `lessons` (`ID`, `groupID`, `teacherID`, `start_Minute`, `length`, `day`, `subjectName`) VALUES (NULL, 1, 1 , 590, 45, 'csutortok','Magyar nyelv és Irodalom');
+INSERT INTO `lessons` (`ID`, `groupID`, `teacherID`, `start_Minute`, `length`, `day`, `subjectName`) VALUES (NULL, 1, 3,  480,45, 'csutortok','Környezetismeret');
+INSERT INTO `lessons` (`ID`, `groupID`, `teacherID`, `start_Minute`, `length`, `day`, `subjectName`) VALUES (NULL, 1, 2 , 700, 45, 'csutortok','Testnevelés');
+
+INSERT INTO `lessons` (`ID`, `groupID`, `teacherID`, `start_Minute`, `length`, `day`, `subjectName`) VALUES (NULL, 1, 2, 480, 45, 'pentek','Matematika');
+INSERT INTO `lessons` (`ID`, `groupID`, `teacherID`, `start_Minute`, `length`, `day`, `subjectName`) VALUES (NULL, 1, 1, 535, 45, 'pentek','Magyar nyelv és Irodalom');
+INSERT INTO `lessons` (`ID`, `groupID`, `teacherID`, `start_Minute`, `length`, `day`, `subjectName`) VALUES (NULL, 1, 1 , 590, 45, 'pentek','Magyar nyelv és Irodalom');
+INSERT INTO `lessons` (`ID`, `groupID`, `teacherID`, `start_Minute`, `length`, `day`, `subjectName`) VALUES (NULL, 1, 3,  645,45, 'pentek','Környezetismeret');
+INSERT INTO `lessons` (`ID`, `groupID`, `teacherID`, `start_Minute`, `length`, `day`, `subjectName`) VALUES (NULL, 1, 2 , 700, 45, 'pentek','Testnevelés');
+
+
+INSERT INTO `lessons` (`ID`, `groupID`, `teacherID`, `start_Minute`, `length`, `day`, `subjectName`) VALUES (NULL, 2, 2, 425, 45, 'hetfo','Matematika');
+INSERT INTO `lessons` (`ID`, `groupID`, `teacherID`, `start_Minute`, `length`, `day`, `subjectName`) VALUES (NULL, 2, 1, 480, 45, 'hetfo','Magyar nyelv és Irodalom');
+INSERT INTO `lessons` (`ID`, `groupID`, `teacherID`, `start_Minute`, `length`, `day`, `subjectName`) VALUES (NULL, 2, 1 , 590, 45, 'hetfo','Magyar nyelv és Irodalom');
+INSERT INTO `lessons` (`ID`, `groupID`, `teacherID`, `start_Minute`, `length`, `day`, `subjectName`) VALUES (NULL, 2, 3,  645,45, 'hetfo','Környezetismeret');
+INSERT INTO `lessons` (`ID`, `groupID`, `teacherID`, `start_Minute`, `length`, `day`, `subjectName`) VALUES (NULL, 2, 2 , 700, 45, 'hetfo','Testnevelés');
+
+INSERT INTO `lessons` (`ID`, `groupID`, `teacherID`, `start_Minute`, `length`, `day`, `subjectName`) VALUES (NULL, 2, 2, 535, 45, 'kedd','Matematika');
+INSERT INTO `lessons` (`ID`, `groupID`, `teacherID`, `start_Minute`, `length`, `day`, `subjectName`) VALUES (NULL, 2, 1, 810, 45, 'kedd','Magyar nyelv és Irodalom');
+INSERT INTO `lessons` (`ID`, `groupID`, `teacherID`, `start_Minute`, `length`, `day`, `subjectName`) VALUES (NULL, 2, 1 , 755, 45, 'kedd','Magyar nyelv és Irodalom');
+INSERT INTO `lessons` (`ID`, `groupID`, `teacherID`, `start_Minute`, `length`, `day`, `subjectName`) VALUES (NULL, 2, 3,  645,45, 'kedd','Környezetismeret');
+INSERT INTO `lessons` (`ID`, `groupID`, `teacherID`, `start_Minute`, `length`, `day`, `subjectName`) VALUES (NULL, 2, 2 , 700, 45, 'kedd','Testnevelés');
+
+INSERT INTO `lessons` (`ID`, `groupID`, `teacherID`, `start_Minute`, `length`, `day`, `subjectName`) VALUES (NULL, 2, 2, 590, 45, 'szerda','Matematika');
+INSERT INTO `lessons` (`ID`, `groupID`, `teacherID`, `start_Minute`, `length`, `day`, `subjectName`) VALUES (NULL, 2, 1, 645, 45, 'szerda','Magyar nyelv és Irodalom');
+INSERT INTO `lessons` (`ID`, `groupID`, `teacherID`, `start_Minute`, `length`, `day`, `subjectName`) VALUES (NULL, 2, 1, 480, 45, 'szerda','Magyar nyelv és Irodalom');
+INSERT INTO `lessons` (`ID`, `groupID`, `teacherID`, `start_Minute`, `length`, `day`, `subjectName`) VALUES (NULL, 2, 3, 535, 45, 'szerda','Környezetismeret');
+INSERT INTO `lessons` (`ID`, `groupID`, `teacherID`, `start_Minute`, `length`, `day`, `subjectName`) VALUES (NULL, 2, 2 , 700, 45, 'szerda','Testnevelés');
+
+INSERT INTO `lessons` (`ID`, `groupID`, `teacherID`, `start_Minute`, `length`, `day`, `subjectName`) VALUES (NULL, 2, 2, 645, 45, 'csutortok','Matematika');
+INSERT INTO `lessons` (`ID`, `groupID`, `teacherID`, `start_Minute`, `length`, `day`, `subjectName`) VALUES (NULL, 2, 1, 535, 45, 'csutortok','Magyar nyelv és Irodalom');
+INSERT INTO `lessons` (`ID`, `groupID`, `teacherID`, `start_Minute`, `length`, `day`, `subjectName`) VALUES (NULL, 2, 1 , 590, 45, 'csutortok','Magyar nyelv és Irodalom');
+INSERT INTO `lessons` (`ID`, `groupID`, `teacherID`, `start_Minute`, `length`, `day`, `subjectName`) VALUES (NULL, 2, 3,  480,45, 'csutortok','Környezetismeret');
+INSERT INTO `lessons` (`ID`, `groupID`, `teacherID`, `start_Minute`, `length`, `day`, `subjectName`) VALUES (NULL, 2, 2 , 700, 45, 'csutortok','Testnevelés');
+
+INSERT INTO `lessons` (`ID`, `groupID`, `teacherID`, `start_Minute`, `length`, `day`, `subjectName`) VALUES (NULL, 2, 2, 480, 45, 'pentek','Matematika');
+INSERT INTO `lessons` (`ID`, `groupID`, `teacherID`, `start_Minute`, `length`, `day`, `subjectName`) VALUES (NULL, 2, 1, 535, 45, 'pentek','Magyar nyelv és Irodalom');
+INSERT INTO `lessons` (`ID`, `groupID`, `teacherID`, `start_Minute`, `length`, `day`, `subjectName`) VALUES (NULL, 2, 1 , 590, 45, 'pentek','Magyar nyelv és Irodalom');
+INSERT INTO `lessons` (`ID`, `groupID`, `teacherID`, `start_Minute`, `length`, `day`, `subjectName`) VALUES (NULL, 2, 3,  645,45, 'pentek','Környezetismeret');
+INSERT INTO `lessons` (`ID`, `groupID`, `teacherID`, `start_Minute`, `length`, `day`, `subjectName`) VALUES (NULL, 2, 2 , 700, 45, 'pentek','Testnevelés');
+
+
+
+INSERT INTO `classdistruptions` (`ID`, `date`, `groupID`, `teacherID`, `start_Hour`, `start_Minute`, `length`, `day`, `subjectName`) VALUES (NULL, '2025-03-29 16:28:53', '1', '1', '0', '700', '45', 'pentek', 'Matematika');
+INSERT INTO `classdistruptions` (`ID`, `date`, `groupID`, `teacherID`, `start_Hour`, `start_Minute`, `length`, `day`, `subjectName`) VALUES (NULL, '2025-03-21 16:28:53', '1', '1', '0', '700', '45', 'pentek', 'Matematika');
+
+INSERT INTO `classdistruptions` (`ID`, `date`, `groupID`, `teacherID`, `start_Hour`, `start_Minute`, `length`, `day`, `subjectName`) VALUES (NULL, '2025-03-21 16:28:53', '1', '1', '0', '700', '135', 'szombat', 'Matematika');

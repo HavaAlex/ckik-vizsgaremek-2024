@@ -182,6 +182,7 @@ const addAssignment = async (assignment: Assignment) : Promise<Assignment> =>{
         headers: { Authorization: `Bearer ${getCookie("alap")}` }
     };
     const response = await axiosClient.post(`http://localhost:3000/feladat/newassignment`,assignment,config) // ${document.cookie}
+
     return response.data
 }
 export const useaddAssignment = () => {

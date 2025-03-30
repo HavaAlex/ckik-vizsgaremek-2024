@@ -17,7 +17,6 @@ const getUzenetek = async (): Promise<Message> => {
         headers: { Authorization: `Bearer ${getCookie("alap")}` }
     };
     const response = await axiosClient.get(`http://localhost:3000/uzenet/`,config) // ${document.cookie}
-    console.log("LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL, ", response)
     return response.data
 }
 export const useGetUzenetek = () => {
