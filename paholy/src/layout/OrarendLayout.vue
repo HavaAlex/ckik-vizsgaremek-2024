@@ -16,7 +16,7 @@
   width: 100%;
   height: 1200px;
   max-height: max-content;
-  overflow: auto;
+  /* overflow: auto; */
 }
 
 .timetable-container {

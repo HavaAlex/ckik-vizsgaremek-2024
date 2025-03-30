@@ -88,58 +88,126 @@ const groupedAbsences = computed(() => {
 
 <template>
   <main>
-    <v-expansion-panels>
-      <template v-if="Object.keys(groupedAbsences).length > 0">
-        <v-expansion-panel v-for="(absences, date) in groupedAbsences" :key="date">
-          <v-expansion-panel-title>
-            {{ date }} ({{ absences.length }} hiányzás)
-          </v-expansion-panel-title>
-          <v-expansion-panel-text>
-            <v-table v-if="!isPortrait">
-              <thead>
-                <tr>
-                  <th class="text-center">Tantárgy</th>
-                  <th class="text-center">Időtartam</th>
-                  <th class="text-center">Tanár</th>
-                  <th class="text-center">Igazolás státusza</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="absence in absences" :key="absence.ID">
-                  <td class="text-center">{{ getSubjectName(absence.lessonID) }}</td>
-                  <td class="text-center">{{ formatTimeRange(absence.lessonID) }}</td>
-                  <td class="text-center">{{ getTeacherName(absence.teacherID) }}</td>
-                  <td class="text-center">{{ formatExcused(absence.excused) }}</td>
-                </tr>
-              </tbody>
-            </v-table>
-            <v-container v-else>
-              <v-row v-for="absence in absences" :key="absence.ID" class="mb-4">
-                <v-col>
-                  <v-card>
-                    <v-card-text>
-                      <div><strong>Tantárgy:</strong> {{ getSubjectName(absence.lessonID) }}</div>
-                      <div><strong>Időtartam:</strong> {{ formatTimeRange(absence.lessonID) }}</div>
-                      <div><strong>Tanár:</strong> {{ getTeacherName(absence.teacherID) }}</div>
-                      <div><strong>Igazolás státusza:</strong> {{ formatExcused(absence.excused) }}</div>
-                    </v-card-text>
-                  </v-card>
-                </v-col>
-              </v-row>
-            </v-container>
-          </v-expansion-panel-text>
-        </v-expansion-panel>
-      </template>
-      <template v-else-if="Object.keys(groupedAbsences).length == 0">
-        <v-card style=" padding: 1rem;">
-          Nincs még hiányzás
-        </v-card>
-      </template>
-      <template v-else>
-        <v-card style="display: flex; justify-content: center;">
-          <v-progress-circular indeterminate :size="37"></v-progress-circular>
-        </v-card>
-      </template>
-    </v-expansion-panels>
+    <div v-if="isPortrait">
+      <v-card>
+        <v-card-title>Hiányzások</v-card-title>
+        <v-card-text style="height: 80vw !important; overflow-y: auto;">
+          <v-expansion-panels>
+            <template v-if="Object.keys(groupedAbsences).length > 0">
+              <v-expansion-panel v-for="(absences, date) in groupedAbsences" :key="date">
+                <v-expansion-panel-title>
+                  {{ date }} ({{ absences.length }} hiányzás)
+                </v-expansion-panel-title>
+                <v-expansion-panel-text>
+                  <v-table v-if="!isPortrait">
+                    <thead>
+                      <tr>
+                        <th class="text-center">Tantárgy</th>
+                        <th class="text-center">Időtartam</th>
+                        <th class="text-center">Tanár</th>
+                        <th class="text-center">Igazolás státusza</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr v-for="absence in absences" :key="absence.ID">
+                        <td class="text-center">{{ getSubjectName(absence.lessonID) }}</td>
+                        <td class="text-center">{{ formatTimeRange(absence.lessonID) }}</td>
+                        <td class="text-center">{{ getTeacherName(absence.teacherID) }}</td>
+                        <td class="text-center">{{ formatExcused(absence.excused) }}</td>
+                      </tr>
+                    </tbody>
+                  </v-table>
+                  <v-container v-else>
+                    <v-row v-for="absence in absences" :key="absence.ID" class="mb-4">
+                      <v-col>
+                        <v-card>
+                          <v-card-text>
+                            <div><strong>Tantárgy:</strong> {{ getSubjectName(absence.lessonID) }}</div>
+                            <div><strong>Időtartam:</strong> {{ formatTimeRange(absence.lessonID) }}</div>
+                            <div><strong>Tanár:</strong> {{ getTeacherName(absence.teacherID) }}</div>
+                            <div><strong>Igazolás státusza:</strong> {{ formatExcused(absence.excused) }}</div>
+                          </v-card-text>
+                        </v-card>
+                      </v-col>
+                    </v-row>
+                  </v-container>
+                </v-expansion-panel-text>
+              </v-expansion-panel>
+            </template>
+            <template v-else-if="Object.keys(groupedAbsences).length == 0">
+              <v-card style=" padding: 1rem;">
+                Nincs még hiányzás
+              </v-card>
+            </template>
+            <template v-else>
+              <v-card style="display: flex; justify-content: center;">
+                <v-progress-circular indeterminate :size="37"></v-progress-circular>
+              </v-card>
+            </template>
+          </v-expansion-panels>
+        </v-card-text>
+      </v-card>
+    </div>
+    <div v-else>
+      <v-card>
+        <v-card-title>Hiányzások</v-card-title>
+        <v-card-text style="height: 30vw !important; overflow-y: auto;">
+          <v-expansion-panels>
+            <template v-if="Object.keys(groupedAbsences).length > 0">
+              <v-expansion-panel v-for="(absences, date) in groupedAbsences" :key="date">
+                <v-expansion-panel-title>
+                  {{ date }} ({{ absences.length }} hiányzás)
+                </v-expansion-panel-title>
+                <v-expansion-panel-text>
+                  <v-table v-if="!isPortrait">
+                    <thead>
+                      <tr>
+                        <th class="text-center">Tantárgy</th>
+                        <th class="text-center">Időtartam</th>
+                        <th class="text-center">Tanár</th>
+                        <th class="text-center">Igazolás státusza</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr v-for="absence in absences" :key="absence.ID">
+                        <td class="text-center">{{ getSubjectName(absence.lessonID) }}</td>
+                        <td class="text-center">{{ formatTimeRange(absence.lessonID) }}</td>
+                        <td class="text-center">{{ getTeacherName(absence.teacherID) }}</td>
+                        <td class="text-center">{{ formatExcused(absence.excused) }}</td>
+                      </tr>
+                    </tbody>
+                  </v-table>
+                  <v-container v-else>
+                    <v-row v-for="absence in absences" :key="absence.ID" class="mb-4">
+                      <v-col>
+                        <v-card>
+                          <v-card-text>
+                            <div><strong>Tantárgy:</strong> {{ getSubjectName(absence.lessonID) }}</div>
+                            <div><strong>Időtartam:</strong> {{ formatTimeRange(absence.lessonID) }}</div>
+                            <div><strong>Tanár:</strong> {{ getTeacherName(absence.teacherID) }}</div>
+                            <div><strong>Igazolás státusza:</strong> {{ formatExcused(absence.excused) }}</div>
+                          </v-card-text>
+                        </v-card>
+                      </v-col>
+                    </v-row>
+                  </v-container>
+                </v-expansion-panel-text>
+              </v-expansion-panel>
+            </template>
+            <template v-else-if="Object.keys(groupedAbsences).length == 0">
+              <v-card style=" padding: 1rem;">
+                Nincs még hiányzás
+              </v-card>
+            </template>
+            <template v-else>
+              <v-card style="display: flex; justify-content: center;">
+                <v-progress-circular indeterminate :size="37"></v-progress-circular>
+              </v-card>
+            </template>
+          </v-expansion-panels>
+        </v-card-text>
+      </v-card>
+    </div>
+    
   </main>
 </template>
