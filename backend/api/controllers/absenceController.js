@@ -14,6 +14,11 @@ exports.getStudentsInGroup = async (req, res, next) => {
     res.status(200).json(students);
 }
 
+exports.getAllAbsences = async (req, res, next) => {
+    const absences = await absenceService.getAbsences();
+    res.status(200).json(absences);
+}
+
 exports.postAbsence = async (req, res, next) => {
 
 

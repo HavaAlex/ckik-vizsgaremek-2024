@@ -1,20 +1,20 @@
 const orarendService = require("../services/orarendService")
 const csoportService = require("../services/csoportService")
 const lessonService = require("../services/lessonService")
+const orarendRepository = require("../repositories/orarendRepository")
+const lessonRepository = require("../repositories/lessonRepository")
 
 exports.getOrarend = async (req, res, next) =>
 {
     const weekStart = req.query.weekStart
 
-    const groups = await csoportService.getGroup(req.decoded.ID)
+    const groups = await csoportService.getGroupsOfStudent(req.decoded.role=="szulo"?req.params.id: req.decoded.ID)
 
     const combinedOrarend = req.decoded.role=="tanar"?await orarendService.getTeacherLessons(req.role.ID,weekStart): await orarendService.getOrarend(groups,weekStart)
 
 
     res.status(201).json(combinedOrarend)
 }
-
-
 
 exports.getTantargyakTanar = async (req, res, next) =>
 {

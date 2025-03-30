@@ -1,4 +1,5 @@
 export type Teacher = {
+    ID: number
     name: string,
     phone: string,
     email: string,
@@ -26,4 +27,16 @@ export type Guardian = {
 export type CreatedGroup = {
     name: string,
     StudentOMIDs: number[]
+}
+
+export type Disruption = {
+    ID: number,
+    date:Date,
+    groupID: number,
+    teacherID: number,
+    start_Hour: number,
+    start_Minute: number,
+    length: number,
+    day: string,
+    subjectName: string,
 }

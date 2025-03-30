@@ -1,12 +1,14 @@
 import axiosClient from "@/lib/axios"
 import { useMutation, useQuery } from "@tanstack/vue-query"
 import { QUERY_KEYS } from "@/utils/QueryKeys"
-import type { Teacher , Student, Guardian,CreatedGroup } from '@/api/admin/admin';
+import type { Teacher , Student, Guardian,CreatedGroup, Disruption } from '@/api/admin/admin';
 import { useCookieHandler } from "@/stores/cookieHandler";
 
 //import type { Message,PotentialReceiver,newMessage } from "./uzenetek";
 import queryClient from "@/lib/queryClient";
 import { useErrorHandler } from "@/stores/errorHandler";
+import type { Group, Lesson } from "../orarend/orarend";
+import { useStatusHandler } from "@/stores/statusHandler";
 
 
 //Tanárok feltöltése
@@ -31,6 +33,32 @@ export const useaaddTeacherUsers = () => {
         }
     })
 }
+
+//Összes felhasználó lekérése
+const getStudents = async () => {
+    const { getCookie } = useCookieHandler() 
+    const config = {
+        headers: { Authorization: `Bearer ${getCookie("alap")}` }
+    };
+    const response = await axiosClient.get(`http://localhost:3000/admin/getAllStudents`, config)
+    console.log(response.data)
+    return response.data
+}
+
+export const useGetStudents = () => {
+    const { setError } = useErrorHandler()
+    const query = useQuery({
+        queryKey: [QUERY_KEYS.getUsers],
+        queryFn: getStudents,
+    })
+
+    if (query.error.value) {
+        console.error("Lekérdezési hiba:", query.error)
+        setError(query.error.value)
+    }
+    return query
+}
+
 //Diákok feltöltése
 const addStudentUsers = async (students: Student[]) : Promise<Student[]> => {
     const { getCookie } = useCookieHandler() 
@@ -120,33 +148,6 @@ export const usegetUsers = () => {
     }
     return query
 }
-
-//Összes felhasználó lekérése
-const getStudents = async () => {
-    const { getCookie } = useCookieHandler() 
-    const config = {
-        headers: { Authorization: `Bearer ${getCookie("alap")}` }
-    };
-    const response = await axiosClient.get(`http://localhost:3000/admin/getAllStudents`, config)
-    console.log(response.data)
-    return response.data
-}
-
-export const useGetStudents = () => {
-    const { setError } = useErrorHandler()
-    const query = useQuery({
-        queryKey: [QUERY_KEYS.getUsers],
-        queryFn: getStudents,
-    })
-
-    if (query.error.value) {
-        console.error("Lekérdezési hiba:", query.error)
-        setError(query.error.value)
-    }
-    return query
-}
-
-
 // egy felhasználó lekérése
 export const getUser = async (userID: number) => {
     const { getCookie } = useCookieHandler() 
@@ -362,6 +363,195 @@ export const usegetGroupAsignments = () => {
     return query
 }
 
+const getOrarend = async (weekStart: string,groupID:number): Promise<Lesson[]> => {
+    const { getCookie } = useCookieHandler()
+    const config = {
+        headers: { Authorization: `Bearer ${getCookie("alap")}` }
+    };
+    console.log(`http://localhost:3000/admin/timetable/${groupID}?weekStart=${weekStart}`)
+    const response = await axiosClient.get(`http://localhost:3000/admin/timetable/${groupID}?weekStart=${weekStart}`, config)
+
+
+    console.log("Orarend lekérdezve:", response.data)
+    return response.data
+}
+
+export const useGetOrarend = (weekStart: string,groupID:number) => {
+    const { setError } = useErrorHandler()
+    const query = useQuery({
+        queryKey: [QUERY_KEYS.getTimetable],
+        queryFn: () => getOrarend(weekStart,groupID),
+    })
+
+    if (query.error.value) {
+        console.error("Lekérdezési hiba:", query.error)
+        setError(query.error.value)
+    }
+    return query
+}
+
+export const fetchOrarend = async (weekStart: string,groupID:number): Promise<Lesson[]> => {
+    try {
+        return await getOrarend(weekStart,groupID);
+    } catch (error) {
+        console.error("Lekérdezési hiba:", error);
+        throw error;
+    }
+}
+
+const getAllGroups = async (): Promise<Group[]> => {
+    const { getCookie } = useCookieHandler()
+    const config = {
+        headers: { Authorization: `Bearer ${getCookie("alap")}` }
+    };
+    console.log(`http://localhost:3000/admin/allgroups`)
+    const response = await axiosClient.get(`http://localhost:3000/admin/allgroups`, config)
+
+
+    console.log("Groupok lekérdezve:", response.data)
+    return response.data
+}
+
+export const useGetAllGroups = () => {
+    const { setError } = useErrorHandler()
+    const query = useQuery({
+        queryKey: [QUERY_KEYS.getAllGroups],
+        queryFn: () => getAllGroups(),
+    })
+
+    if (query.error.value) {
+        console.error("Lekérdezési hiba:", query.error)
+        setError(query.error.value)
+    }
+    return query
+}
+
+//órák feltöltése
+const addLessons = async (lessons: Lesson[]) : Promise<Lesson[]> => {
+    const { getCookie } = useCookieHandler() 
+    const config = {
+        headers: { Authorization: `Bearer ${getCookie("alap")}` }
+    };
+    const response = await axiosClient.post(`http://localhost:3000/admin/addLessons`, lessons, config)
+    return response.data
+}
+
+export const useAddLessons = () => {
+    return useMutation({
+        mutationFn: addLessons,
+        onSuccess() {
+            queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.getTimetable] })
+            const {setStatus} = useStatusHandler()
+            setStatus("Sikeres óra felvitel!")
+        },
+        onError(error) {
+            const { setError } = useErrorHandler()
+            setError(error)
+        }
+    })
+}
+
+const getAllTeachers = async (): Promise<Teacher[]> => {
+    const { getCookie } = useCookieHandler()
+    const config = {
+        headers: { Authorization: `Bearer ${getCookie("alap")}` }
+    };
+    console.log(`http://localhost:3000/admin/allteachers`)
+    const response = await axiosClient.get(`http://localhost:3000/admin/allteachers`, config)
+
+
+    console.log("Tanárok lekérdezve:", response.data)
+    return response.data
+}
+
+export const useGetAllTeachers = () => {
+    const { setError } = useErrorHandler()
+    const query = useQuery({
+        queryKey: [QUERY_KEYS.getAllTeachers],
+        queryFn: () => getAllTeachers(),
+    })
+
+    if (query.error.value) {
+        console.error("Lekérdezési hiba:", query.error)
+        setError(query.error.value)
+    }
+    return query
+}
+
+//Csoport törlése (Nem törli ki a felhasználókat, de a kapcsolótábla adatait igen)
+const deleteLesson = async (ID: Number)=>{
+    const {getCookie} = useCookieHandler()
+    const config = {
+        headers: { Authorization: `Bearer ${getCookie("alap")}` }
+    }; 
+    const response = await axiosClient.delete(`http://localhost:3000/admin/deleteLesson/${ID}`,config) // ${document.cookie}
+    return response.data
+}
+
+export const useDeleteLesson = () => {
+    return useMutation( 
+        {
+            mutationFn: deleteLesson,
+            onSuccess(data){
+                queryClient.invalidateQueries({queryKey:[QUERY_KEYS.getTimetable]})
+                const {setStatus} = useStatusHandler()
+                setStatus("Sikeres óra törlés!")
+            },
+            onError(error){
+                const {setError} = useErrorHandler()
+                setError(error)
+            }
+        }
+    )
+}
+
+const modifyLesson = async (modifedLesson: Lesson) => {
+    const { getCookie } = useCookieHandler() 
+    const config = {
+        headers: { Authorization: `Bearer ${getCookie("alap")}` }
+    };
+    const response = await axiosClient.post(`http://localhost:3000/admin/modifyLesson`, modifedLesson, config)
+    return response.data
+}
+
+export const useModifyLesson = () => {
+    return useMutation({
+        mutationFn: modifyLesson,
+        onSuccess() {
+            queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.getTimetable] })
+            const {setStatus} = useStatusHandler()
+            setStatus("Sikeres óra módosítás!")
+        },
+        onError(error) {
+            const { setError } = useErrorHandler()
+            setError(error)
+        }
+    })
+}
+
+const addDisruption = async (disruption: Disruption) => {
+    const { getCookie } = useCookieHandler() 
+    const config = {
+        headers: { Authorization: `Bearer ${getCookie("alap")}` }
+    };
+    const response = await axiosClient.put(`http://localhost:3000/admin/addDisruption`, disruption, config)
+    return response.data
+}
+
+export const useAddDisruption = () => {
+    return useMutation({
+        mutationFn: addDisruption,
+        onSuccess() {
+            queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.getTimetable] })
+            const {setStatus} = useStatusHandler()
+            setStatus("Sikeres óra módosítás!")
+        },
+        onError(error) {
+            const { setError } = useErrorHandler()
+            setError(error)
+        }
+    })
+}
 
 export const getAbsences = async () => {
     const { getCookie } = useCookieHandler() 

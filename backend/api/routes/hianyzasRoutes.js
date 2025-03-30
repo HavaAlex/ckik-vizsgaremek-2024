@@ -11,6 +11,7 @@ const absenceController = require("../controllers/absenceController");
 router.use(userAuth.verifyToken);
 
 router.get("/", absenceController.getAbsences);
+router.get("/getAllAbsences", absenceController.getAllAbsences);
 router.get("/:id", absenceController.getAbsences);
 router.get("/getStudentsInGroup/:groupID", absenceController.getStudentsInGroup);
 router.post("/postAbsence", absenceController.postAbsence);

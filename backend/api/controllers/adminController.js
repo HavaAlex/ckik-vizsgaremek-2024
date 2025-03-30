@@ -3,7 +3,9 @@ const adminService = require("../services/adminService")
 const hazikService = require("../services/hazikService")
 const userRepository = require("../repositories/userRepository")
 const studentRepository = require("../repositories/studentRepository")
-const { response } = require("express")
+const orarendService = require("../services/orarendService")
+const groupRepository = require("../repositories/groupRepository")
+const lessonRepository = require("../repositories/lessonRepository")
 
 exports.uploadTeachers = async (req,res,next) =>{
     const teachers = req.body
@@ -150,6 +152,11 @@ exports.getAllGroupsWithStudents = async (req,res,next) => {
     const eredmeny = await adminService.getAllGroupsWithStudents();
     res.status(201).json(eredmeny)
 }
+
+exports.getAllGroups = async (req,res,next) => {
+    const response = await adminService.getAllGroups();
+    res.status(201).json(response)
+}
 exports.CreateGroup = async (req,res,next) => {
     const newGroup = req.body 
     if(newGroup.StudentOMIDs.length < 1){
@@ -238,4 +245,99 @@ exports.modifyAbsence = async (req,res,next) => {
     res.status(201).json(modifiedAbsence)
 
     
+    res.status(201).json(result)
+}
+
+exports.getOrarend = async (req, res, next) =>
+{
+    const weekStart = req.query.weekStart
+    console.log(req.params.id+"!!")
+    let group = await groupRepository.getGroupByID(req.params.id)
+
+    console.log(group,"767346")
+
+    let combinedOrarend;
+    try{
+        combinedOrarend = await orarendService.getOrarend([group],weekStart)
+        console.log(combinedOrarend)
+        res.status(201).json(combinedOrarend)
+    }
+    catch(error)
+    {
+        next(error)
+    }   
+}
+
+
+exports.getAllTeachers = async (req,res,next) => {
+    const response = await adminService.getAllTeachers();
+    res.status(201).json(response)
+}
+
+
+exports.uploadLessons = async (req, res, next) =>
+{
+    console.log(req.body)
+    const lessons = req.body;
+    try
+    {
+        const response = await adminService.uploadLessons(lessons)
+        //console.log("adminController: vége a kérésnek!",response)
+        if(response.message)
+        {
+            res.status(400).json(response)
+        }
+        else
+        {
+            res.status(201).json(response);
+        }
+    }
+    catch(error)
+    {
+        next(error)
+    }
+}
+
+
+exports.uploadDisruption = async (req, res, next) =>
+{
+    console.log(req.body,"ITT IDE HE")
+    const disruption = req.body;
+    try
+    {
+        const response = await adminService.uploadDisruption(disruption)
+        //console.log("adminController: vége a kérésnek!",response)
+        if(response.message)
+        {
+            res.status(400).json(response)
+        }
+        else
+        {
+            res.status(201).json(response);
+        }
+    }
+    catch(error)
+    {
+        next(error)
+    }
+}
+
+exports.modifyLesson = async (req,res,next) => {
+    const modifiedLesson = req.body 
+    console.log(modifiedLesson,"ITT IDE HE")
+    try{
+        const response  = await adminService.modifyLesson(modifiedLesson)
+        res.status(201).json(response)
+    }
+    catch(error){
+        next(error)
+    }
+    
+}
+
+
+exports.deleteLesson= async (req,res,next) => {
+    const ID = JSON.parse(req.params.ID);
+    const response = await adminService.deleteLesson(ID);
+    res.status(201).json(response);
 }

@@ -9,7 +9,7 @@ class MarkRepository
 
     async createMark(mark)
     {
-        const newMark = await this.Marks.build(mark);
+        const newMark = await this.Marks.create(mark);
 
         await newMark.save();
         

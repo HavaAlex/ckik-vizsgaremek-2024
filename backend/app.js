@@ -34,7 +34,6 @@ const openapiSpecification = swaggerJsdoc(options);
 
 app.use(cors(corsOptions));
 
-
 const adminRoutes = require("./api/routes/adminRoutes")
 
 const loginRoutes = require("./api/routes/loginRoutes")
@@ -52,8 +51,6 @@ const hianyzasRoutes = require("./api/routes/hianyzasRoutes")
 const feladatRoutes = require("./api/routes/feladatRoutes")
 
 const jegyRoutes = require("./api/routes/jegyRoutes")
-
-const szuloRoutes = require("./api/routes/szuloRoutes")
 
 const errorHandler = require("./api/middlewares/errorHandler");
 
@@ -76,8 +73,6 @@ app.use("/jegy", jegyRoutes);
 app.use("/admin", adminRoutes);
 
 app.use("/csoport", csoportRoutes);
-
-app.use("/szulo", szuloRoutes);
 
 app.use("/tanar",tanarRoutes)
 
