@@ -425,7 +425,7 @@ export const useModifyAbsence = () => {
     return useMutation({
         mutationFn: modifyAbsence,
         onSuccess() {
-            queryClient.refetchQueries({ queryKey: [QUERY_KEYS.getUsers] })
+            queryClient.refetchQueries({ queryKey: [QUERY_KEYS.modifyAbsence] })
         },
         onError(error) {
             const { setError } = useErrorHandler()

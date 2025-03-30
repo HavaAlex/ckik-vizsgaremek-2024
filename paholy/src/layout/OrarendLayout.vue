@@ -163,7 +163,7 @@
   color: #000;
   height: 30px;
   line-height: 30px;
-  margin-bottom: 10px; /* optional spacing below the header */
+  margin-bottom: 10px;
 }
 
 

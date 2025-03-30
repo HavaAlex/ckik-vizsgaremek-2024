@@ -67,6 +67,7 @@ const ADMIN_KEYS = {
     getAbsences:'getAbsences',
     getStudents:'getStudents',
     deleteAbsence: 'deleteAbsence',
+    modifyAbsence: 'modifyAbsence'
 
 }
 export const QUERY_KEYS = {

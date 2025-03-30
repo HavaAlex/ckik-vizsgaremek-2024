@@ -79,7 +79,6 @@ class AbsenceRepository
         await absence.update({ excused: false});
         return absence
     }
-
 }
 
 module.exports = new AbsenceRepository(db);

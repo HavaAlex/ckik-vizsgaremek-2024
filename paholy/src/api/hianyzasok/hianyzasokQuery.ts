@@ -147,7 +147,7 @@ export const useAddAbsence = () => {
                 queryClient.refetchQueries({queryKey:[QUERY_KEYS.postAbsence]})
                 console.log(data)
                 const {setStatus} = useStatusHandler()
-                setStatus("Sikeres Hianyzas felvitel!")
+                setStatus("Sikeres hiányzás felvitel!")
             },
             onError(error){
                 const {setError} = useErrorHandler()

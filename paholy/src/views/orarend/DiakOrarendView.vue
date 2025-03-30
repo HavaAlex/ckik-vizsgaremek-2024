@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { Lesson, Teacher } from '@/api/orarend/orarend';
-import { fetchOrarend, useGetTeachers } from '@/api/orarend/orarendQuery';
+import type { Teacher } from '@/api/orarend/orarend';
+import { useGetTeachers } from '@/api/orarend/orarendQuery';
 import { ref, watch, onMounted, onUnmounted } from 'vue';
 import { format, startOfWeek, addWeeks } from 'date-fns';
 import { useOrarendStore } from '@/stores/orarendStore';
