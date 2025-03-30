@@ -245,7 +245,7 @@ exports.modifyAbsence = async (req,res,next) => {
     res.status(201).json(modifiedAbsence)
 
     
-    res.status(201).json(result)
+    
 }
 
 exports.getOrarend = async (req, res, next) =>
