@@ -423,7 +423,7 @@ const drawer = ref<boolean>(false)
           </v-card>
         </v-tabs-window-item>
         <v-tabs-window-item value="two">
-          <v-table  height="40vw" style="border-radius: 2%;">
+          <v-table  height="26vw" style="border-radius: 2%;">
             <thead>
               <tr>
                 <th class="text-center">Név</th>

@@ -258,7 +258,7 @@ onUnmounted(() => {
       <v-container>
         <v-card>
           <v-card-title>Feladatok: </v-card-title>
-          <v-card-text style="overflow-y: auto; max-height: 80vw;">
+          <v-card-text style="overflow-y: auto; max-height: 50vw;">
             <v-list>
               <v-list-item v-for="feladat in assignmentTeacherList" :key="feladat.feladat.ID">
                   <strong>Határidő: </strong>{{ formatDate(feladat.feladat.deadline) }} <br>
@@ -449,7 +449,7 @@ onUnmounted(() => {
             <h1 style="padding: 10px;" class="bg-title"> Feladatok</h1>
           </v-card-title>
           <v-card-text>
-            <v-table style="height: 30vw !important;">
+            <v-table style="height: 25vw !important;">
               <thead>
                 <tr>
                   <th class="text-center" style="width: 15vw; justify-content: center;">Határidő</th>

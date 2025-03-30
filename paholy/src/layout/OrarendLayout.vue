@@ -14,7 +14,7 @@
 
 .timetable-scrollable {
   width: 100%;
-  height: 1200px;
+  height: 40vw;
   max-height: max-content;
   /* overflow: auto; */
 }

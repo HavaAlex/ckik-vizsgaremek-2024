@@ -650,7 +650,7 @@ const disruptionDate = ref<string>(new Date().toISOString().split("T")[0]);
         <v-tabs-window-item value="two">
               <v-card>
                 <v-card-title>Óra hozzáadás</v-card-title>
-                <v-card-text>
+                <v-card-text style="overflow: auto; height: 20vw;">
                   <h1>Órák manuális hozzáadása:</h1>
                   <v-container>
                     <v-row>
@@ -749,8 +749,8 @@ const disruptionDate = ref<string>(new Date().toISOString().split("T")[0]);
 
 .timetable-scrollable {
   width: 100%;
-  height: 1200px;
-  max-height: max-content;
+  height: 70vw;
+
   overflow: auto;
 }
 
