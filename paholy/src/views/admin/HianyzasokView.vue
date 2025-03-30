@@ -95,7 +95,7 @@ onUnmounted(() => {
   window.matchMedia("(orientation: portrait)").removeEventListener("change", updateOrientation);
 });
 
-// Updated grouping that works with the new replacement code – using absences.value
+
 const groupedAbsences = computed(() => {
   if (!absences.value || absences.value.length === 0) return {};
   return absences.value.reduce((acc, absence) => {
@@ -107,9 +107,7 @@ const groupedAbsences = computed(() => {
     return acc;
   }, {} as Record<string, any[]>);
 });
-console.log("=============7")
-console.log(groupedAbsences)
-console.log("=============7")
+
 const DeleteAbsenceDialog = ref(false);
 const SelectedAbsence = ref<any>(null);
 
@@ -161,19 +159,17 @@ async function approval(absence: any) {
         <v-card-title>Hiányzások</v-card-title>
           <v-card-text style="height: 80vw !important; overflow-y: auto;">
             <template v-if="Object.keys(groupedAbsences).length > 0">
-        
-              <!-- Wrap your expansion panels in v-expansion-panels -->
               <v-expansion-panels>
                 <v-expansion-panel v-for="(absences, date) in groupedAbsences" :key="date">
                   <v-expansion-panel-title>
                     {{ date }} ({{ absences.length }} hiányzás)
                   </v-expansion-panel-title>
                   <v-expansion-panel-text>
-                    <!-- Replacement code inserted here -->
                     <v-table v-if="!isPortrait">
                       <thead>
                         <tr>
                           <th class="text-center">OMID</th>
+                          <th class="text-center">Diák neve</th>
                           <th class="text-center">Tantárgy</th>
                           <th class="text-center">Időtartam</th>
                           <th class="text-center">Tanár</th>
@@ -183,6 +179,7 @@ async function approval(absence: any) {
                       </thead>
                       <tbody>
                         <tr v-for="absence in absences" :key="absence.ID">
+                          <td class="text-center">{{ getStudentOMID(absence.studentID) }}</td>
                           <td class="text-center">{{ getStudentName(absence.studentID) }}</td>
                           <td class="text-center">{{ getSubjectName(absence.lessonID) }}</td>
                           <td class="text-center">{{ formatTimeRange(absence.lessonID) }}</td>
@@ -201,7 +198,8 @@ async function approval(absence: any) {
                         <v-col>
                           <v-card>
                             <v-card-text>
-                              <div><strong>OMID:</strong> {{ getStudentName(absence.studentID) }}</div>
+                              <div><strong>OMID:</strong> {{ getStudentOMID(absence.studentID) }}</div>
+                              <div><strong>Diák neve:</strong> {{ getStudentName(absence.studentID) }}</div>
                               <div><strong>Tantárgy:</strong> {{ getSubjectName(absence.lessonID) }}</div>
                               <div><strong>Időtartam:</strong> {{ formatTimeRange(absence.lessonID) }}</div>
                               <div><strong>Tanár:</strong> {{ getTeacherName(absence.teacherID) }}</div>
@@ -241,11 +239,11 @@ async function approval(absence: any) {
                   {{ date }} ({{ absences.length }} hiányzás)
                 </v-expansion-panel-title>
                 <v-expansion-panel-text>
-                  <!-- Replacement code inserted here -->
                   <v-table v-if="!isPortrait">
                     <thead>
                       <tr>
                         <th class="text-center">OMID</th>
+                        <th class="text-center">Diák neve:</th>
                         <th class="text-center">Tantárgy</th>
                         <th class="text-center">Időtartam</th>
                         <th class="text-center">Tanár</th>
@@ -255,6 +253,7 @@ async function approval(absence: any) {
                     </thead>
                     <tbody>
                       <tr v-for="absence in absences" :key="absence.ID">
+                        <td class="text-center">{{ getStudentOMID(absence.studentID) }}</td>
                         <td class="text-center">{{ getStudentName(absence.studentID) }}</td>
                         <td class="text-center">{{ getSubjectName(absence.lessonID) }}</td>
                         <td class="text-center">{{ formatTimeRange(absence.lessonID) }}</td>
