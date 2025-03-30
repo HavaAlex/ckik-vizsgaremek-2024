@@ -3,7 +3,6 @@ const uzenetService = require("../services/uzenetService")
 exports.getUzenetek = async (req, res, next) =>
 {
     const uzenetek = await uzenetService.getUzenetek(req.decoded.ID)
-    console.log("UUU ", uzenetek)
     res.status(201).json(uzenetek);
 } 
 
@@ -15,6 +14,7 @@ exports.getPotentialReceivers = async (req, res, next) => {
 
 exports.getAllMessages = async (req,res,next) => {
     const response = await uzenetService.getAllMessages();
+    console.log("a: ", response)
     res.status(201).json(response)
 }
 
