@@ -273,7 +273,7 @@ function addLesson() {
   }
 }
 
-const drawer = ref<boolean>(false)
+const drawer = ref<boolean>(true)
 
 
 const selectedLesson = ref<Lesson>();
@@ -427,9 +427,6 @@ const disruptionDate = ref<string>(new Date().toISOString().split("T")[0]);
           <v-card-item>
 
             <!--ÓRAREND VIEW KEZDETE-->
-            <v-card style="border-radius: 10px; margin-bottom: 10px; margin-top: 620px;">
-              <h1 style="padding: 10px;" class="bg-title">Órarend</h1>
-            </v-card>
 
             <div v-if="refs.lessons.value !== null">
               <div class="color-picker">
