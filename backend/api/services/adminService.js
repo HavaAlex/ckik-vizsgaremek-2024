@@ -205,23 +205,23 @@ class adminService {
     {
         const groupsWithStudentsArray = []
         const groups = await groupRepository.getAllGroups();
-        //console.log("ÉN VAGYOK A GROUP A GRPO ATZ EGYETLEN GRUP: ", groups)
+
         for (let i = 0; i < groups.length; i++) {
             let groupsWithStudents = {
                 group : groups[i],
                 students: await studentRepository.getStudentsByGroupID(groups[i].ID)
             } 
-            //console.log("itt van ez a cunyó: ",groupsWithStudents)
+
             groupsWithStudentsArray.push(groupsWithStudents)
         }
 
-        //console.log("VÉGRE ITT VAGYOK A TÖMBNÉK JUHUUUU: ", groupsWithStudentsArray)
+
         return groupsWithStudentsArray
 
     }
 
     async CreatedGroup(newGroup){
-        console.log("OOOOO: ", newGroup)
+
         const usersExist = await UserService.checkIfUsersExist(newGroup.StudentOMIDs)
         if(!usersExist){
             return -1 

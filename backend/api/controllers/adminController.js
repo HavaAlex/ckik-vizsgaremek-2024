@@ -3,9 +3,11 @@ const adminService = require("../services/adminService")
 const hazikService = require("../services/hazikService")
 const userRepository = require("../repositories/userRepository")
 const studentRepository = require("../repositories/studentRepository")
+const { response } = require("express")
 
 exports.uploadTeachers = async (req,res,next) =>{
     const teachers = req.body
+    console.log("a: ", teachers)
     if(teachers.length < 1){
         res.status(500).send("Nincsenek elemek amiket feltölthetne, adjon hozzá a listához")
         return
@@ -19,8 +21,8 @@ exports.uploadTeachers = async (req,res,next) =>{
 }
 
 exports.uploadStudents = async (req,res,next) =>{
+    
     const students = req.body
-
     if(students.length < 1){
         res.status(500).send("Nincsenek elemek amiket feltölthetne, adjon hozzá a listához")
         return
@@ -78,7 +80,9 @@ exports.getAllStudents = async (req,res,next) =>{
 
 
 exports.modifyUser = async (req,res,next) => {
+
     const modifiedUser = req.body 
+
     const userWithThisID = await userRepository.getUserByID(modifiedUser.userSide)
     const result  = await adminService.modifyUser(modifiedUser, userWithThisID.username)
     if(result == -1){
@@ -90,13 +94,16 @@ exports.modifyUser = async (req,res,next) => {
         return
     }
     else{
+
         res.status(201).json(result)
+        
     }
     
 }
 
 exports.deleteUser = async (req,res,next) => {
     const userID = JSON.parse(req.params.userID);
+
 
     if(userID == req.decoded.ID){
         res.status(500).send("Nem törölheti ki az aktuálisan használt felhasználót")
@@ -119,15 +126,13 @@ exports.deleteAbsence = async (req,res,next) => {
 
 
 exports.addStudentsToGuardian = async(req,res,next) =>{
-
     const newStudentOMIDs = req.body 
-    console.log("PPPPPP", newStudentOMIDs)
     const students = [];
     for (const Id of newStudentOMIDs.newOMIDs) {
         const student = await studentRepository.getStudentByOmId(Id)
         
         if(!student){
-            res.status(500).send("Nincs ilyen OM azonosítójú diák")
+            res.status(500).send("Helytelen OM azonosítót adott meg. Diákok hozzáadása sikertelen!")
             return
         }
         else{
@@ -135,8 +140,9 @@ exports.addStudentsToGuardian = async(req,res,next) =>{
         }
 
     }
-    console.log("FANTASTZIKUS BEKERÜLÉS : ", students)
     const response = await adminService.addStudentToGuardian(newStudentOMIDs.szuloID, students)
+
+    
     res.status(201).json(response)
 }
 
@@ -146,7 +152,6 @@ exports.getAllGroupsWithStudents = async (req,res,next) => {
 }
 exports.CreateGroup = async (req,res,next) => {
     const newGroup = req.body 
-    
     if(newGroup.StudentOMIDs.length < 1){
         res.status(500).send("Nem adott meg OM azonosítókat. Csoport létrehozása sikertelen.")
         return
@@ -155,6 +160,7 @@ exports.CreateGroup = async (req,res,next) => {
         res.status(500).send("Nem adott meg nevet a csoportnak. Csoport létrehozása sikertelen.")
         return
     }
+
     const eredmeny = await adminService.CreatedGroup(newGroup);
    
     if(eredmeny == -1){
@@ -173,7 +179,6 @@ exports.CreateGroup = async (req,res,next) => {
 }
 
 exports.addStudentsToGroup = async (req,res,next) => {
-    console.log("bentvan")
     const newUsers  = req.body
     if(newUsers.StudentOMIDs.length < 1){
         res.status(500).send("Nem adott meg OM azonosítókat. Csoport modósítása sikertelen.")
@@ -194,21 +199,24 @@ exports.addStudentsToGroup = async (req,res,next) => {
 
 exports.deleteStudentGroup= async (req,res,next) => {
     const ID = JSON.parse(req.params.ID);
+
     const response = await adminService.deleteStudentGroup(ID);
+
     res.status(201).json(response);
 }
 
 exports.deleteGroup = async (req,res,next) =>{
     const ID = JSON.parse(req.params.ID);
+    console.log(".............................")
+    console.log("a: ", ID)
     const response = await adminService.deleteGroup(ID);
+    console.log("b: ", response)
     res.status(201).json(response)
 }
 
 exports.getGroupAsignments = async (req,res,next) => {
     const GroupID = JSON.parse(req.params.GroupID);
     const result = await hazikService.getAssignmentsAndAnswersByGroupID(GroupID)
-
-    
     res.status(201).json(result)
 }
 
