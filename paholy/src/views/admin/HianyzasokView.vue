@@ -42,10 +42,16 @@ function getTeacherName(teacherId: number): string {
   return teacher ? teacher.name : teacherId.toString();
 }
 
-function getStudentName(studentID: number): string {
+function getStudentOMID(studentID: number): string {
   const student = userList.value.find(student => student.ID === studentID);
   console.log(student);
   return student ? student.OMID : studentID.toString();
+}
+
+function getStudentName(studentID: number): string {
+  const student = userList.value.find(student => student.ID === studentID);
+  console.log(student);
+  return student ? student.name : studentID.toString();
 }
 
 function formatDate(dateStr: string): string {
@@ -161,6 +167,7 @@ async function approval(absence: any) {
                 <thead>
                   <tr>
                     <th class="text-center">OMID</th>
+                    <th class="text-center">Diák neve</th>
                     <th class="text-center">Tantárgy</th>
                     <th class="text-center">Időtartam</th>
                     <th class="text-center">Tanár</th>
@@ -170,6 +177,7 @@ async function approval(absence: any) {
                 </thead>
                 <tbody>
                   <tr v-for="absence in absences" :key="absence.ID">
+                    <td class="text-center">{{ getStudentOMID(absence.studentID) }}</td>
                     <td class="text-center">{{ getStudentName(absence.studentID) }}</td>
                     <td class="text-center">{{ getSubjectName(absence.lessonID) }}</td>
                     <td class="text-center">{{ formatTimeRange(absence.lessonID) }}</td>
@@ -188,14 +196,15 @@ async function approval(absence: any) {
                   <v-col>
                     <v-card>
                       <v-card-text>
-                        <div><strong>OMID:</strong> {{ getStudentName(absence.studentID) }}</div>
+                        <div><strong>OMID:</strong> {{ getStudentOMID(absence.studentID) }}</div>
+                        <div><strong>Diák neve:</strong> {{ getStudentName(absence.studentID) }}</div>
                         <div><strong>Tantárgy:</strong> {{ getSubjectName(absence.lessonID) }}</div>
                         <div><strong>Időtartam:</strong> {{ formatTimeRange(absence.lessonID) }}</div>
                         <div><strong>Tanár:</strong> {{ getTeacherName(absence.teacherID) }}</div>
                         <div><strong>Igazolás státusza:</strong> {{ formatExcused(absence.excused) }}</div>
                         <div>
                           <v-btn v-if="!absence.excused" color="primary" style="margin-right: 10px;" @click="approval(absence)">Leigazolás</v-btn>
-                          <v-btn v-else color="primary" style="margin-right: 10px;" @click="approval(absence)">gazolás visszavonása</v-btn>
+                          <v-btn v-else color="primary" style="margin-right: 10px;" @click="approval(absence)">Igazolás visszavonása</v-btn>
                           <v-btn color="error" @click="fastdelete(absence)">Törlés</v-btn>
                         </div>
                       </v-card-text>

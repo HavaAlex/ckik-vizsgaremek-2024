@@ -4,14 +4,14 @@ exports.getAbsences = async (req, res, next) =>
 {
     const absences = await absenceService.getAbsencesStudent(req.decoded.role=="szulo"?req.params.id:req.decoded.ID)
 
-    res.status(201).json(absences);
+    res.status(200).json(absences);
 }
 
 exports.getStudentsInGroup = async (req, res, next) => {
     const groupID = req.params.groupID;
     const students = await absenceService.getStudentsInGroup(groupID);
 
-    res.status(201).json(students);
+    res.status(200).json(students);
 }
 
 exports.postAbsence = async (req, res, next) => {

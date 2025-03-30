@@ -639,72 +639,218 @@
 
     "/orarend/": {
       "get": {
-        "description": "",
+        "description": "Lekéri a jelenlegi felhasználó órarendjét",
+        "tags": ["Órarend"],
         "parameters": [
           {
             "name": "weekStart",
             "in": "query",
-            "type": "string"
+            "type": "string",
+            "required" : true,
+            "description" : "Az a hét hétfőjének a napja amit felhasználó lekér",
+            "example": "2025-03-31"
           }
         ],
         "responses": {
-          "201": {
-            "description": "Created"
+          "200": {
+            "description": "Sikeres lekérés",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties":{
+                  "ID": {
+                    "type": "integer",
+                    "example": 1,
+                    "description": "Az óra egyedi azonosítója."
+                  },
+                  "groupID:": {
+                    "type": "integer",
+                    "example": 1,
+                    "description": "Az csoport egyedi azonosítója."
+                  },
+                  "teacherID:": {
+                    "type": "integer",
+                    "example": 1,
+                    "description": "Az tanár egyedi azonosítója."
+                  },
+                  "start_Hour:": {
+                    "type": "integer",
+                    "example": 0,
+                    "description": "Az óra kezdésének az órája (nem használt, mindig 0)"
+                  },
+                  "start_Minute:": {
+                    "type": "integer",
+                    "example": 480,
+                    "description": "Az óra kezdésének az ideje éjféltől számitott percekben"
+                  },
+                  "length:": {
+                    "type": "integer",
+                    "example": 45,
+                    "description": "Az óra hossza percekben"
+                  },
+                  "day:": {
+                    "type": "string",
+                    "example": "hetfo",
+                    "description": "Az órának a napja kisbetüvel, ékezet nélkül"
+                  },
+                  "subjectName:": {
+                    "type": "string",
+                    "example": "hetfo",
+                    "description": "A tanóra neve"
+                  }
+                }
+              }
+            }
           },
           "400": {
-            "description": "Bad Request"
+            "description": "Hibás kérés."
           },
           "403": {
-            "description": "Forbidden"
+            "description": "Belső szerverhiba a lekérdezés során."
           }
         }
       }
     },
     "/orarend/getTeachers": {
       "get": {
-        "description": "",
+        "description": "Lekéri az összes tanárt",
+        "tags": ["Admin funkciók", "Felhasználók kezelése", "Órarend"],
         "responses": {
-          "201": {
-            "description": "Created"
+          "200": {
+            "description": "Sikeres lekérés",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties":{
+                  "ID": {
+                    "type": "integer",
+                    "example": 1,
+                    "description": "Az tanár egyedi azonosítója."
+                  },
+                  "email": {
+                    "type": "string",
+                    "example": "example@example.com",
+                    "description": "Az tanár email címe."
+                  },
+                  "name": {
+                    "type": "string",
+                    "example": "John Doe",
+                    "description": "Az tanár teljes neve."
+                  },
+                  "phone": {
+                    "type": "string",
+                    "example": "+36 123 1234",
+                    "description": "Az tanár telefonszáma."
+                  },
+                  "userId": {
+                    "type": "integer",
+                    "example": 1,
+                    "description": "Az tanár egyedi user azonosítója."
+                  }
+                }
+              }
+            }
           },
           "400": {
-            "description": "Bad Request"
+            "description": "Hibás kérés."
           },
           "403": {
-            "description": "Forbidden"
+            "description": "Belső szerverhiba a lekérdezés során."
           }
         }
       }
     },
     "/orarend/getLessons": {
       "get": {
-        "description": "",
+        "description": "Lekéri az összes órát",
+        "tags": ["Órarend"],
         "responses": {
-          "201": {
-            "description": "Created"
+          "200": {
+            "description": "Sikeres lekérés",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties":{
+                  "ID": {
+                    "type": "integer",
+                    "example": 1,
+                    "description": "Az óra egyedi azonosítója."
+                  },
+                  "groupID:": {
+                    "type": "integer",
+                    "example": 1,
+                    "description": "Az csoport egyedi azonosítója."
+                  },
+                  "teacherID:": {
+                    "type": "integer",
+                    "example": 1,
+                    "description": "Az tanár egyedi azonosítója."
+                  },
+                  "start_Hour:": {
+                    "type": "integer",
+                    "example": 0,
+                    "description": "Az óra kezdésének az órája (nem használt, mindig 0)"
+                  },
+                  "start_Minute:": {
+                    "type": "integer",
+                    "example": 480,
+                    "description": "Az óra kezdésének az ideje éjféltől számitott percekben"
+                  },
+                  "length:": {
+                    "type": "integer",
+                    "example": 45,
+                    "description": "Az óra hossza percekben"
+                  },
+                  "day:": {
+                    "type": "string",
+                    "example": "hetfo",
+                    "description": "Az órának a napja kisbetüvel, ékezet nélkül"
+                  },
+                  "subjectName:": {
+                    "type": "string",
+                    "example": "hetfo",
+                    "description": "A tanóra neve"
+                  }
+                }
+              }
+            }
           },
           "400": {
-            "description": "Bad Request"
+            "description": "Hibás kérés."
           },
           "403": {
-            "description": "Forbidden"
+            "description": "Belső szerverhiba a lekérdezés során."
           }
         }
       }
     },
     "/hianyzas/": {
       "get": {
-        "description": "",
-        "responses": {
-          "201": {
-            "description": "Created"
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "403": {
-            "description": "Forbidden"
+        "description": "Lekéri a felhasználó, vagy a szülő, a gyerekeinek az összes hiányzását",
+        "200": {
+          "description": "Sikeres lekérés",
+          "schema": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties":{
+                "ID": {
+                  "type": "integer",
+                  "example": 1,
+                  "description": "Az óra egyedi azonosítója."
+                }
+              }
+            }
           }
+        },
+        "400": {
+          "description": "Hibás kérés."
+        },
+        "403": {
+          "description": "Belső szerverhiba a lekérdezés során."
         }
       },
       "post": {

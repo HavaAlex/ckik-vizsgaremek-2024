@@ -21,10 +21,6 @@ const getHianyzasok = async (): Promise<Hianyzas|Error> => {
     const config = {
         headers: { Authorization: `Bearer ${ cookieHandler.getCookie("alap")}` }
     };
-    console.log("FAAAAAAAAAAAASZ")
-    console.log(cookieHandler.utolsoDecoded)
-    console.log(cookieHandler.utolsoDecoded?.userData.role)
-    console.log("ÉÉÉÉÉÉÉÉ: ", cookieHandler.utolsoDecoded?.userData.role == "szulo"?`http://localhost:3000/hianyzas/${route.params.id}` :`http://localhost:3000/hianyzas`)
     const response = await axiosClient.get(cookieHandler.utolsoDecoded?.userData.role == "szulo"?`http://localhost:3000/hianyzas/${route.params.id}` :`http://localhost:3000/hianyzas`,config)
     return response.data
 }

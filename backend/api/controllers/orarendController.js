@@ -10,51 +10,27 @@ exports.getOrarend = async (req, res, next) =>
 
     const combinedOrarend = req.decoded.role=="tanar"?await orarendService.getTeacherLessons(req.role.ID,weekStart): await orarendService.getOrarend(groups,weekStart)
 
+
     res.status(201).json(combinedOrarend)
 }
 
 
-exports.createOrarend = async (req, res, next) =>
-{
-    let {oraIDk} = req.body;
-
-    price = Number(price);
-
-    try
-    {
-        var newToy =
-        {
-            name: name,
-            price: price,
-            company: company,
-            shopID: shopID,
-        }
-
-        newToy = await toyService.createToy(newToy);
-
-        res.status(201).json(newToy);
-    }
-    catch(error)
-    {
-        next(error);
-    }
-}
 
 exports.getTantargyakTanar = async (req, res, next) =>
 {
     //console.log("TANTARGY KEZD")
     const tantargyak = await lessonService.getTeacherSubjects(req.role.ID)
-    res.status(201).json(tantargyak);
+    res.status(200).json(tantargyak);
     //console.log("TANTARGY VEG")
 }
 
 exports.getTeachers = async (req, res, next) =>
 {
     const teachers = await orarendService.getTeachers()
-    res.status(201).json(teachers);
+    res.status(200).json(teachers);
 }
 exports.getLessons = async (req, res, next) =>
 {
     const lessons = await orarendService.getAllLessons()
-    res.status(201).json(lessons);
+    res.status(200).json(lessons);
 }
