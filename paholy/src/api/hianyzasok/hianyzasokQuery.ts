@@ -5,9 +5,10 @@ import { QUERY_KEYS } from "@/utils/QueryKeys"
 import { jwtDecode } from "jwt-decode";
 import { useCookieHandler } from "@/stores/cookieHandler";
 import { useStatusHandler } from "@/stores/statusHandler"
-import type { Hianyzas, Lesson, Teacher, Absence } from "./hianyzasok";
+import type { Hianyzas, Lesson, Teacher, Absence, Students } from "./hianyzasok";
 import queryClient from "@/lib/queryClient";
 import { useErrorHandler } from "@/stores/errorHandler";
+import type { Student } from "../admin/admin";
 
 const getHianyzasok = async (): Promise<Hianyzas|Error> => {
     console.log("LEFUTOK: hianyzas")
@@ -87,7 +88,7 @@ export const useGetTeachers = () => {
 }
 
 
-const getStudentsInGroup = async (groupID: number): Promise<Lesson[]> => {
+const getStudentsInGroup = async (groupID: number): Promise<Students[]> => {
     console.log("Itt kellene Indulnia2")
 
     //tudom hogy csunya
@@ -98,8 +99,6 @@ const getStudentsInGroup = async (groupID: number): Promise<Lesson[]> => {
     };
     const response = await axiosClient.get(`http://localhost:3000/hianyzas/getStudentsInGroup/${groupID.value}`, config);
 
-
-    console.log("Itt kellene lennie de nincs")
     console.log(response.data)
 
     return response.data

@@ -830,6 +830,7 @@
     "/hianyzas/": {
       "get": {
         "description": "Lekéri a felhasználó, vagy a szülő, a gyerekeinek az összes hiányzását",
+        "tags": ["Hiányzás"],
         "200": {
           "description": "Sikeres lekérés",
           "schema": {
@@ -841,6 +842,31 @@
                   "type": "integer",
                   "example": 1,
                   "description": "Az óra egyedi azonosítója."
+                },
+                "studentID": {
+                  "type": "integer",
+                  "example": 1,
+                  "description": "Az diák egyedi azonosítója."
+                },
+                "teacherID":{
+                  "type": "integer",
+                  "example": 1,
+                  "description": "Az tanár egyedi azonosítója."
+                },
+                "date":{
+                  "type": "string",
+                  "example": "2025-03-23 23:00:00",
+                  "description": "A hiányzás napjának a időpontja."
+                },
+                "excused":{
+                  "type": "bool",
+                  "example": "1",
+                  "description": "A hiányzás hogy levan-e igazolva."
+                },
+                "lessonID":{
+                  "type": "integer",
+                  "example": "1",
+                  "description": "Az óra egyedi azonosítója"
                 }
               }
             }
@@ -854,23 +880,59 @@
         }
       },
       "post": {
-        "description": "",
+        "description": "Egy hiányzás feltöltése",
+        "tags": ["Hiányzás"],
+        "parameters": [
+          {
+            "name": "studentID",
+            "in": "body",
+            "required": true,
+            "type": "integer",
+            "description": "Az diák egyedi azonosítója.",
+            "example": 1
+          },
+          {
+            "name": "teacherID",
+            "in": "body",
+            "required": true,
+            "type": "integer",
+            "description": "Az tanár egyedi azonosítója.",
+            "example": 1
+          },
+          {
+            "name": "date",
+            "in": "body",
+            "required": true,
+            "type": "string",
+            "description": "A hiányzás napjának a időpontja.",
+            "example": "2025-03-23 23:00:00"
+          },
+          {
+            "name": "lessonID",
+            "in": "body",
+            "required": true,
+            "type": "integer",
+            "description": "Az óra egyedi azonosítója.",
+            "example": 1
+          }
+        ],
         "responses": {
           "201": {
-            "description": "Created"
+            "description": "Létrehozva"
           },
           "400": {
-            "description": "Bad Request"
+            "description": "Hibás kérés."
           },
           "403": {
-            "description": "Forbidden"
+            "description": "Belső szerverhiba a lekérdezés során."
           }
         }
       }
     },
     "/hianyzas/{id}": {
       "get": {
-        "description": "",
+        "description": "Egy hiányzás pontos lekérése",
+        "tags": ["Hiányzás"],
         "parameters": [
           {
             "name": "id",
@@ -880,38 +942,125 @@
           }
         ],
         "responses": {
-          "201": {
-            "description": "Created"
+          "200": {
+            "description": "Sikeres lekérés",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties":{
+                    "ID": {
+                      "type": "integer",
+                      "example": 1,
+                      "description": "Az óra egyedi azonosítója."
+                    },
+                    "studentID": {
+                      "type": "integer",
+                      "example": 1,
+                      "description": "Az diák egyedi azonosítója."
+                    },
+                    "teacherID":{
+                      "type": "integer",
+                      "example": 1,
+                      "description": "Az tanár egyedi azonosítója."
+                    },
+                    "date":{
+                      "type": "string",
+                      "example": "2025-03-23 23:00:00",
+                      "description": "A hiányzás napjának a időpontja."
+                    },
+                    "excused":{
+                      "type": "bool",
+                      "example": "1",
+                      "description": "A hiányzás hogy levan-e igazolva."
+                    },
+                    "lessonID":{
+                      "type": "integer",
+                      "example": "1",
+                      "description": "Az óra egyedi azonosítója"
+                    }
+                  }
+              }
+            }
           },
           "400": {
-            "description": "Bad Request"
+            "description": "Hibás kérés."
           },
           "403": {
-            "description": "Forbidden"
+            "description": "Belső szerverhiba a lekérdezés során."
           }
         }
       }
     },
     "/hianyzas/getStudentsInGroup/{groupID}": {
       "get": {
-        "description": "",
+        "description": "Diákok leakérdezése egy csoportból",
         "parameters": [
           {
             "name": "groupID",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "integer",
+            "example" : 1
           }
         ],
         "responses": {
-          "201": {
-            "description": "Created"
+          "200": {
+            "description": "Sikeres lekérés",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties":{
+                  "ID": {
+                    "type": "integer",
+                    "example": 1,
+                    "description": "Az óra egyedi azonosítója."
+                  },
+                  "name:": {
+                    "type": "string",
+                    "example": "John Doe",
+                    "description": "A diák neve."
+                  },
+                  "DoB:": {
+                    "type": "datetime",
+                    "example": "1999-01-01 00:00:00",
+                    "description": "A diák születésének időpontja"
+                  },
+                  "adress:": {
+                    "type": "string",
+                    "example": "1600 Pennsylvania Avenue NW, Washington, DC 20500, United States",
+                    "description": "A diák lakcíme"
+                  },
+                  "phone:": {
+                    "type": "string",
+                    "example": "+36 123 1234",
+                    "description": "A diák telefonszáma"
+                  },
+                  "email:": {
+                    "type": "string",
+                    "example": "example@example.com",
+                    "description": "A diák email címe"
+                  },
+                  "userID:": {
+                    "type": "integer",
+                    "example": "1",
+                    "description": "Az diák egyedi user azonosítója."
+                  },
+                  "OMID:": {
+                    "type": "string",
+                    "example": "123",
+                    "description": "A diák oktatási azonosítója"
+                  }
+                }
+              }
+            }
           },
           "400": {
-            "description": "Bad Request"
+            "description": "Hibás kérés."
           },
           "403": {
-            "description": "Forbidden"
+            "description": "Belső szerverhiba a lekérdezés során."
           }
         }
       }

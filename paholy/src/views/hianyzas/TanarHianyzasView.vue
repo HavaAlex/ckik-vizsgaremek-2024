@@ -6,6 +6,7 @@ import type { Students } from '@/api/hianyzasok/hianyzasok';
 
 import { ref, watch, onMounted, onUnmounted, computed } from 'vue';
 import { format, startOfWeek, addWeeks,addDays  } from 'date-fns';
+import { el } from 'date-fns/locale';
 
 
 const {mutate} = useAddAbsence()
@@ -30,6 +31,7 @@ watch(
   },
   { immediate: true }
 );
+
 
 
 const portraitDayIndex = ref(0);
@@ -74,6 +76,7 @@ watch(
 
 
 
+
 const selectedLesson = ref<Lesson | null>(null);
 
 const attendance = ref<{ [studentId: number]: { studentID: number; absent: boolean } }>({});
@@ -82,18 +85,19 @@ const students = ref<Students[]>([]);
 
 const currentGroupID = ref<number | null>(null);
 
-
 const { data: studentsData } = useGetStudentsInGroup(
   computed(() => currentGroupID.value),
   { enabled: computed(() => currentGroupID.value !== null) }
 );
 
-watch(studentsData, (newData) => {
+watch(studentsData, async (newData) => {
+  console.log(studentsData.value)
   if (newData) {
     students.value = newData;
     if (selectedLesson.value) {
       newData.forEach(student => {
         if (!attendance.value[student.ID]) {
+          console.log(student)
           attendance.value[student.ID] = { studentID: student.ID, absent: false };
         }
       });
@@ -104,13 +108,33 @@ watch(studentsData, (newData) => {
 function openAttendance(lesson: Lesson) {
   selectedLesson.value = lesson;
   currentGroupID.value = lesson.groupID;
+  console.log(absences.value)
+  let date = new Date(currentWeekStart.value); 
 
+  date.setDate(date.getDate() + dayKeys.indexOf(selectedLesson.value.day));
+
+  console.log(selectedLesson.value.ID);
+
+  const existingAbsence = absences.value.find(a =>
+            a.lessonID == selectedLesson.value.ID &&
+            new Date(a.date).getTime() === date.getTime()
+        );
+
+  console.log(students.value)
 
   for (const student of students.value) {
-    if (!attendance.value[student.ID]) {
-      attendance.value[student.ID] = { studentID: student.ID, absent: false };
+    console.log(existingAbsence.studentID +"   "+student.ID)
+    if (attendance.value[student.ID]) {
+      if(existingAbsence.studentID == student.ID){
+        attendance.value[student.ID] = { studentID: student.ID, absent: true };
+      }
+      else{
+        attendance.value[student.ID] = { studentID: student.ID, absent: false };
+      }
     }
   }
+
+  console.log(attendance)
 }
 
 function submitAttendance() {
