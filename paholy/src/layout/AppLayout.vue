@@ -109,7 +109,7 @@ const selectedChildKey = ref(-1); // Ez biztosítja a komponens újrarenderelés
                 <v-list-item v>
                   <v-btn @click="push({name:role+'feladatok'})" class="appnavbarmenu">Házifeladatok/beadandók</v-btn>
                 </v-list-item>
-                <v-list-item class="appnavbarmenu">
+                <v-list-item class="appnavbarmenu" v-if="role!='admin'">
                   <v-btn @click="push({name:role+'jegyek'})" class="appnavbarmenu">Osztályzatok</v-btn>
                 </v-list-item>
                 <v-list-item class="appnavbarmenu">
@@ -170,7 +170,7 @@ const selectedChildKey = ref(-1); // Ez biztosítja a komponens újrarenderelés
       <v-btn @click="push({name:role+'feladatok'})">
                 Házifeladatok/beadandók
       </v-btn>
-      <v-btn @click="push({name:role+'jegyek'})">
+      <v-btn @click="push({name:role+'jegyek'})" v-if="role!='admin'">
                 Osztályzatok
       </v-btn>
       <v-btn @click="push({name:role+'hianyzasok'})">
