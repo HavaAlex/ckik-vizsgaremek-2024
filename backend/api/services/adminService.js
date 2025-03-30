@@ -6,6 +6,7 @@ const studentGroupRepository = require("../repositories/studentGroupRepository")
 const UserRepository = require("../repositories/userRepository")
 const GuardianStudentRepository = require("../repositories/guardianStudentRepository")
 const GuardianRepository = require("../repositories/guardianRepository")
+const AbsenceRepository = require("../repositories/absenceRepository")
 
 const UserService = require("../services/userService")
 const GroupService = require("../services/csoportService")
@@ -14,6 +15,8 @@ const bcrypt = require("bcrypt");
 const userRepository = require("../repositories/userRepository");
 const userService = require("../services/userService");
 const guardianStudentRepository = require("../repositories/guardianStudentRepository");
+const absence = require("../models/absence");
+const absenceRepository = require("../repositories/absenceRepository");
 const salt = 10;
 
 class adminService {
@@ -172,6 +175,10 @@ class adminService {
         return users
     }
 
+    async getAllStudents(){
+        return await studentRepository.getAllStudents()
+    }
+
 
     async modifyUser(user, currentUsername){
         if(currentUsername == user.roleSide.name){
@@ -188,6 +195,10 @@ class adminService {
     async deleteUser(ID){
         const user = await userRepository.getUserByID(ID)
         return await userRepository.deleteUser(ID, user)
+    }
+
+    async deleteAbsence(ID){
+        return await userRepository.deleteAbsence(ID)
     }
 
     async getAllGroupsWithStudents()
@@ -297,7 +308,17 @@ class adminService {
     }
 
     async getAbsences(){
-        const absences = await userRepository.getAbsences();
+        const absences = await absenceRepository.getAbsences();
+        return absences
+    }
+
+    async approveAbsence(absenceToBeModified){
+        const absences = await absenceRepository.approveAbsence(absenceToBeModified);
+        return absences
+    }
+
+    async disapproveAbsence(absenceToBeModified){
+        const absences = await absenceRepository.disapproveAbsence(absenceToBeModified);
         return absences
     }
 

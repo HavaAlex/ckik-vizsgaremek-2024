@@ -14,7 +14,8 @@ class UserRepository
         this.Admins = db.admin;
         this.Guardians = db.guardian;
         this.Teachers = db.teacher;
-        this.Students = db.student 
+        this.Students = db.student;
+        this.Absences = db.absence;
     }
 
     async createUser(user)
@@ -89,7 +90,6 @@ class UserRepository
         let username = baseUsername;
         let counter = 1;
         
-        // Check if the username already exists in the database.
         let userExists = await this.Users.findOne({ where: { username: username } });
         while (userExists) {
             counter++;
@@ -106,14 +106,16 @@ class UserRepository
           const randomIndex = Math.floor(Math.random() * charset.length);
           password += charset[randomIndex];
         }
-        // Example usage:
         return password;
     }
-    async getAllUsers(){
-        return await this.Users.findAll()
+
+    async getAllUsers() {
+        return await this.Users.findAll({
+            attributes: ['ID', 'username', 'role']
+        });
     }
+
     async modifyUser(user){
-        // Assume User is a Sequelize model
         // console.log("biztos ami biztos: ",user)
         const changedUser = await this.Users.findOne({ where: { id: user.userSide } });
         await changedUser.update({ username: user.roleSide.name });
@@ -138,7 +140,6 @@ class UserRepository
         return changedUser
     }
     async deleteUser(ID,oaz){
-        // Assume User is a Sequelize model
         if(oaz.role == "tanar"){
             await teacherRepository.deleteTeacher(ID)
         }
@@ -160,12 +161,27 @@ class UserRepository
         
         return "törölve "
     }
+
+    async deleteAbsence(ID){
+        await this.Absences.destroy({
+            where:{
+                ID: ID
+            }
+        })
+        
+        return "törölve "
+    }
+
     async changePassword(ID, userReplacement){
         const record = await this.Users.findOne({
             where: { ID }
         });
         await record.update(userReplacement);
         return record;
+    }
+
+    async getAllStudents(){
+        return await this.Students.findAll();
     }
 }
 

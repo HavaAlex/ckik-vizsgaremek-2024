@@ -65,6 +65,9 @@ const ADMIN_KEYS = {
     CreateGroup:'CreateGroup',
     getGroupAsignments:'getGroupAsignments',
     getAbsences:'getAbsences',
+    getStudents:'getStudents',
+    deleteAbsence: 'deleteAbsence',
+
 }
 export const QUERY_KEYS = {
     ...USER_KEYS,

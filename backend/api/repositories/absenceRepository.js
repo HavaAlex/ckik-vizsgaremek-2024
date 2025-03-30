@@ -65,6 +65,21 @@ class AbsenceRepository
     {
         return await this.Absences.findAll();
     }
+
+    async approveAbsence(absenceToBeModified)
+    {
+        const absence = await this.Absences.findOne({ where: { ID: absenceToBeModified.ID } });
+        await absence.update({ excused: true});
+        return absence
+    }
+
+    async disapproveAbsence(absenceToBeModified)
+    {
+        const absence = await this.Absences.findOne({ where: { ID: absenceToBeModified.ID } });
+        await absence.update({ excused: false});
+        return absence
+    }
+
 }
 
 module.exports = new AbsenceRepository(db);

@@ -71,6 +71,12 @@ exports.getAllUsers = async (req,res,next) =>{
     res.status(201).json(users)
 }
 
+exports.getAllStudents = async (req,res,next) =>{
+    const students = await adminService.getAllStudents();
+    res.status(201).json(students)
+}
+
+
 exports.modifyUser = async (req,res,next) => {
     const modifiedUser = req.body 
     const userWithThisID = await userRepository.getUserByID(modifiedUser.userSide)
@@ -102,6 +108,15 @@ exports.deleteUser = async (req,res,next) => {
     }
     
 }
+
+exports.deleteAbsence = async (req,res,next) => {
+    const absenceID = req.params.userID;
+
+    const result = await adminService.deleteAbsence(absenceID)
+    res.status(201).json(result)
+}
+    
+
 
 exports.addStudentsToGuardian = async(req,res,next) =>{
 
@@ -201,4 +216,18 @@ exports.getGroupAsignments = async (req,res,next) => {
 exports.getAbsences = async (req,res,next) =>{
     const absences = await adminService.getAbsences();
     res.status(201).json(absences)
+}
+
+exports.modifyAbsence = async (req,res,next) => {
+    const absenceToBeModified = req.body 
+    console.log(absenceToBeModified)
+    if(absenceToBeModified.excused == false){ // tehát most igazoljuk le
+        var modifiedAbsence = await adminService.approveAbsence(absenceToBeModified);
+    }
+    else{ // tehat elveszuk az igazolast
+        var modifiedAbsence = await adminService.disapproveAbsence(absenceToBeModified);
+    }
+    res.status(201).json(modifiedAbsence)
+
+    
 }
