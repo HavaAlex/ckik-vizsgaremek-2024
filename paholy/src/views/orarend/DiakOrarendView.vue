@@ -266,7 +266,7 @@ onUnmounted(() => {
                                 Elmarad
                               </div>
                               <div v-else-if="lesson.teacherID !== null" style="font-size: 10px; margin-top: 4px;">
-                                Tanár: {{ getTeacherName(lesson.teacherID) }}
+                                Tanár: {{ lesson.Teacher.name }}
                               </div>
                             </div>
                           </div>
@@ -367,7 +367,7 @@ onUnmounted(() => {
                                 Elmarad
                               </div>
                               <div v-else-if="lesson.teacherID !== null" style="font-size: 10px; margin-top: 4px;">
-                                Tanár: {{ getTeacherName(lesson.teacherID) }}
+                                Tanár: {{ lesson.Teacher.name }}
                               </div>
                             </div>
                           </div>
