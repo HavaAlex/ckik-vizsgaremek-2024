@@ -42,10 +42,16 @@ function getTeacherName(teacherId: number): string {
   return teacher ? teacher.name : teacherId.toString();
 }
 
-function getStudentName(studentID: number): string {
+function getStudentOMID(studentID: number): string {
   const student = userList.value.find(student => student.ID === studentID);
   console.log(student);
   return student ? student.OMID : studentID.toString();
+}
+
+function getStudentName(studentID: number): string {
+  const student = userList.value.find(student => student.ID === studentID);
+  console.log(student);
+  return student ? student.name : studentID.toString();
 }
 
 function formatDate(dateStr: string): string {
