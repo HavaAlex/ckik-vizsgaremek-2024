@@ -10,16 +10,13 @@ import { useCookieHandler } from "@/stores/cookieHandler";
 import queryClient from "@/lib/queryClient";
 import { useErrorHandler } from "@/stores/errorHandler";
 
-
+//házik lekérése tanár oldalról
 const getAssignmentsTeacher = async ()  =>{
     const {getCookie} = useCookieHandler()
     const config = {
         headers: { Authorization: `Bearer ${getCookie("alap")}` }
     };
     const response = await axiosClient.get(`http://localhost:3000/feladat/haziktanar`,config)
-    console.log("///////////////////////////////////////////////////")
-    console.log(response)
-    console.log("///////////////////////////////////////////////////")
     return response.data
 }
 export const usegetAssignmentsTeacher = () => {
@@ -35,9 +32,8 @@ export const usegetAssignmentsTeacher = () => {
     }
     return query
 }
-
+//házik lekérése diák oldalról
 const getAssignmentsStudent = async ()  =>{
-    console.log("LEFUTOK: studimudi")
     const cookieHandler= useCookieHandler()
     const vanE = cookieHandler.hasValidCookie()
     const route = useRoute()
@@ -48,14 +44,8 @@ const getAssignmentsStudent = async ()  =>{
     const config = {
         headers: { Authorization: `Bearer ${ cookieHandler.getCookie("alap")}` }
     };
-    console.log("FAAAAAAAAAAAASZ")
-    console.log(cookieHandler.utolsoDecoded)
-    console.log(cookieHandler.utolsoDecoded?.userData.role)
-    console.log("ÉÉÉÉÉÉÉÉ: ", cookieHandler.utolsoDecoded?.userData.role == "szulo"?`http://localhost:3000/feladat/hazikdiak/${route.params.id}` :`http://localhost:3000/feladat/hazikdiak`)
+ 
     const response = await axiosClient.get(cookieHandler.utolsoDecoded?.userData.role == "szulo"?`http://localhost:3000/feladat/hazikdiak/${route.params.id}` :`http://localhost:3000/feladat/hazikdiak`,config)
-    console.log("-----------------------------------------------")
-    console.log(response)
-    console.log("-----------------------------------------------")
     return response.data
 }
 export const usegetAssignmentsStudent = () => {
@@ -76,9 +66,7 @@ const getAssignmentFiles = async (assignmentId:number) : Promise<any[]> =>{
     const config = {
         headers: { Authorization: `Bearer ${getCookie("alap")}` ,assignmentid: assignmentId}
     };
-    console.log("HERe IS  the IIIDD : ", assignmentId)
     const response = await axiosClient.get(`http://localhost:3000/feladat/getAssignmentFiles/`,config)
-    console.log("getAssignmentFiles RESPONSEEEEEEEEEEEE: ", response)
     return response.data
 }
 export const usegetAssignmentFiles = () => {
@@ -107,17 +95,14 @@ const getCompletedAssignmentFiles = async (assignmentId:any[]) : Promise<any[]|E
     const config = {
         headers: { Authorization: `Bearer ${ cookieHandler.getCookie("alap")}` }
     };
-    console.log("FAAAAAAAAAAAASZ")
-    console.log(cookieHandler.utolsoDecoded)
-    console.log(cookieHandler.utolsoDecoded?.userData.role)
     const response = await axiosClient.post(`http://localhost:3000/feladat/getCompletedAssignmentFiles`,assignmentId,config)
-    console.log("getCompletedAssignmentFiles RESPONSEEEEEEEEEEEE: ", response)
     return response.data
 }
 export const usegetCompletedAssignmentFiles = () => {
     return useMutation( 
         {
             mutationFn: getCompletedAssignmentFiles,
+            mutationKey: [QUERY_KEYS.getCompletedAssignmentFiles],
             onSuccess(){
                 queryClient.refetchQueries({queryKey:[QUERY_KEYS.getCompletedAssignmentFiles]})
             },
@@ -164,6 +149,7 @@ export const usemodifyCompletedAssignment = () => {
     return useMutation( 
         {
             mutationFn: modifyCompletedAssignment,
+            mutationKey: [QUERY_KEYS.modifyCompletedAssignment],
             onSuccess(){
                 queryClient.refetchQueries({queryKey:[QUERY_KEYS.getAssignmentsStudent]})
             },
@@ -189,6 +175,7 @@ export const useaddAssignment = () => {
     return useMutation( 
         {
             mutationFn: addAssignment,
+            mutationKey: [QUERY_KEYS.modifyCompletedAssignment],
             onSuccess(){
                 queryClient.refetchQueries({queryKey:[QUERY_KEYS.getAssignmentsTeacher]})
             },
@@ -213,6 +200,7 @@ export const usedeleteAssignment = () => {
     return useMutation( 
         {
             mutationFn: deleteAssignment,
+            mutationKey: [QUERY_KEYS.deleteAssignment],
             onSuccess(){
                 const decoded = jwtDecode(getCookie("alap"));
                 const role = decoded.userData.role;
@@ -245,6 +233,7 @@ export const usedeleteAnswerFile = () => {
     return useMutation( 
         {
             mutationFn: deleteAnswerFile,
+            mutationKey: [QUERY_KEYS.deleteAnswerFile],
             onSuccess(){
                 queryClient.refetchQueries({queryKey:[QUERY_KEYS.deleteAnswerFile]})
             },
@@ -285,6 +274,7 @@ export const useuploadAssignmentFiles = () => {
     return useMutation( 
         {
             mutationFn: uploadAssignmentFiles,
+            mutationKey: [QUERY_KEYS.uploadAssignmentFiles],
             onSuccess(){
                 queryClient.refetchQueries({queryKey:[QUERY_KEYS.uploadAssignmentFiles]})
             },
@@ -317,14 +307,13 @@ const uploadCompletedAssignmentFiles = async ({
       "Content-Type": "multipart/form-data"
     }
   };
-  console.log("FELTÖLTÉS PRÓVA")
   await axiosClient.post(`http://localhost:3000/feladat/uploadcompletedassignmentfiles`, formData, config);
-  console.log("SIKER")
 }
 export const useuploadCompletedAssignmentFiles = () => {
     return useMutation( 
         {
             mutationFn: uploadCompletedAssignmentFiles,
+            mutationKey: [QUERY_KEYS.uploadCompletedAssignmentFiles],
             onSuccess(){
                 queryClient.refetchQueries({queryKey:[QUERY_KEYS.uploadCompletedAssignmentFiles]})
             },

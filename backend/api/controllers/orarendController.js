@@ -18,10 +18,8 @@ exports.getOrarend = async (req, res, next) =>
 
 exports.getTantargyakTanar = async (req, res, next) =>
 {
-    //console.log("TANTARGY KEZD")
     const tantargyak = await lessonService.getTeacherSubjects(req.role.ID)
     res.status(200).json(tantargyak);
-    //console.log("TANTARGY VEG")
 }
 
 exports.getTeachers = async (req, res, next) =>

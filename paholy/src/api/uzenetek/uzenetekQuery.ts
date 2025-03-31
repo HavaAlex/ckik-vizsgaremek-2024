@@ -5,13 +5,13 @@ import { QUERY_KEYS } from "@/utils/QueryKeys"
 import { jwtDecode } from "jwt-decode";
 import { useCookieHandler } from "@/stores/cookieHandler";
 
-import type { Message,PotentialReceiver,newMessage } from "./uzenetek";
+import type { Message,PotentialReceivers,newMessage,sentAndReceivedMessages,NewMessage} from "./uzenetek";
 import queryClient from "@/lib/queryClient";
 import { useErrorHandler } from "@/stores/errorHandler";
 
 
 
-const getUzenetek = async (): Promise<Message> => {
+const getUzenetek = async (): Promise<sentAndReceivedMessages> => {
     const {getCookie} = useCookieHandler()
     const config = {
         headers: { Authorization: `Bearer ${getCookie("alap")}` }
@@ -35,7 +35,7 @@ export const useGetUzenetek = () => {
     return query
 }
  
-const getAllUzenetek = async (): Promise<Message> => {
+const getAllUzenetek = async (): Promise<Message[]> => {
 
     const {getCookie} = useCookieHandler()
     const config = {
@@ -61,16 +61,12 @@ export const usegetAllUzenetek = () => {
 
     return query
 }
-const getPotentialReceivers = async (): Promise<PotentialReceiver> =>{
-    console.log("LEFUTOK: getPotentialReceivers")
+const getPotentialReceivers = async (): Promise<PotentialReceivers> =>{
     const {getCookie} = useCookieHandler()
     const config = {
         headers: { Authorization: `Bearer ${getCookie("alap")}` }
     };
     const response = await axiosClient.get(`http://localhost:3000/uzenet/uzenetekreceivers`,config)
-    console.log("anyád:")
-    console.log(response)
-    console.log(response.data)
     return response.data
 }
 export const usegetPotentialReceivers = () => {
@@ -88,7 +84,7 @@ export const usegetPotentialReceivers = () => {
     return query  
 }
 
-const addMessage = async (data: Message) : Promise<Message> =>{
+const addMessage = async (data: NewMessage) : Promise<NewMessage> =>{
     data.date = new Date(); //aktuális dátum hozzáadása
     const {getCookie} = useCookieHandler()
     const config = {

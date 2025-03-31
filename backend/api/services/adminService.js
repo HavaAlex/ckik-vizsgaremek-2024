@@ -33,7 +33,6 @@ class adminService {
         for (let i = 0; i < teachers.length; i++) {
             const username = await UserRepository.createUserName(teachers[i].name)
             const passwordUncrypted = await UserRepository.generatePassword()
-            // Create new user object with the given attributes.
             const newUser = {
                 id: null,
                 username: username,
@@ -74,7 +73,6 @@ class adminService {
         for (let i = 0; i < students.length; i++) {
             const username = await UserRepository.createUserName(students[i].name)
             const passwordUncrypted = await UserRepository.generatePassword()
-            // Create new user object with the given attributes.
             const newUser = {
                 id: null,
                 username: username,
@@ -137,7 +135,6 @@ class adminService {
         for (let i = 0; i < guardians.length; i++) {
             const username = await UserRepository.createUserName(guardians[i].name)
             const passwordUncrypted = await UserRepository.generatePassword()
-            // Create new user object with the given attributes.
             const newUser = {
                 id: null,
                 username: username,
@@ -151,7 +148,7 @@ class adminService {
             uploadedStudents.push(newUser);
             let newGuardian = {
                 id: null,
-                name: newUser.username, //van egy .address is majd megcsináljuk
+                name: newUser.username,
                 phone: guardians[i].phone,
                 email: guardians[i].email,
                 userId: user.ID
@@ -276,7 +273,6 @@ class adminService {
             return -2
         }
         for (let i = 0; i < newGroup.StudentOMIDs.length; i++) {
-            // await studentGroupRepository.createStudentGroup
             const student = await studentRepository.getStudentByOmId(newGroup.StudentOMIDs[i])
 
             const newStudentGroup = {
@@ -304,7 +300,6 @@ class adminService {
                 GuardianID: GuardianID,
                 StudentID: students[i].ID
             }
-            console.log("KAKIÁLS _ ", newGuardianStudent)
             await guardianStudentRepository.createGuardianStudent(newGuardianStudent)
         }
         return "sikeres módosítás"
@@ -347,14 +342,11 @@ class adminService {
                 subjectName: element.subjectName
             };
             newLesson = await lessonRepository.createLesson(newLesson);
-            //console.log(newLesson, "!!!!!!!!!!!!!!!!!!!!!!!!!!");
             uploaded.push(newLesson);
             return newLesson;
         });
     
         await Promise.all(lessonPromises);
-    
-        //console.log("adminService: vége a felöltésnek4", uploaded);
         return uploaded;
     }
 

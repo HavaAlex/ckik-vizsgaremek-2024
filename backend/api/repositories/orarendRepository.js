@@ -51,15 +51,10 @@ class OrarendRepository
     }
 
     async getDisruptions(groups, weekStart) {
-        // Map groups to an array of IDs
         groups = groups.map(group => group.GroupID||group.ID);
-
-        // Create a date for the end of the week (weekStart is assumed to be a Monday)
         const startOfWeek = new Date(weekStart);
         const endOfWeek = new Date(weekStart);
         endOfWeek.setDate(endOfWeek.getDate() + 6);
-        
-        // Query disruptions that are within the current week
         return await this.ClassDisruption.findAll({
             where: {
                 groupID: groups,
