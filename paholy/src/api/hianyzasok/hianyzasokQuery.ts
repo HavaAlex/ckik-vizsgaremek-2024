@@ -87,7 +87,7 @@ export const useGetTeachers = () => {
 }
 
 
-const getStudentsInGroup = async (groupID: number): Promise<Students[]> => {
+const getStudentsInGroup = async (groupID: any): Promise<Students[]> => {
 
     //tudom hogy csunya
     const { getCookie } = useCookieHandler()

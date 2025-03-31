@@ -621,6 +621,7 @@ const modifyAbsence = async (absenceToBeModified: any) => {
         headers: { Authorization: `Bearer ${getCookie("alap")}` }
     };
     const response = await axiosClient.put(`http://localhost:3000/admin/modifyAbsence`, absenceToBeModified, config)
+
     return response.data
 }
 

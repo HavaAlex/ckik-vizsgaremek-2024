@@ -233,7 +233,8 @@ exports.getAbsences = async (req,res,next) =>{
 exports.modifyAbsence = async (req,res,next) => {
     const absenceToBeModified = req.body 
     console.log(absenceToBeModified)
-    if(absenceToBeModified.excused == false){ // tehát most igazoljuk le
+    console.log(absenceToBeModified.excused, "fasz")
+    if(absenceToBeModified.excused == true){ // tehát most igazoljuk le
         var modifiedAbsence = await adminService.approveAbsence(absenceToBeModified);
     }
     else{ // tehat elveszuk az igazolast

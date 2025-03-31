@@ -1,10 +1,11 @@
+i have this script:
 <script setup lang="ts">
 import type { Lesson, Teacher } from '@/api/orarend/orarend';
 import { fetchOrarend } from '@/api/orarend/orarendQuery';
 import { useGetStudentsInGroup, useAddAbsence,useGetAbsences } from '@/api/hianyzasok/hianyzasokQuery';
 import type { Students } from '@/api/hianyzasok/hianyzasok';
 
-import { ref, watch, onMounted, onUnmounted, computed } from 'vue';
+import { ref, watch, onMounted, onUnmounted, computed,nextTick } from 'vue';
 import { format, startOfWeek, addWeeks,addDays  } from 'date-fns';
 import { el } from 'date-fns/locale';
 
@@ -75,27 +76,35 @@ watch(
 );
 
 
-
+const isAttendanceReady = computed(() => {
+  return students.value?.every((student) => attendance.value[student.ID] !== undefined);
+});
 
 const selectedLesson = ref<Lesson | null>(null);
 
-const attendance = ref<{ [studentId: number]: { studentID: number; absent: boolean } }>({});
+const attendance = ref<{ 
+  [studentId: number]: { 
+    studentID: number; 
+    absent: boolean; 
+    isAutoAbsent: boolean 
+  } 
+}>({});
 
-const students = ref<Students[]>([]);
+const students = ref<Students[] | null >(null);
 
 const currentGroupID = ref<number | null>(1);
 
-const { data: studentsData } = useGetStudentsInGroup(
+const { data: studentsData, refetch } = useGetStudentsInGroup(
   computed(() => currentGroupID.value),
   { enabled: computed(() => currentGroupID.value !== null) }
 );
 
 watch(studentsData, (newData) => {
-  console.log("studentsData updated:", newData);
-  
   if (newData) {
-    students.value = newData; 
-    console.log("Updated students.value:", students.value);
+    students.value = newData;
+    newData.forEach((student) => {
+      initializeAttendance(student);
+    });
   }
 }, { immediate: true });
 
@@ -105,37 +114,34 @@ async function openAttendance(lesson: Lesson) {
   selectedLesson.value = lesson;
   currentGroupID.value = lesson.groupID;
 
-  watch(
-    students,
-    (newStudents) => {
-      console.log(newStudents);
-      if (!newStudents.length) return;
+  await refetch();
+  await nextTick();
 
-      let date = new Date(currentWeekStart.value);
-      date.setDate(date.getDate() + dayKeys.indexOf(selectedLesson.value.day));
+  console.log("Students after refetch:", students.value);
 
-      // Get all absence records for this lesson and date.
-      const existingAbsences = absences.value.filter(
-        (a) => a.lessonID === selectedLesson.value?.ID && new Date(a.date).getTime() === date.getTime()
-      );
+  attendance.value = {};
 
-      console.log("existingAbsences", existingAbsences);
+  if (!students.value || students.value.length === 0) return;
 
-      for (const student of newStudents) {
-        const autoAbsent = existingAbsences.some(
-          (a) => a.studentID === student.ID
-        );
-        attendance.value[student.ID] = {
-          studentID: student.ID,
-          absent: autoAbsent,
-          isAutoAbsent: autoAbsent,
-        };
-      }
+  let date = new Date(currentWeekStart.value);
+  date.setDate(date.getDate() + dayKeys.indexOf(selectedLesson.value.day));
 
-      console.log("Updated attendance:", attendance.value);
-    },
-    { immediate: true, once: true }
+  const existingAbsences = absences.value.filter(
+    (a) => a.lessonID === selectedLesson.value?.ID && new Date(a.date).getTime() === date.getTime()
   );
+
+  for (const student of students.value) {
+    const isAutoAbsent = existingAbsences.some((a) => a.studentID === student.ID);
+
+    console.log(isAutoAbsent)
+    attendance.value[student.ID] = {
+      studentID: student.ID,
+      absent: isAutoAbsent,
+      isAutoAbsent: isAutoAbsent,
+    };
+  }
+
+  console.log("Updated attendance:", attendance.value);
 }
 
 function submitAttendance() {
@@ -203,6 +209,16 @@ function changeDay(direction: number) {
   }
 }
 
+function initializeAttendance(student: Students) {
+  if (!attendance.value[student.ID]) {
+    attendance.value[student.ID] = {
+      studentID: student.ID,
+      absent: false,
+      isAutoAbsent: false,
+    };
+  }
+}
+
 
 const isPortrait = ref(window.matchMedia("(orientation: portrait)").matches);
 const updateOrientation = () => {
@@ -217,7 +233,6 @@ onUnmounted(() => {
 
 
 </script>
-
 
 <template>
   <main>
@@ -384,7 +399,7 @@ onUnmounted(() => {
         </v-card>
 
         <transition name="fade">
-          <div class="attendance-modal" v-if="selectedLesson" >
+          <div class="attendance-modal" v-if="selectedLesson && isAttendanceReady">
             <div class="modal-content" style="width: 90vw;">
               <h2 class="modal-header">
                 Hiányzók beírása: {{ selectedLesson.subjectName }}
@@ -392,13 +407,14 @@ onUnmounted(() => {
 
               <div v-for="student in students" :key="student.ID" class="student-attendance">
                 <span class="student-name">{{ student.name }}</span>
-                <div class="attendance-options" v-if="attendance[student.ID]">
+                <div class="attendance-options" v-if="attendance[student.ID] !== undefined">
                   <label>
                     <input 
                       type="radio" 
                       :name="'attendance-' + student.ID" 
                       :value="false" 
-                      v-model="attendance[student.ID].absent" 
+                      v-model="attendance[student.ID].absent"
+                      :disabled="attendance[student.ID].absent && attendance[student.ID].isAutoAbsent"
                     />
                     Jelen volt
                   </label>
@@ -407,12 +423,17 @@ onUnmounted(() => {
                       type="radio" 
                       :name="'attendance-' + student.ID" 
                       :value="true" 
-                      v-model="attendance[student.ID].absent" 
+                      v-model="attendance[student.ID].absent"
+                      @change="() => {
+                        console.log('Marked as absent', student.ID);
+                        attendance[student.ID].isAutoAbsent = false;
+                      }"
                     />
                     Hiányzott
                   </label>
                 </div>
               </div>
+
 
               <div class="modal-buttons">
                 <v-btn color="primary" @click="submitAttendance">Hiányzók feltöltése</v-btn> <br>
@@ -590,15 +611,15 @@ onUnmounted(() => {
         </v-card>
 
         <transition name="fade">
-          <div class="attendance-modal" v-if="selectedLesson">
-            <div class="modal-content" style="width: 30vw;">
+          <div class="attendance-modal" v-if="selectedLesson && isAttendanceReady">
+            <div class="modal-content" style="width: 90vw;">
               <h2 class="modal-header">
                 Hiányzók beírása: {{ selectedLesson.subjectName }}
               </h2>
 
               <div v-for="student in students" :key="student.ID" class="student-attendance">
                 <span class="student-name">{{ student.name }}</span>
-                <div class="attendance-options">
+                <div class="attendance-options" v-if="attendance[student.ID] !== undefined">
                   <label>
                     <input 
                       type="radio" 
@@ -615,16 +636,20 @@ onUnmounted(() => {
                       :name="'attendance-' + student.ID" 
                       :value="true" 
                       v-model="attendance[student.ID].absent"
-                      @change="attendance[student.ID].isAutoAbsent = false"
+                      @change="() => {
+                        console.log('Marked as absent', student.ID);
+                        attendance[student.ID].isAutoAbsent = false;
+                      }"
                     />
                     Hiányzott
                   </label>
                 </div>
               </div>
 
+
               <div class="modal-buttons">
                 <v-btn color="primary" @click="submitAttendance">Hiányzók feltöltése</v-btn> <br>
-                <v-btn @click="closeAttendance">Bezárás</v-btn>
+                <v-btn  @click="closeAttendance">Bezárás</v-btn>
               </div>
             </div>
           </div>
