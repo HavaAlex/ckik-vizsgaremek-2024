@@ -88,7 +88,6 @@ export const useGetTeachers = () => {
 
 
 const getStudentsInGroup = async (groupID: number): Promise<Students[]> => {
-    console.log("Itt kellene Indulnia2")
 
     //tudom hogy csunya
     const { getCookie } = useCookieHandler()
@@ -97,13 +96,11 @@ const getStudentsInGroup = async (groupID: number): Promise<Students[]> => {
     };
     const response = await axiosClient.get(`http://localhost:3000/hianyzas/getStudentsInGroup/${groupID}`, config);
 
-    console.log(response.data)
 
     return response.data
 }
 
 export const useGetStudentsInGroup = (groupID: number) => {
-    console.log("Itt kellene Indulnia1")
     const { setError } = useErrorHandler()
     const query = useQuery({
         queryKey: [QUERY_KEYS.getStudentsInGroup, groupID],
@@ -118,7 +115,6 @@ export const useGetStudentsInGroup = (groupID: number) => {
 }
 
 const addAbsence = async (data : Absence) : Promise<Absence> => {
-    console.log("FELKÜLDÉS")
     const {getCookie} = useCookieHandler()
     let config = {
         headers: {
@@ -137,7 +133,7 @@ export const useAddAbsence = () => {
         {
             mutationFn: addAbsence,
             onSuccess(data) {
-                queryClient.refetchQueries({queryKey:[QUERY_KEYS.postAbsence]})
+                queryClient.refetchQueries({queryKey:[QUERY_KEYS.getAbsences]})
                 console.log(data)
                 const {setStatus} = useStatusHandler()
                 setStatus("Sikeres hiányzás felvitel!")
