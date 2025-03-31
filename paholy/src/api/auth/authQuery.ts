@@ -1,5 +1,5 @@
 import axiosClient from "@/lib/axios"
-import type { LoginData, ResetPasswordData, SetPasswordData, SetPasswordResponse } from "./auth"
+import type { LoginData, ResetPasswordData, SetPasswordData, SetPasswordResponse,changePasswordData } from "./auth"
 import { useMutation, useQuery } from "@tanstack/vue-query"
 import { useRoute, useRouter } from "vue-router"
 import { QUERY_KEYS } from "@/utils/QueryKeys"
@@ -10,30 +10,21 @@ import { useErrorHandler } from "@/stores/errorHandler"
 import { registerTS } from "vue/compiler-sfc"
  
 const Login = async (data: LoginData) : Promise<string> => {
-    console.log("login elküldve")
     const response = await axiosClient.post('http://localhost:3000/login/', data)
-    console.log("eljut ide return elött")
     return response.data
 } 
-export const useLogin = () => {
+export const useLogin = (data: LoginData) => {
     const {push} = useRouter()
     return useMutation({
         mutationFn:Login,
+        mutationKey: [QUERY_KEYS.Login, data],
         onSuccess(data){
             const {setBaseTime,setCookie} = useCookieHandler()
-            //console.log("Token elmentve!")
-            //console.log(data)
             const decoded = jwtDecode(data)
             const d = new Date(0)
             d.setUTCSeconds(decoded.exp)
             setCookie("alap",data,d)
-            //console.log("EXP")
-            //console.log(decoded.exp*1000)
-            //console.log(decoded.userData)
-            //console.log(Math.floor((decoded.exp*1000-Date.now())/1000))
             setBaseTime(Math.floor((decoded.exp*1000-Date.now())/1000))
-            console.log("FING")
-            console.log('/orarend/'+decoded.userData.role+"/"+(decoded.userData.role == "szulo"?`${decoded.userData.children[0].ID}`:''))
             push({path:'/orarend/'+decoded.userData.role+"/"+(decoded.userData.role == "szulo"?`${decoded.userData.children[0].ID}`:'')})
             
         },
@@ -44,15 +35,16 @@ export const useLogin = () => {
     })
 }
 
-const ChangePassword = async (passwordData:any)=>{
+const ChangePassword = async (passwordData:changePasswordData)=>{
     const response = await axiosClient.post('http://localhost:3000/login/changePassword/', passwordData)
     return response.data
 }
 
-export const useChangePassword = () =>{
+export const useChangePassword = (passwordData:changePasswordData) =>{
     const {push} = useRouter()
     return useMutation({
         mutationFn:ChangePassword,
+        mutationKey: [QUERY_KEYS.ChangePassword, passwordData],
         onSuccess(){
 
             push({name: 'login'})

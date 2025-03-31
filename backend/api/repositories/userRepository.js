@@ -81,8 +81,6 @@ class UserRepository
     }
 
     async createUserName(nev){
-
-        // console.log("Elötte: ",nev)
         const nameParts = _.deburr(nev.toLowerCase())
                                     .split(" ")
                                     .filter(Boolean);
@@ -99,7 +97,7 @@ class UserRepository
         // console.log("utána ", username)
         return username;
     }
-    async generatePassword() {
+    async generatePassword() { //véletlenszerű jelszó generálás
         const charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%&*()_+";
         let password = "";
         for (let i = 0; i < 12; i++) {
@@ -116,7 +114,6 @@ class UserRepository
     }
 
     async modifyUser(user){
-        // console.log("biztos ami biztos: ",user)
         const changedUser = await this.Users.findOne({ where: { id: user.userSide } });
         await changedUser.update({ username: user.roleSide.name });
         if(user.userRole == "tanar"){

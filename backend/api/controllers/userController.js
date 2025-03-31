@@ -59,7 +59,6 @@ exports.createUser = async (req, res, next) =>
 
 exports.loginUser = async (req, res, next) =>
 {
-    console.log("LOGIN KÉRELEM")
     const { username, password } = req.body;
 
     if(username == undefined || password == undefined)
@@ -67,11 +66,8 @@ exports.loginUser = async (req, res, next) =>
         res.status(400).send("Nincs megadva az egyik paraméter!");
         return
     }
-    //console.log(password);
     
     const user = await userService.getUser(username);
-    //console.log(user)
-
     if(user == undefined)
     {
         res.status(404).send("Nincs ilyen felhasználó!");
@@ -111,7 +107,6 @@ exports.loginUser = async (req, res, next) =>
 }
 exports.changePassword = async (req,res,next)=>{
     const passwordData = req.body;
-    console.log("lll", passwordData)
     if(passwordData.currentpassword != passwordData.currentpasswordagain){
         res.status(500).send("A két jelszó nem egyezik!")
         return

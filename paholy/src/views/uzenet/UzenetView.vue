@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed,onMounted, onUnmounted  } from 'vue'
-import type { Message } from '@/api/uzenetek/uzenetek';
+import type { NewMessage } from '@/api/uzenetek/uzenetek';
 import { useaddMessage, usegetPotentialReceivers } from '@/api/uzenetek/uzenetekQuery';
 
 const dialog = ref(false);
@@ -27,11 +27,11 @@ const filteredGroups = computed(() => {
   );
 });
 
-const MessageDataRef = ref<Message>({
+const MessageDataRef = ref<NewMessage>({
   message: '',
   date: new Date("0000-12-12"),
-  receiverlist: [],
-  receiverGrouplist: []
+  receiverlist: new Array(),
+  receiverGrouplist: new Array()
 });
 
 

@@ -1,16 +1,11 @@
 <script lang="ts" setup>
 import { useLogin, useChangePassword} from '@/api/auth/authQuery';
+import type { LoginData, ResetPasswordData, SetPasswordData, SetPasswordResponse,changePasswordData } from "./auth"
 import { ref ,onMounted, onUnmounted } from 'vue';
 import { useRouter } from 'vue-router';
 
 const {push} = useRouter()
-const {mutate: ChangePassword} = useChangePassword()
-const passwordData = ref({
-    username:'',
-    currentpassword: '',
-    currentpasswordagain:'',
-    newpassword:''
-})
+const passwordData = ref<changePasswordData>()
 
 </script>
 
@@ -26,7 +21,7 @@ const passwordData = ref({
             </v-card-text>
             <v-card-actions>
                 <v-btn @click="push({name:'login'})">Mégse</v-btn>
-                <v-btn @click="ChangePassword(passwordData)">Új jelszó feltöltése</v-btn>
+                <v-btn @click="useChangePassword(passwordData)">Új jelszó feltöltése</v-btn>
             </v-card-actions>
         </v-card>
     </v-container>

@@ -48,7 +48,7 @@ class UserService
             return await GuardianRepository.getRoleByUserID(ID)
         }
     }
-    async checkIfUsersExist(StudentOMIDs){
+    async checkIfUsersExist(StudentOMIDs){ // megnézi, hogy van e az adott OM azonosóval diák
 
         for (let i = 0; i < StudentOMIDs.length; i++) {
             const StudentID = await studentRepository.getStudentByOmId(StudentOMIDs[i])

@@ -24,6 +24,7 @@ const addTeacherUsers = async (teachers: Teacher[]) : Promise<Teacher[]> => {
 export const useaaddTeacherUsers = () => {
     return useMutation({
         mutationFn: addTeacherUsers,
+        mutationKey: [QUERY_KEYS.addTeacherUsers],
         onSuccess() {
             queryClient.refetchQueries({ queryKey: [QUERY_KEYS.getUsers] })
         },
@@ -34,7 +35,7 @@ export const useaaddTeacherUsers = () => {
     })
 }
 
-//Összes felhasználó lekérése
+//Összes diák lekérése a hiányzások igazolásához
 const getStudents = async () => {
     const { getCookie } = useCookieHandler() 
     const config = {
@@ -48,7 +49,7 @@ const getStudents = async () => {
 export const useGetStudents = () => {
     const { setError } = useErrorHandler()
     const query = useQuery({
-        queryKey: [QUERY_KEYS.getUsers],
+        queryKey: [QUERY_KEYS.getStudents],
         queryFn: getStudents,
     })
 
@@ -72,6 +73,7 @@ const addStudentUsers = async (students: Student[]) : Promise<Student[]> => {
 export const useaddStudentUsers = () => {
     return useMutation({
         mutationFn: addStudentUsers,
+        mutationKey: [QUERY_KEYS.addStudentUsers],
         onSuccess() {
             queryClient.refetchQueries({ queryKey: [QUERY_KEYS.getUsers] })
         },
@@ -94,6 +96,7 @@ const addGuardianUsers = async (guardians: Guardian[]) : Promise<Guardian[]> => 
 export const useaddGuardianUsers = () => {
     return useMutation({
         mutationFn: addGuardianUsers,
+        mutationKey: [QUERY_KEYS.addGuardianUsers],
         onSuccess() {
             queryClient.refetchQueries({ queryKey: [QUERY_KEYS.getUsers] })
         },
@@ -116,6 +119,7 @@ const modifyUser = async (modifiedUser: any) => {
 export const usemodifyUser = () => {
     return useMutation({
         mutationFn: modifyUser,
+        mutationKey: [QUERY_KEYS.modifyUser],
         onSuccess() {
             queryClient.refetchQueries({ queryKey: [QUERY_KEYS.getUsers] })
         },
@@ -148,7 +152,7 @@ export const usegetUsers = () => {
     }
     return query
 }
-// egy felhasználó lekérése
+// egy felhasználó adatainak lekérése
 export const getUser = async (userID: number) => {
     const { getCookie } = useCookieHandler() 
     const config = {
@@ -158,18 +162,18 @@ export const getUser = async (userID: number) => {
     return response.data
 }
 
-export const usegetUser = () => {
-    const { setError } = useErrorHandler()
+export const usegetUser = (userID: number) => {
+    const { setError } = useErrorHandler();
     const query = useQuery({
-        queryKey: [QUERY_KEYS.getUser],
-        queryFn: getUser,
-    })
+        queryKey: [QUERY_KEYS.getUser, userID],
+        queryFn: () => getUser(userID),
+    });
 
     if (query.error.value) {
-        console.error("Lekérdezési hiba:", query.error)
-        setError(query.error.value)
+        console.error("Lekérdezési hiba:", query.error);
+        setError(query.error.value);
     }
-    return query
+    return query;
 }
 //Felhasználó törlése
 export const deleteUser = async (userID: number) => {
@@ -184,6 +188,7 @@ export const deleteUser = async (userID: number) => {
 export const usedeleteUser = () => {
     return useMutation({
         mutationFn: deleteUser,
+        mutationKey: [QUERY_KEYS.deleteUser],
         onSuccess() {
             queryClient.refetchQueries({ queryKey: [QUERY_KEYS.getUsers] })
         },
@@ -229,6 +234,7 @@ const CreateGroup = async (newGroup: CreatedGroup)  => {
 export const useCreateGroup = () => {
     return useMutation({
         mutationFn: CreateGroup,
+        mutationKey: [QUERY_KEYS.CreateGroup],
         onSuccess() {
             queryClient.refetchQueries({ queryKey: [QUERY_KEYS.getGroups] })
         },
@@ -253,6 +259,7 @@ const AddUsersToGroup = async (newUsers: any) => {
 export const useAddUsersToGroup = () => {
     return useMutation({
         mutationFn: AddUsersToGroup,
+        mutationKey: [QUERY_KEYS.AddUsersToGroup],
         onSuccess() {
             queryClient.refetchQueries({ queryKey: [QUERY_KEYS.getGroups] })
         },
@@ -268,10 +275,6 @@ const AddStudentsToGuardians = async (newStudentOMIDs: any) => {
     const config = {
         headers: { Authorization: `Bearer ${getCookie("alap")}` }
     };
-    console.log("§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§")
-    console.log(newStudentOMIDs.value)
-    console.log("§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§")
-
     const response = await axiosClient.post(`http://localhost:3000/admin/addStudentsToGuardian`, newStudentOMIDs.value, config)
     return response.data
 }
@@ -279,6 +282,7 @@ const AddStudentsToGuardians = async (newStudentOMIDs: any) => {
 export const useAddStudentsToGuardians = () => {
     return useMutation({
         mutationFn: AddStudentsToGuardians,
+        mutationKey: [QUERY_KEYS.AddStudentsToGuardians],
         onSuccess() {
             queryClient.refetchQueries({ queryKey: [QUERY_KEYS.getUsers] })
         },
@@ -303,6 +307,7 @@ export const usedeleteStudentGroup = () => {
     return useMutation( 
         {
             mutationFn: deleteStudentGroup,
+            mutationKey: [QUERY_KEYS.deleteStudentGroup],
             onSuccess(data){
                 queryClient.refetchQueries({queryKey:[QUERY_KEYS.getGroups]})
             },
@@ -328,6 +333,7 @@ export const usedeleteGroup = () => {
     return useMutation( 
         {
             mutationFn: deleteGroup,
+            mutationKey: [QUERY_KEYS.deleteGroup],
             onSuccess(data){
                 queryClient.refetchQueries({queryKey:[QUERY_KEYS.getGroups]})
             },
@@ -439,6 +445,7 @@ const addLessons = async (lessons: Lesson[]) : Promise<Lesson[]> => {
 export const useAddLessons = () => {
     return useMutation({
         mutationFn: addLessons,
+        mutationKey: [QUERY_KEYS.addLessons],
         onSuccess() {
             queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.getTimetable] })
             const {setStatus} = useStatusHandler()
@@ -478,7 +485,7 @@ export const useGetAllTeachers = () => {
     return query
 }
 
-//Csoport törlése (Nem törli ki a felhasználókat, de a kapcsolótábla adatait igen)
+//Óra törlése
 const deleteLesson = async (ID: Number)=>{
     const {getCookie} = useCookieHandler()
     const config = {
@@ -492,6 +499,7 @@ export const useDeleteLesson = () => {
     return useMutation( 
         {
             mutationFn: deleteLesson,
+            mutationKey: [QUERY_KEYS.deleteLesson],
             onSuccess(data){
                 queryClient.invalidateQueries({queryKey:[QUERY_KEYS.getTimetable]})
                 const {setStatus} = useStatusHandler()
@@ -517,6 +525,7 @@ const modifyLesson = async (modifedLesson: Lesson) => {
 export const useModifyLesson = () => {
     return useMutation({
         mutationFn: modifyLesson,
+        mutationKey: [QUERY_KEYS.modifyLesson],
         onSuccess() {
             queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.getTimetable] })
             const {setStatus} = useStatusHandler()
@@ -528,7 +537,7 @@ export const useModifyLesson = () => {
         }
     })
 }
-
+//helyettesítés beírása
 const addDisruption = async (disruption: Disruption) => {
     const { getCookie } = useCookieHandler() 
     const config = {
@@ -541,6 +550,7 @@ const addDisruption = async (disruption: Disruption) => {
 export const useAddDisruption = () => {
     return useMutation({
         mutationFn: addDisruption,
+        mutationKey: [QUERY_KEYS.addDisruption],
         onSuccess() {
             queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.getTimetable] })
             const {setStatus} = useStatusHandler()
@@ -590,6 +600,7 @@ export const deleteAbsence = async (absenceID: number) => {
 export const useDeleteAbsence = () => {
     return useMutation({
         mutationFn: deleteAbsence,
+        mutationKey: [QUERY_KEYS.useDeleteAbsence],
         onSuccess() {
             queryClient.refetchQueries({ queryKey: [QUERY_KEYS.deleteAbsence] })
         },
@@ -614,6 +625,7 @@ const modifyAbsence = async (absenceToBeModified: any) => {
 export const useModifyAbsence = () => {
     return useMutation({
         mutationFn: modifyAbsence,
+        mutationKey: [QUERY_KEYS.useModifyAbsence],
         onSuccess() {
             queryClient.refetchQueries({ queryKey: [QUERY_KEYS.modifyAbsence] })
         },

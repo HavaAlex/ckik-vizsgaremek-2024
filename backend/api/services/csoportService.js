@@ -17,16 +17,12 @@ class GroupService
         return await GroupRepository.getGroupsOfStudent(studentID)
     }
 
-    async checkIfGroupNameIsNotTaken(name){
-        console.log("őt hasonlítjuk: ", name)
+    async checkIfGroupNameIsNotTaken(name){ // megnézi hogy foglalt e már ez a csoportnév
         const groups = await groupRepository.getAllGroups();
         for (let i = 0; i < groups.length; i++) {
-            console.log("Van ilyen: ", groups[i].dataValues.name)
             if(groups[i].dataValues.name == name){
-
                 return false
             }
-            
         }
         return true
     }

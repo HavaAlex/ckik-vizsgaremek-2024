@@ -14,11 +14,8 @@ class StudentRepository
 
     async createStudent(student)
     {
-        //console.log("BEJÖVÖS: ", student)
         const newStudent = await this.Students.build(student);
-        //console.log("ÚÚK: ", newStudent)
         await newStudent.save();
-        
         return newStudent;
     }
 
@@ -107,7 +104,6 @@ class StudentRepository
         })
     }
     async getStudentsByGroupID(GroupID){
-        //console.log("ez alapján keresünk: ", GroupID)
         const students = []
         const studentIDs = await this.StudentGroups.findAll({
             where:{

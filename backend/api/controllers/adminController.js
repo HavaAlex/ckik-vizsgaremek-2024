@@ -214,10 +214,7 @@ exports.deleteStudentGroup= async (req,res,next) => {
 
 exports.deleteGroup = async (req,res,next) =>{
     const ID = JSON.parse(req.params.ID);
-    console.log(".............................")
-    console.log("a: ", ID)
     const response = await adminService.deleteGroup(ID);
-    console.log("b: ", response)
     res.status(201).json(response)
 }
 
@@ -251,11 +248,7 @@ exports.modifyAbsence = async (req,res,next) => {
 exports.getOrarend = async (req, res, next) =>
 {
     const weekStart = req.query.weekStart
-    console.log(req.params.id+"!!")
     let group = await groupRepository.getGroupByID(req.params.id)
-
-    console.log(group,"767346")
-
     let combinedOrarend;
     try{
         combinedOrarend = await orarendService.getOrarend([group],weekStart)
@@ -282,7 +275,6 @@ exports.uploadLessons = async (req, res, next) =>
     try
     {
         const response = await adminService.uploadLessons(lessons)
-        //console.log("adminController: vége a kérésnek!",response)
         if(response.message)
         {
             res.status(400).json(response)
@@ -301,12 +293,10 @@ exports.uploadLessons = async (req, res, next) =>
 
 exports.uploadDisruption = async (req, res, next) =>
 {
-    console.log(req.body,"ITT IDE HE")
     const disruption = req.body;
     try
     {
         const response = await adminService.uploadDisruption(disruption)
-        //console.log("adminController: vége a kérésnek!",response)
         if(response.message)
         {
             res.status(400).json(response)
@@ -324,7 +314,6 @@ exports.uploadDisruption = async (req, res, next) =>
 
 exports.modifyLesson = async (req,res,next) => {
     const modifiedLesson = req.body 
-    console.log(modifiedLesson,"ITT IDE HE")
     try{
         const response  = await adminService.modifyLesson(modifiedLesson)
         res.status(201).json(response)

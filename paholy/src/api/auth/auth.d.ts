@@ -16,3 +16,10 @@ export type LoginData = {
 export type ResetPasswordData = {
     email:string
 }
+
+export type changePasswordData = {
+    username:string,
+    currentPassword:string,
+    currentPasswordAgain:string,
+    newPassword:string
+}

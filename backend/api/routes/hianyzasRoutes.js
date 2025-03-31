@@ -7,7 +7,7 @@ const userAuth = require("../middlewares/userAuth");
 const absenceController = require("../controllers/absenceController");
 
 
-// Make sure to protect all routes with your auth middleware
+// Middleware ellenőrzés
 router.use(userAuth.verifyToken);
 
 router.get("/", absenceController.getAbsences);

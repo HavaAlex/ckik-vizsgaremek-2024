@@ -64,12 +64,9 @@ class HazikService {
         for (const assignment of assignments) {
             const answers = await assignmentRepository.getCompletedAssignmentsByAssignmentID(assignment.ID);
             for (const ans of answers) {
-                //console.log("VANYASZ: ", ans)
                 const student = await studentRepository.getStudentByID(ans.studentID);
-                //console.log("STUDNET: ", student)
                 ans.dataValues.senderUserName = student.name;
             }
-            //console.log("őőő: ", teacher)
             assignment.dataValues.senderUserName = teacher.name
 
             result.push({
@@ -113,41 +110,23 @@ class HazikService {
         if (!group) return [];
     
         const studentIDs = group.map(s => s.ID);
-        console.log("STUDENT IDS: ", studentIDs);
-    
         const allCompletedAssignments = [];
     
         for (const sid of studentIDs) {
-            console.log("Fetching assignments for student: ", sid);
             const completedAssignments = await assignmentRepository.getCompletedAssignmentsByStudentID(sid);
-            console.log("Completed assignments: ", completedAssignments);
-            
-
             allCompletedAssignments.push(...completedAssignments);
         }
     
         if (allCompletedAssignments.length === 0) {
-            console.log("No completed assignments found.");
             return [];
         }
-    
-
         const plainAssignments = allCompletedAssignments.map(c => c.get({ plain: true }));
-    
-
         const assignmentIDs = [...new Set(plainAssignments.map(c => c.assignmentID))];
-    
-        console.log("DISTINCT ASSIGNMENT IDS: ", assignmentIDs);
-    
         const assignments = [];
         for (const aid of assignmentIDs) {
             const found = await assignmentRepository.getAssignmentByID(aid);
             if (found) assignments.push(found);
         }
-    
-        console.log("Assignments: ", assignments);
-    
-
         for (const item of assignments) {
             const teacher = await teacherRepository.getTeacherByID(item.dataValues.teacherID);
             if (teacher) {
@@ -175,8 +154,6 @@ class HazikService {
                 answers: relevantAnswers.map(a => a.get({ plain: true }))
             });
         }
-    
-        console.log("Final Result: ", result);
         return result;
     }
 
@@ -228,8 +205,8 @@ class HazikService {
     }
 
 
-    async checkAndUpdateOverdueAssignments() {
-
+    async checkAndUpdateOverdueAssignments() { // minden házifeladatatokka kapcsolatos lekérés elején lefut
+                                                //átállítja egy feladat státuszát ha lejárt a határidő és nincs szöveges válasz vagy feltöltött fájlok
         const allCompletedAssignments = await assignmentRepository.getAllCompletedAssignments();
 
         for (const completedAssignment of allCompletedAssignments) {

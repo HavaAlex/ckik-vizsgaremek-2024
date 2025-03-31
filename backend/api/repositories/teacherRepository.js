@@ -49,9 +49,6 @@ class TeacherRepository
     }
     
     async modifyTeacher(ID,teacher){
-        // Assume User is a Sequelize model
-        // console.log("biztos ami biztos: ",ID)
-        // console.log("techerbe  ", teacher)
         const changedTeacher = await this.Teachers.findOne({ where: { userId: ID } });
         await changedTeacher.update({ name: teacher.name });
         await changedTeacher.update({ email: teacher.email });

@@ -5,7 +5,9 @@ const USER_KEYS = {
 
 const AUTH_KEYS = {
     setPassword: 'setPassword',
-    passwordReset:'passwordReset'
+    passwordReset:'passwordReset',
+    ChangePassword:'ChangePassword',
+    Login:'Login'
 }
 
 const ORAREND_KEYS = {
@@ -70,7 +72,17 @@ const ADMIN_KEYS = {
     getAbsences:'getAbsences',
     getStudents:'getStudents',
     deleteAbsence: 'deleteAbsence',
-    modifyAbsence: 'modifyAbsence'
+    modifyAbsence: 'modifyAbsence',
+    AddUsersToGroup:'AddUsersToGroup',
+    AddStudentsToGuardians:'AddStudentsToGuardians',
+    deleteStudentGroup:'deleteStudentGroup',
+    deleteGroup:'deleteGroup',
+    deleteLesson:'deleteLesson',
+    addLessons:'addLessons',
+    modifyLesson:'modifyLesson',
+    addDisruption:'addDisruption',
+    useDeleteAbsence:'useDeleteAbsence',
+    useModifyAbsence:'useModifyAbsence'
 
 }
 export const QUERY_KEYS = {
