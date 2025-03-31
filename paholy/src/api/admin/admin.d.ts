@@ -1,5 +1,5 @@
 export type Teacher = {
-    ID: number
+    ID: number,
     name: string,
     phone: string,
     email: string,
@@ -39,4 +39,27 @@ export type Disruption = {
     length: number,
     day: string,
     subjectName: string,
+}
+
+export type User = {
+    ID: number,
+    username: string
+    role: string
+}
+
+export type SelectedUser= {
+    roleSide: any,
+    userRole: string,
+    userSide: number,
+    belongingStudents?: OMID[] 
+}
+
+export type OMID = {
+    OMID: number
+}
+
+
+export type uploadedOMIDdata = {
+    szuloID:string,
+    newOMIDs: number[]
 }

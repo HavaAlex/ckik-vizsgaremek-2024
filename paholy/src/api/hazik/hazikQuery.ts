@@ -85,7 +85,8 @@ export const usegetAssignmentFiles = () => {
     )
 };
 
-const getCompletedAssignmentFiles = async (assignmentId:any[]) : Promise<any[]|Error> =>{
+const getCompletedAssignmentFiles = async (assignmentId: number[]) : Promise<any[]|Error> => {
+
     const cookieHandler= useCookieHandler()
     const vanE = cookieHandler.hasValidCookie()
     if(vanE == false)
@@ -96,6 +97,9 @@ const getCompletedAssignmentFiles = async (assignmentId:any[]) : Promise<any[]|E
         headers: { Authorization: `Bearer ${ cookieHandler.getCookie("alap")}` }
     };
     const response = await axiosClient.post(`http://localhost:3000/feladat/getCompletedAssignmentFiles`,assignmentId,config)
+    console.log("====================")
+    console.log(response)
+    console.log("====================")
     return response.data
 }
 export const usegetCompletedAssignmentFiles = () => {
@@ -175,7 +179,7 @@ export const useaddAssignment = () => {
     return useMutation( 
         {
             mutationFn: addAssignment,
-            mutationKey: [QUERY_KEYS.modifyCompletedAssignment],
+            mutationKey: [QUERY_KEYS.addAssignment],
             onSuccess(){
                 queryClient.refetchQueries({queryKey:[QUERY_KEYS.getAssignmentsTeacher]})
             },
@@ -293,7 +297,7 @@ const uploadCompletedAssignmentFiles = async ({
     completedAssignmentId,
   }: {
     files: File[];
-    completedAssignmentId: any;
+    completedAssignmentId: string | Blob;
   }): Promise<void> => {
     const formData = new FormData();
   // Now we can loop over `files` directly

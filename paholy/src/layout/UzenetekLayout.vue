@@ -480,7 +480,7 @@ onUnmounted(() => {
                   <tbody>
                     <tr v-for="uzenet in sortedOsszes" :key="uzenet.ID">
                       <td style="width: 15vw;">
-                        {{ uzenet.senderUserName ? uzenet.senderUserName.username : (uzenet.senderUserName ? uzenet.senderUserName?.username : 'Én') }}
+                        {{ selectedMessage?.senderUserName ? selectedMessage.senderUserName.username : (selectedMessage?.senderUserName ? selectedMessage.senderUserName.username : 'Én') }}
                       </td>
                       <td style="width: 15vw;">{{ formatDate(uzenet.date) }}</td>
                       <td id="szoveg" style="width: 15vw;">{{ uzenet.message }}</td>
@@ -533,12 +533,7 @@ onUnmounted(() => {
         </v-card>
       </v-dialog>
     </div>
-    
-    
     <RouterView></RouterView>
-    
-    
-    
   </main>
 </template>
 

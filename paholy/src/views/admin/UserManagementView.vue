@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, computed } from 'vue';
-import type { Teacher, Student, Guardian } from '@/api/admin/admin';
+import type { Teacher, Student, Guardian,User,SelectedUser,uploadedOMIDdata } from '@/api/admin/admin';
 import * as XLSX from 'xlsx';
 
 import { 
@@ -22,7 +22,9 @@ const { mutate: modifyUser } = usemodifyUser();
 const { mutate: deleteUser } = usedeleteUser();
 const { mutate: AddStudentsToGuardians } = useAddStudentsToGuardians()
 const { data: userList } = usegetUsers();
-
+console.log("!!!!!!!!!!!!!!!!!!")
+console.log(userList)
+console.log("!!!!!!!!!!!!!!!!!!")
 // Rendezése és keresés
 const sortKey = ref<string>('username');
 const sortOrder = ref<'asc' | 'desc'>('asc');
@@ -465,11 +467,18 @@ function submitGuardians() {
 const viewUserDialog = ref(false);
 const DeleteUserDialog = ref(false);
 const selectedUserForView = ref(null);
-const SelectedUserData = ref<any>(null);
-
+const SelectedUserData = ref<SelectedUser>({
+  roleSide: null,
+  userRole: 'asd',
+  userSide: -1
+});
+console.log("MMMMMMMMMMM")
+console.log(SelectedUserData)
+console.log("MMMMMMMMMMM")
 async function openSelectedUserDialog(user: any) {
   try {
     const data = await getUser(user.ID);
+    console.log("ő az : ", data)
     SelectedUserData.value = { ...data };
     viewUserDialog.value = true;
   } catch (error) {
@@ -489,7 +498,11 @@ async function fastdelete(user: any) {
 }
 
 function closeSelectedUserDialog() {
-  SelectedUserData.value = {};
+  SelectedUserData.value = {
+    roleSide: null,
+    userRole: 'asd',
+    userSide: -1
+  };
   viewUserDialog.value = false;
 }
 
@@ -499,7 +512,9 @@ async function deleteUserfunction() {
   await deleteUser(SelectedUserData.value.userSide, {
     onSuccess: (response) => {
       console.log("Deletion result:", response);
-      userList.value = userList.value.filter(user => user.ID !== SelectedUserData.value.ID);
+      if(userList.value){
+        userList.value = userList.value.filter(user => user.ID !== SelectedUserData.value.ID);
+      }
       DeleteUserDialog.value = false;
       viewUserDialog.value = false;
     }
@@ -520,30 +535,39 @@ const newBelongingOMID = ref<string>('');
 
 function addBelongingOMID() {
   const omid = newBelongingOMID.value.trim();
+  console.log("aaaaaaaa",omid,"a")
   if (!omid) return;
- 
-  SelectedUserData.value.belongingStudents.push({ OMID: omid });
-  newBelongingOMID.value = '';
+  if(SelectedUserData.value.belongingStudents){
+    SelectedUserData.value.belongingStudents.push(parseInt(omid));
+    newBelongingOMID.value = '';
+  }
+
 }
 
 
 function removeBelongingStudent(index: number) {
-  SelectedUserData.value.belongingStudents.splice(index, 1);
+  if(SelectedUserData.value.belongingStudents){
+    SelectedUserData.value.belongingStudents.splice(index, 1);
+  }
+
 }
 
-const uploadedOMIDdata = ref({
-  szuloID:'',
-  newOMIDs: []
+const uploadedOMiddata = ref<uploadedOMIDdata>({
+  szuloID:"-1",
+  newOMIDs: [-1]
 })
 async function updateSzuloOMIDs() {
   const szuloID = SelectedUserData.value.roleSide.ID;
   console.log("Ő A SZERENCSÉTLEN: ", SelectedUserData.value)
-  const newOMIDs = SelectedUserData.value.belongingStudents
-    .map(student => student.OMID);
-  console.log("Updating Szulo OMIDs:", { szuloID, newOMIDs });
-  uploadedOMIDdata.value.szuloID = szuloID
-  uploadedOMIDdata.value.newOMIDs = newOMIDs
-  await AddStudentsToGuardians(uploadedOMIDdata)
+  if(SelectedUserData.value.belongingStudents){
+    const newOMIDs = SelectedUserData.value.belongingStudents
+      .map(student => student.OMID);
+    console.log("Updating Szulo OMIDs:", { szuloID, newOMIDs });
+    uploadedOMiddata.value.szuloID = szuloID
+    uploadedOMiddata.value.newOMIDs = newOMIDs
+    await AddStudentsToGuardians(uploadedOMiddata)
+  }
+
 }
 
 
@@ -553,7 +577,11 @@ async function uploadChangedUser() {
     if(SelectedUserData.value.belongingStudents){
     updateSzuloOMIDs()
   }
-  SelectedUserData.value = {};
+  SelectedUserData.value = {
+    roleSide: null,
+    userRole: 'asd',
+    userSide: -1
+  };;
   viewUserDialog.value = false;
 
 }
@@ -582,7 +610,10 @@ onUnmounted(() => {
           <v-card-title>Felhasználók kezelése:</v-card-title>
           <!-- Kereső -->
           <v-card-text>
-            <p> Felhasználók száma: {{ userList.length }}</p>
+            <div v-if="userList?.length">
+              <p> Felhasználók száma: {{ userList.length }}</p>
+            </div>
+            
             <v-text-field
               v-model="searchQuery"
               label="Keresés felhasználónév alapján"
@@ -640,7 +671,9 @@ onUnmounted(() => {
           <v-card-title>Felhasználók kezelése:</v-card-title>
           <!-- Kereső -->
           <v-card-text>
-            <p> Felhasználók száma: {{ userList.length }}</p>
+            <div v-if="userList?.length">
+              <p> Felhasználók száma: {{ userList.length }}</p>
+            </div>
             <v-text-field
               v-model="searchQuery"
               label="Keresés felhasználónév alapján"

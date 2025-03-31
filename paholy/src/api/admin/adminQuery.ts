@@ -1,7 +1,7 @@
 import axiosClient from "@/lib/axios"
 import { useMutation, useQuery } from "@tanstack/vue-query"
 import { QUERY_KEYS } from "@/utils/QueryKeys"
-import type { Teacher , Student, Guardian,CreatedGroup, Disruption } from '@/api/admin/admin';
+import type { Teacher , Student, Guardian,CreatedGroup, Disruption, User,SelectedUser } from '@/api/admin/admin';
 import { useCookieHandler } from "@/stores/cookieHandler";
 
 //import type { Message,PotentialReceiver,newMessage } from "./uzenetek";
@@ -130,7 +130,8 @@ export const usemodifyUser = () => {
     })
 }
 //Összes felhasználó lekérése
-const getUsers = async () => {
+const getUsers = async (): Promise<User[]> => {
+
     const { getCookie } = useCookieHandler() 
     const config = {
         headers: { Authorization: `Bearer ${getCookie("alap")}` }
@@ -153,7 +154,7 @@ export const usegetUsers = () => {
     return query
 }
 // egy felhasználó adatainak lekérése
-export const getUser = async (userID: number) => {
+export const getUser = async (userID: number): Promise<SelectedUser> => {
     const { getCookie } = useCookieHandler() 
     const config = {
         headers: { Authorization: `Bearer ${getCookie("alap")}` }

@@ -8,13 +8,13 @@ export type Lesson = {
     day: string,
     subjectName: string,
     excused: boolean,
-    Teacher: TeacherName
+    Teacher: TeacherName,
 }
 
 
 export type Group = {
     ID: number,
-    name: string
+    name: string,
 }
 
 export type Teacher = {
@@ -25,5 +25,5 @@ export type Teacher = {
 }
 
 export type TeacherName = {
-    name: string
+    name: string,
 }
