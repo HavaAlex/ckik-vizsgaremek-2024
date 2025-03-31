@@ -268,11 +268,7 @@ exports.getAllTeachers = async (req,res,next) => {
 
 
 exports.uploadLessons = async (req, res, next) =>
-<<<<<<< HEAD
 {   
-=======
-{
->>>>>>> a1af372219b3e0996007a8723e9e392921c1a52e
     const lessons = req.body;
     try
     {
