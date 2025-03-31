@@ -65,22 +65,13 @@ export const useGetTeacherGroups = () => {
     return query
 }
 
-const getGroupMarks = async () : Promise<GroupMark[]|Error> => {
+const getGroupMarks = async () : Promise<GroupMark[]> => {
     const {getCookie} = useCookieHandler()
     const config = {
         headers: { Authorization: `Bearer ${getCookie("alap")}` }
     };
-    try{
-        console.log("TANAR JEGY LEKERES")
-        const response = await axiosClient.get(`http://localhost:3000/jegy/csoportjegy/`,config)
-        console.log("IIIT VVV")
-        console.log(response.data)
-        return response.data
-    }
-    catch(error:any){
-        console.log("ERROR A KAKIBAN")
-        return error
-    }
+    const response = await axiosClient.get(`http://localhost:3000/jegy/csoportjegy/`,config)
+    return response.data
 }
 
 export const useGetGroupMarks = () => {
@@ -110,17 +101,11 @@ const getGroupMembers = async () : Promise<GroupMembers[]> => {
 }
 
 export const useGetGroupMembers = () => {
-    const { setError } = useErrorHandler()
 
     const query = useQuery({
         queryKey: [QUERY_KEYS.getMembers],
         queryFn: getGroupMembers,
     })
-
-    if (query.error.value) {
-        console.error("Lekérdezési hiba:", query.error)
-        setError(query.error.value)
-    }
     return query
 }
 
@@ -130,30 +115,19 @@ const getSubjects = async () : Promise<Lesson[]> => {
         headers: { Authorization: `Bearer ${getCookie("alap")}` }
     };
     const response = await axiosClient.get(`http://localhost:3000/tanar/tantargy`,config)
-    console.log("IIIT VVV")
-    console.log(response.data)
     return response.data
 }
 
 export const useGetSubjects = () => {
-    const { setError } = useErrorHandler()
 
     const query = useQuery({
         queryKey: [QUERY_KEYS.getSubjects],
         queryFn: getSubjects,
     })
-
-    if (query.error.value) {
-        console.error("Lekérdezési hiba:", query.error)
-        setError(query.error.value)
-    }
-
     return query
 }
 
 const addMarks = async (data : Mark) : Promise<MarkAttribute> => {
-    console.log("FELKÜLDÉS")
-    //console.log(data)
     const {getCookie} = useCookieHandler()
     let config = {
         headers: {

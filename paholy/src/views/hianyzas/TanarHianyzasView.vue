@@ -150,7 +150,7 @@ function submitAttendance() {
   console.log("Lesson:", selectedLesson.value);
   console.log("Attendance:", attendance.value);
   
-  const absencesToPost = students.value.map((student) => {
+  const absencesToPost = students.value?.map((student) => {
     const isAbsent = attendance.value[student.ID]?.absent;
 
 
