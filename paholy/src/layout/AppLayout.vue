@@ -1,7 +1,5 @@
 <script lang="ts" setup>
 import { useRoute, useRouter } from 'vue-router';
-import { getUserStatusFromLocalStorage, deleteUserStatusFromLocalStorage} from '@/localstorage/localStorageManagment.ts';
-import Jogosultsagok from '@/views/admin/Jogosultsagok.vue';
 import { useCookieHandler } from '@/stores/cookieHandler';
 import { jwtDecode } from 'jwt-decode';
 import { ref ,onMounted, onUnmounted,onUpdated,watchEffect } from 'vue';
@@ -10,7 +8,7 @@ import { useErrorHandler } from '@/stores/errorHandler';
 import { AxiosError } from 'axios';
 import { useGyerekStore } from '@/stores/gyerekStore';
 import { useGetChildren } from '@/api/szulo/szuloQuery';
-const { push } = useRouter()
+const Router = useRouter()
 
 const cookieHandler = useCookieHandler()
 const { time } = storeToRefs(cookieHandler);
@@ -35,10 +33,10 @@ if (cookieStatus == true){
   }
   console.log(decoded)
   console.log(role)
-  push({path:'/orarend/'+decoded.userData.role+"/"+(decoded.userData.role == "szulo"?`${decoded.userData.children[0].ID}`:'')})
+  Router.push({path:'/orarend/'+decoded.userData.role+"/"+(decoded.userData.role == "szulo"?`${decoded.userData.children[0].ID}`:'')})
 }
 else{
-  push({name:"login"})
+  Router.push({name:"login"})
 }
 
 //itt kezdődik a forgatásnak a figyelése
@@ -60,7 +58,7 @@ onUnmounted(() => {
 onUpdated(()=>{
   const cookieStatus =  cookieHandler.hasValidCookie()
   if (cookieStatus == false){
-    push({name:"login"})
+    Router.push({name:"login"})
     useErrorHandler().setError(new Error("Süti lejárt!"))
     cookieHandler.resetTimer()
   }
@@ -86,44 +84,44 @@ const selectedChildKey = ref(-1); // Ez biztosítja a komponens újrarenderelés
             <v-list>
               <div v-if="role=='szulo'">
                 <v-list-item class="appnavbarmenu">
-                  <v-btn @click="push({name:role+'orarend'+role=='szulo'?`/${selectedChild}`:''})" class="appnavbarmenu">Órarend</v-btn>
+                  <v-btn @click="Router.push({name:role+'orarend'+role=='szulo'?`/${selectedChild}`:''})" class="appnavbarmenu">Órarend</v-btn>
                 </v-list-item>
                 <v-list-item v>
-                  <v-btn @click="push({name:role+'feladatok'+role=='szulo'?`/${selectedChild}`:''})" class="appnavbarmenu">Házifeladatok/beadandók</v-btn>
+                  <v-btn @click="Router.push({name:role+'feladatok'+role=='szulo'?`/${selectedChild}`:''})" class="appnavbarmenu">Házifeladatok/beadandók</v-btn>
                 </v-list-item>
                 <v-list-item class="appnavbarmenu">
-                  <v-btn @click="push({name:role+'jegyek'+role=='szulo'?`/${selectedChild}`:''})" class="appnavbarmenu">Osztályzatok</v-btn>
+                  <v-btn @click="Router.push({name:role+'jegyek'+role=='szulo'?`/${selectedChild}`:''})" class="appnavbarmenu">Osztályzatok</v-btn>
                 </v-list-item>
                 <v-list-item class="appnavbarmenu">
-                  <v-btn @click="push({name:role+'hianyzasok'+role=='szulo'?`/${selectedChild}`:''})" class="appnavbarmenu">Mulasztások/Hiányzások</v-btn>
+                  <v-btn @click="Router.push({name:role+'hianyzasok'+role=='szulo'?`/${selectedChild}`:''})" class="appnavbarmenu">Mulasztások/Hiányzások</v-btn>
                 </v-list-item>
                 <v-list-item class="appnavbarmenu">
-                  <v-btn @click="push({name:role+'uzenetek'+role=='szulo'?`/${selectedChild}`:''})" class="appnavbarmenu">Üzenetek</v-btn>
+                  <v-btn @click="Router.push({name:role+'uzenetek'+role=='szulo'?`/${selectedChild}`:''})" class="appnavbarmenu">Üzenetek</v-btn>
                 </v-list-item>
                 
               </div>
               <div v-else>
                 <v-list-item class="appnavbarmenu">
-                  <v-btn @click="push({name:role+'orarend'})" class="appnavbarmenu">Órarend</v-btn>
+                  <v-btn @click="Router.push({name:role+'orarend'})" class="appnavbarmenu">Órarend</v-btn>
                 </v-list-item>
                 <v-list-item v>
-                  <v-btn @click="push({name:role+'feladatok'})" class="appnavbarmenu">Házifeladatok/beadandók</v-btn>
+                  <v-btn @click="Router.push({name:role+'feladatok'})" class="appnavbarmenu">Házifeladatok/beadandók</v-btn>
                 </v-list-item>
                 <v-list-item class="appnavbarmenu" v-if="role!='admin'">
-                  <v-btn @click="push({name:role+'jegyek'})" class="appnavbarmenu">Osztályzatok</v-btn>
+                  <v-btn @click="Router.push({name:role+'jegyek'})" class="appnavbarmenu">Osztályzatok</v-btn>
                 </v-list-item>
                 <v-list-item class="appnavbarmenu">
-                  <v-btn @click="push({name:role+'hianyzasok'})" class="appnavbarmenu">Mulasztások/Hiányzások</v-btn>
+                  <v-btn @click="Router.push({name:role+'hianyzasok'})" class="appnavbarmenu">Mulasztások/Hiányzások</v-btn>
                 </v-list-item>
                 <v-list-item class="appnavbarmenu">
-                  <v-btn @click="push({name:role+'uzenetek'})" class="appnavbarmenu">Üzenetek</v-btn>
+                  <v-btn @click="Router.push({name:role+'uzenetek'})" class="appnavbarmenu">Üzenetek</v-btn>
                 </v-list-item>
            
-                    <v-btn  class="appnavbarmenu" @click="push({name:'UserManagementView'})" v-if="role=='admin' ">
+                    <v-btn  class="appnavbarmenu" @click="Router.push({name:'UserManagementView'})" v-if="role=='admin' ">
                             Felhasználók kezelése
                   </v-btn>
 
-                  <v-btn  class="appnavbarmenu" @click="push({name:'GroupManagementView'})" v-if="role=='admin'">
+                  <v-btn  class="appnavbarmenu" @click="Router.push({name:'GroupManagementView'})" v-if="role=='admin'">
                             Csoportok kezelése
                   </v-btn>
          
@@ -131,7 +129,7 @@ const selectedChildKey = ref(-1); // Ez biztosítja a komponens újrarenderelés
             </v-list>
           </v-menu>
           
-          <v-btn class="appnavbarmenubtn" @click="cookieHandler.deleteCookie('alap') ; push({name:'login'})">
+          <v-btn class="appnavbarmenubtn" @click="cookieHandler.deleteCookie('alap') ; Router.push({name:'login'})">
                 Kilépés
           </v-btn>
               
@@ -164,25 +162,25 @@ const selectedChildKey = ref(-1); // Ez biztosítja a komponens újrarenderelés
         flat
       >
       
-      <v-btn @click="push({name:role+'orarend'})">
+      <v-btn @click="Router.push({name:role+'orarend'})">
                 Órarend
       </v-btn>
-      <v-btn @click="push({name:role+'feladatok'})">
+      <v-btn @click="Router.push({name:role+'feladatok'})">
                 Házifeladatok/beadandók
       </v-btn>
-      <v-btn @click="push({name:role+'jegyek'})" v-if="role!='admin'">
+      <v-btn @click="Router.push({name:role+'jegyek'})" v-if="role!='admin'">
                 Osztályzatok
       </v-btn>
-      <v-btn @click="push({name:role+'hianyzasok'})">
+      <v-btn @click="Router.push({name:role+'hianyzasok'})">
                 Mulasztások/Hiányzások
       </v-btn>
-      <v-btn @click="push({name:role+'uzenetek'})">
+      <v-btn @click="Router.push({name:role+'uzenetek'})">
                 Üzenetek
       </v-btn>
-      <v-btn @click="push({name:'UserManagementView'})" v-if="role=='admin'">
+      <v-btn @click="Router.push({name:'UserManagementView'})" v-if="role=='admin'">
                 Felhasználók kezelése
       </v-btn>
-      <v-btn @click="push({name:'GroupManagementView'})" v-if="role=='admin'">
+      <v-btn @click="Router.push({name:'GroupManagementView'})" v-if="role=='admin'">
                 Csoportok kezelése
       </v-btn>
 
@@ -198,7 +196,7 @@ const selectedChildKey = ref(-1); // Ez biztosítja a komponens újrarenderelés
           let pathSlice = route.path.split('/')
           let pathReconstructed = pathSlice.slice(0,pathSlice.length-1).join('/')
           console.log(`${pathReconstructed}/${value}`)
-          push({ path: `${pathReconstructed}/${value}` }).then(()=>{
+          Router.push({ path: `${pathReconstructed}/${value}` }).then(()=>{
             selectedChildKey = value
             console.log('futok')
           })
@@ -211,7 +209,7 @@ const selectedChildKey = ref(-1); // Ez biztosítja a komponens újrarenderelés
           <v-btn v-bind="props">{{ time }}</v-btn>
         </template>
       </v-tooltip>
-      <v-btn @click="cookieHandler.deleteCookie('alap') ; push({name:'login'})">
+      <v-btn @click="cookieHandler.deleteCookie('alap') ; Router.push({name:'login'})">
                 Kilépés
       </v-btn>
     </v-app-bar>

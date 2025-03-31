@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { ref, computed,onMounted, onUnmounted  } from 'vue'
-import type { Message } from '@/api/uzenetek/uzenetek';
+import type { Message , NewMessage} from '@/api/uzenetek/uzenetek';
 import { useaddMessage, usegetPotentialReceivers } from '@/api/uzenetek/uzenetekQuery';
 import { jwtDecode } from 'jwt-decode';
-
+import {useRouter} from 'vue-router'
+const Router = useRouter()
 const dialog = ref(false);
 const successDialog = ref(false);
 const { mutate: addMessage, isPending } = useaddMessage();
@@ -28,18 +29,19 @@ const filteredGroups = computed(() => {
   );
 });
 
-const MessageDataRef = ref<Message>({
+const MessageDataRef = ref<NewMessage>({
   message: '',
   date: new Date("0000-12-12"),
-  receiverlist: [],
-  receiverGrouplist: []
+  receiverlist: new Array(),
+  receiverGrouplist: new Array()
 });
 
-// Function to handle message sending
+
+
 const sendMessage = () => {
   addMessage(MessageDataRef.value, {
     onSuccess: () => {
-      // Reset input fields and clear search bar
+      
       MessageDataRef.value = {
         message: '',
         date: new Date("0000-12-12"),
@@ -48,10 +50,10 @@ const sendMessage = () => {
       };
       searchText.value = '';
 
-      // Show success popup
+      
       successDialog.value = true;
 
-      // Close the message dialog
+      
       dialog.value = false;
     }
   });

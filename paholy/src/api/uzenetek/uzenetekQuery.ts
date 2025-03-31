@@ -5,7 +5,7 @@ import { QUERY_KEYS } from "@/utils/QueryKeys"
 import { jwtDecode } from "jwt-decode";
 import { useCookieHandler } from "@/stores/cookieHandler";
 
-import type { Message,PotentialReceivers,newMessage,sentAndReceivedMessages,NewMessage} from "./uzenetek";
+import type { Message,PotentialReceivers,sentAndReceivedMessages,NewMessage} from "./uzenetek";
 import queryClient from "@/lib/queryClient";
 import { useErrorHandler } from "@/stores/errorHandler";
 

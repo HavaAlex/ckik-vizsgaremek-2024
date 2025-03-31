@@ -13,7 +13,7 @@ import { storeToRefs } from 'pinia';
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import * as XLSX from 'xlsx';
-
+const Router = useRouter()
 const {data:csoportok} = useGetAllGroups()
 const {data:tanarok} = useGetAllTeachers()
 const { mutate: addLessons, } = useAddLessons();

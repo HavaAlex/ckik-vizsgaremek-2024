@@ -5,7 +5,8 @@ import { ref, onMounted, onUnmounted, computed } from 'vue';
 import { useCookieHandler } from '@/stores/cookieHandler';
 import { jwtDecode } from 'jwt-decode';
 import { storeToRefs } from 'pinia';
-
+import {useRouter} from 'vue-router'
+const Router = useRouter()
 const { mutate: deleteMessage } = usedeleteMessage();
 
 const cookieHandler = useCookieHandler();
@@ -113,12 +114,8 @@ const sortedOsszes = computed(() => {
   let list = [...allMessages.value];
   if (sortKey.value === 'sender') {
     list.sort((a, b) => {
-      const aSender = a.senderUserName
-        ? a.senderUserName.username
-        : (a.sender ? a.sender.username : 'Én');
-      const bSender = b.senderUserName
-        ? b.senderUserName.username
-        : (b.sender ? b.sender.username : 'Én');
+      const aSender = a.senderUserName.username;
+      const bSender = b.senderUserName.username;
       return sortAsc.value
         ? aSender.localeCompare(bSender)
         : bSender.localeCompare(aSender);
@@ -139,7 +136,8 @@ const sortedOsszes = computed(() => {
   return list;
 });
 
-function formatDate(dateString: Date | string | null) {
+
+function formatDate(dateString: Date | undefined) {
   if (!dateString) return "";
   const date = new Date(dateString);
   date.setHours(date.getHours() + 1); 
@@ -164,7 +162,7 @@ onMounted(() => {
   window.matchMedia("(orientation: portrait)").addEventListener("change", updateOrientation);
   if(document.cookie != ''){
     const decoded = jwtDecode(getCookie("alap"))
-    push({name:decoded.userData.role+'orarend'})
+    Router.push({name:decoded.userData.role+'orarend'})
   }
 });
 onUnmounted(() => {
@@ -202,8 +200,8 @@ onUnmounted(() => {
             </div>
             <div v-else>
               <v-list style="height: 80vw; overflow-y: auto;">
-                <v-list-item v-for="uzenet in sortedKapott" :key="uzenet.id">
-                    <strong>Feladó: </strong>{{ uzenet.sender.username }} <br>
+                <v-list-item v-for="uzenet in sortedKapott" :key="uzenet.ID">
+                    <strong>Feladó: </strong>{{ uzenet.senderUserName.username }} <br>
                     <strong>Küldés dátuma: </strong>{{ formatDate(uzenet.date) }} <br>
                     <div style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;width: 80vw;display: inline-block;"><strong >Üzenet: </strong>{{ uzenet.message }}</div> <br>
                     <v-btn color="primary" @click="openDialog(uzenet)">Megtekintés</v-btn>
@@ -215,7 +213,7 @@ onUnmounted(() => {
                 <v-card max-width="80vw">
                   <v-card-title>Üzenet részletei</v-card-title>
                   <v-card-text>
-                    <p><strong>Feladó:</strong> {{ selectedMessage?.sender.username }}</p>
+                    <p><strong>Feladó:</strong> {{ selectedMessage?.senderUserName.username }}</p>
                     <p><strong>Címzettek:</strong> {{ formatReceivers(selectedMessage?.receivers) }}</p>
                     <p><strong>Dátum:</strong> {{ formatDate(selectedMessage?.date) }}</p>
                     <p><strong>Üzenet:</strong> {{ selectedMessage?.message }}</p>
@@ -235,7 +233,7 @@ onUnmounted(() => {
             </div>
             <div v-else>
               <v-list style="height: 80vw; overflow-y: auto;">
-                <v-list-item v-for="uzenet in sortedElkuldott" :key="uzenet.id">
+                <v-list-item v-for="uzenet in sortedElkuldott" :key="uzenet.ID">
                     <strong>Küldés dátuma: </strong>{{ formatDate(uzenet.date) }} <br>
                     <div style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;width: 80vw;display: inline-block;"><strong >Üzenet: </strong>{{ uzenet.message }}</div> <br>
                     <v-btn color="primary" @click="openDialog(uzenet)">Megtekintés</v-btn>
@@ -276,7 +274,7 @@ onUnmounted(() => {
             </div>
             <div v-else>
               <v-list style="height: 80vw; overflow-y: auto;">
-                <v-list-item v-for="uzenet in sortedOsszes" :key="uzenet.id">
+                <v-list-item v-for="uzenet in sortedOsszes" :key="uzenet.ID">
                     <strong>Küldés dátuma: </strong>{{ formatDate(uzenet.date) }} <br>
                     <div style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;width: 80vw;display: inline-block;"><strong >Üzenet: </strong>{{ uzenet.message }}</div> <br>
                     <v-btn color="primary" @click="openDialog(uzenet)">Megtekintés</v-btn>
@@ -291,7 +289,7 @@ onUnmounted(() => {
                   <v-card-text>
                     <p>
                       <strong>Feladó:</strong>
-                      {{ selectedMessage?.sender ? selectedMessage.sender.username : (selectedMessage?.senderUserName ? selectedMessage.senderUserName.username : 'Én') }}
+                      {{ selectedMessage?.senderUserName ? selectedMessage.senderUserName.username : (selectedMessage?.senderUserName ? selectedMessage.senderUserName.username : 'Én') }}
                     </p>
                     <p><strong>Címzettek:</strong> {{ formatReceivers(selectedMessage?.receivers) }}</p>
                     <p><strong>Dátum:</strong> {{ formatDate(selectedMessage?.date) }}</p>
@@ -373,8 +371,8 @@ onUnmounted(() => {
                     </tr>
                   </thead>
                   <tbody>
-                    <tr v-for="uzenet in sortedKapott" :key="uzenet.id">
-                      <td style="width: 15vw;">{{ uzenet.sender.username }}</td>
+                    <tr v-for="uzenet in sortedKapott" :key="uzenet.ID">
+                      <td style="width: 15vw;">{{ uzenet.senderUserName.username }}</td>
                       <td style="width: 15vw;">{{ formatDate(uzenet.date) }}</td>
                       <td id="szoveg" style="width: 15vw;">{{ uzenet.message }}</td>
                       <td style="width: 15vw;">
@@ -388,7 +386,7 @@ onUnmounted(() => {
                   <v-card max-width="50vw">
                     <v-card-title>Üzenet részletei</v-card-title>
                     <v-card-text>
-                      <p><strong>Feladó:</strong> {{ selectedMessage?.sender.username }}</p>
+                      <p><strong>Feladó:</strong> {{ selectedMessage?.senderUserName.username }}</p>
                       <p><strong>Címzettek:</strong> {{ formatReceivers(selectedMessage?.receivers) }}</p>
                       <p><strong>Dátum:</strong> {{ formatDate(selectedMessage?.date) }}</p>
                       <p><strong>Üzenet:</strong> {{ selectedMessage?.message }}</p>
@@ -428,7 +426,7 @@ onUnmounted(() => {
                     </tr>
                   </thead>
                   <tbody>
-                    <tr v-for="uzenet in sortedElkuldott" :key="uzenet.id">
+                    <tr v-for="uzenet in sortedElkuldott" :key="uzenet.ID">
                       <td style="width: 15vw;">{{ formatDate(uzenet.date) }}</td>
                       <td id="szoveg" style="width: 15vw;">{{ uzenet.message }}</td>
                       <td style="width: 15vw;">
@@ -484,9 +482,9 @@ onUnmounted(() => {
                     </tr>
                   </thead>
                   <tbody>
-                    <tr v-for="uzenet in sortedOsszes" :key="uzenet.id">
+                    <tr v-for="uzenet in sortedOsszes" :key="uzenet.ID">
                       <td style="width: 15vw;">
-                        {{ uzenet.sender ? uzenet.sender.username : (uzenet.senderUserName ? uzenet.senderUserName.username : 'Én') }}
+                        {{ uzenet.senderUserName ? uzenet.senderUserName.username : (uzenet.senderUserName ? uzenet.senderUserName?.username : 'Én') }}
                       </td>
                       <td style="width: 15vw;">{{ formatDate(uzenet.date) }}</td>
                       <td id="szoveg" style="width: 15vw;">{{ uzenet.message }}</td>
@@ -505,7 +503,7 @@ onUnmounted(() => {
                     <v-card-text>
                       <p>
                         <strong>Feladó:</strong>
-                        {{ selectedMessage?.sender ? selectedMessage.sender.username : (selectedMessage?.senderUserName ? selectedMessage.senderUserName.username : 'Én') }}
+                        {{ selectedMessage?.senderUserName ? selectedMessage.senderUserName.username : (selectedMessage?.senderUserName ? selectedMessage.senderUserName.username : 'Én') }}
                       </p>
                       <p><strong>Címzettek:</strong> {{ formatReceivers(selectedMessage?.receivers) }}</p>
                       <p><strong>Dátum:</strong> {{ formatDate(selectedMessage?.date) }}</p>

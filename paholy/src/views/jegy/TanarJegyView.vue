@@ -12,9 +12,7 @@ const NewMarkRef = ref<NewMark>({
 
 const {data} = useGetTeacherGroups()
 const groupMarks = usegetGroupMarks()
-const {push} = useRouter()
-const {back} = useRouter()
-const {mutate, isPending} = useAddMark()
+const {mutate} = useAddMark()
 
 const tab = ref<string>("one");
 

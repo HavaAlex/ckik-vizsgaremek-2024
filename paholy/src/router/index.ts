@@ -17,7 +17,6 @@ import JegyekLayout from '../layout/JegyekLayout.vue'
 import HianyzasokLayout from '../layout/HianyzasokLayout.vue' 
 
 import AppLayout from '@/layout/AppLayout.vue'
-import Jogosultsagok from '../views/admin/Jogosultsagok.vue'
 
 import LoginView from '../views/auth/LoginView.vue'
 import OrarendView from '@/views/orarend/DiakOrarendView.vue'

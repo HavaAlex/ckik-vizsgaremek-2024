@@ -3,8 +3,8 @@ import { useLogin, useChangePassword} from '@/api/auth/authQuery';
 import type { LoginData, ResetPasswordData, SetPasswordData, SetPasswordResponse,changePasswordData } from "./auth"
 import { ref ,onMounted, onUnmounted } from 'vue';
 import { useRouter } from 'vue-router';
+const Router = useRouter()
 
-const {push} = useRouter()
 const passwordData = ref<changePasswordData>()
 
 </script>
@@ -20,7 +20,7 @@ const passwordData = ref<changePasswordData>()
                 <v-text-field v-model="passwordData.newpassword" label="Új jelszó"></v-text-field>
             </v-card-text>
             <v-card-actions>
-                <v-btn @click="push({name:'login'})">Mégse</v-btn>
+                <v-btn @click="Router.push({name:'login'})">Mégse</v-btn>
                 <v-btn @click="useChangePassword(passwordData)">Új jelszó feltöltése</v-btn>
             </v-card-actions>
         </v-card>

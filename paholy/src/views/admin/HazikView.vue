@@ -2,7 +2,8 @@
 import { ref, watch, computed } from 'vue'
 import { usegetGroups, usegetGroupAsignments, getGroupAsignments } from '@/api/admin/adminQuery'
 import { usegetAssignmentFiles, usegetCompletedAssignmentFiles,usedeleteAssignment } from '@/api/hazik/hazikQuery'
-
+import {useRouter} from 'vue-router'
+const Router = useRouter()
 
 const { mutate: getAssignmentFiles } = usegetAssignmentFiles()
 const { mutate: getCompletedAssignmentFiles } = usegetCompletedAssignmentFiles()
@@ -46,7 +47,7 @@ const openAssignmentDetails = async (item: any) => {
     item.answers.forEach((answer: any) => {
       const answerId = answer.id || answer.ID
       if (answerId) {
-        answerFilesIDs.value.push(answerId)
+        answerFilesIDs.value.i(answerId)
       }
     })
     if(answerFilesIDs.value.length){

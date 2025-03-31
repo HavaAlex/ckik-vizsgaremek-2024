@@ -10,7 +10,8 @@ const { data: lessons } = useGetLessons();
 const { data: userList } = useGetStudents();
 const { mutate: deleteAbsence } = useDeleteAbsence();
 const { mutate: modifyAbsence } = useModifyAbsence();
-
+import {useRouter} from 'vue-router'
+const Router = useRouter()
 
 const absences = ref<any[]>([]);
 const absenceQuery = useGetAbsences();

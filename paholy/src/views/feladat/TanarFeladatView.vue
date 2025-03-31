@@ -11,9 +11,9 @@ import {
   usedeleteAssignment
 } from '@/api/hazik/hazikQuery';
 
-const dialog = ref(false); // dialog for sending assignment
-const successDialog = ref(false); // shows when submission is successful
-const { data } = usegetGroups(); // target groups
+const dialog = ref(false); // küldés dialpog
+const successDialog = ref(false); // sikeres küldés
+const { data } = usegetGroups(); // csoportok
 const { mutate: addAssignment, isPending } = useaddAssignment();
 const { mutate: uploadAssignmentFiles } = useuploadAssignmentFiles();
 const { mutate: getAssignmentFiles } = usegetAssignmentFiles();
@@ -149,10 +149,8 @@ const openViewAssignmentAnswerDialog = async (assignmentItem: { anwsers: any[]; 
   selectedAssignmentForAnswers.value = assignmentItem;
   ViewAssignmentAnwserDialog.value = true;
   
-  // Reset the answerFilesIDs array before pushing new IDs.
   answerFilesIDs.value = [];
   
-  // For each answer, fetch its associated files
   if (assignmentItem.anwsers) {
     for (const answer of assignmentItem.anwsers) {
       const answerId = answer.id || answer.ID;

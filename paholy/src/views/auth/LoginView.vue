@@ -11,7 +11,8 @@ const LoginDataRef = ref<LoginData>({
     password:''
 })
 
-const { push,back } = useRouter()
+
+const Router = useRouter()
 const { mutate: login, isPending} = useLogin()
 const {getCookie} = useCookieHandler()
 
@@ -25,7 +26,7 @@ onMounted(() => {
   if(document.cookie != ''){
     const decoded = jwtDecode(getCookie("alap"))
     console.log("KAKI")
-    push({path:'/orarend/'+decoded.userData.role+"orarend/"+(decoded.userData.role == "szulo"?`${decoded.userData.children[0].ID}`:'')})
+    Router.push({path:'/orarend/'+decoded.userData.role+"orarend/"+(decoded.userData.role == "szulo"?`${decoded.userData.children[0].ID}`:'')})
   }
 });
 onUnmounted(() => {
@@ -63,7 +64,7 @@ onUnmounted(() => {
             }" :loading="isPending"> 
                 Bejelentkezés
             </v-btn>
-            <v-btn @click="push({name:'changePassword'})">
+            <v-btn @click="Router.push({name:'changePassword'})">
               Jelszó megváltoztatása
             </v-btn>
           

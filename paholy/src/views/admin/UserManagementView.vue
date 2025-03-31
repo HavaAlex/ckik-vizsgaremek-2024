@@ -13,7 +13,8 @@ import {
   usedeleteUser,
   useAddStudentsToGuardians
 } from '@/api/admin/adminQuery';
-
+import {useRouter} from 'vue-router'
+const Router = useRouter()
 const { mutate: addTeacherUsers } = useaaddTeacherUsers();
 const { mutate: addStudentUsers } = useaddStudentUsers();
 const { mutate: addGuardianUsers } = useaddGuardianUsers();

@@ -3,6 +3,8 @@ import { ref, onMounted, onUnmounted, computed } from 'vue'
 import { usegetGroups, useCreateGroup, useAddUsersToGroup, usedeleteStudentGroup,usedeleteGroup } from '@/api/admin/adminQuery'
 import type { CreatedGroup } from '@/api/admin/admin'
 import * as XLSX from 'xlsx'
+import {useRouter} from 'vue-router'
+const Router = useRouter()
 
 const { mutate: CreateGroup } = useCreateGroup()
 const { mutate: AddUsers } = useAddUsersToGroup()
@@ -123,7 +125,7 @@ onMounted(() => {
   window.matchMedia("(orientation: portrait)").addEventListener("change", updateOrientation);
   if(document.cookie != ''){
     const decoded = jwtDecode(getCookie("alap"))
-    push({name:decoded.userData.role+'orarend'})
+    Router.push({name:decoded.userData.role+'orarend'})
   }
 });
 onUnmounted(() => {
