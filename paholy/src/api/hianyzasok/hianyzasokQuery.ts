@@ -5,20 +5,17 @@ import { QUERY_KEYS } from "@/utils/QueryKeys"
 import { jwtDecode } from "jwt-decode";
 import { useCookieHandler } from "@/stores/cookieHandler";
 import { useStatusHandler } from "@/stores/statusHandler"
-import type { Hianyzas, Lesson, Teacher, Absence, Students } from "./hianyzasok";
+import type { Hianyzas, Lesson, Absence, Students } from "./hianyzasok";
 import queryClient from "@/lib/queryClient";
 import { useErrorHandler } from "@/stores/errorHandler";
-import type { Student } from "../admin/admin";
+import type { Student, Teacher } from "../admin/admin";
+import { computed, type Ref } from "vue";
 
-const getHianyzasok = async (): Promise<Hianyzas|Error> => {
+const getHianyzasok = async (): Promise<Hianyzas[]> => {
     console.log("LEFUTOK: hianyzas")
     const cookieHandler= useCookieHandler()
     const vanE = cookieHandler.hasValidCookie()
     const route = useRoute()
-    if(vanE == false)
-    {
-        return new Error("Lejárt a munkamenet!")
-    }
     const config = {
         headers: { Authorization: `Bearer ${ cookieHandler.getCookie("alap")}` }
     };
@@ -38,7 +35,7 @@ export const useGetHianyzasok =  () => {
     return query
 }
 
-const getLessons = async (): Promise<Lesson> => {
+const getLessons = async (): Promise<Lesson[]> => {
     const {getCookie} = useCookieHandler()
     const config = {
         headers: { Authorization: `Bearer ${getCookie("alap")}` }
@@ -63,7 +60,7 @@ export const useGetLessons = () => {
 }
 
 
-const getTeachers = async (): Promise<Teacher> =>{
+const getTeachers = async (): Promise<Teacher[]> =>{
     const {getCookie} = useCookieHandler()
     const config = {
         headers: { Authorization: `Bearer ${getCookie("alap")}` }
@@ -73,16 +70,10 @@ const getTeachers = async (): Promise<Teacher> =>{
     return response.data
 }
 export const useGetTeachers = () => {
-    const { setError } = useErrorHandler()
     const query = useQuery({
         queryKey: [QUERY_KEYS.getTeachers],
         queryFn: getTeachers,
     })
-
-    if (query.error.value) {
-        console.error("Lekérdezési hiba:", query.error)
-        setError(query.error.value)
-    }
     return query  
 }
 
@@ -94,25 +85,29 @@ const getStudentsInGroup = async (groupID: any): Promise<Students[]> => {
     const config = {
         headers: { Authorization: `Bearer ${getCookie("alap")}` }
     };
-    const response = await axiosClient.get(`http://localhost:3000/hianyzas/getStudentsInGroup/${groupID.value}`, config);
+    const response = await axiosClient.get(`http://localhost:3000/hianyzas/getStudentsInGroup/${groupID}`, config);
 
 
     return response.data
 }
 
-export const useGetStudentsInGroup = (groupID: number) => {
+export const useGetStudentsInGroup = (groupID: Ref<number>) => {
     const { setError } = useErrorHandler()
+
     const query = useQuery({
         queryKey: [QUERY_KEYS.getStudentsInGroup, groupID],
-        queryFn:() => getStudentsInGroup(groupID),
-    })
+        queryFn: () => groupID.value !== -1 ? getStudentsInGroup(groupID.value) : Promise.reject("Érvénytelen csoport ID"),
+        enabled: computed(() => groupID.value !== -1)
+    });
 
     if (query.error.value) {
         console.error("Lekérdezési hiba:", query.error)
         setError(query.error.value)
     }
+    
     return query  
 }
+
 
 const addAbsence = async (data : Absence) : Promise<Absence> => {
     const {getCookie} = useCookieHandler()

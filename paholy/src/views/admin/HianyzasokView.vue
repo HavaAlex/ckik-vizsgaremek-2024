@@ -2,7 +2,6 @@
 import { useGetHianyzasok, useGetLessons, useGetTeachers } from '@/api/hianyzasok/hianyzasokQuery';
 import { useGetAbsences, useGetStudents, useDeleteAbsence, useModifyAbsence} from '@/api/admin/adminQuery'
 
-import type { Teacher } from '@/api/hianyzasok/hianyzasok';
 import { ref, watch, onMounted, onUnmounted, computed } from 'vue';
 
 const { data } = useGetHianyzasok();
@@ -11,6 +10,7 @@ const { data: userList } = useGetStudents();
 const { mutate: deleteAbsence } = useDeleteAbsence();
 const { mutate: modifyAbsence } = useModifyAbsence();
 import {useRouter} from 'vue-router'
+import type { Teacher } from '@/api/admin/admin';
 const Router = useRouter()
 
 const absences = ref<any[]>([]);
@@ -46,13 +46,13 @@ function getTeacherName(teacherId: number): string {
 }
 
 function getStudentOMID(studentID: number): string {
-  const student = userList.value.find(student => student.ID === studentID);
+  const student = userList.value.find((student:any) => student.ID === studentID);
   console.log(student);
   return student ? student.OMID : studentID.toString();
 }
 
 function getStudentName(studentID: number): string {
-  const student = userList.value.find(student => student.ID === studentID);
+  const student = userList.value.find((student:any) => student.ID === studentID);
   console.log(student);
   return student ? student.name : studentID.toString();
 }

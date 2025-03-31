@@ -150,6 +150,7 @@ async function sendTeachers() {
 const showStudentDialog = ref(false);
 const students = ref<Student[]>([]);
 const newStudent = ref<Student>({
+  ID:-1,
   name: '',
   birth_Date: new Date(),
   address: '',
@@ -167,7 +168,7 @@ function addStudent() {
     !newStudent.value.OM_ID
   ) return;
   students.value.push({ ...newStudent.value });
-  newStudent.value = { name: '', birth_Date: new Date(), address: '', phone: '', email: '', OM_ID: '' };
+  newStudent.value = {ID:-1, name: '', birth_Date: new Date(), address: '', phone: '', email: '', OM_ID: '' };
 }
 
 function removeStudent(index: number) {
@@ -189,6 +190,7 @@ function processStudentFile(file: File): Promise<Student[]> {
         const rows = lines.map(line => line.split(delimiter));
         const validRows = rows.filter(cols => cols.length >= 6);
         const studentsFromFile: Student[] = validRows.map(cols => ({
+          ID:-1,
           name: cols[0].trim(),
           birth_Date: new Date(cols[1].trim()),
           address: cols[2].trim(),
@@ -210,6 +212,7 @@ function processStudentFile(file: File): Promise<Student[]> {
         jsonData.forEach(row => {
           if (row && row.length >= 6) {
             studentsFromFile.push({
+              ID:-1,
               name: String(row[0]).trim(),
               birth_Date: new Date(row[1]),
               address: String(row[2]).trim(),
@@ -513,7 +516,7 @@ async function deleteUserfunction() {
     onSuccess: (response) => {
       console.log("Deletion result:", response);
       if(userList.value){
-        userList.value = userList.value.filter(user => user.ID !== SelectedUserData.value.ID);
+        userList.value = userList.value.filter(user => user.ID !== SelectedUserData.value.userSide);
       }
       DeleteUserDialog.value = false;
       viewUserDialog.value = false;
@@ -538,7 +541,15 @@ function addBelongingOMID() {
   console.log("aaaaaaaa",omid,"a")
   if (!omid) return;
   if(SelectedUserData.value.belongingStudents){
-    SelectedUserData.value.belongingStudents.push(parseInt(omid));
+    SelectedUserData.value.belongingStudents.push({
+      ID:-1,
+      name: '',
+      birth_Date: new Date(),
+      address: '',
+      phone: '',
+      email: '',
+      OM_ID: omid
+    });
     newBelongingOMID.value = '';
   }
 
@@ -561,7 +572,7 @@ async function updateSzuloOMIDs() {
   console.log("Ő A SZERENCSÉTLEN: ", SelectedUserData.value)
   if(SelectedUserData.value.belongingStudents){
     const newOMIDs = SelectedUserData.value.belongingStudents
-      .map(student => student.OMID);
+      .map(student => Number(student.OM_ID));
     console.log("Updating Szulo OMIDs:", { szuloID, newOMIDs });
     uploadedOMiddata.value.szuloID = szuloID
     uploadedOMiddata.value.newOMIDs = newOMIDs
@@ -977,7 +988,7 @@ onUnmounted(() => {
                 >
                   <v-list-item-content>
                     <v-list-item-title>
-                      {{ student.OMID }} <span v-if="student.name"> - {{ student.name }}  </span> (kattintson az eltávolításhoz)
+                      {{ student.OM_ID }} <span v-if="student.name"> - {{ student.name }}  </span> (kattintson az eltávolításhoz)
                     </v-list-item-title>
                   </v-list-item-content>
                 </v-list-item>
