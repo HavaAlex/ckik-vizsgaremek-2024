@@ -20,8 +20,6 @@ exports.getAllAbsences = async (req, res, next) => {
 }
 
 exports.postAbsence = async (req, res, next) => {
-
-
     let { studentID, teacherID, lessonID, date, excused } = req.body;
 
     date = new Date(date);
@@ -40,11 +38,6 @@ exports.postAbsence = async (req, res, next) => {
 
         const plainAbsences = absences.map(a => a.dataValues);
 
-        
-        plainAbsences.forEach(absence => {
-            console.log("PlainAbsences")
-            console.log(absence)
-        });
 
         console.log("New Absence")
         console.log(absence)
@@ -55,14 +48,13 @@ exports.postAbsence = async (req, res, next) => {
         );
 
 
-        console.log("existingAbsence")
-        console.log(existingAbsence)
 
-        if (existingAbsence) {
-            throw new Error("Egy olyan diákot akart beirni akit már beirt erre az órára");
+        if (!existingAbsence ) {
+
+            console.log("beirlak")
+            absence = await absenceService.postAbsence(absence);
         }
 
-        absence = await absenceService.postAbsence(absence);
         res.status(201).json(absence);
     } catch (error) {
         next(error);
