@@ -42,6 +42,7 @@ exports.getJegyekTanar = async (req, res, next) =>
     console.log("_________")
     console.log("b: ", jegyek)
     console.log("_________")
+    console.log("getjegyek vége")
     res.status(201).json(jegyek);
 
 }
