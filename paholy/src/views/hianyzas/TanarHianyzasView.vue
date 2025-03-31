@@ -79,7 +79,20 @@ const isAttendanceReady = computed(() => {
   return students.value?.every((student) => attendance.value[student.ID] !== undefined);
 });
 
-const selectedLesson = ref<Lesson | null>(null);
+const selectedLesson = ref<Lesson>({
+  ID: -1,
+  groupID: 0,
+  teacherID: 0,
+  start_Hour: 0,
+  start_Minute: 0,
+  length: 0,
+  day: '',
+  subjectName: '',
+  excused: false,
+  Teacher: {
+    name: ''
+  }
+});
 
 const attendance = ref<{ 
   [studentId: number]: { 
@@ -89,9 +102,9 @@ const attendance = ref<{
   } 
 }>({});
 
-const students = ref<Students[] | null >(null);
+const students = ref<Students[]>();
 
-const currentGroupID = ref<number | null>(1);
+const currentGroupID = ref<number>(1);
 
 const { data: studentsData, refetch } = useGetStudentsInGroup(
   computed(() => currentGroupID.value),
@@ -110,7 +123,8 @@ watch(studentsData, (newData) => {
 
 //copyright 3025-nem szabad megnézni
 async function openAttendance(lesson: Lesson) {
-  selectedLesson.value = lesson;
+  console.log(lesson,"ÓRA")
+  selectedLesson.value = JSON.parse(JSON.stringify(lesson));
   currentGroupID.value = lesson.groupID;
 
   await refetch();
@@ -125,8 +139,9 @@ async function openAttendance(lesson: Lesson) {
   let date = new Date(currentWeekStart.value);
   date.setDate(date.getDate() + dayKeys.indexOf(selectedLesson.value.day));
 
+  console.log(selectedLesson.value.ID,"KAKI")
   const existingAbsences = absences.value.filter(
-    (a) => a.lessonID === selectedLesson.value?.ID && new Date(a.date).getTime() === date.getTime()
+    (a) => a.lessonID === selectedLesson.value.ID && new Date(a.date).getTime() === date.getTime()
   );
 
   for (const student of students.value) {
@@ -144,7 +159,6 @@ async function openAttendance(lesson: Lesson) {
 }
 
 function submitAttendance() {
-  if (!selectedLesson.value) return;
 
   
   console.log("Lesson:", selectedLesson.value);
@@ -161,14 +175,14 @@ function submitAttendance() {
 
     return {
       studentID: student.ID,
-      teacherID: selectedLesson.value?.teacherID || currentTeacherId, 
+      teacherID: selectedLesson.value.teacherID || currentTeacherId, 
       lessonID: selectedLesson.value.ID,
       date: date,
       absent: isAbsent ? true : false,
     };
   });
 
-  absencesToPost.forEach((absence) => {
+  absencesToPost?.forEach((absence) => {
     if (absence.absent === true) {
       console.log(absence)
       const valasz = mutate(absence)
@@ -179,7 +193,8 @@ function submitAttendance() {
 }
 
 function closeAttendance() {
-  selectedLesson.value = null;
+  selectedLesson.value.ID =-1
+  console.log(selectedLesson.value.ID,"!!!!!!!!!!!!!444")
   attendance.value = {};
 }
 
@@ -398,7 +413,7 @@ onUnmounted(() => {
         </v-card>
 
         <transition name="fade">
-          <div class="attendance-modal" v-if="selectedLesson && isAttendanceReady">
+          <div class="attendance-modal" v-if="selectedLesson.ID!=-1 && isAttendanceReady">
             <div class="modal-content" style="width: 90vw;">
               <h2 class="modal-header">
                 Hiányzók beírása: {{ selectedLesson.subjectName }}
@@ -610,7 +625,7 @@ onUnmounted(() => {
         </v-card>
 
         <transition name="fade">
-          <div class="attendance-modal" v-if="selectedLesson && isAttendanceReady">
+          <div class="attendance-modal" v-if="selectedLesson.ID!=-1 && isAttendanceReady">
             <div class="modal-content" style="width: 90vw;">
               <h2 class="modal-header">
                 Hiányzók beírása: {{ selectedLesson.subjectName }}
