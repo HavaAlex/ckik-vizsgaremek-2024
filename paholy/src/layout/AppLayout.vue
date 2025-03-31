@@ -8,6 +8,7 @@ import { useErrorHandler } from '@/stores/errorHandler';
 import { AxiosError } from 'axios';
 import { useGyerekStore } from '@/stores/gyerekStore';
 import { useGetChildren } from '@/api/szulo/szuloQuery';
+import type { child } from '@/api/szulo/szulo'
 const Router = useRouter()
 
 const cookieHandler = useCookieHandler()
@@ -26,7 +27,8 @@ if (cookieStatus == true){
   role = decoded.userData.role
   if(role == "szulo"){
     gyerekStore.clearChildren()
-    decoded.userData.children.forEach(element => {
+    decoded.userData.children.forEach((element: child ) => {
+
       gyerekStore.addChild(element)
     });
     selectedChild.value = refs.children.value.length ? refs.children.value[0].ID : -1;

@@ -1,9 +1,11 @@
 export type Assignment = {
-    Groups: Array,
+    ID?: number, 
+    Groups: any[],
     Description: string,
     DeadLine: Date,
     UploadDate: Date,
-}
+  };
+  
 
 export type FileList = {
     List: FormData[]
@@ -37,3 +39,11 @@ export type CompletedAssignmentInstance = {
     studentID: number,
     textAnswer
 }
+
+export type CompletedAssignmentInstance = {
+    ID: number;
+    assignmentID: number; 
+    status: string;
+    studentID: number;
+    textAnswer: string;
+};

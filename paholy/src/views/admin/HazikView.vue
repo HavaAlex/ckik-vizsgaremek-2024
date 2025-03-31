@@ -16,7 +16,8 @@ const { data: Groups } = usegetGroups()
 const selectedGroupForFetch = ref<number | null>(null)
 
 
-const groupAssignments = ref([])
+const groupAssignments = ref<any[]>([])
+
 
 watch(selectedGroupForFetch, async (newGroupId) => {
   if (newGroupId !== null) {
@@ -47,7 +48,8 @@ const openAssignmentDetails = async (item: any) => {
     item.answers.forEach((answer: any) => {
       const answerId = answer.id || answer.ID
       if (answerId) {
-        answerFilesIDs.value.i(answerId)
+        answerFilesIDs.value.push(answerId)
+
       }
     })
     if(answerFilesIDs.value.length){
@@ -186,15 +188,15 @@ const cardHeight = computed(() => isPortrait.value ? '80vw' : '40vw')
           <v-card-title>Kiosztott házi feladatok</v-card-title>
           <v-card-text style="max-height: 80vw; overflow-y: auto;">
             <v-list>
-              <div v-if="groupAssignments && (groupAssignments.length || groupAssignments.value.length)">
+              <div v-if="groupAssignments && (groupAssignments.length || groupAssignments.values.length)">
                 <v-list-item v-for="item in groupAssignments" :key="item.assignment.ID">
-                  <h3><strong>Feladó tanár: </strong>{{ item.assignment.senderUserName }}</h3> 
+                  <h3><strong>Feladó tanár: </strong>{{ item.assignment.senderUserName }}</h3>
                   <strong>Feladás dátuma: </strong>{{ formatDate(item.assignment.uploadDate) }}<br>
                   <strong>Határidő: </strong>{{ formatDate(item.assignment.deadline) }}<br>
                   <v-btn color="primary" @click="openAssignmentDetails(item)">Részletek</v-btn><br>
                   <v-btn color="error" @click="openDeleteAssignment(item)">Törlés</v-btn><br>
-                 
                 </v-list-item>
+
               </div>
               <div v-else>
                 <v-list-item>Nincs megjeleníthető házi feladat</v-list-item>
@@ -298,7 +300,7 @@ const cardHeight = computed(() => isPortrait.value ? '80vw' : '40vw')
                   <th>Interakció</th>
                 </tr>
               </thead>
-              <tbody v-if="groupAssignments && (groupAssignments.length || groupAssignments.value.length)">
+              <tbody v-if="groupAssignments && (groupAssignments.length || groupAssignments.values.length)">
                 <tr v-for="item in groupAssignments" :key="item.assignment.ID">
                   <td>{{ item.assignment.senderUserName }}</td>
                   <td>{{ formatDate(item.assignment.uploadDate) }}</td>

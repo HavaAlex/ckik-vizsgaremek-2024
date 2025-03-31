@@ -1,30 +1,31 @@
 <script setup lang="ts">
-import { ref, computed,onMounted, onUnmounted, watchEffect  } from 'vue';
+import { ref, computed, onMounted, onUnmounted, watchEffect } from 'vue';
 import type { Assignment, OpenAssignment, OpenCompletedAssignment } from '@/api/hazik/hazik';
-import { usegetAssignmentsStudent, usemodifyCompletedAssignment, usegetAssignmentFiles,useuploadCompletedAssignmentFiles, usegetCompletedAssignmentFiles, usedeleteAnswerFile } from '@/api/hazik/hazikQuery';
+import { 
+  usegetAssignmentsStudent, 
+  usemodifyCompletedAssignment, 
+  usegetAssignmentFiles,
+  useuploadCompletedAssignmentFiles, 
+  usegetCompletedAssignmentFiles, 
+  usedeleteAnswerFile 
+} from '@/api/hazik/hazikQuery';
 import { useCookieHandler } from '@/stores/cookieHandler';
 
 const successDialog = ref(false); 
 const { mutate: modifyCompletedAssignment, isPending } = usemodifyCompletedAssignment();
-const { data: assignmentStudentList,refetch  } = usegetAssignmentsStudent();
+const { data: assignmentStudentList, refetch } = usegetAssignmentsStudent();
 const { mutate: getAssignmentFiles } = usegetAssignmentFiles();
 const { mutate: uploadCompletedAssignmentFiles } = useuploadCompletedAssignmentFiles();
 const { mutate: getCompletedAssignmentFiles } = usegetCompletedAssignmentFiles();
 const { mutate: deleteAnswerFile } = usedeleteAnswerFile();
-console.log("űűűűű ", assignmentStudentList)
-const cookieHandler = useCookieHandler()
-const role = ref<string>()
-console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-cookieHandler.hasValidCookie()
-role.value = cookieHandler.utolsoDecoded?.userData.role
-console.log(role.value)
+
+console.log("űűűűű ", assignmentStudentList);
+const cookieHandler = useCookieHandler();
+const role = ref<string>();
+cookieHandler.hasValidCookie();
+role.value = cookieHandler.utolsoDecoded?.userData.role;
+console.log(role.value);
 refetch();
-/*watchEffect(() => {
-  console.log("FFFFFFFFFFFFFUUUUUUUUUUUT")
-  refetch();
-  cookieHandler.hasValidCookie()
-  role.value = cookieHandler.utolsoDecoded?.role
-});*/
 
 function formatDate(dateString: Date | string | null) {
   if (!dateString) return "";
@@ -33,14 +34,12 @@ function formatDate(dateString: Date | string | null) {
   return date.toISOString().slice(0, 19).replace("T", " ");
 }
 
-
 const getStatusClass = (status: string) => { // színezés
   if(status === "Nincs leadva") return "status-yellow";
   if(status === "Leadva") return "status-green";
   if(status === "Határidő lejárt") return "status-red";
   return "";
 };
-
 
 const selectedAssignment = ref<OpenAssignment>({
   ID: -1,
@@ -59,12 +58,11 @@ const openCompletedAssignment = ref<OpenCompletedAssignment>({
   textAnswer: ""
 });
 
-//dialog megnyitáshoz
+// Dialog megnyitáshoz
 const ViewAssignmentDialog = ref(false);
 const openAssignmentViewDialog = (selected: OpenAssignment, complassignment: OpenCompletedAssignment) => {
   selectedAssignment.value = selected;
-
-  openCompletedAssignment.value = { ...complassignment }; // azért ilyen , hogy lehessen szerkeszteni és felktűnjön a szövegdobozban
+  openCompletedAssignment.value = { ...complassignment }; // deep copy for editing
   ViewAssignmentDialog.value = true;
 };
 
@@ -77,40 +75,43 @@ const resetForm = () => {
 const assignmentFiles = ref<any[]>([]);
 const completedAssignmentFiles = ref<any[]>([]);
 
-
-const isDeadlinePast = computed(() => { //deadline csekkolás (ha a számítóg idejét visszatekerjuk, kijátszható de a backend levalidálja mégegyszer szóval nincs para)
+// Deadline checking
+const isDeadlinePast = computed(() => {
   return new Date(selectedAssignment.value.deadline) < new Date();
 });
 
-function modositasmentese(){ //feltölti a cuccokat
+function modositasmentese(){ 
   modifyCompletedAssignment(openCompletedAssignment.value, {
-    onSuccess: async (assignmentResponse) => {
+    onSuccess: async (assignmentResponse: any) => {
+      // Convert the returned ID to a string before passing it to uploadCompletedAssignmentFiles
       const completedAssignmentID = assignmentResponse.ID;
       if (completedAssignmentFiles.value.length > 0) {
         await uploadCompletedAssignmentFiles(
-          { files: completedAssignmentFiles.value, completedAssignmentId: completedAssignmentID },
+          { 
+            files: completedAssignmentFiles.value, 
+            completedAssignmentId: String(completedAssignmentID) 
+          },
           { onSuccess: resetForm }
         );
-      }
-      else{
+      } else {
         resetForm();
       }
     }
   });
 }
 
-
 const fetchAssignmentFiles = async (selectedAssignmentID: number) => { 
   await getAssignmentFiles(selectedAssignmentID, {
-    onSuccess: async (response) => {
+    onSuccess: async (response: any) => {
       console.log("Files fetched:", response);
-      assignmentFiles.value = response;
+      // If response is an array, use it directly; otherwise, use response.data
+      const res: any = response;
+      assignmentFiles.value = res.data || res;
     }
   });
 };
 
-
-const downloadFile = (file: any) => { // mindenféle fájl ezt használja
+const downloadFile = (file: any) => {
   const byteArray = new Uint8Array(file.buffer.data);
   const blob = new Blob([byteArray], { type: file.mimetype || 'application/octet-stream' });
   const link = document.createElement("a");
@@ -121,7 +122,7 @@ const downloadFile = (file: any) => { // mindenféle fájl ezt használja
   document.body.removeChild(link);
 };
 
-// leadott fájl kitörlése (mint külön funkció) itt kezdődik
+// Leadott fájl törlése
 const DeleteAssignmentID = ref<number>(-1);
 const DeleteAssignmentDialog = ref(false); 
 const openDeleteAssignmentDialog = async (id: number) => { 
@@ -131,29 +132,28 @@ const openDeleteAssignmentDialog = async (id: number) => {
 
 const deleteFile = async () => {
   await deleteAnswerFile(DeleteAssignmentID.value, {
-    onSuccess: (response) => {
+    onSuccess: (response: any) => {
       console.log("File deletion successful");
-
       const currentAnswerId = openCompletedAssignment.value.ID;
       if (answerFiles.value[currentAnswerId]) {
         answerFiles.value[currentAnswerId] = answerFiles.value[currentAnswerId].filter(
-          (file) => file.ID !== DeleteAssignmentID.value
+          (file: any) => file.ID !== DeleteAssignmentID.value
         );
       }
-
       DeleteAssignmentDialog.value = false;
     }
   });
 };
-// és itt ér véget 
 
 const answerFiles = ref<Record<number, any[]>>({});
 
 const fetchAnswerFiles = async (answerFilesIDs: number[]) => {
   console.log("Fetching answer files for answer id:", answerFilesIDs);
   await getCompletedAssignmentFiles(answerFilesIDs, {
-    onSuccess: (response) => {
-      const filesArray = response.data || response;
+    onSuccess: (response: any) => {
+      // Cast response to any to safely access .data if available
+      const res: any = response;
+      const filesArray = res.data || res;
       const filesByAnswer: Record<number, any[]> = {};
       answerFilesIDs.forEach((id, index) => {
         filesByAnswer[id] = filesArray[index];
@@ -166,11 +166,10 @@ const fetchAnswerFiles = async (answerFilesIDs: number[]) => {
 const handleOpenAssignment = (selected: OpenAssignment, complassignment: OpenCompletedAssignment) => {
   openAssignmentViewDialog(selected, complassignment);
   fetchAssignmentFiles(selected.ID);
-
   fetchAnswerFiles([complassignment.ID]);
 };
 
-//itt kezdődik a forgatásnak a figyelése
+// Orientation handling
 const isPortrait = ref(window.matchMedia("(orientation: portrait)").matches);
 const updateOrientation = () => {
   isPortrait.value = window.matchMedia("(orientation: portrait)").matches;
@@ -180,17 +179,17 @@ onMounted(() => {
 });
 onUnmounted(() => {
   window.matchMedia("(orientation: portrait)").removeEventListener("change", updateOrientation);
-});//itt ér véget
+});
 </script>
 
 <template>
   <div v-if="isPortrait">
     <v-container style="max-height: 100vw;">
-      <v-card >
+      <v-card>
         <v-card-title>Kapott feladatok: </v-card-title>
-        <v-card-text style="max-height: 80vw; overflow-y: auto;" >
+        <v-card-text style="max-height: 80vw; overflow-y: auto;">
           <v-list>
-            <v-list-item v-for="feladat in assignmentStudentList" :key="feladat.feladat.ID" >
+            <v-list-item v-for="feladat in assignmentStudentList" :key="feladat.feladat.ID">
               <strong>Feladó tanár:</strong> {{ feladat.feladat.senderUserName }} <br>
               <strong>Határidő: </strong>{{ formatDate(feladat.feladat.deadline) }}  <br>
               <span :class="getStatusClass(feladat.valasz.status)">{{ feladat.valasz.status }}</span><br>
@@ -200,9 +199,7 @@ onUnmounted(() => {
               </v-btn>
             </v-list-item>
           </v-list>
-          
         </v-card-text>
-        
       </v-card>
     </v-container>
     <v-dialog v-model="ViewAssignmentDialog" max-width="80vw">
@@ -212,8 +209,6 @@ onUnmounted(() => {
           <p><strong>Feladás dátuma:</strong> {{ formatDate(selectedAssignment?.uploadDate) }}</p>
           <p><strong>Dátum:</strong> {{ formatDate(selectedAssignment?.deadline) }}</p>
           <p><strong>Leírás:</strong> {{ selectedAssignment?.desc }}</p>
-
-
           <div v-if="assignmentFiles.length">
             <p><strong>Fájlok:</strong></p>
             <v-list-item
@@ -228,8 +223,6 @@ onUnmounted(() => {
           <div v-else>
             <p><strong>Fájlok:</strong> Nincsenek fájlok ehhez a feladathoz.</p>
           </div>
-
-
           <div v-if="answerFiles[openCompletedAssignment.ID] && answerFiles[openCompletedAssignment.ID].length">
             <p><strong>Beadott fájlok:</strong></p>
             <v-list-item
@@ -243,7 +236,7 @@ onUnmounted(() => {
                 small
                 color="error"
                 @click="openDeleteAssignmentDialog(file.ID)"
-                :disabled="isDeadlinePast||role=='szulo'"
+                :disabled="isDeadlinePast || role=='szulo'"
               >
                 Törlés
               </v-btn>
@@ -254,10 +247,8 @@ onUnmounted(() => {
           </div>
           <p v-if="role=='szulo'"><strong>A gyereke válasza:</strong></p>
           <p v-else><strong>Az ön válasza:</strong></p>
-          <v-textarea placeholder="Ide írhat" v-model="openCompletedAssignment.textAnswer"  v-bind:disabled="role=='szulo'">
-            {{ openCompletedAssignment.textAnswer }}
-          </v-textarea>
-          <v-file-input v-bind:disabled="role=='szulo'||isDeadlinePast"
+          <v-textarea placeholder="Ide írhat" v-model="openCompletedAssignment.textAnswer" :disabled="role=='szulo'"></v-textarea>
+          <v-file-input :disabled="role=='szulo' || isDeadlinePast"
             label="Fájlok feltöltése (egyszerre töltse fel)"
             multiple
             v-model="completedAssignmentFiles"
@@ -268,11 +259,10 @@ onUnmounted(() => {
         </v-card-text>
         <v-card-actions>
           <v-btn color="primary" @click="ViewAssignmentDialog = false">Bezárás</v-btn>
-          <v-btn @click="modositasmentese" :disabled="isDeadlinePast||role=='szulo'">Módosítás</v-btn>
+          <v-btn @click="modositasmentese" :disabled="isDeadlinePast || role=='szulo'">Módosítás</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
-
 
     <v-dialog v-model="DeleteAssignmentDialog" max-width="80vw" theme="dark">
       <v-card>
@@ -281,7 +271,6 @@ onUnmounted(() => {
         <v-btn @click="DeleteAssignmentDialog = false">Mégse</v-btn>
       </v-card>
     </v-dialog>
-
 
     <v-dialog v-model="successDialog" max-width="80vw" theme="dark">
       <v-card>
@@ -294,13 +283,12 @@ onUnmounted(() => {
     </v-dialog>
   </div>
 
-  <!-- asztali nézet -->
   <div v-else>
     <v-container>
       <v-card>
         <v-card-title>Házifeladatok:</v-card-title>
         <v-card-text>
-          <div v-if= "assignmentStudentList && assignmentStudentList.length">
+          <div v-if="assignmentStudentList && assignmentStudentList.length">
             <v-table style="height: 30vw !important;">
               <thead>
                 <tr>
@@ -314,7 +302,6 @@ onUnmounted(() => {
               </thead>
               <tbody>
                 <tr v-for="feladat in assignmentStudentList" :key="feladat.feladat.ID">
-                  
                   <td>{{ feladat.feladat.senderUserName }}</td>
                   <td>{{ formatDate(feladat.feladat.deadline) }}</td>
                   <td>{{ formatDate(feladat.feladat.uploadDate) }}</td>
@@ -324,18 +311,18 @@ onUnmounted(() => {
                       {{ feladat.valasz.status }}
                     </span>
                   </td>
-                  <v-btn color="primary"@click="handleOpenAssignment(feladat.feladat, feladat.valasz)">
-                    Feladat megtekintése
-                  </v-btn>
+                  <td>
+                    <v-btn color="primary" @click="handleOpenAssignment(feladat.feladat, feladat.valasz)">
+                      Feladat megtekintése
+                    </v-btn>
+                  </td>
                 </tr>
               </tbody>
             </v-table>
           </div>
-          
           <div v-else>
             Nincs semmilyen adat!
           </div>
-          
         </v-card-text>
       </v-card>
     </v-container>
@@ -347,8 +334,6 @@ onUnmounted(() => {
           <p><strong>Feladás dátuma:</strong> {{ formatDate(selectedAssignment?.uploadDate) }}</p>
           <p><strong>Dátum:</strong> {{ formatDate(selectedAssignment?.deadline) }}</p>
           <p><strong>Leírás:</strong> {{ selectedAssignment?.desc }}</p>
-
-          <!-- Assignment Files Section (Teacher's Files) -->
           <div v-if="assignmentFiles.length">
             <p><strong>Fájlok:</strong></p>
             <v-list-item
@@ -363,8 +348,6 @@ onUnmounted(() => {
           <div v-else>
             <p><strong>Fájlok:</strong> Nincsenek fájlok ehhez a feladathoz.</p>
           </div>
-
-          <!-- Completed Assignment Files Section (Student's Files) -->
           <div v-if="answerFiles[openCompletedAssignment.ID] && answerFiles[openCompletedAssignment.ID].length">
             <p><strong>Beadott fájlok:</strong></p>
             <v-list-item
@@ -378,7 +361,7 @@ onUnmounted(() => {
                 small
                 color="error"
                 @click="openDeleteAssignmentDialog(file.ID)"
-                :disabled="isDeadlinePast||role=='szulo'"
+                :disabled="isDeadlinePast || role=='szulo'"
               >
                 Törlés
               </v-btn>
@@ -387,13 +370,12 @@ onUnmounted(() => {
           <div v-else>
             <p><strong>Beadott fájlok:</strong> Nincsenek beadott fájlok.</p>
           </div>
-
           <p v-if="role=='szulo'"><strong>A gyereke válasza:</strong></p>
           <p v-else><strong>Az ön válasza:</strong></p>
-          <v-textarea v-bind:disabled="role=='szulo'||isDeadlinePast" placeholder="Ide írhat" v-model="openCompletedAssignment.textAnswer">
+          <v-textarea :disabled="role=='szulo' || isDeadlinePast" placeholder="Ide írhat" v-model="openCompletedAssignment.textAnswer">
             {{ openCompletedAssignment.textAnswer }}
           </v-textarea>
-          <v-file-input v-bind:disabled="role=='szulo'||isDeadlinePast"
+          <v-file-input :disabled="role=='szulo' || isDeadlinePast"
             label="Fájlok feltöltése (egyszerre töltse fel)"
             multiple
             v-model="completedAssignmentFiles"
@@ -404,12 +386,11 @@ onUnmounted(() => {
         </v-card-text>
         <v-card-actions>
           <v-btn color="primary" @click="ViewAssignmentDialog = false">Bezárás</v-btn>
-          <v-btn @click="modositasmentese" :disabled="isDeadlinePast||role=='szulo'">Módosítás</v-btn>
+          <v-btn @click="modositasmentese" :disabled="isDeadlinePast || role=='szulo'">Módosítás</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
 
-    <!-- Delete File Confirmation Dialog -->
     <v-dialog v-model="DeleteAssignmentDialog" max-width="50vw" theme="dark">
       <v-card>
         <v-card-title>Biztos törölni akarod?</v-card-title>
@@ -418,7 +399,6 @@ onUnmounted(() => {
       </v-card>
     </v-dialog>
 
-    <!-- Success Dialog -->
     <v-dialog v-model="successDialog" max-width="30vw" theme="dark">
       <v-card>
         <v-card-title>Sikeres módosítás</v-card-title>

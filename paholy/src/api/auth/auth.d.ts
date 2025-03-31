@@ -23,3 +23,10 @@ export type changePasswordData = {
     currentPasswordAgain:string,
     newPassword:string
 }
+
+export type Assignment = {
+    Groups: any[];  
+    Description: string;
+    DeadLine: Date;
+    UploadDate: Date;
+};

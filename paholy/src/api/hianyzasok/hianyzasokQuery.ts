@@ -91,12 +91,11 @@ const getStudentsInGroup = async (groupID: number): Promise<Students[]> => {
     console.log("Itt kellene Indulnia2")
 
     //tudom hogy csunya
-    console.log(groupID.value)
     const { getCookie } = useCookieHandler()
     const config = {
         headers: { Authorization: `Bearer ${getCookie("alap")}` }
     };
-    const response = await axiosClient.get(`http://localhost:3000/hianyzas/getStudentsInGroup/${groupID.value}`, config);
+    const response = await axiosClient.get(`http://localhost:3000/hianyzas/getStudentsInGroup/${groupID}`, config);
 
     console.log(response.data)
 
