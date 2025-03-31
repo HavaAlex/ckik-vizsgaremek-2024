@@ -1,4 +1,3 @@
-i have this script:
 <script setup lang="ts">
 import type { Lesson, Teacher } from '@/api/orarend/orarend';
 import { fetchOrarend } from '@/api/orarend/orarendQuery';
