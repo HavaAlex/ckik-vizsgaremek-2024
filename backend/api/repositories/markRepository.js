@@ -29,6 +29,7 @@ class MarkRepository
         )
     }
     async getMarksByGroup(groupID) {
+        console.log("gro ", groupID)
         return await this.Marks.findAll({
             include: [
                 {

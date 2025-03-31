@@ -5,12 +5,14 @@ const lessonService =  require("../services/lessonService")
 
 exports.getJegyek = async (req, res, next) =>
 {
+    console.log("JEGY KEZD")
     const jegyek = await jegyService.getJegyek(req.role.ID)
     res.status(201).json(jegyek);
 }
 
 exports.getJegyekTanar = async (req, res, next) =>
 {
+    console.log("JEGY KEZD")
     const csoportok = await groupService.getTeacherGroups(req.role.ID)
     const jegyek = [];
     for (const element of csoportok) { //csoportok alapján vannak csoportosítva a jegyek, és azon belül tantárgyanként, majd dátum és személy alapján csak frontenden
@@ -25,7 +27,7 @@ exports.getJegyekTanar = async (req, res, next) =>
                 targyAlapjan.push(beszurando);
             }
             const ido = new Date(jegy.date)
-            targyAlapjan[[...targyak].indexOf(jegy.subjectName)].push(jegy);
+            targyAlapjan[[...targyak].indexOf(jegy.subjectName)].push(jegy);//[ido.getMonth()]
         });
     
         const object = {
@@ -35,14 +37,15 @@ exports.getJegyekTanar = async (req, res, next) =>
         };
         jegyek.push(object);
     }
-
-
     res.status(201).json(jegyek);
 
 }
 
 exports.getJegyekSzulo = async (req, res, next) =>
 {
+    console.log("JEGY KEZD szülő")
+    console.log(req.decoded)
+    console.log(req.params.id)
     const jegyek = await jegyService.getJegyek(req.params.id)
     res.status(201).json(jegyek);
 }

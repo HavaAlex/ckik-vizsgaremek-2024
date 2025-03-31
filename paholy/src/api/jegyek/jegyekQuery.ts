@@ -71,17 +71,19 @@ const getGroupMarks = async () : Promise<GroupMark[]|Error> => {
         headers: { Authorization: `Bearer ${getCookie("alap")}` }
     };
     try{
-        const response = await axiosClient.get(`http://localhost:3000/jegy/csoportjegy`,config)
+        console.log("TANAR JEGY LEKERES")
+        const response = await axiosClient.get(`http://localhost:3000/jegy/csoportjegy/`,config)
         console.log("IIIT VVV")
         console.log(response.data)
         return response.data
     }
-    catch(error:any){//annyira jó a typescript hogy erre kényszerít
+    catch(error:any){
+        console.log("ERROR A KAKIBAN")
         return error
     }
 }
 
-export const usegetGroupMarks = () => {
+export const useGetGroupMarks = () => {
    const { setError } = useErrorHandler()
 
     const query = useQuery({

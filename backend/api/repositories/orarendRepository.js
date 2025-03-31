@@ -32,6 +32,7 @@ class OrarendRepository
                 where: {groupID: groups},
                 include:[{
                     model:db.teacher,
+                    as:"Teacher",
                     attributes:["name"]
                 }]
             }
@@ -45,6 +46,11 @@ class OrarendRepository
         (
             {
                 where: {teacherID: teacherID},
+                include:[{
+                    model:db.teacher,
+                    as:"Teacher",
+                    attributes:["name"]
+                }]
             }
         )
 
@@ -64,6 +70,7 @@ class OrarendRepository
             },
             include:[{
                 model:db.teacher,
+                as:"Teacher",
                 attributes:["name"]
             }]
         });
@@ -86,7 +93,12 @@ class OrarendRepository
                 date: {
                     [Op.between]: [startOfWeek, endOfWeek]
                 }
-            }
+            },
+            include:[{
+                model:db.teacher,
+                as:"Teacher",
+                attributes:["name"]
+            }]
         });
     }
 
@@ -98,6 +110,11 @@ class OrarendRepository
 
     async getAllLessons(){
         return await this.Lesson.findAll({ 
+            include:[{
+                model:db.teacher,
+                as:"Teacher",
+                attributes:["name"]
+            }]
         });
     }
 }

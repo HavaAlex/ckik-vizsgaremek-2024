@@ -202,6 +202,7 @@ export const usedeleteAssignment = () => {
             mutationFn: deleteAssignment,
             mutationKey: [QUERY_KEYS.deleteAssignment],
             onSuccess(){
+                const {getCookie} = useCookieHandler()
                 const decoded = jwtDecode(getCookie("alap"));
                 const role = decoded.userData.role;
                 if(role === 'admin'){
