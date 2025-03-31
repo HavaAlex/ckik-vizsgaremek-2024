@@ -5,8 +5,7 @@ import { ref, onMounted, onUnmounted, computed } from 'vue';
 import { useCookieHandler } from '@/stores/cookieHandler';
 import { jwtDecode } from 'jwt-decode';
 import { storeToRefs } from 'pinia';
-import {useRouter} from 'vue-router'
-const Router = useRouter()
+
 const { mutate: deleteMessage } = usedeleteMessage();
 
 const cookieHandler = useCookieHandler();
@@ -22,10 +21,10 @@ if (cookieStatus === true) {
 const { data: SentAndReceivedMessages } = useGetUzenetek();
 const { data: allMessages } = usegetAllUzenetek();
 console.log("Alllll: ", allMessages)
-const selectedMessage = ref<Message | null>(null);
+const selectedMessage = ref<any | null>(null);
 const dialog = ref(false);
 
-const openDialog = (uzenet: Message) => {
+const openDialog = (uzenet: any) => {
   selectedMessage.value = uzenet;
   dialog.value = true;
 };
@@ -47,11 +46,11 @@ const confirmDelete = async () => {
   }
 };
 
-const messageView = ref<'kapott' | 'elkuldott' | 'osszes'>('kapott');
+const messageView = ref<any>('kapott');
 
 
-const sortKey = ref<string>(''); // 'sender' v 'date', v 'message'
-const sortAsc = ref<boolean>(true);
+const sortKey = ref<any>(''); // 'sender' v 'date', v 'message'
+const sortAsc = ref<any>(true);
 
 const sortListBy = (key: string) => {
   if (sortKey.value === key) {
@@ -114,8 +113,12 @@ const sortedOsszes = computed(() => {
   let list = [...allMessages.value];
   if (sortKey.value === 'sender') {
     list.sort((a, b) => {
-      const aSender = a.senderUserName.username;
-      const bSender = b.senderUserName.username;
+      const aSender = a.senderUserName
+        ? a.senderUserName.username
+        : (a.sender ? a.sender.username : 'Én');
+      const bSender = b.senderUserName
+        ? b.senderUserName.username
+        : (b.sender ? b.sender.username : 'Én');
       return sortAsc.value
         ? aSender.localeCompare(bSender)
         : bSender.localeCompare(aSender);
@@ -136,8 +139,7 @@ const sortedOsszes = computed(() => {
   return list;
 });
 
-
-function formatDate(dateString: Date | undefined) {
+function formatDate(dateString: Date | string | null) {
   if (!dateString) return "";
   const date = new Date(dateString);
   date.setHours(date.getHours() + 1); 
@@ -197,7 +199,7 @@ onUnmounted(() => {
             <div v-else>
               <v-list style="height: 80vw; overflow-y: auto;">
                 <v-list-item v-for="uzenet in sortedKapott" :key="uzenet.ID">
-                    <strong>Feladó: </strong>{{ uzenet.senderUserName.username }} <br>
+                    <strong>Feladó: </strong>{{ uzenet.sender.username }} <br>
                     <strong>Küldés dátuma: </strong>{{ formatDate(uzenet.date) }} <br>
                     <div style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;width: 80vw;display: inline-block;"><strong >Üzenet: </strong>{{ uzenet.message }}</div> <br>
                     <v-btn color="primary" @click="openDialog(uzenet)">Megtekintés</v-btn>
@@ -209,7 +211,7 @@ onUnmounted(() => {
                 <v-card max-width="80vw">
                   <v-card-title>Üzenet részletei</v-card-title>
                   <v-card-text>
-                    <p><strong>Feladó:</strong> {{ selectedMessage?.senderUserName.username }}</p>
+                    <p><strong>Feladó:</strong> {{ selectedMessage?.sender.username }}</p>
                     <p><strong>Címzettek:</strong> {{ formatReceivers(selectedMessage?.receivers) }}</p>
                     <p><strong>Dátum:</strong> {{ formatDate(selectedMessage?.date) }}</p>
                     <p><strong>Üzenet:</strong> {{ selectedMessage?.message }}</p>
@@ -285,7 +287,7 @@ onUnmounted(() => {
                   <v-card-text>
                     <p>
                       <strong>Feladó:</strong>
-                      {{ selectedMessage?.senderUserName ? selectedMessage.senderUserName.username : (selectedMessage?.senderUserName ? selectedMessage.senderUserName.username : 'Én') }}
+                      {{ selectedMessage?.sender ? selectedMessage.sender.username : (selectedMessage?.senderUserName ? selectedMessage.senderUserName.username : 'Én') }}
                     </p>
                     <p><strong>Címzettek:</strong> {{ formatReceivers(selectedMessage?.receivers) }}</p>
                     <p><strong>Dátum:</strong> {{ formatDate(selectedMessage?.date) }}</p>
@@ -368,7 +370,7 @@ onUnmounted(() => {
                   </thead>
                   <tbody>
                     <tr v-for="uzenet in sortedKapott" :key="uzenet.ID">
-                      <td style="width: 15vw;">{{ uzenet.senderUserName.username }}</td>
+                      <td style="width: 15vw;">{{ uzenet.sender.username }}</td>
                       <td style="width: 15vw;">{{ formatDate(uzenet.date) }}</td>
                       <td id="szoveg" style="width: 15vw;">{{ uzenet.message }}</td>
                       <td style="width: 15vw;">
@@ -382,7 +384,7 @@ onUnmounted(() => {
                   <v-card max-width="50vw">
                     <v-card-title>Üzenet részletei</v-card-title>
                     <v-card-text>
-                      <p><strong>Feladó:</strong> {{ selectedMessage?.senderUserName.username }}</p>
+                      <p><strong>Feladó:</strong> {{ selectedMessage?.sender.username }}</p>
                       <p><strong>Címzettek:</strong> {{ formatReceivers(selectedMessage?.receivers) }}</p>
                       <p><strong>Dátum:</strong> {{ formatDate(selectedMessage?.date) }}</p>
                       <p><strong>Üzenet:</strong> {{ selectedMessage?.message }}</p>
@@ -480,7 +482,7 @@ onUnmounted(() => {
                   <tbody>
                     <tr v-for="uzenet in sortedOsszes" :key="uzenet.ID">
                       <td style="width: 15vw;">
-                        {{ selectedMessage?.senderUserName ? selectedMessage.senderUserName.username : (selectedMessage?.senderUserName ? selectedMessage.senderUserName.username : 'Én') }}
+                        {{ uzenet.sender ? uzenet.sender.username : (uzenet.senderUserName ? uzenet.senderUserName.username : 'Én') }}
                       </td>
                       <td style="width: 15vw;">{{ formatDate(uzenet.date) }}</td>
                       <td id="szoveg" style="width: 15vw;">{{ uzenet.message }}</td>
@@ -499,7 +501,7 @@ onUnmounted(() => {
                     <v-card-text>
                       <p>
                         <strong>Feladó:</strong>
-                        {{ selectedMessage?.senderUserName ? selectedMessage.senderUserName.username : (selectedMessage?.senderUserName ? selectedMessage.senderUserName.username : 'Én') }}
+                        {{ selectedMessage?.sender ? selectedMessage.sender.username : (selectedMessage?.senderUserName ? selectedMessage.senderUserName.username : 'Én') }}
                       </p>
                       <p><strong>Címzettek:</strong> {{ formatReceivers(selectedMessage?.receivers) }}</p>
                       <p><strong>Dátum:</strong> {{ formatDate(selectedMessage?.date) }}</p>
@@ -533,7 +535,12 @@ onUnmounted(() => {
         </v-card>
       </v-dialog>
     </div>
+    
+    
     <RouterView></RouterView>
+    
+    
+    
   </main>
 </template>
 
