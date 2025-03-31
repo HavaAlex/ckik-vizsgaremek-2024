@@ -9,6 +9,7 @@ import vuetify from './lib/vuetify'
 
 import { VueQueryPlugin } from '@tanstack/vue-query'
 import queryClient from './lib/queryClient'
+import { useErrorHandler } from './stores/errorHandler'
 
 const app = createApp(App)
 
@@ -27,6 +28,8 @@ app.config.errorHandler = (err, vm, info) => {
   console.error("Error:", err);
   console.error("Vue component:", vm);
   console.error("Additional info:", info);
+  const { setError } = useErrorHandler()
+  setError(err)
 };
 
 

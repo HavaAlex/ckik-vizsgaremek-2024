@@ -4,11 +4,11 @@ import { jwtDecode } from 'jwt-decode'
 import { AxiosError } from 'axios'
 
 export const useErrorHandler = defineStore('errorHandler', () => {
-  const currentErrorStatus = ref<Error>();
+  const currentErrorStatus = ref<Error|unknown>();
 
   const showError = ref<boolean>(false)
 
-  function setError(error:Error){
+  function setError(error:Error|unknown){
     console.log("ERROR")
     console.log(error)
     currentErrorStatus.value = error
