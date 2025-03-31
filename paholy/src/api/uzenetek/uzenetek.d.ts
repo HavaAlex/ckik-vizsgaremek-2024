@@ -17,6 +17,7 @@ export type PotentialReceivers = {
 
 
 export type Message={
+    sender: any
     ID: number,
     date: Date,
     message: string,

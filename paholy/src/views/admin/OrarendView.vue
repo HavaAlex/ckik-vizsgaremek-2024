@@ -2,7 +2,7 @@
 import type { Disruption, Teacher } from '@/api/admin/admin';
 import { useGetAllGroups,useAddLessons, useGetAllTeachers, useModifyLesson, useAddDisruption, useDeleteLesson } from '@/api/admin/adminQuery';
 import type { NewMark, MarkAttribute, Mark } from '@/api/jegyek/jegyek';
-import { useAddMark, usegetGroupMarks, useGetGroupMembers, useGetSubjects, useGetTeacherGroups } from '@/api/jegyek/jegyekQuery';
+import { useAddMark, useGetGroupMembers, useGetSubjects, useGetTeacherGroups } from '@/api/jegyek/jegyekQuery';
 import type { Group, Lesson } from '@/api/orarend/orarend';
 import { useGetTeachers } from '@/api/orarend/orarendQuery';
 import queryClient from '@/lib/queryClient';
@@ -45,15 +45,18 @@ const computedTanarok = computed(() =>{
 const selectedCsoport= ref<number>(-1);
 
 const NewLessonRef = ref<Lesson>({
-    ID:-1,
-    groupID: -1,
-    teacherID: -1,
-    start_Hour: 0,
-    start_Minute: 0, 
-    length:0,
-    day:"hetfo",
-    subjectName:"",
-    excused:false,
+  ID: -1,
+  groupID: -1,
+  teacherID: -1,
+  start_Hour: 0,
+  start_Minute: 0,
+  length: 0,
+  day: "hetfo",
+  subjectName: "",
+  excused: false,
+  Teacher: {
+    name: ''
+  }
 })
 
 const lessonCopy = ref<Lesson>({
@@ -66,6 +69,9 @@ const lessonCopy = ref<Lesson>({
     day:"hetfo",
     subjectName:"",
     excused:false,
+    Teacher: {
+    name: ''
+  }
 });
 
 const tab = ref<string>("one");
@@ -123,7 +129,7 @@ const orarendStore = useOrarendStore()
 const refs = storeToRefs(orarendStore)
 
 
-const teachers = ref<Teacher[]>([]);
+const teachers = ref<any[]>([]);
 
 const teacherQuery = useGetTeachers();
 watch(
@@ -208,6 +214,9 @@ function processFile(file: File): Promise<Lesson[]> {
           day: cols[5].trim(),
           subjectName: cols[6].trim(),
           excused:false,
+          Teacher: {
+            name: ''
+          }
         }));
         resolve(lessonsFromFile);
       };
@@ -232,6 +241,9 @@ function processFile(file: File): Promise<Lesson[]> {
               day: String(row[5]).trim(),
               subjectName: String(row[6]).trim(),
               excused:false,
+              Teacher: {
+                name: ''
+              }
             });
           }
         });
@@ -270,6 +282,9 @@ function addLesson() {
       day:"hetfo",
       subjectName:"",
       excused:false,
+      Teacher: {
+        name: ''
+      }
   }
 }
 
