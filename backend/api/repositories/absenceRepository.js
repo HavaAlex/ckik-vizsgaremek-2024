@@ -69,7 +69,6 @@ class AbsenceRepository
     async approveAbsence(absenceToBeModified)
     {
         const absence = await this.Absences.findOne({ where: { ID: absenceToBeModified.ID } });
-        console.log(absence, "absence");
         await absence.update({ excused: true});
         return absence
     }
