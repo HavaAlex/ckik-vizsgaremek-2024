@@ -401,7 +401,6 @@ const drawer = ref<boolean>(false)
                           {{ jegy.Value }}
                         </v-card-text>
                         <v-card-text class="bg-secondary" v-else>
-                          id:{{ jegy.studentID }}
                           Jegy: {{ jegy.Value }} Tanár: {{ jegy.teacherID }} Százalék: {{ jegy.Multiplier }}% Dátum: {{ new Date(jegy.date).getFullYear()+'.'+(new Date(jegy.date).getMonth()+1)+'.'+new Date(jegy.date).getDate() }}
                         </v-card-text>
                       </v-card>
