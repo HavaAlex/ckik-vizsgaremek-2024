@@ -49,7 +49,7 @@ watch(
   () => teacherQuery.data.value,
   (data) => {
 
-    console.log("ÁÁÁÁÁÁÁÁ ", data)
+    console.log("ÁÁÁÁÁÁÁÁ", data)
     teachers.value = data || [];
   },
   { immediate: true }
@@ -125,92 +125,18 @@ onUnmounted(() => {
               <input type="color" id="lessonColor" v-model="lessonColor" />
             </div>
 
-            <div v-if="!isPortrait">
-              <div class="week-navigation">
-                <v-btn @click="changeWeek(-1)" color="primary">Előző hét</v-btn>
-                <span>{{ format(currentWeekStart, 'yyyy-MM-dd') }} - {{ format(endOfWeek, 'yyyy-MM-dd') }}</span>
-                <v-btn @click="changeWeek(1)" color="primary">Következő hét</v-btn>
-              </div>
-            </div>
             
-            <div v-else>
+            
               <div class="week-navigation">
                 <v-btn @click="changeDay(-1)" color="primary">Előző nap</v-btn>
                 <span>{{ format(showDay(), 'yyyy-MM-dd') }}</span>
                 <v-btn @click="changeDay(1)" color="primary">Következő nap</v-btn>
               </div>
-            </div>
+            
 
-            <div v-if="!isPortrait">
-              <div class="timetable-scrollable">
-                <div class="timetable-container">
-                  <div class="time-labels">
-                    <div class="time-labels-header"></div>
-                    <div class="time-labels-content">
-                      <div
-                        v-for="tick in timeTicks"
-                        :key="tick"
-                        :class="['time-tick', { 'hour-tick': tick % 60 === 0 }]"
-                        :style="{ top: ((tick - startMinute) / totalMinutes * 100) + '%' }"
-                      >
-                        <span v-if="tick % 60 === 0" class="time-label-text">
-                          {{ Math.floor(tick / 60) }}:00
-                        </span>
-                      </div>
-                    </div>
-                  </div>
+            
 
-                  <div class="days-container">
-                    <div v-for="day in dayKeys" :key="day" class="day-column">
-                      <div class="day-header">{{ dayNames[day] }}</div>
-                      <div class="day-content">
-                        <div class="grid-lines">
-                          <div
-                            v-for="tick in timeTicks"
-                            :key="tick"
-                            :class="['grid-line', { 'grid-hour': tick % 60 === 0 }]"
-                            :style="{ top: ((tick - startMinute) / totalMinutes * 100) + '%' }"
-                          ></div>
-                        </div>
-                        <div class="lessons-container">
-                          <div
-                            v-for="lesson in refs.lessons.value.filter(l => l.day === day)"
-                            :key="lesson.ID"
-                            class="lesson-block"
-                            :style="{
-                              top: ((lesson.start_Minute - startMinute) / totalMinutes * 100) + '%',
-                              height: (lesson.length / totalMinutes * 100) + '%',
-                              backgroundColor: lesson.excused 
-                                ? (lesson.teacherID !== null ? 'orange' : 'red') 
-                                : lessonColor
-                            }"
-                          >
-                            <div>
-                              <div>
-                                <template v-if="lesson.teacherID === null">
-                                  <s>{{ lesson.subjectName }}</s>
-                                </template>
-                                <template v-else>
-                                  {{ lesson.subjectName }}
-                                </template>
-                              </div>
-                              <div v-if="lesson.teacherID == null" style="font-size: 10px; margin-top: 4px;">
-                                Elmarad
-                              </div>
-                              <div v-else-if="lesson.teacherID !== null" style="font-size: 10px; margin-top: 4px;">
-                                Tanár: {{ getTeacherName(lesson.teacherID) }}
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div v-else>
+            
               <div class="day-header-portrait">
                 {{ dayNames[ dayKeys[portraitDayIndex] ] }}
               </div>
@@ -278,7 +204,7 @@ onUnmounted(() => {
                   </div>
                 </div>
               </div>
-            </div>
+            
           </div>
 
           <v-card style="justify-content: center" v-else>
@@ -305,13 +231,6 @@ onUnmounted(() => {
               </div>
             </div>
             
-            <div v-else>
-              <div class="week-navigation">
-                <v-btn @click="changeDay(-1)" color="primary">Előző nap</v-btn>
-                <span>{{ format(showDay(), 'yyyy-MM-dd') }}</span>
-                <v-btn @click="changeDay(1)" color="primary">Következő nap</v-btn>
-              </div>
-            </div>
 
             <div v-if="!isPortrait">
               <div class="timetable-scrollable">
@@ -382,75 +301,8 @@ onUnmounted(() => {
               </div>
             </div>
 
-            <div v-else>
-              <div class="day-header-portrait">
-                {{ dayNames[ dayKeys[portraitDayIndex] ] }}
-              </div>
-
-              <div class="timetable-scrollable">
-                <div class="timetable-container">
-                  <div class="time-labels">
-                    <div class="time-labels-header-portrait"></div>
-                    <div class="time-labels-content">
-                      <div
-                        v-for="tick in timeTicks"
-                        :key="tick"
-                        :class="['time-tick', { 'hour-tick': tick % 60 === 0 }]"
-                        :style="{ top: ((tick - startMinute) / totalMinutes * 100) + '%' }"
-                      >
-                        <span v-if="tick % 60 === 0" class="time-label-text">
-                          {{ Math.floor(tick / 60) }}:00
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="days-container">
-                      <div class="day-content">
-                        <div class="grid-lines">
-                          <div
-                            v-for="tick in timeTicks"
-                            :key="tick"
-                            :class="['grid-line', { 'grid-hour': tick % 60 === 0 }]"
-                            :style="{ top: ((tick - startMinute) / totalMinutes * 100) + '%' }"
-                          ></div>
-                        </div>
-                        <div class="lessons-container">
-                          <div
-                            v-for="lesson in refs.lessons.value.filter(l => l.day === dayKeys[portraitDayIndex])"
-                            :key="lesson.ID"
-                            class="lesson-block"
-                            :style="{
-                              top: ((lesson.start_Minute - startMinute) / totalMinutes * 100) + '%',
-                              height: (lesson.length / totalMinutes * 100) + '%',
-                              backgroundColor: lesson.excused 
-                                ? (lesson.teacherID !== null ? 'orange' : 'red') 
-                                : lessonColor
-                            }"
-                          >
-                            <div>
-                              <div>
-                                <template v-if="lesson.teacherID === null">
-                                  <s>{{ lesson.subjectName }}</s>
-                                </template>
-                                <template v-else>
-                                  {{ lesson.subjectName }}
-                                </template>
-                              </div>
-                              <div v-if="lesson.teacherID == null" style="font-size: 10px; margin-top: 4px;">
-                                Elmarad
-                              </div>
-                              <div v-else-if="lesson.teacherID !== null" style="font-size: 10px; margin-top: 4px;">
-                                Tanár: {{ getTeacherName(lesson.teacherID) }}
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+            
+            
           </div>
 
           <v-card style="justify-content: center" v-else>
