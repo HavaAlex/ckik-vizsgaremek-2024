@@ -355,11 +355,12 @@ export const getGroupAsignments = async (GroupID: Number) => {
     return response.data
 }
 
-export const usegetGroupAsignments = () => {
+export const usegetGroupAsignments = (GroupID: number) => {
     const { setError } = useErrorHandler()
     const query = useQuery({
+        queryFn: () => getGroupAsignments(GroupID),
         queryKey: [QUERY_KEYS.getGroupAsignments],
-        queryFn: getGroupAsignments,
+
     })
 
     if (query.error.value) {

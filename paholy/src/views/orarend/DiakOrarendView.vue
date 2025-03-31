@@ -40,13 +40,16 @@ for (let t = startMinute; t <= endMinute; t += 15) {
 
 const orarendStore = useOrarendStore();
 const refs = storeToRefs(orarendStore);
-
+console.log("reeeeeeff ", refs)
+console.log("rrrrrrrrrrrr ", refs.lessons)
 const teachers = ref<Teacher[]>([]);
 
 const teacherQuery = useGetTeachers();
 watch(
   () => teacherQuery.data.value,
   (data) => {
+
+    console.log("ÁÁÁÁÁÁÁÁ ", data)
     teachers.value = data || [];
   },
   { immediate: true }

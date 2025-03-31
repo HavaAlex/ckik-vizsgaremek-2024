@@ -7,7 +7,8 @@ export type Lesson = {
     length: number,
     day: string,
     subjectName: string,
-    excused: boolean
+    excused: boolean,
+    Teacher: TeacherName
 }
 
 
@@ -21,5 +22,8 @@ export type Teacher = {
     name: string,
     phone: string,
     email: string,
+}
 
+export type TeacherName = {
+    name: string
 }
