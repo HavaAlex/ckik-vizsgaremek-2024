@@ -2474,21 +2474,83 @@
       }
     },
     "/jegy/csoportjegy": {
-      "get": {
-        "description": "",
+        "get": {
+          "description": "Lekérdezi a tanár csoportjainak jegyeit, csoportosítva tantárgyanként. Minden csoport esetében az eredmény tartalmazza a csoport nevét, a jegyeket (tantárgyanként rendezve tömbökben) és a tantárgyak listáját.",
+          "tags": ["Jegyek"],
         "responses": {
-          "201": {
-            "description": "Created"
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "403": {
-            "description": "Forbidden"
+            "200": {
+              "description": "Csoportosított jegyek sikeresen lekérve.",
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "groupName": {
+                      "type": "string",
+                      "example": "1.a"
+                    },
+                    "marks": {
+                      "type": "array",
+                      "description": "Tömbökben csoportosított jegyek, ahol minden belső tömb egy tantárgy jegyeit tartalmazza.",
+                      "items": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "ID": {
+                              "type": "integer",
+                              "example": 1
+                            },
+                            "teacherID": {
+                              "type": "integer",
+                              "example": 1
+                            },
+                            "studentID": {
+                              "type": "integer",
+                              "example": 1
+                            },
+                            "Value": {
+                              "type": "integer",
+                              "example": 5
+                            },
+                            "Multiplier": {
+                              "type": "integer",
+                              "example": 100
+                            },
+                            "subjectName": {
+                              "type": "string",
+                              "example": "Magyar nyelv és Irodalom"
+                            },
+                            "date": {
+                              "type": "string",
+                              "format": "date-time",
+                              "example": "2025-03-31T18:23:51.000Z"
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "tantargyak": {
+                      "type": "array",
+                      "description": "A csoportban szereplő tantárgyak listája.",
+                      "items": {
+                        "type": "string",
+                        "example": "Magyar nyelv és Irodalom"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Bad Request"
+            },
+            "403": {
+              "description": "Lejárt a cookie"
+            }
           }
         }
-      }
-    },
+      },
     "/jegy/{id}": {
       "get": {
         "description": "Lekérdezi szülő kiválasztott gyerekéhez tartozó összes jegyet",
@@ -2539,48 +2601,6 @@
           },
           "403": {
             "description": "Lejárt a cookie"
-          }
-        }
-      }
-    },
-    "/admin/register/{token}": {
-      "post": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "token",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "body",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "ID": {
-                  "example": "any"
-                },
-                "name": {
-                  "example": "any"
-                },
-                "password": {
-                  "example": "any"
-                }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "201": {
-            "description": "Created"
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "403": {
-            "description": "Forbidden"
           }
         }
       }
@@ -3245,21 +3265,38 @@
       }
     },
     "/admin/allgroups": {
-      "get": {
-        "description": "",
-        "responses": {
-          "201": {
-            "description": "Created"
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "403": {
-            "description": "Forbidden"
+        "get": {
+          "description": "Lekérdezi az összes csoportot.",
+          "tags": ["Admin funkciók", "Csoportok kezelése"],
+          "responses": {
+            "200": {
+              "description": "Csoportok listája sikeresen lekérve.",
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "ID": {
+                      "type": "integer",
+                      "example": 1
+                    },
+                    "name": {
+                      "type": "string",
+                      "example": "1.a"
+                    }
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Bad Request"
+            },
+            "403": {
+              "description": "Forbidden"
+            }
           }
         }
-      }
-    },
+      },
     "/admin/createGroup": {
       "post": {
         "description": "Létrehoz egy új csoportot a megadott névvel és a diákok OM azonosítóival.",
@@ -3574,36 +3611,168 @@
     },
     "/admin/addLessons": {
       "post": {
-        "description": "",
+        "description": "Feltölti az órákat. A kérés egy tömb, amely minden elem egy órát képvisel.",
+        "tags": ["Admin funkciók","Órarend"],
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "ID": {
+                    "type": "integer",
+                    "example": -1,
+                    "description": "Új óra esetén -1, vagy nem szükséges megadni."
+                  },
+                  "groupID": {
+                    "type": "integer",
+                    "example": 1
+                  },
+                  "teacherID": {
+                    "type": "integer",
+                    "example": 1
+                  },
+                  "start_Hour": {
+                    "type": "string",
+                    "example": "15"
+                  },
+                  "start_Minute": {
+                    "type": "integer",
+                    "example": 0
+                  },
+                  "length": {
+                    "type": "string",
+                    "example": "35"
+                  },
+                  "day": {
+                    "type": "string",
+                    "example": "hetfo"
+                  },
+                  "subjectName": {
+                    "type": "string",
+                    "example": "Kénia"
+                  },
+                  "excused": {
+                    "type": "boolean",
+                    "example": false
+                  },
+                  "Teacher": {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string",
+                        "example": ""
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ],
         "responses": {
           "201": {
-            "description": "Created"
+            "description": "Órák sikeresen feltöltve.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "ID": {
+                    "type": "integer",
+                    "example": 51
+                  },
+                  "groupID": {
+                    "type": "integer",
+                    "example": 1
+                  },
+                  "teacherID": {
+                    "type": "integer",
+                    "example": 1
+                  },
+                  "start_Hour": {
+                    "type": "string",
+                    "example": "15"
+                  },
+                  "start_Minute": {
+                    "type": "integer",
+                    "example": 900,
+                    "description": "A feldolgozott kezdő perc, az inputhoz képest módosulhat."
+                  },
+                  "length": {
+                    "type": "string",
+                    "example": "35"
+                  },
+                  "day": {
+                    "type": "string",
+                    "example": "hetfo"
+                  },
+                  "subjectName": {
+                    "type": "string",
+                    "example": "Kénia"
+                  }
+                }
+              }
+            }
           },
           "400": {
-            "description": "Bad Request"
+            "description": "Bad Request - Hibás input vagy probléma az adatok feldolgozásakor."
           },
           "403": {
-            "description": "Forbidden"
+            "description": "Lejárt a cookie"
           }
         }
       }
     },
     "/admin/allteachers": {
-      "get": {
-        "description": "",
-        "responses": {
-          "201": {
-            "description": "Created"
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "403": {
-            "description": "Forbidden"
+        "get": {
+          "description": "Lekérdezi az összes tanárt.",
+          "tags": ["Admin funkciók","Hiányzás"],
+          "responses": {
+            "200": {
+              "description": "Tanárok listája sikeresen lekérve.",
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "ID": {
+                      "type": "integer",
+                      "example": 1
+                    },
+                    "name": {
+                      "type": "string",
+                      "example": "papp.lajos"
+                    },
+                    "phone": {
+                      "type": "string",
+                      "example": "36301234567"
+                    },
+                    "email": {
+                      "type": "string",
+                      "example": "papp.lajos@gmail.com"
+                    },
+                    "userId": {
+                      "type": "integer",
+                      "example": 12
+                    }
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Bad Request"
+            },
+            "403": {
+              "description": "Lejárt a cookie"
+            }
           }
         }
-      }
-    },
+      },
     "/admin/addDisruption": {
       "put": {
         "description": "",

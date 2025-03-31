@@ -33,7 +33,14 @@ exports.getJegyekTanar = async (req, res, next) =>
         };
         jegyek.push(object);
     }
+<<<<<<< HEAD
+    console.log("_________")
+    console.log("b: ", jegyek)
+    console.log("_________")
+    console.log("getjegyek vége")
+=======
 
+>>>>>>> a1af372219b3e0996007a8723e9e392921c1a52e
     res.status(201).json(jegyek);
 
 }

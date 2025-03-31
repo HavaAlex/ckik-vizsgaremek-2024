@@ -14,7 +14,6 @@ const adminService = require("../services/adminService");
 
 router.use(userAuth.verifyToken);
 
-router.post("/register/:token",adminHandler.checkRole, userController.createUser);
 
 router.post("/addTeacherUsers",adminHandler.checkRole,adminController.uploadTeachers)//Tanárok feltöltése
 router.post("/addStudentUsers",adminHandler.checkRole,adminController.uploadStudents)//Diákok feltöltése

@@ -259,13 +259,20 @@ exports.getOrarend = async (req, res, next) =>
 
 
 exports.getAllTeachers = async (req,res,next) => {
+    console.log("äääääääääääääääääääaaaa")
     const response = await adminService.getAllTeachers();
+    console.log("a: ", response)
+    console.log("äääääääääääääääääääaaaa")
     res.status(201).json(response)
 }
 
 
 exports.uploadLessons = async (req, res, next) =>
+<<<<<<< HEAD
+{   
+=======
 {
+>>>>>>> a1af372219b3e0996007a8723e9e392921c1a52e
     const lessons = req.body;
     try
     {
@@ -277,6 +284,7 @@ exports.uploadLessons = async (req, res, next) =>
         else
         {
             res.status(201).json(response);
+
         }
     }
     catch(error)
