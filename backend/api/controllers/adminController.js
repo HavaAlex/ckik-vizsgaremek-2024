@@ -81,7 +81,7 @@ exports.getAllStudents = async (req,res,next) =>{
 exports.modifyUser = async (req,res,next) => {
 
     const modifiedUser = req.body 
-
+    console.log("A ", modifiedUser)
     const userWithThisID = await userRepository.getUserByID(modifiedUser.userSide)
     const result  = await adminService.modifyUser(modifiedUser, userWithThisID.username)
     if(result == -1){

@@ -120,7 +120,8 @@ class UserRepository
         }
         else if(user.userRole == "diak"){
             const alreadyexistingUser = await studentRepository.getStudentByOmId(user.roleSide.OMID)
-            if(alreadyexistingUser){
+            console.log("B: ", user)
+            if(alreadyexistingUser && alreadyexistingUser.ID != user.roleSide.ID){
                 return -1
             }
 

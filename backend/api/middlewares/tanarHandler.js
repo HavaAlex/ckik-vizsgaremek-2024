@@ -2,7 +2,7 @@
 
 exports.checkRole = async (req, res, next) =>
 {
-    if(req.decoded.role == "tanar")
+    if(req.decoded.role == "tanar" || req.decoded.role == "admin")
     {
         next()
     }
@@ -11,3 +11,4 @@ exports.checkRole = async (req, res, next) =>
         return;
     }
 }
+
