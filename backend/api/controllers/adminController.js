@@ -324,5 +324,6 @@ exports.modifyLesson = async (req,res,next) => {
 exports.deleteLesson= async (req,res,next) => {
     const ID = JSON.parse(req.params.ID);
     const response = await adminService.deleteLesson(ID);
+    console.log(response)
     res.status(201).json(response);
 }

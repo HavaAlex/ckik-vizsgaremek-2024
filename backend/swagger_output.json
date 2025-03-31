@@ -3775,56 +3775,366 @@
       },
     "/admin/addDisruption": {
       "put": {
-        "description": "",
+        "summary": "Új fennakadás hozzáadása",
+        "description": "Lehetővé teszi az adminisztrátorok számára, hogy egy új helyettesítés/módosulás rögzítsenek a rendszerben.",
+        "tags": ["Admin"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "ID": {
+                    "type": "integer",
+                    "description": "Ideiglenes azonosító (-1 új bejegyzés esetén)",
+                    "example": -1
+                  },
+                  "date": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "A helyettesítés dátuma (ISO 8601 formátum)",
+                    "example": "2025-03-31T00:00:00.000Z"
+                  },
+                  "groupID": {
+                    "type": "integer",
+                    "description": "Az érintett csoport azonosítója",
+                    "example": 1
+                  },
+                  "teacherID": {
+                    "type": "integer",
+                    "description": "A tanár azonosítója",
+                    "example": 3
+                  },
+                  "start_Hour": {
+                    "type": "integer",
+                    "description": "A helyettesítés kezdési órája",
+                    "example": 8
+                  },
+                  "start_Minute": {
+                    "type": "integer",
+                    "description": "A helyettesítés kezdési perce",
+                    "example": 0
+                  },
+                  "length": {
+                    "type": "integer",
+                    "description": "A helyettesítés hossza percben",
+                    "example": 45
+                  },
+                  "day": {
+                    "type": "string",
+                    "description": "A hét napja magyarul",
+                    "example": "csutortok"
+                  },
+                  "subjectName": {
+                    "type": "string",
+                    "description": "Az érintett tantárgy neve",
+                    "example": "Környezetismeret"
+                  }
+                }
+              }
+            }
+          }
+        },
         "responses": {
           "201": {
-            "description": "Created"
+            "description": "Sikeres létrehozás",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "dataValues": {
+                      "type": "object",
+                      "properties": {
+                        "ID": {
+                          "type": "integer",
+                          "description": "Az újonnan létrehozott fennakadás azonosítója",
+                          "example": 4
+                        },
+                        "date": {
+                          "type": "string",
+                          "format": "date-time",
+                          "description": "A fennakadás dátuma",
+                          "example": "2025-03-31T00:00:00.000Z"
+                        },
+                        "groupID": {
+                          "type": "integer",
+                          "example": 1
+                        },
+                        "teacherID": {
+                          "type": "integer",
+                          "example": 3
+                        },
+                        "start_Hour": {
+                          "type": "integer",
+                          "example": 8
+                        },
+                        "start_Minute": {
+                          "type": "integer",
+                          "example": 480
+                        },
+                        "length": {
+                          "type": "integer",
+                          "example": 45
+                        },
+                        "day": {
+                          "type": "string",
+                          "example": "csutortok"
+                        },
+                        "subjectName": {
+                          "type": "string",
+                          "example": "Környezetismeret"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
           },
           "400": {
-            "description": "Bad Request"
+            "description": "Hibás kérés (érvénytelen vagy hiányzó mezők)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Invalid request payload"
+                    }
+                  }
+                }
+              }
+            }
           },
           "403": {
-            "description": "Forbidden"
+            "description": "Engedély megtagadva (admin jogosultság szükséges)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Forbidden: You do not have permission to perform this action"
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
     },
     "/admin/deleteLesson/{ID}": {
       "delete": {
-        "description": "",
+        "summary": "Óra törlése",
+        "description": "Törli a megadott azonosítójú órát az adatbázisból. Csak adminisztrátorok hajthatják végre.",
+        "tags": ["Admin"],
         "parameters": [
           {
             "name": "ID",
             "in": "path",
             "required": true,
-            "type": "string"
+            "schema": {
+              "type": "integer"
+            },
+            "description": "A törlendő óra egyedi azonosítója",
+            "example": 4
           }
         ],
         "responses": {
-          "201": {
-            "description": "Created"
+          "200": {
+            "description": "Sikeres törlés",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Lesson successfully deleted"
+                    }
+                  }
+                }
+              }
+            }
           },
           "400": {
-            "description": "Bad Request"
+            "description": "Hibás kérés (érvénytelen ID vagy más hiba)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Invalid lesson ID"
+                    }
+                  }
+                }
+              }
+            }
           },
           "403": {
-            "description": "Forbidden"
+            "description": "Engedély megtagadva (admin jogosultság szükséges)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Forbidden: You do not have permission to perform this action"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Nem található (ha az ID nem létezik az adatbázisban)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Lesson not found"
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
     },
     "/admin/modifyLesson/": {
       "post": {
-        "description": "",
+        "summary": "Óra módosítása",
+        "description": "Lehetővé teszi az adminisztrátorok számára egy meglévő óra adatainak módosítását (a dátum kivételével).",
+        "tags": ["Admin"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "ID": {
+                    "type": "integer",
+                    "description": "A módosítandó óra egyedi azonosítója",
+                    "example": 4
+                  },
+                  "groupID": {
+                    "type": "integer",
+                    "description": "Az érintett csoport azonosítója",
+                    "example": 1
+                  },
+                  "teacherID": {
+                    "type": "integer",
+                    "description": "A tanár azonosítója",
+                    "example": 3
+                  },
+                  "start_Hour": {
+                    "type": "integer",
+                    "description": "Az óra kezdési órája",
+                    "example": 8
+                  },
+                  "start_Minute": {
+                    "type": "integer",
+                    "description": "Az óra kezdési perce",
+                    "example": 0
+                  },
+                  "length": {
+                    "type": "integer",
+                    "description": "Az óra hossza percben",
+                    "example": 45
+                  },
+                  "day": {
+                    "type": "string",
+                    "description": "A hét napja magyarul",
+                    "example": "csutortok"
+                  },
+                  "subjectName": {
+                    "type": "string",
+                    "description": "Az érintett tantárgy neve",
+                    "example": "Környezetismeret"
+                  }
+                },
+                "required": ["ID"]
+              }
+            }
+          }
+        },
         "responses": {
-          "201": {
-            "description": "Created"
+          "200": {
+            "description": "Sikeres módosítás",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Lesson successfully modified"
+                    }
+                  }
+                }
+              }
+            }
           },
           "400": {
-            "description": "Bad Request"
+            "description": "Hibás kérés (érvénytelen vagy hiányzó mezők)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Invalid request payload"
+                    }
+                  }
+                }
+              }
+            }
           },
           "403": {
-            "description": "Forbidden"
+            "description": "Engedély megtagadva (admin jogosultság szükséges)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Forbidden: You do not have permission to perform this action"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Nem található (ha az ID nem létezik az adatbázisban)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Lesson not found"
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
