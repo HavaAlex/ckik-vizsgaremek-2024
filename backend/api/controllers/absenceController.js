@@ -3,7 +3,7 @@ const absenceService = require("../services/absenceService")
 exports.getAbsences = async (req, res, next) =>
 {
     const absences = await absenceService.getAbsencesStudent(req.decoded.role=="szulo"?req.params.id:req.decoded.ID)
-
+    console.log("a: ", absences)
     res.status(200).json(absences);
 }
 
