@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { NewMark, MarkAttribute, Mark } from '@/api/jegyek/jegyek';
-import { useAddMark, usegetGroupMarks, useGetGroupMembers, useGetSubjects, useGetTeacherGroups } from '@/api/jegyek/jegyekQuery';
+import { useAddMark, useGetGroupMarks, useGetGroupMembers, useGetSubjects, useGetTeacherGroups } from '@/api/jegyek/jegyekQuery';
 import { computed, onMounted, onUnmounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 const NewMarkRef = ref<NewMark>({
@@ -11,7 +11,7 @@ const NewMarkRef = ref<NewMark>({
 })
 
 const {data} = useGetTeacherGroups()
-const groupMarks = usegetGroupMarks()
+const {data:groupMarks} = useGetGroupMarks()
 const {push} = useRouter()
 const {back} = useRouter()
 const {mutate, isPending} = useAddMark()
@@ -31,7 +31,7 @@ const csoportok = computed(() => {
 const csoportJegyek = computed(() => {
   if (!data.value) return [];
   if (!selectedGroup.value) return data.value;
-  return groupMarks.data.value?.find((csoport: any) => csoport.groupName === selectedGroup.value);
+  return groupMarks.value?.find((csoport: any) => csoport.groupName === selectedGroup.value);
 });
 
 const tantargyJegyek = computed(() => {
@@ -76,7 +76,7 @@ const osszTag = useGetGroupMembers()
 const osszTagComputed = computed(() => {
   if (!osszTag.data.value) return  {groupName:"Nincs",members:[]};
   if (!selectedOsszGroup.value) return  {groupName:"Nincs",members:[]};
-  return osszTag.data.value?.find((group: any) => group.groupName === selectedOsszGroup.value)
+  return osszTag.data.value?.find((group: any) => group.groupName === selectedOsszGroup.value)??{groupName:"Nincs",members:[]};
 });
 
 const newMarks = ref<any>({});
@@ -93,7 +93,7 @@ function adatOsszeszedes(){
     }
     const newMark = ref<Mark>({
       ID:-1,
-      studentID: element.ID, // Helyes azonosító hozzárendelés
+      studentID:Number(element.ID), // Helyes azonosító hozzárendelés
       teacherID: -1,
       Value: newMarks.value[index],
       Multiplier: 100,
@@ -383,7 +383,7 @@ const drawer = ref<boolean>(false)
       </v-navigation-drawer>
       <v-tabs-window v-model="tab">
         <v-tabs-window-item value="one">
-          <v-table  height="40vw" style="border-radius: 2%;" v-if="groupMarks.data != undefined">
+          <v-table  height="40vw" style="border-radius: 2%;" v-if="groupMarks != undefined">
             <thead>
               <tr>
                   <th style="width: 15vw; justify-content: center !important; " class="text-center">Név</th>

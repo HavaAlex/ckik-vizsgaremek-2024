@@ -28,12 +28,16 @@ class LessonRepository
         });
     }
 
-    async getLessonByID(lessonID)//Megkeresi az összes csoportját az adott embernek
+    async getLessonByID(lessonID)
     {
         return await db.lesson.findOne
         (
             {
                 where: {ID: Number(lessonID)},
+                include:[{
+                    model:db.teacher,
+                    attributes:["name"]
+                }]
             }
         )
     }

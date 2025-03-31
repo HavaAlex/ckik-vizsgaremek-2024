@@ -46,7 +46,7 @@ const getOrarend = async (weekStart: string): Promise<Lesson[]> => {
     const config = {
         headers: { Authorization: `Bearer ${getCookie("alap")}` }
     };
-    const response = await axiosClient.get(`http://localhost:3000/szulo/orarend/${params.id}/?weekStart=${weekStart}`, config)
+    const response = await axiosClient.get(`http://localhost:3000/orarend/${params.id}/?weekStart=${weekStart}`, config)
     return response.data
 }
 
@@ -79,7 +79,7 @@ const getMarks = async () : Promise<Mark[]> => {
     const config = {
         headers: { Authorization: `Bearer ${getCookie("alap")}` }
     };
-    const response = await axiosClient.get(`http://localhost:3000/szulo/jegy/${params.id}`,config)
+    const response = await axiosClient.get(`http://localhost:3000/jegy/${params.id}`,config)
     return response.data
 }
 
