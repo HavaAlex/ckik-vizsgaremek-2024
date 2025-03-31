@@ -10,11 +10,8 @@ const getOrarend = async (weekStart: string): Promise<Lesson[]> => {
     const config = {
         headers: { Authorization: `Bearer ${getCookie("alap")}` }
     };
-    console.log(`http://localhost:3000/orarend?weekStart=${weekStart}`)
     const response = await axiosClient.get(`http://localhost:3000/orarend?weekStart=${weekStart}`, config)
 
-
-    console.log("Orarend lekérdezve:", response.data)
     return response.data
 }
 
@@ -43,13 +40,11 @@ export const fetchOrarend = async (weekStart: string): Promise<Lesson[]> => {
 
 
 const getTeachers = async (): Promise<Teacher[]> =>{
-    console.log("LEFUTOK: GetTeachers")
     const {getCookie} = useCookieHandler()
     const config = {
         headers: { Authorization: `Bearer ${getCookie("alap")}` }
     };
     const response = await axiosClient.get(`http://localhost:3000/orarend/getTeachers`,config)
-    console.log(response.data)
     return response.data
 }
 export const useGetTeachers = () => {

@@ -59,7 +59,6 @@ const openAssignmentDetails = async (item: any) => {
 }
 
 const fetchAssignmentFiles = async (assignmentId: number) => {
-  console.log("Fetching assignment files for:", assignmentId)
   await getAssignmentFiles(assignmentId, {
     onSuccess: (response: any) => {
       assignmentFiles.value = response.data || response
@@ -68,7 +67,6 @@ const fetchAssignmentFiles = async (assignmentId: number) => {
 }
 
 const fetchAnswerFiles = async (ids: any[]) => {
-  console.log("Fetching answer files for IDs:", ids)
   await getCompletedAssignmentFiles(ids, {
     onSuccess: (response: any) => {
       const filesArray = response.data || response
@@ -90,7 +88,6 @@ const openDeleteAssignment = (item: any) => {
 }
 
 const deleteThisAssignment = async () => {
-  console.log("Deleting assignment:", assignmentToDelete.value.assignment.ID)
   groupAssignments.value = groupAssignments.value.filter(
     (item: any) => item.assignment.ID !== assignmentToDelete.value.assignment.ID
   )

@@ -9,7 +9,7 @@ export const useHianyzasStore = defineStore('hianyzasSotre', () => {
     
     const lessons = ref<Lesson[]>([]);
     
-    async function orarendfeltolt(weekStart: string) { //MÁSOLANDÓ
+    async function orarendfeltolt(weekStart: string) {
         const cookieHandler = useCookieHandler()
         const valasz = cookieHandler.hasValidCookie()
         if(valasz == false)

@@ -1,7 +1,5 @@
 const jegyService = require("../services/jegyService")
 const groupService = require("../services/csoportService")
-const roleService = require("../services/roleService")
-const lessonService =  require("../services/lessonService")
 
 exports.getJegyek = async (req, res, next) =>
 {
@@ -11,8 +9,6 @@ exports.getJegyek = async (req, res, next) =>
 
 exports.getJegyekTanar = async (req, res, next) =>
 {
-    console.log("_________")
-    console.log("tanár jegy get: ")
     const csoportok = await groupService.getTeacherGroups(req.role.ID)
     console.log("a: ", csoportok)
     console.log("_________")

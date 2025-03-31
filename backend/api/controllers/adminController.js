@@ -1,15 +1,12 @@
-const { endsWith } = require("lodash")
 const adminService = require("../services/adminService")
 const hazikService = require("../services/hazikService")
 const userRepository = require("../repositories/userRepository")
 const studentRepository = require("../repositories/studentRepository")
 const orarendService = require("../services/orarendService")
 const groupRepository = require("../repositories/groupRepository")
-const lessonRepository = require("../repositories/lessonRepository")
 
 exports.uploadTeachers = async (req,res,next) =>{
     const teachers = req.body
-    console.log("a: ", teachers)
     if(teachers.length < 1){
         res.status(500).send("Nincsenek elemek amiket feltölthetne, adjon hozzá a listához")
         return
@@ -235,8 +232,6 @@ exports.getAbsences = async (req,res,next) =>{
 
 exports.modifyAbsence = async (req,res,next) => {
     const absenceToBeModified = req.body 
-    console.log(absenceToBeModified)
-    console.log(absenceToBeModified.excused, "fasz")
     if(absenceToBeModified.excused == true){ // tehát most igazoljuk le
         var modifiedAbsence = await adminService.approveAbsence(absenceToBeModified);
     }
@@ -273,7 +268,6 @@ exports.getAllTeachers = async (req,res,next) => {
 
 exports.uploadLessons = async (req, res, next) =>
 {
-    console.log(req.body)
     const lessons = req.body;
     try
     {

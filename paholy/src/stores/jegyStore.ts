@@ -10,7 +10,7 @@ export const useJegyStore = defineStore('jegyStore', () => {
     
     const marks = ref<Mark[]>([]);
     
-    async function jegyFeltolt() { //MÁSOLANDÓ
+    async function jegyFeltolt() {
         const cookieHandler = useCookieHandler()
         const valasz = cookieHandler.hasValidCookie()
         if(valasz == false)

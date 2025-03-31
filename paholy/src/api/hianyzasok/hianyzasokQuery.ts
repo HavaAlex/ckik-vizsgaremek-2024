@@ -11,8 +11,12 @@ import { useErrorHandler } from "@/stores/errorHandler";
 import type { Student, Teacher } from "../admin/admin";
 import { computed, type Ref } from "vue";
 
+<<<<<<< HEAD
+const getHianyzasok = async (): Promise<Hianyzas|Error> => {
+=======
 const getHianyzasok = async (): Promise<Hianyzas[]> => {
     console.log("LEFUTOK: hianyzas")
+>>>>>>> fae76cfb19fe97390f7d74478000bfcf8a6a80dc
     const cookieHandler= useCookieHandler()
     const vanE = cookieHandler.hasValidCookie()
     const route = useRoute()
@@ -66,7 +70,6 @@ const getTeachers = async (): Promise<Teacher[]> =>{
         headers: { Authorization: `Bearer ${getCookie("alap")}` }
     };
     const response = await axiosClient.get(`http://localhost:3000/orarend/getTeachers`,config)
-    console.log(response.data)
     return response.data
 }
 export const useGetTeachers = () => {
@@ -79,8 +82,6 @@ export const useGetTeachers = () => {
 
 
 const getStudentsInGroup = async (groupID: any): Promise<Students[]> => {
-
-    //tudom hogy csunya
     const { getCookie } = useCookieHandler()
     const config = {
         headers: { Authorization: `Bearer ${getCookie("alap")}` }
@@ -118,7 +119,6 @@ const addAbsence = async (data : Absence) : Promise<Absence> => {
     } 
     const response = await axiosClient.post(`http://localhost:3000/hianyzas/postAbsence`, data,config)
 
-    console.log(response.data)
     return response.data.data
 }
 
@@ -129,7 +129,6 @@ export const useAddAbsence = () => {
             mutationFn: addAbsence,
             onSuccess(data) {
                 queryClient.refetchQueries({queryKey:[QUERY_KEYS.getAbsences]})
-                console.log(data)
                 const {setStatus} = useStatusHandler()
                 setStatus("Sikeres hiányzás felvitel!")
             },

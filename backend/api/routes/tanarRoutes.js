@@ -7,13 +7,7 @@ const userAuth = require("../middlewares/userAuth")
 
 const orarendController = require("../controllers/orarendController");
 
-const userController = require("../controllers/userController")
 
-const uzenetController = require("../controllers/uzenetController")
-
-const jegyController = require("../controllers/jegyController")
-
-const groupController = require("../controllers/groupController")
 
 const tanarHandler = require("../middlewares/tanarHandler")
 
