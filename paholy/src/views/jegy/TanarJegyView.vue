@@ -27,8 +27,8 @@ const csoportok = computed(() => {
 });
 
 const csoportJegyek = computed(() => {
-  if (!data.value) return [];
-  if (!selectedGroup.value) return data.value;
+  if (!data.value) return undefined;
+  if (!selectedGroup.value) return undefined;
   return groupMarks.value?.find((csoport: any) => csoport.groupName === selectedGroup.value);
 });
 
@@ -55,7 +55,7 @@ const groupBy = <T, K extends keyof any>(arr: T[], key: (i: T) => K) =>
 
 const szemelyJegyek = computed(() => {
   if (!tantargyJegyek.value) return [];
-  return groupBy(tantargyJegyek.value,i=>i?.studentID)
+  return groupBy(tantargyJegyek.value,(i:any)=>i.studentID)
 });
 
 const selectedOsszGroup = ref<string>('');

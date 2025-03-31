@@ -15,7 +15,7 @@ const { showStatus } = storeToRefs(statusHandler);
     <RouterView></RouterView>
 
     <v-snackbar v-model="showError" color="yellow">
-      {{ (currentErrorStatus as AxiosError)?.response?.data || "An unknown error occurred" }}
+      {{ (currentErrorStatus as AxiosError)?.response?.data || "Egy ismeretlen hiba előlépett" }}
 
       <template v-slot:actions>
         <v-btn color="black" variant="text" @click="showError = false">X</v-btn>

@@ -1,4 +1,3 @@
-i have this script:
 <script setup lang="ts">
 import type { Lesson, Teacher } from '@/api/orarend/orarend';
 import { fetchOrarend } from '@/api/orarend/orarendQuery';
@@ -151,7 +150,7 @@ function submitAttendance() {
   console.log("Lesson:", selectedLesson.value);
   console.log("Attendance:", attendance.value);
   
-  const absencesToPost = students.value.map((student) => {
+  const absencesToPost = students.value?.map((student) => {
     const isAbsent = attendance.value[student.ID]?.absent;
 
 
