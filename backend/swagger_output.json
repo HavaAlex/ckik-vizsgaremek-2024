@@ -3831,48 +3831,172 @@
     },
     "/csoport/tanarcsoport": {
       "get": {
-        "description": "",
+        "tags":["Jegyek"],
+        "description": "Lekéri a tanárhoz rendelt csoportok listáját a szerepkör azonosítója alapján.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Hitelesítési token (Bearer token)"
+          }
+        ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Sikeres válasz a csoportok listájával",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "ID": {
+                        "type": "integer",
+                        "example": 1
+                      },
+                      "name": {
+                        "type": "string",
+                        "example": "1.a"
+                      },
+                      "Lessons": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "ID": {
+                              "type": "integer",
+                              "example": 101
+                            },
+                            "subject": {
+                              "type": "string",
+                              "example": "Matematika"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
           },
-          "400": {
-            "description": "Bad Request"
+          "401": {
+            "description": "Nincs jogosultság - Érvénytelen token"
           },
-          "403": {
-            "description": "Forbidden"
+          "500": {
+            "description": "Belső szerverhiba"
           }
         }
       }
     },
     "/csoport/csoporttag": {
       "get": {
-        "description": "",
+        "description": "Lekéri a tanárhoz rendelt csoportokat és azok tagjait a szerepkör azonosítója alapján.",
+        "tags" : ["Jegyek"],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Hitelesítési token (Bearer token)"
+          }
+        ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Sikeres válasz a csoportok és tagok listájával",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "groupName": {
+                        "type": "string",
+                        "example": "1.a"
+                      },
+                      "members": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "ID": {
+                              "type": "integer",
+                              "example": 201
+                            },
+                            "name": {
+                              "type": "string",
+                              "example": "Kiss Péter"
+                            },
+                            "role": {
+                              "type": "string",
+                              "example": "Diák"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
           },
-          "400": {
-            "description": "Bad Request"
+          "401": {
+            "description": "Nincs jogosultság - Érvénytelen token"
           },
-          "403": {
-            "description": "Forbidden"
+          "500": {
+            "description": "Belső szerverhiba"
           }
         }
       }
     },
     "/tanar/tantargy": {
       "get": {
-        "description": "",
+        "description": "Lekéri a tanár által tanított tantárgyakat.",
+        "tags" : ["Jegyek"],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Hitelesítési token (Bearer token)"
+          }
+        ],
         "responses": {
-          "201": {
-            "description": "Created"
+          "200": {
+            "description": "Sikeres válasz a tantárgyak listájával",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "subjectName": {
+                        "type": "string",
+                        "example": "Matematika"
+                      }
+                    }
+                  }
+                }
+              }
+            }
           },
-          "400": {
-            "description": "Bad Request"
+          "401": {
+            "description": "Nincs jogosultság - Érvénytelen token"
           },
-          "403": {
-            "description": "Forbidden"
+          "500": {
+            "description": "Belső szerverhiba"
           }
         }
       }

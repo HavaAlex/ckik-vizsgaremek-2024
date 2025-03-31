@@ -79,13 +79,10 @@ class OrarendRepository
     async getTeacherDisruptions(weekStart)
     {
 
-        console.log(weekStart)
-
         const startOfWeek = new Date(weekStart);
         const endOfWeek = new Date(weekStart);
         endOfWeek.setDate(endOfWeek.getDate() + 6);
         
-        console.log(startOfWeek)
         
 
         return await this.ClassDisruption.findAll({

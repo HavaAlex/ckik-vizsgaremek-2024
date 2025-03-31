@@ -94,7 +94,6 @@ class UserRepository
             username = baseUsername + counter;
             userExists = await this.Users.findOne({ where: { username: username } });
         }
-        // console.log("utána ", username)
         return username;
     }
     async generatePassword() { //véletlenszerű jelszó generálás
@@ -122,7 +121,6 @@ class UserRepository
         else if(user.userRole == "diak"){
             const alreadyexistingUser = await studentRepository.getStudentByOmId(user.roleSide.OMID)
             if(alreadyexistingUser){
-                console.log("ez igy mér nem is annyira jó")
                 return -1
             }
 

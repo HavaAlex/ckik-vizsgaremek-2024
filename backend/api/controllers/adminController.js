@@ -259,10 +259,7 @@ exports.getOrarend = async (req, res, next) =>
 
 
 exports.getAllTeachers = async (req,res,next) => {
-    console.log("äääääääääääääääääääaaaa")
     const response = await adminService.getAllTeachers();
-    console.log("a: ", response)
-    console.log("äääääääääääääääääääaaaa")
     res.status(201).json(response)
 }
 
