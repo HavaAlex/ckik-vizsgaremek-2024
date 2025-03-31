@@ -95,8 +95,6 @@ const getGroupMembers = async () : Promise<GroupMembers[]> => {
         headers: { Authorization: `Bearer ${getCookie("alap")}` }
     };
     const response = await axiosClient.get(`http://localhost:3000/csoport/csoporttag`,config)
-    console.log("IIIT VVV")
-    console.log(response.data)
     return response.data
 }
 

@@ -227,6 +227,9 @@ exports.getGroupAsignments = async (req,res,next) => {
 
 exports.getAbsences = async (req,res,next) =>{
     const absences = await adminService.getAbsences();
+    console.log("================")
+    console.log("a: ",absences)
+    console.log("================")
     res.status(201).json(absences)
 }
 
@@ -253,7 +256,6 @@ exports.getOrarend = async (req, res, next) =>
     let combinedOrarend;
     try{
         combinedOrarend = await orarendService.getOrarend([group],weekStart)
-        console.log(combinedOrarend)
         res.status(201).json(combinedOrarend)
     }
     catch(error)

@@ -11,7 +11,7 @@ exports.getOrarend = async (req, res, next) =>
     const groups = await csoportService.getGroupsOfStudent(req.decoded.role=="szulo"?req.params.id: req.decoded.ID)
 
     const combinedOrarend = req.decoded.role=="tanar"?await orarendService.getTeacherLessons(req.role.ID,weekStart): await orarendService.getOrarend(groups,weekStart)
-
+    console.log("a: ", combinedOrarend)
 
     res.status(201).json(combinedOrarend)
 }
