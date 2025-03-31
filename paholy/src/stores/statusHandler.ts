@@ -8,7 +8,6 @@ export const useStatusHandler = defineStore('statusHandler', () => {
   const showStatus = ref<boolean>(false)
 
   function setStatus(status:string){
-    console.log("STATUS")
     currentStatus.value = status
     showStatus.value = true
   }

@@ -2,7 +2,6 @@ import axiosClient from "@/lib/axios"
 import { useMutation, useQuery } from "@tanstack/vue-query"
 import { useRoute, useRouter } from "vue-router"
 import { QUERY_KEYS } from "@/utils/QueryKeys"
-import { jwtDecode } from "jwt-decode";
 import { useCookieHandler } from "@/stores/cookieHandler";
 import type { child } from "./szulo";
 import { useErrorHandler } from "@/stores/errorHandler";
@@ -24,8 +23,6 @@ export const useGetChildren = () => {
         {
             mutationFn: getChildren,
             onSuccess(data) {
-                console.log("FASU")
-                console.log(data)
                 const gyerekStore = useGyerekStore()
                 gyerekStore.clearChildren()
                 data.forEach(element => {

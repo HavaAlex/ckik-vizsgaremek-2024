@@ -1,8 +1,6 @@
 const orarendService = require("../services/orarendService")
 const csoportService = require("../services/csoportService")
 const lessonService = require("../services/lessonService")
-const orarendRepository = require("../repositories/orarendRepository")
-const lessonRepository = require("../repositories/lessonRepository")
 
 exports.getOrarend = async (req, res, next) =>
 {

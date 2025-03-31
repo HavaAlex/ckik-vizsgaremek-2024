@@ -20,7 +20,6 @@ if (cookieStatus === true) {
 
 const { data: SentAndReceivedMessages } = useGetUzenetek();
 const { data: allMessages } = usegetAllUzenetek();
-console.log("Alllll: ", allMessages)
 const selectedMessage = ref<any | null>(null);
 const dialog = ref(false);
 
@@ -49,7 +48,7 @@ const confirmDelete = async () => {
 const messageView = ref<any>('kapott');
 
 
-const sortKey = ref<any>(''); // 'sender' v 'date', v 'message'
+const sortKey = ref<any>('');
 const sortAsc = ref<any>(true);
 
 const sortListBy = (key: string) => {

@@ -1,7 +1,5 @@
 const userService = require("../services/userService");
 
-const groupService = require("../services/csoportService");
-
 const userRepository  = require("../repositories/userRepository"); 
 
 const bcrypt = require("bcrypt");
@@ -10,7 +8,6 @@ const salt = 10;
 
 const jwt = require("jsonwebtoken");
 const roleService = require("../services/roleService");
-const { stubTrue } = require("lodash");
 const studentRepository = require("../repositories/studentRepository");
 
 exports.getUser = async (req, res, next) => 

@@ -1,7 +1,5 @@
 const jegyService = require("../services/jegyService")
 const groupService = require("../services/csoportService")
-const roleService = require("../services/roleService")
-const lessonService =  require("../services/lessonService")
 
 exports.getJegyek = async (req, res, next) =>
 {
@@ -11,11 +9,7 @@ exports.getJegyek = async (req, res, next) =>
 
 exports.getJegyekTanar = async (req, res, next) =>
 {
-    console.log("_________")
-    console.log("tanár jegy get: ")
     const csoportok = await groupService.getTeacherGroups(req.role.ID)
-    console.log("a: ", csoportok)
-    console.log("_________")
     const jegyek = [];
     for (const element of csoportok) { //csoportok alapján vannak csoportosítva a jegyek, és azon belül tantárgyanként, majd dátum és személy alapján csak frontenden
         const csoportJegyei = await jegyService.getJegyekCsoport(element.ID)
@@ -39,10 +33,14 @@ exports.getJegyekTanar = async (req, res, next) =>
         };
         jegyek.push(object);
     }
+<<<<<<< HEAD
     console.log("_________")
     console.log("b: ", jegyek)
     console.log("_________")
     console.log("getjegyek vége")
+=======
+
+>>>>>>> a1af372219b3e0996007a8723e9e392921c1a52e
     res.status(201).json(jegyek);
 
 }

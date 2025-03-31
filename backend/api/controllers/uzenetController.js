@@ -14,7 +14,6 @@ exports.getPotentialReceivers = async (req, res, next) => {
 
 exports.getAllMessages = async (req,res,next) => {
     const response = await uzenetService.getAllMessages();
-    console.log("a: ", response)
     res.status(201).json(response)
 }
 

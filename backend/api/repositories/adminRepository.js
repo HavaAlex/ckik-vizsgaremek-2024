@@ -14,7 +14,6 @@ class AdminRepository
         this.Teachers = db.teacher;
         this.Students = db.student
         this.Guardian = db.guardian;
-        console.log(this.Admins)
     }
 
     async createAdmin(admin)

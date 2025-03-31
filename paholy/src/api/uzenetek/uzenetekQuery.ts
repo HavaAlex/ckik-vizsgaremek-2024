@@ -122,7 +122,7 @@ export const usedeleteMessage = () => {
     return useMutation( 
         {
             mutationFn: deleteMessage,
-            onSuccess(data){
+            onSuccess(){
                 queryClient.refetchQueries({queryKey:[QUERY_KEYS.getAllUzenetek]})
                 queryClient.refetchQueries({queryKey:[QUERY_KEYS.getUzenetek]})
             },

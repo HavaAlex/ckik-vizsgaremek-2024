@@ -7,7 +7,6 @@ export const useGyerekStore = defineStore('gyerekStore', () => {
   const children = ref<child[]>([])
   function addChild(data:child) {
     children.value.push(data)
-    console.log(children)
   }
   function clearChildren(){
     children.value = []

@@ -1,5 +1,5 @@
 import axiosClient from "@/lib/axios"
-import type { MarkAttribute, Mark, NewMark, GroupMark, GroupMember, Lesson, GroupMembers } from "./jegyek"
+import type { MarkAttribute, Mark, NewMark, GroupMark, Lesson, GroupMembers } from "./jegyek"
 import { useMutation, useQuery } from "@tanstack/vue-query"
 import { useRoute, useRouter } from "vue-router"
 import { QUERY_KEYS } from "@/utils/QueryKeys"
@@ -143,7 +143,6 @@ export const useAddMark = () => {
             mutationFn: addMarks,
             onSuccess(data) {
                 queryClient.refetchQueries({queryKey:[QUERY_KEYS.getJegyek]})
-                console.log(data)
                 const {setStatus} = useStatusHandler()
                 setStatus("Sikeres jegy felvitel!")
             },
