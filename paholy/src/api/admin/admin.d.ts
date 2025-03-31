@@ -7,6 +7,7 @@ export type Teacher = {
 } 
 
 export type Student = {
+    ID:number,
     name: string,
     birth_Date: Date,
     address: string,
@@ -51,7 +52,7 @@ export type SelectedUser= {
     roleSide: any,
     userRole: string,
     userSide: number,
-    belongingStudents?: OMID[] 
+    belongingStudents?: Student[]
 }
 
 export type OMID = {

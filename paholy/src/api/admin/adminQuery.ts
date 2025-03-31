@@ -129,7 +129,7 @@ export const usemodifyUser = () => {
     })
 }
 //Összes felhasználó lekérése
-const getUsers = async (): Promise<User[]> => {
+const getUsers = async (): Promise<any[]> => {
 
     const { getCookie } = useCookieHandler() 
     const config = {

@@ -13,11 +13,11 @@ const Login = async (data: LoginData) : Promise<string> => {
     const response = await axiosClient.post('http://localhost:3000/login/', data)
     return response.data
 } 
-export const useLogin = (data: LoginData) => {
+export const useLogin = () => {
     const { push } = useRouter();
     return useMutation({
         mutationFn: Login,
-        mutationKey: [QUERY_KEYS.Login, data],
+        mutationKey: [QUERY_KEYS.Login],
         onSuccess(data) {
             const { setBaseTime, setCookie } = useCookieHandler();
             const decoded: JwtPayload = jwtDecode(data); 

@@ -9,7 +9,6 @@ exports.getAbsences = async (req, res, next) =>
 exports.getStudentsInGroup = async (req, res, next) => {
     const groupID = req.params.groupID;
     const students = await absenceService.getStudentsInGroup(groupID);
-
     res.status(200).json(students);
 }
 
@@ -20,7 +19,6 @@ exports.getAllAbsences = async (req, res, next) => {
 
 exports.postAbsence = async (req, res, next) => {
     let { studentID, teacherID, lessonID, date, excused } = req.body;
-
     date = new Date(date);
 
     try {
@@ -37,15 +35,22 @@ exports.postAbsence = async (req, res, next) => {
 
         const plainAbsences = absences.map(a => a.dataValues);
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> fae76cfb19fe97390f7d74478000bfcf8a6a80dc
         const existingAbsence = await plainAbsences.find(a =>
             a.studentID == studentID &&
             a.lessonID == lessonID &&
             new Date(a.date).getTime() === date.getTime()
         );
         if (!existingAbsence ) {
+<<<<<<< HEAD
+=======
+
+>>>>>>> fae76cfb19fe97390f7d74478000bfcf8a6a80dc
             absence = await absenceService.postAbsence(absence);
         }
-
         res.status(201).json(absence);
     } catch (error) {
         next(error);

@@ -1,6 +1,6 @@
 <script setup lang="ts">
+import type { Teacher } from '@/api/admin/admin';
 import { useGetHianyzasok, useGetLessons, useGetTeachers } from '@/api/hianyzasok/hianyzasokQuery';
-import type { Teacher } from '@/api/hianyzasok/hianyzasok'; 
 import { ref, watch,onMounted,onUnmounted } from 'vue';
 import { computed } from 'vue';
 

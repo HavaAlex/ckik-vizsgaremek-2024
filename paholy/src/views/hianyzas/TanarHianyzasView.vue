@@ -104,12 +104,10 @@ const attendance = ref<{
 
 const students = ref<Students[]>();
 
-const currentGroupID = ref<number>(1);
+const currentGroupID = ref<number>(-1);
 
-const { data: studentsData, refetch } = useGetStudentsInGroup(
-  computed(() => currentGroupID.value),
-  { enabled: computed(() => currentGroupID.value !== null) }
-);
+const { data: studentsData, refetch } = useGetStudentsInGroup(computed(() => currentGroupID.value));
+
 
 watch(studentsData, (newData) => {
   if (newData) {
@@ -124,8 +122,11 @@ watch(studentsData, (newData) => {
 //copyright 3025-nem szabad megnézni
 async function openAttendance(lesson: Lesson) {
   console.log(lesson,"ÓRA")
+  console.log(currentGroupID.value)
   selectedLesson.value = JSON.parse(JSON.stringify(lesson));
   currentGroupID.value = lesson.groupID;
+  console.log(currentGroupID.value)
+  console.log(currentGroupID.value)
 
   await refetch();
   await nextTick();
@@ -194,6 +195,7 @@ function submitAttendance() {
 
 function closeAttendance() {
   selectedLesson.value.ID =-1
+  currentGroupID.value =-1
   console.log(selectedLesson.value.ID,"!!!!!!!!!!!!!444")
   attendance.value = {};
 }

@@ -224,6 +224,9 @@ exports.getGroupAsignments = async (req,res,next) => {
 
 exports.getAbsences = async (req,res,next) =>{
     const absences = await adminService.getAbsences();
+    console.log("================")
+    console.log("a: ",absences)
+    console.log("================")
     res.status(201).json(absences)
 }
 
