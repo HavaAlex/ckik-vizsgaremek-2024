@@ -10,8 +10,6 @@ exports.getJegyek = async (req, res, next) =>
 exports.getJegyekTanar = async (req, res, next) =>
 {
     const csoportok = await groupService.getTeacherGroups(req.role.ID)
-    console.log("a: ", csoportok)
-    console.log("_________")
     const jegyek = [];
     for (const element of csoportok) { //csoportok alapján vannak csoportosítva a jegyek, és azon belül tantárgyanként, majd dátum és személy alapján csak frontenden
         const csoportJegyei = await jegyService.getJegyekCsoport(element.ID)
@@ -35,9 +33,7 @@ exports.getJegyekTanar = async (req, res, next) =>
         };
         jegyek.push(object);
     }
-    console.log("_________")
-    console.log("b: ", jegyek)
-    console.log("_________")
+
     res.status(201).json(jegyek);
 
 }

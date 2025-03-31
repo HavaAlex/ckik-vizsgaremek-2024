@@ -35,12 +35,17 @@ exports.postAbsence = async (req, res, next) => {
 
         const plainAbsences = absences.map(a => a.dataValues);
 
+
         const existingAbsence = await plainAbsences.find(a =>
             a.studentID == studentID &&
             a.lessonID == lessonID &&
             new Date(a.date).getTime() === date.getTime()
         );
+
+
+
         if (!existingAbsence ) {
+
             absence = await absenceService.postAbsence(absence);
         }
         res.status(201).json(absence);
