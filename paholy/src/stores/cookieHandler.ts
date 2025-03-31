@@ -1,6 +1,11 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import { jwtDecode, type JwtPayload } from 'jwt-decode'
+declare module "jwt-decode" {
+  export interface JwtPayload {
+      userData: Array<any>;
+  }
+}
 
 export const useCookieHandler = defineStore('cookieHandler', () => {
   console.log(document.cookie)
@@ -11,7 +16,7 @@ export const useCookieHandler = defineStore('cookieHandler', () => {
       return false
     }
     const decoded = jwtDecode(document.cookie.split(";")[0])
-    if (Date.now() >= decoded.exp * 1000)
+    if (decoded?.exp&& Date.now() >= decoded.exp * 1000)
     {
       console.log("Cookie lejárt")
       return false
@@ -31,8 +36,11 @@ export const useCookieHandler = defineStore('cookieHandler', () => {
     /*console.log("!!!!!!!!!!!!!!!!!!!!")
     console.log(Date.now())
     console.log(decoded.exp*1000)*/
-    baseTime.value = Math.floor(Math.abs(Date.now() - (decoded.exp*1000))/1000)
-    timeValue.value = baseTime.value
+    if(decoded.exp)
+    {
+      baseTime.value = Math.floor(Math.abs(Date.now() - (decoded.exp*1000))/1000)
+      timeValue.value = baseTime.value
+    }
     if (!timer) {
       timer = setInterval(() => {
         //console.log(timeValue.value)
