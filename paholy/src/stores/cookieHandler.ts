@@ -1,11 +1,6 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import { jwtDecode, type JwtPayload } from 'jwt-decode'
-declare module "jwt-decode" {
-  export interface JwtPayload {
-      userData: Array<any>;
-  }
-}
 
 export const useCookieHandler = defineStore('cookieHandler', () => {
   console.log(document.cookie)

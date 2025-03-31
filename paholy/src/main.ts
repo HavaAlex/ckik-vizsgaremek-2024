@@ -17,6 +17,12 @@ app.use(router)
 app.use(vuetify)
 app.use(VueQueryPlugin, {queryClient: queryClient})
 
+declare module "jwt-decode" {
+  export interface JwtPayload {
+      userData: any;
+  }
+}
+
 app.config.errorHandler = (err, vm, info) => {
   console.error("Error:", err);
   console.error("Vue component:", vm);
