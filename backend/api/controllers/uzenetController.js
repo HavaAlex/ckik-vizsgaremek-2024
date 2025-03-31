@@ -52,7 +52,6 @@ exports.createUzenet = async (req, res, next) =>
         if(receiverGrouplist != 'undefined'){
             for (let l = 0; l < receiverGrouplist.length; l++) {
                     receiverGrouplist[l].studentList.forEach(element => {
-                        console.log(element)
                         cleanedreceiverlist.push(element)
                     });
 
@@ -60,7 +59,6 @@ exports.createUzenet = async (req, res, next) =>
         }
         let cucc = await uzenetService.createUzenet(newUzenet,cleanedreceiverlist);
 
-        console.log(" e ", cucc)
         if(cucc){
             res.status(201).json(cucc)
         }
