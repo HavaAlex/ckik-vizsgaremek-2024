@@ -31,11 +31,8 @@ exports.verifyToken = async (req, res, next) =>
     }
     req.decoded = decoded
     req.role = await roleService.getRole(decoded.ID,decoded.role) 
-<<<<<<< HEAD
     console.log(decoded)
     console.log(req.role)
     console.log("KÉRÉS")
-=======
->>>>>>> 681559e58d811c33039ca72de8d00085d1452a3b
     next()
 }
