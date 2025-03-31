@@ -11,12 +11,7 @@ import { useErrorHandler } from "@/stores/errorHandler";
 import type { Student, Teacher } from "../admin/admin";
 import { computed, type Ref } from "vue";
 
-<<<<<<< HEAD
 const getHianyzasok = async (): Promise<Hianyzas|Error> => {
-=======
-const getHianyzasok = async (): Promise<Hianyzas[]> => {
-    console.log("LEFUTOK: hianyzas")
->>>>>>> fae76cfb19fe97390f7d74478000bfcf8a6a80dc
     const cookieHandler= useCookieHandler()
     const vanE = cookieHandler.hasValidCookie()
     const route = useRoute()
