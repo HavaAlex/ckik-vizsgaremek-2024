@@ -1,0 +1,3332 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "API Dokumentáció",
+    "description": "Az API leírása.",
+    "version": "1.0.0"
+  },
+  "host": "localhost:3000",
+  "basePath": "/",
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "/login/": {
+      "post": {
+        "description": "Bejelentkezés útja",
+        "tags":["Authorization"],
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "username": {
+                  "type": "string",
+                  "example": "papp.lajos42"
+                },
+                "password": {
+                  "type": "string",
+                  "example": "Jelszó123"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/login/changePassword": {
+      "post": {
+        "description": "Jelszó megváltoztatása az előző jelszó használatával",
+        "tags":["Authorization"],
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "currentpassword": {
+                  "type": "string",
+                  "example": "Jelszó123"
+                },
+                "currentpasswordagain": {
+                  "type": "string",
+                  "example": "Jelszó123"
+                },
+                "username": {
+                  "type": "string",
+                  "example": "papp.lajos42"
+                },
+                "newpassword": {
+                  "type": "string",
+                  "example": "Újjelszó123"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/uzenet/": {
+      "get": {
+        "description": "Üzenetek lekérése user ID alapján",
+        "tags": ["Üzenetek"],
+        "responses": {
+          "201": {
+            "description": "Lekérve",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "elkuldott": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "Message": {
+                        "type": "object",
+                        "properties": {
+                          "dataValues": {
+                            "type": "object",
+                            "properties": {
+                              "ID": {
+                                "type": "integer",
+                                "example": 1
+                              },
+                              "senderUserID": {
+                                "type": "integer",
+                                "example": 3
+                              },
+                              "message": {
+                                "type": "string",
+                                "example": "Példa üzenet"
+                              },
+                              "date": {
+                                "type": "string",
+                                "format": "date-time",
+                                "example": "2025-03-24T16:54:41.000Z"
+                              },
+                              "receivers": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "User": {
+                                      "type": "object",
+                                      "properties": {
+                                        "dataValues": {
+                                          "type": "object",
+                                          "properties": {
+                                            "ID": {
+                                              "type": "integer",
+                                              "example": 1
+                                            },
+                                            "username": {
+                                              "type": "string",
+                                              "example": "laci"
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              },
+                              "sender": {
+                                "type": "object",
+                                "properties": {
+                                  "User": {
+                                    "type": "object",
+                                    "properties": {
+                                      "dataValues": {
+                                        "type": "object",
+                                        "properties": {
+                                          "ID": {
+                                            "type": "integer",
+                                            "example": 3
+                                          },
+                                          "username": {
+                                            "type": "string",
+                                            "example": "lajos"
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "example": [
+                    {
+                      "Message": {
+                        "dataValues": {
+                          "ID": 1,
+                          "senderUserID": 3,
+                          "message": "Példa üzenet",
+                          "date": "2025-03-24T16:54:41.000Z",
+                          "receivers": [
+                            {
+                              "User": {
+                                "dataValues": {
+                                  "ID": 1,
+                                  "username": "laci"
+                                }
+                              }
+                            },
+                            {
+                              "User": {
+                                "dataValues": {
+                                  "ID": 2,
+                                  "username": "rebeka"
+                                }
+                              }
+                            }
+                          ],
+                          "sender": {
+                            "User": {
+                              "dataValues": {
+                                "ID": 3,
+                                "username": "lajos"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "Message": {
+                        "dataValues": {
+                          "ID": 1,
+                          "senderUserID": 3,
+                          "message": "Példa üzenet2",
+                          "date": "2025-03-26T16:54:41.000Z",
+                          "receivers": [
+                            {
+                              "User": {
+                                "dataValues": {
+                                  "ID": 1,
+                                  "username": "laci"
+                                }
+                              }
+                            },
+                            {
+                              "User": {
+                                "dataValues": {
+                                  "ID": 2,
+                                  "username": "rebeka"
+                                }
+                              }
+                            }
+                          ],
+                          "sender": {
+                            "User": {
+                              "dataValues": {
+                                "ID": 3,
+                                "username": "lajos"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                },
+                "kapott": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "Message": {
+                        "type": "object",
+                        "properties": {
+                          "dataValues": {
+                            "type": "object",
+                            "properties": {
+                              "ID": {
+                                "type": "integer",
+                                "example": 1
+                              },
+                              "senderUserID": {
+                                "type": "integer",
+                                "example": 1
+                              },
+                              "message": {
+                                "type": "string",
+                                "example": "Példa üzenet 3"
+                              },
+                              "date": {
+                                "type": "string",
+                                "format": "date-time",
+                                "example": "2025-03-24T16:54:41.000Z"
+                              },
+                              "receivers": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "User": {
+                                      "type": "object",
+                                      "properties": {
+                                        "dataValues": {
+                                          "type": "object",
+                                          "properties": {
+                                            "ID": {
+                                              "type": "integer",
+                                              "example": 3
+                                            },
+                                            "username": {
+                                              "type": "string",
+                                              "example": "lajos"
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              },
+                              "sender": {
+                                "type": "object",
+                                "properties": {
+                                  "User": {
+                                    "type": "object",
+                                    "properties": {
+                                      "dataValues": {
+                                        "type": "object",
+                                        "properties": {
+                                          "ID": {
+                                            "type": "integer",
+                                            "example": 1
+                                          },
+                                          "username": {
+                                            "type": "string",
+                                            "example": "laci"
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "example": [
+                    {
+                      "Message": {
+                        "dataValues": {
+                          "ID": 1,
+                          "senderUserID": 1,
+                          "message": "Példa üzenet 3",
+                          "date": "2025-03-24T16:54:41.000Z",
+                          "receivers": [
+                            {
+                              "User": {
+                                "dataValues": {
+                                  "ID": 3,
+                                  "username": "lajos"
+                                }
+                              }
+                            },
+                            {
+                              "User": {
+                                "dataValues": {
+                                  "ID": 2,
+                                  "username": "rebeka"
+                                }
+                              }
+                            }
+                          ],
+                          "sender": {
+                            "User": {
+                              "dataValues": {
+                                "ID": 1,
+                                "username": "laci"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "Message": {
+                        "dataValues": {
+                          "ID": 1,
+                          "senderUserID": 1,
+                          "message": "Példa üzenet 4",
+                          "date": "2025-03-26T16:54:41.000Z",
+                          "receivers": [
+                            {
+                              "User": {
+                                "dataValues": {
+                                  "ID": 3,
+                                  "username": "lajos"
+                                }
+                              }
+                            },
+                            {
+                              "User": {
+                                "dataValues": {
+                                  "ID": 2,
+                                  "username": "rebeka"
+                                }
+                              }
+                            }
+                          ],
+                          "sender": {
+                            "User": {
+                              "dataValues": {
+                                "ID": 1,
+                                "username": "laci"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      },
+      "post": {
+        "description": "Új üzenet küldése",
+        "tags": ["Üzenetek"],
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "description": "Az üzenet szövege",
+                  "example": "Mi a hézag hapsikám?"
+                },
+                "date": {
+                  "type": "string",
+                  "format": "date-time",
+                  "example": "2025-03-24T16:54:41.000Z"
+                },
+                "receiverlist": {
+                  "type": "array",
+                  "description": "egyes felhasználók akik nem tartoznak egy csoportokhoz",
+                  "example": [
+                    {
+                      "ID": 4,
+                      "username": "jozsi",
+                      "role": "szulo"
+                    },
+                    {
+                      "ID": 5,
+                      "username": "patrik",
+                      "role": "admin"
+                    }
+                  ]
+                },
+                "receiverGrouplist": {
+                  "type": "array",
+                  "description": "egy tömbb amiben a csoportok vannak benne amiknek az üzentet küldik el",
+                  "example": [
+                    {
+                      "ID": 1,
+                      "name": "1.b",
+                      "studentList": [1, 2]
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "schema": {
+              "type": "object",
+              "example": {
+                "ID": 10,
+                "senderUserID": 1,
+                "message": "Mi a hézag hapsikám?",
+                "date": "2025-03-24T16:54:41.000Z"
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+
+    "/uzenet/uzenetekreceivers": {
+      "get": {
+        "description": "Egy tömbb amiben szerepel minden felhasználó, illetve csoport a benne lévő diákok ID-jaival együtt",
+        "tags": ["Üzenetek"],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "singleUsers": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "User": {
+                        "type": "object",
+                        "properties": {
+                          "dataValues": {
+                            "type": "object",
+                            "properties": {
+                              "ID": {
+                                "type": "integer",
+                                "example": 1
+                              },
+                              "username": {
+                                "type": "string",
+                                "example": "laci"
+                              },
+                              "role": {
+                                "type": "string",
+                                "example": "diak"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "example": [
+                    {
+                      "User": {
+                        "dataValues": {
+                          "ID": 1,
+                          "username": "laci",
+                          "role": "diak"
+                        }
+                      }
+                    },
+                    {
+                      "User": {
+                        "dataValues": {
+                          "ID": 2,
+                          "username": "rebeka",
+                          "role": "diak"
+                        }
+                      }
+                    }
+                  ]
+                },
+                "groups": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "ID": {
+                        "type": "integer",
+                        "example": 1
+                      },
+                      "name": {
+                        "type": "string",
+                        "example": "1.b"
+                      },
+                      "studentList": {
+                        "type": "array",
+                        "items": {
+                          "type": "integer"
+                        },
+                        "example": [1, 2]
+                      }
+                    }
+                  },
+                  "example": [
+                    {
+                      "ID": 1,
+                      "name": "1.b",
+                      "studentList": [1, 2]
+                    }
+                  ]
+                }
+              },
+              "example": {
+                "singleUsers": [
+                  {
+                    "User": {
+                      "dataValues": {
+                        "ID": 1,
+                        "username": "laci",
+                        "role": "diak"
+                      }
+                    }
+                  },
+                  {
+                    "User": {
+                      "dataValues": {
+                        "ID": 2,
+                        "username": "rebeka",
+                        "role": "diak"
+                      }
+                    }
+                  }
+                ],
+                "groups": [
+                  {
+                    "ID": 1,
+                    "name": "1.b",
+                    "studentList": [1, 2]
+                  }
+                ]
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+
+    "/orarend/": {
+      "get": {
+        "description": "Lekéri a jelenlegi felhasználó órarendjét",
+        "tags": ["Órarend"],
+        "parameters": [
+          {
+            "name": "weekStart",
+            "in": "query",
+            "type": "string",
+            "required" : true,
+            "description" : "Az a hét hétfőjének a napja amit felhasználó lekér",
+            "example": "2025-03-31"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sikeres lekérés",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties":{
+                  "ID": {
+                    "type": "integer",
+                    "example": 1,
+                    "description": "Az óra egyedi azonosítója."
+                  },
+                  "groupID:": {
+                    "type": "integer",
+                    "example": 1,
+                    "description": "Az csoport egyedi azonosítója."
+                  },
+                  "teacherID:": {
+                    "type": "integer",
+                    "example": 1,
+                    "description": "Az tanár egyedi azonosítója."
+                  },
+                  "start_Hour:": {
+                    "type": "integer",
+                    "example": 0,
+                    "description": "Az óra kezdésének az órája (nem használt, mindig 0)"
+                  },
+                  "start_Minute:": {
+                    "type": "integer",
+                    "example": 480,
+                    "description": "Az óra kezdésének az ideje éjféltől számitott percekben"
+                  },
+                  "length:": {
+                    "type": "integer",
+                    "example": 45,
+                    "description": "Az óra hossza percekben"
+                  },
+                  "day:": {
+                    "type": "string",
+                    "example": "hetfo",
+                    "description": "Az órának a napja kisbetüvel, ékezet nélkül"
+                  },
+                  "subjectName:": {
+                    "type": "string",
+                    "example": "hetfo",
+                    "description": "A tanóra neve"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Hibás kérés."
+          },
+          "403": {
+            "description": "Belső szerverhiba a lekérdezés során."
+          }
+        }
+      }
+    },
+    "/orarend/getTeachers": {
+      "get": {
+        "description": "Lekéri az összes tanárt",
+        "tags": ["Admin funkciók", "Felhasználók kezelése", "Órarend"],
+        "responses": {
+          "200": {
+            "description": "Sikeres lekérés",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties":{
+                  "ID": {
+                    "type": "integer",
+                    "example": 1,
+                    "description": "Az tanár egyedi azonosítója."
+                  },
+                  "email": {
+                    "type": "string",
+                    "example": "example@example.com",
+                    "description": "Az tanár email címe."
+                  },
+                  "name": {
+                    "type": "string",
+                    "example": "John Doe",
+                    "description": "Az tanár teljes neve."
+                  },
+                  "phone": {
+                    "type": "string",
+                    "example": "+36 123 1234",
+                    "description": "Az tanár telefonszáma."
+                  },
+                  "userId": {
+                    "type": "integer",
+                    "example": 1,
+                    "description": "Az tanár egyedi user azonosítója."
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Hibás kérés."
+          },
+          "403": {
+            "description": "Belső szerverhiba a lekérdezés során."
+          }
+        }
+      }
+    },
+    "/orarend/getLessons": {
+      "get": {
+        "description": "Lekéri az összes órát",
+        "tags": ["Órarend"],
+        "responses": {
+          "200": {
+            "description": "Sikeres lekérés",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties":{
+                  "ID": {
+                    "type": "integer",
+                    "example": 1,
+                    "description": "Az óra egyedi azonosítója."
+                  },
+                  "groupID:": {
+                    "type": "integer",
+                    "example": 1,
+                    "description": "Az csoport egyedi azonosítója."
+                  },
+                  "teacherID:": {
+                    "type": "integer",
+                    "example": 1,
+                    "description": "Az tanár egyedi azonosítója."
+                  },
+                  "start_Hour:": {
+                    "type": "integer",
+                    "example": 0,
+                    "description": "Az óra kezdésének az órája (nem használt, mindig 0)"
+                  },
+                  "start_Minute:": {
+                    "type": "integer",
+                    "example": 480,
+                    "description": "Az óra kezdésének az ideje éjféltől számitott percekben"
+                  },
+                  "length:": {
+                    "type": "integer",
+                    "example": 45,
+                    "description": "Az óra hossza percekben"
+                  },
+                  "day:": {
+                    "type": "string",
+                    "example": "hetfo",
+                    "description": "Az órának a napja kisbetüvel, ékezet nélkül"
+                  },
+                  "subjectName:": {
+                    "type": "string",
+                    "example": "hetfo",
+                    "description": "A tanóra neve"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Hibás kérés."
+          },
+          "403": {
+            "description": "Belső szerverhiba a lekérdezés során."
+          }
+        }
+      }
+    },
+    "/hianyzas/": {
+      "get": {
+        "description": "Lekéri a felhasználó, vagy a szülő, a gyerekeinek az összes hiányzását",
+        "tags": ["Hiányzás"],
+        "200": {
+          "description": "Sikeres lekérés",
+          "schema": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties":{
+                "ID": {
+                  "type": "integer",
+                  "example": 1,
+                  "description": "Az óra egyedi azonosítója."
+                },
+                "studentID": {
+                  "type": "integer",
+                  "example": 1,
+                  "description": "Az diák egyedi azonosítója."
+                },
+                "teacherID":{
+                  "type": "integer",
+                  "example": 1,
+                  "description": "Az tanár egyedi azonosítója."
+                },
+                "date":{
+                  "type": "string",
+                  "example": "2025-03-23 23:00:00",
+                  "description": "A hiányzás napjának a időpontja."
+                },
+                "excused":{
+                  "type": "bool",
+                  "example": "1",
+                  "description": "A hiányzás hogy levan-e igazolva."
+                },
+                "lessonID":{
+                  "type": "integer",
+                  "example": "1",
+                  "description": "Az óra egyedi azonosítója"
+                }
+              }
+            }
+          }
+        },
+        "400": {
+          "description": "Hibás kérés."
+        },
+        "403": {
+          "description": "Belső szerverhiba a lekérdezés során."
+        }
+      },
+      "post": {
+        "description": "Egy hiányzás feltöltése",
+        "tags": ["Hiányzás"],
+        "parameters": [
+          {
+            "name": "studentID",
+            "in": "body",
+            "required": true,
+            "type": "integer",
+            "description": "Az diák egyedi azonosítója.",
+            "example": 1
+          },
+          {
+            "name": "teacherID",
+            "in": "body",
+            "required": true,
+            "type": "integer",
+            "description": "Az tanár egyedi azonosítója.",
+            "example": 1
+          },
+          {
+            "name": "date",
+            "in": "body",
+            "required": true,
+            "type": "string",
+            "description": "A hiányzás napjának a időpontja.",
+            "example": "2025-03-23 23:00:00"
+          },
+          {
+            "name": "lessonID",
+            "in": "body",
+            "required": true,
+            "type": "integer",
+            "description": "Az óra egyedi azonosítója.",
+            "example": 1
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Létrehozva"
+          },
+          "400": {
+            "description": "Hibás kérés."
+          },
+          "403": {
+            "description": "Belső szerverhiba a lekérdezés során."
+          }
+        }
+      }
+    },
+    "/hianyzas/{id}": {
+      "get": {
+        "description": "Egy hiányzás pontos lekérése",
+        "tags": ["Hiányzás"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sikeres lekérés",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties":{
+                    "ID": {
+                      "type": "integer",
+                      "example": 1,
+                      "description": "Az óra egyedi azonosítója."
+                    },
+                    "studentID": {
+                      "type": "integer",
+                      "example": 1,
+                      "description": "Az diák egyedi azonosítója."
+                    },
+                    "teacherID":{
+                      "type": "integer",
+                      "example": 1,
+                      "description": "Az tanár egyedi azonosítója."
+                    },
+                    "date":{
+                      "type": "string",
+                      "example": "2025-03-23 23:00:00",
+                      "description": "A hiányzás napjának a időpontja."
+                    },
+                    "excused":{
+                      "type": "bool",
+                      "example": "1",
+                      "description": "A hiányzás hogy levan-e igazolva."
+                    },
+                    "lessonID":{
+                      "type": "integer",
+                      "example": "1",
+                      "description": "Az óra egyedi azonosítója"
+                    }
+                  }
+              }
+            }
+          },
+          "400": {
+            "description": "Hibás kérés."
+          },
+          "403": {
+            "description": "Belső szerverhiba a lekérdezés során."
+          }
+        }
+      }
+    },
+    "/hianyzas/getStudentsInGroup/{groupID}": {
+      "get": {
+        "description": "Diákok leakérdezése egy csoportból",
+        "parameters": [
+          {
+            "name": "groupID",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "example" : 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sikeres lekérés",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties":{
+                  "ID": {
+                    "type": "integer",
+                    "example": 1,
+                    "description": "Az óra egyedi azonosítója."
+                  },
+                  "name:": {
+                    "type": "string",
+                    "example": "John Doe",
+                    "description": "A diák neve."
+                  },
+                  "DoB:": {
+                    "type": "datetime",
+                    "example": "1999-01-01 00:00:00",
+                    "description": "A diák születésének időpontja"
+                  },
+                  "adress:": {
+                    "type": "string",
+                    "example": "1600 Pennsylvania Avenue NW, Washington, DC 20500, United States",
+                    "description": "A diák lakcíme"
+                  },
+                  "phone:": {
+                    "type": "string",
+                    "example": "+36 123 1234",
+                    "description": "A diák telefonszáma"
+                  },
+                  "email:": {
+                    "type": "string",
+                    "example": "example@example.com",
+                    "description": "A diák email címe"
+                  },
+                  "userID:": {
+                    "type": "integer",
+                    "example": "1",
+                    "description": "Az diák egyedi user azonosítója."
+                  },
+                  "OMID:": {
+                    "type": "string",
+                    "example": "123",
+                    "description": "A diák oktatási azonosítója"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Hibás kérés."
+          },
+          "403": {
+            "description": "Belső szerverhiba a lekérdezés során."
+          }
+        }
+      }
+    },
+    "/hianyzas/postAbsence": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "studentID": {
+                  "example": "any"
+                },
+                "teacherID": {
+                  "example": "any"
+                },
+                "lessonID": {
+                  "example": "any"
+                },
+                "date": {
+                  "example": "any"
+                },
+                "excused": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/feladat/hazikGroups": {
+      "get": {
+        "tags": ["Házifeladatok"],
+        "description": "Lekéri az összes csoportot amiknek a tanár típusú felhasználók házifeladatot tud feladni",
+        "responses": {
+          "201": {
+            "description": "Sikeres lekérés",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "ID": {
+                    "type": "integer",
+                    "example": 1
+                  },
+                  "name": {
+                    "type": "string",
+                    "example": "1.b"
+                  },
+                  "studentList": {
+                    "type": "array",
+                    "items": {
+                      "type": "integer"
+                    },
+                    "example": [1, 2]
+                  }
+                }
+              },
+              "example": [
+                {
+                  "ID": 1,
+                  "name": "1.b",
+                  "studentList": [1, 2]
+                },
+                {
+                  "ID": 2,
+                  "name": "1.a",
+                  "studentList": [3, 4]
+                }
+              ]
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/feladat/haziktanar": {
+      "get": {
+        "tags": ["Házifeladatok"],
+        "description": "Lekéri az összes feladatot amit az adott felhasználó küldött ki",
+        "responses": {
+          "201": {
+            "description": "Created",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "feladat": {
+                    "type": "object",
+                    "properties": {
+                      "Assignment": {
+                        "type": "object",
+                        "properties": {
+                          "dataValues": {
+                            "type": "object",
+                            "properties": {
+                              "ID": {
+                                "type": "integer",
+                                "example": 1
+                              },
+                              "senderUserID": {
+                                "type": "integer",
+                                "example": 3
+                              },
+                              "desc": {
+                                "type": "string",
+                                "example": "Oldd meg x és y feladatot"
+                              },
+                              "deadline": {
+                                "type": "string",
+                                "format": "date-time",
+                                "example": "2025-03-29T16:55:00.000Z"
+                              },
+                              "uploadDate": {
+                                "type": "string",
+                                "format": "date-time",
+                                "example": "2025-03-24T13:54:41.000Z"
+                              },
+                              "senderUserName": {
+                                "type": "string",
+                                "example": "lajos"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "anwsers": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "CompletedAssignment": {
+                          "type": "object",
+                          "properties": {
+                            "dataValues": {
+                              "type": "object",
+                              "properties": {
+                                "ID": {
+                                  "type": "integer",
+                                  "example": 1
+                                },
+                                "assignmentID": {
+                                  "type": "integer",
+                                  "example": 1
+                                },
+                                "studentID": {
+                                  "type": "integer",
+                                  "example": 1
+                                },
+                                "date": {
+                                  "type": "string",
+                                  "format": "date-time",
+                                  "example": "2025-03-25T09:15:34.000Z"
+                                },
+                                "textAnswer": {
+                                  "type": "string",
+                                  "example": "Kész van minden"
+                                },
+                                "status": {
+                                  "type": "string",
+                                  "example": "Leadva"
+                                },
+                                "senderUserName": {
+                                  "type": "string",
+                                  "example": "laci"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "example": [
+                      {
+                        "CompletedAssignment": {
+                          "dataValues": {
+                            "ID": 1,
+                            "assignmentID": 1,
+                            "studentID": 1,
+                            "date": "2025-03-25T09:15:34.000Z",
+                            "textAnswer": "Kész van minden",
+                            "status": "Leadva",
+                            "senderUserName": "laci"
+                          }
+                        }
+                      },
+                      {
+                        "CompletedAssignment": {
+                          "dataValues": {
+                            "ID": 2,
+                            "assignmentID": 1,
+                            "studentID": 2,
+                            "date": "2025-03-24T13:54:41.000Z",
+                            "textAnswer": "",
+                            "status": "Nincs leadva",
+                            "senderUserName": "rebeka"
+                          }
+                        }
+                      }
+                    ]
+                  }
+                }
+              },
+              "example": [
+                {
+                  "feladat": {
+                    "Assignment": {
+                      "dataValues": {
+                        "ID": 1,
+                        "senderUserID": 3,
+                        "desc": "Oldd meg x és y feladatot",
+                        "deadline": "2025-03-29T16:55:00.000Z",
+                        "uploadDate": "2025-03-24T13:54:41.000Z",
+                        "senderUserName": "lajos"
+                      }
+                    }
+                  },
+                  "anwsers": [
+                    {
+                      "CompletedAssignment": {
+                        "dataValues": {
+                          "ID": 1,
+                          "assignmentID": 1,
+                          "studentID": 1,
+                          "date": "2025-03-25T09:15:34.000Z",
+                          "textAnswer": "Kész van minden",
+                          "status": "Leadva",
+                          "senderUserName": "laci"
+                        }
+                      }
+                    },
+                    {
+                      "CompletedAssignment": {
+                        "dataValues": {
+                          "ID": 2,
+                          "assignmentID": 1,
+                          "studentID": 2,
+                          "date": "2025-03-24T13:54:41.000Z",
+                          "textAnswer": "",
+                          "status": "Nincs leadva",
+                          "senderUserName": "rebeka"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/feladat/hazikdiak": {
+      "get": {
+        "tags": ["Házifeladatok"],
+        "description": "Lekéri az éppen bejelentkezve lévő diák típusú felhasználónak kiosztott feladatokat",
+        "responses": {
+          "201": {
+            "description": "Created",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "valasz": {
+                    "type": "object",
+                    "properties": {
+                      "CompletedAssignment": {
+                        "type": "object",
+                        "properties": {
+                          "dataValues": {
+                            "type": "object",
+                            "properties": {
+                              "ID": {
+                                "type": "integer",
+                                "example": 1
+                              },
+                              "assignmentID": {
+                                "type": "integer",
+                                "example": 1
+                              },
+                              "studentID": {
+                                "type": "integer",
+                                "example": 1
+                              },
+                              "date": {
+                                "type": "string",
+                                "format": "date-time",
+                                "example": "2025-03-25T09:15:34.000Z"
+                              },
+                              "textAnswer": {
+                                "type": "string",
+                                "example": "Kész van minden"
+                              },
+                              "status": {
+                                "type": "string",
+                                "example": "Leadva"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "feladat": {
+                    "type": "object",
+                    "properties": {
+                      "Assignment": {
+                        "type": "object",
+                        "properties": {
+                          "dataValues": {
+                            "type": "object",
+                            "properties": {
+                              "ID": {
+                                "type": "integer",
+                                "example": 1
+                              },
+                              "teacherID": {
+                                "type": "integer",
+                                "example": 1
+                              },
+                              "desc": {
+                                "type": "string",
+                                "example": "Oldd meg x és y feladatot"
+                              },
+                              "deadline": {
+                                "type": "string",
+                                "format": "date-time",
+                                "example": "2025-03-29T16:55:00.000Z"
+                              },
+                              "uploadDate": {
+                                "type": "string",
+                                "format": "date-time",
+                                "example": "2025-03-24T13:54:41.000Z"
+                              },
+                              "senderUserName": {
+                                "type": "string",
+                                "example": "lajos"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "example": [
+                {
+                  "valasz": {
+                    "CompletedAssignment": {
+                      "dataValues": {
+                        "ID": 1,
+                        "assignmentID": 1,
+                        "studentID": 1,
+                        "date": "2025-03-25T09:15:34.000Z",
+                        "textAnswer": "Kész van minden",
+                        "status": "Leadva"
+                      }
+                    }
+                  },
+                  "feladat": {
+                    "Assignment": {
+                      "dataValues": {
+                        "ID": 1,
+                        "teacherID": 1,
+                        "desc": "Oldd meg x és y feladatot",
+                        "deadline": "2025-03-29T16:55:00.000Z",
+                        "uploadDate": "2025-03-24T13:54:41.000Z",
+                        "senderUserName": "lajos"
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/feladat/newassignment": {
+      "post": {
+        "description": "Új feladat feltöltése",
+        "tags": ["Házifeladatok"],
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "Groups": {
+                  "type": "array",
+                  "description": "Az osztály akinek ki lett osztva (azért tömb hogyha meggondoljuk magunkat, hogy több osztálynak is lehessen házit küldeni, ne legyen annyi dolgunk)",
+                  "example": [
+                    {
+                      "ID": 1,
+                      "name": "1.b",
+                      "studentList": [1, 2]
+                    }
+                  ]
+                },
+                "Description": {
+                  "type": "string",
+                  "description": "A feladat leírása",
+                  "example": "Oldd meg yz feladatot."
+                },
+                "DeadLine": {
+                  "type": "string",
+                  "format": "date-time",
+                  "description": "Határidő idő amit frontendről kapunk",
+                  "example": "2025-03-30T01:17:00.000Z"
+                },
+                "UploadDate": {
+                  "type": "string",
+                  "format": "date-time",
+                  "description": "Feltöltési idő amit frontendről kapunk",
+                  "example": "2025-03-27T13:30:38.234Z"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Assignment created",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "Assignment": {
+                  "type": "object",
+                  "properties": {
+                    "dataValues": {
+                      "type": "object",
+                      "properties": {
+                        "ID": {
+                          "type": "integer",
+                          "example": 1
+                        },
+                        "teacherID": {
+                          "type": "integer",
+                          "example": 1
+                        },
+                        "desc": {
+                          "type": "string",
+                          "example": "Oldd meg yz feladatot."
+                        },
+                        "deadline": {
+                          "type": "string",
+                          "format": "date-time",
+                          "example": "2025-03-30T01:17:00.000Z"
+                        },
+                        "uploadDate": {
+                          "type": "string",
+                          "format": "date-time",
+                          "example": "2025-03-27T13:30:38.234Z"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/feladat/hazikdiak/{id}": {
+      "get": {
+        "tags": ["Házifeladatok"],
+        "description": "Lekéri a házifeladatokat egy addot diák ID-je alapján. Ez szölőő oldalon van használva",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "valasz": {
+                    "type": "object",
+                    "properties": {
+                      "CompletedAssignment": {
+                        "type": "object",
+                        "properties": {
+                          "dataValues": {
+                            "type": "object",
+                            "properties": {
+                              "ID": {
+                                "type": "integer",
+                                "example": 1
+                              },
+                              "assignmentID": {
+                                "type": "integer",
+                                "example": 1
+                              },
+                              "studentID": {
+                                "type": "integer",
+                                "example": 1
+                              },
+                              "date": {
+                                "type": "string",
+                                "format": "date-time",
+                                "example": "2025-03-25T09:15:34.000Z"
+                              },
+                              "textAnswer": {
+                                "type": "string",
+                                "example": "Kész van minden"
+                              },
+                              "status": {
+                                "type": "string",
+                                "example": "Leadva"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "feladat": {
+                    "type": "object",
+                    "properties": {
+                      "Assignment": {
+                        "type": "object",
+                        "properties": {
+                          "dataValues": {
+                            "type": "object",
+                            "properties": {
+                              "ID": {
+                                "type": "integer",
+                                "example": 1
+                              },
+                              "teacherID": {
+                                "type": "integer",
+                                "example": 1
+                              },
+                              "desc": {
+                                "type": "string",
+                                "example": "Oldd meg x és y feladatot"
+                              },
+                              "deadline": {
+                                "type": "string",
+                                "format": "date-time",
+                                "example": "2025-03-29T16:55:00.000Z"
+                              },
+                              "uploadDate": {
+                                "type": "string",
+                                "format": "date-time",
+                                "example": "2025-03-24T13:54:41.000Z"
+                              },
+                              "senderUserName": {
+                                "type": "string",
+                                "example": "lajos"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "example": [
+                {
+                  "valasz": {
+                    "CompletedAssignment": {
+                      "dataValues": {
+                        "ID": 1,
+                        "assignmentID": 1,
+                        "studentID": 1,
+                        "date": "2025-03-25T09:15:34.000Z",
+                        "textAnswer": "Kész van minden",
+                        "status": "Leadva"
+                      }
+                    }
+                  },
+                  "feladat": {
+                    "Assignment": {
+                      "dataValues": {
+                        "ID": 1,
+                        "teacherID": 1,
+                        "desc": "Oldd meg x és y feladatot",
+                        "deadline": "2025-03-29T16:55:00.000Z",
+                        "uploadDate": "2025-03-24T13:54:41.000Z",
+                        "senderUserName": "lajos"
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/feladat/modifycompletedassignment": {
+      "patch": {
+        "tags": ["Házifeladatok"],
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "required": [
+                "ID",
+                "assignmentID",
+                "date",
+                "status",
+                "studentID",
+                "textAnswer"
+              ],
+              "properties": {
+                "ID": {
+                  "type": "integer",
+                  "description": "Annak a válasznak az ID-ja amit éppen módosítunk",
+                  "example": 1
+                },
+                "assignmentID": {
+                  "type": "integer",
+                  "description": "A feladat ID-ja. A válasz amit módosítunk ehhez a feladathoz tartozik.",
+                  "example": 1
+                },
+                "date": {
+                  "type": "string",
+                  "format": "date-time",
+                  "description": "A módosítás pillanata",
+                  "example": "2025-03-27T13:48:05.317Z"
+                },
+                "status": {
+                  "type": "string",
+                  "description": "A válasz jelenlegi státusza",
+                  "example": "Nincs leadva"
+                },
+                "studentID": {
+                  "type": "integer",
+                  "description": "A diák ID-ja aki választ ír",
+                  "example": 1
+                },
+                "textAnswer": {
+                  "type": "string",
+                  "description": "A szöveg ami feltöltődik",
+                  "example": "A megoldás 9!"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "CompletedAssignment": {
+                  "type": "object",
+                  "properties": {
+                    "dataValues": {
+                      "type": "object",
+                      "properties": {
+                        "ID": {
+                          "type": "integer",
+                          "example": 1
+                        },
+                        "studentID": {
+                          "type": "integer",
+                          "example": 1
+                        },
+                        "date": {
+                          "type": "string",
+                          "format": "date-time",
+                          "example": "2025-03-27T13:48:05.317Z"
+                        },
+                        "textAnswer": {
+                          "type": "string",
+                          "example": "A megoldás 9!"
+                        },
+                        "status": {
+                          "type": "string",
+                          "example": "Leadva"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "example": {
+                "CompletedAssignment": {
+                  "dataValues": {
+                    "ID": 1,
+                    "studentID": 1,
+                    "date": "2025-03-27T13:48:05.317Z",
+                    "textAnswer": "A megoldás 9!",
+                    "status": "Leadva"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+
+    "/feladat/getAssignmentFiles/": {
+      "get": {
+        "description": "Lekéri egy adott feladathoz tartozó fájlokat",
+        "tags": ["Házifeladatok"],
+        "parameters": [
+          {
+            "name": "assignmentid",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Az assignment ID-ja, amelyhez a fájlok tartoznak",
+            "example": 4
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "A fájlok sikeresen lekérve",
+
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "AssignmentFiles":{
+                    "type": "object",
+                    "properties":{
+                      "dataValues":{
+                        "type":"object",
+                        "properties":{
+                          "ID": { "type": "integer", "example": 1 },
+                          "assignmentID": { "type": "integer", "example": 4 },
+                          "buffer":{"example":" <Buffer 31>"},
+                          "mimetype": { "type": "string", "example": "text/plain" },
+                          "filename": { "type": "string", "example": "1.txt" }
+                        }
+                      }
+                    }
+                  }
+
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - Hiányzó vagy érvénytelen assignmentid"
+          },
+          "403": {
+            "description": "Forbidden - Lejárt a cookie"
+          }
+        }
+      }
+    },
+    "/feladat/getCompletedAssignmentFiles/": {
+      "post": {
+        "description": "Leszedi a fájlokat amik a kiválasztott feladathoz tartoznak.",
+        "tags": ["Házifeladatok"],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "assignmentIds",
+            "description": "A feladathoz tartozó ID-k listája",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "integer"
+              },
+              "example": [11, 12]
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Sikeres lekérés",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "dataValues": {
+                    "type": "object",
+                    "properties": {
+                      "ID": {
+                        "type": "integer",
+                        "description": "A fájl ID-ja"
+                      },
+                      "assignmentID": {
+                        "type": "integer",
+                        "description": "A completedAssignment ID-ja"
+                      },
+                      "buffer": {
+                        "type": "string",
+                        "format": "byte",
+                        "description": "A fájl tartalma"
+                      },
+                      "mimetype": {
+                        "type": "string",
+                        "description": "A fájl típusa"
+                      },
+                      "filename": {
+                        "type": "string",
+                        "description": "A fájl neve"
+                      }
+                    },
+                    "example": {
+                      "ID": 6,
+                      "assignmentID": 11,
+                      "buffer": "Base64 encoded string of file content",
+                      "mimetype": "text/plain",
+                      "filename": "1.txt"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request."
+          },
+          "403": {
+            "description": "Lejárt a cookie"
+          }
+        }
+      }
+    },
+    "/feladat/deleteAssignment/{assignmentId}": {
+      "delete": {
+        "description": "Tanár és admin módban érhatő el. ID alapján kitöröl egy feladatot és minden vele kapcsolatos dolgok: fájlokat, válaszokat, válaszfájlokat",
+        "tags": ["Házifeladatok"],
+        "parameters": [
+          {
+            "name": "assignmentId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/feladat/deleteAnswerFile/{fileId}": {
+      "delete": {
+        "description": "Diák módban érhető el. Ezzel lehet útólagosan kitörölni a válaszként letöltött fájlokat",
+        "tags": ["Házifeladatok"],
+        "parameters": [
+          {
+            "name": "fileId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Sikeres törlés"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/feladat/uploadassignmentfiles": {
+      "post": {
+        "description": "Fájl feltöltése, egy adott feladathoz. (csak azután fut le miútán a feladat létre lett hozva",
+        "tags": ["Házifeladatok"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "assignmentId",
+                  "files"
+                ],
+                "properties": {
+                  "assignmentId": {
+                    "type": "string",
+                    "description": "Az ID-ja annak az assignmentnek amihez tartozik/tartozni fog a fájl",
+                    "example": "1"
+                  },
+                  "files": {
+                    "type": "array",
+                    "description": "A fájlok adataik szerint szétbontva",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "fieldname": {
+                          "type": "string",
+                          "example": "files"
+                        },
+                        "originalname": {
+                          "type": "string",
+                          "example": "1.txt"
+                        },
+                        "encoding": {
+                          "type": "string",
+                          "example": "7bit"
+                        },
+                        "mimetype": {
+                          "type": "string",
+                          "example": "text/plain"
+                        },
+                        "buffer": {
+                          "type": "string",
+                          "format": "binary",
+                          "example": "<Buffer 31>"
+                        },
+                        "size": {
+                          "type": "integer",
+                          "example": 1
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Files uploaded successfully"
+                    },
+                    "uploadedFiles": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "AssignmentFiles": {
+                            "type": "object",
+                            "properties": {
+                              "dataValues": {
+                                "type": "object",
+                                "properties": {
+                                  "ID": {
+                                    "type": "integer",
+                                    "example": 1
+                                  },
+                                  "assignmentID": {
+                                    "type": "integer",
+                                    "example": 1
+                                  },
+                                  "buffer": {
+                                    "type": "string",
+                                    "format": "binary",
+                                    "example": "<Buffer 31>"
+                                  },
+                                  "mimetype": {
+                                    "type": "string",
+                                    "example": "text/plain"
+                                  },
+                                  "filename": {
+                                    "type": "string",
+                                    "example": "1.txt"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+
+    "/feladat/uploadcompletedassignmentfiles": {
+      "post": {
+        "description": "Fájlok feltöltése a válaszhoz",
+        "tags": ["Házifeladatok"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "required": ["completedAssignmentId", "files"],
+                "properties": {
+                  "completedAssignmentId": {
+                    "type": "string",
+                    "description": "A befejezett házifeladat ID-ja",
+                    "example": "6"
+                  },
+                  "files": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "format": "binary"
+                    },
+                    "description": "A feltöltött fájlok"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Files uploaded successfully"
+                    },
+                    "uploadedFiles": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "ID": { "type": "integer", "example": 3 },
+                          "assignmentID": { "type": "string", "example": "6" },
+                          "mimetype": { "type": "string", "example": "text/plain" },
+                          "filename": { "type": "string", "example": "1.txt" }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": { "description": "Bad Request" },
+          "403": { "description": "Forbidden" },
+          "500": { "description": "Internal Server Error" }
+        }
+      }
+    },
+
+
+    "/jegy/": {
+      "get": {
+        "description": "",
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      },
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "studentID": {
+                  "example": "any"
+                },
+                "Value": {
+                  "example": "any"
+                },
+                "Multiplier": {
+                  "example": "any"
+                },
+                "subjectName": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/jegy/csoportjegy": {
+      "get": {
+        "description": "",
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/admin/register/{token}": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "ID": {
+                  "example": "any"
+                },
+                "name": {
+                  "example": "any"
+                },
+                "password": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/admin/addTeacherUsers": {
+      "post": {
+        "description": "Új tanárok feltöltése az adatbázisba",
+        "tags": ["Admin funkciók","Felhasználók kezelése"],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "A tömb amiben feljönnek a tanárok",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "Kiss Judit"
+                  },
+                  "phone": {
+                    "type": "string",
+                    "example": "+43145"
+                  },
+                  "email": {
+                    "type": "string",
+                    "example": "kiss.judit@gmail.com"
+                  },
+                  "birth_Date": {
+                    "type": "string",
+                    "format": "date-time",
+                    "example": "1999-12-12T00:00:00.000Z"
+                  }
+                },
+                "required": ["name", "phone", "email", "birth_Date"]
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": ["integer", "null"],
+                    "example": null
+                  },
+                  "username": {
+                    "type": "string",
+                    "example": "kiss.judit"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "4Nls(0_5xIh!"
+                  },
+                  "role": {
+                    "type": "string",
+                    "example": "tanar"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "403": {
+            "description": "Lejárt a cookie"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+
+    "/admin/addStudentUsers": {
+      "post": {
+        "description": "Diák fiókok feltöltése",
+        "tags": ["Admin funkciók","Felhasználók kezelése"],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "A tömb amiben feljönnek a diákok",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "cinege cecil"
+                  },
+                  "birth_Date": {
+                    "type": "string",
+                    "format": "date-time",
+                    "example": "2005-04-25T00:00:00.000Z"
+                  },
+                  "address": {
+                    "type": "string",
+                    "example": "cegléd szűcstelep"
+                  },
+                  "phone": {
+                    "type": "string",
+                    "example": "34256"
+                  },
+                  "email": {
+                    "type": "string",
+                    "example": "cegledicigany@vajda.hu"
+                  },
+                  "OM_ID": {
+                    "type": "string",
+                    "example": "4526426"
+                  }
+                },
+                "required": ["name", "birth_Date", "address", "phone", "email", "OM_ID"]
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": ["integer", "null"],
+                    "example": null
+                  },
+                  "username": {
+                    "type": "string",
+                    "example": "cinege.cecil"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "YVBq_Orss5iX"
+                  },
+                  "role": {
+                    "type": "string",
+                    "example": "diak"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "403": {
+            "description": "Lejárt a cookie"
+          },
+          "500": {
+            "description": "Helytelen mező megadás (pl születési dátum nem a múltban van)"
+          }
+        }
+      }
+    },
+
+    "/admin/addGuardianUsers": {
+      "post": {
+        "description": "Szülök feltöltése",
+        "tags": ["Admin funkciók","Felhasználók kezelése"],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "A tömb amiben feljönnek a szülök",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "Anyuka1"
+                  },
+                  "birth_Date": {
+                    "type": "string",
+                    "format": "date-time",
+                    "example": "1967-02-05T00:00:00.000Z"
+                  },
+                  "address": {
+                    "type": "string",
+                    "example": "cegléd"
+                  },
+                  "phone": {
+                    "type": "string",
+                    "example": "szűcstelep"
+                  },
+                  "email": {
+                    "type": "string",
+                    "example": "anyu1@gmail.com"
+                  },
+                  "RelatedStudents": {
+                    "type": "array",
+                    "items": {
+                      "type": "integer",
+                      "example": 645235
+                    }
+                  }
+                },
+                "required": ["name", "birth_Date", "address", "phone", "email", "RelatedStudents"]
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": ["integer", "null"],
+                    "example": null
+                  },
+                  "username": {
+                    "type": "string",
+                    "example": "anyuka12"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "iPHlLk7m(Zmw"
+                  },
+                  "role": {
+                    "type": "string",
+                    "example": "szulo"
+                  }
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Születési dátum, vagy OM id hiba"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+
+    "/admin/getAllUsers": {
+      "get": {
+        "description": "Összes felhasználó lekérése",
+        "tags": ["Admin funkciók","Felhasználók kezelése"],
+        "responses": {
+          "201": {
+            "description": "Siekers lekérés",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "ID": {
+                    "type": "integer",
+                    "example": 1
+                  },
+                  "username": {
+                    "type": "string",
+                    "example": "laci"
+                  },
+                  "role": {
+                    "type": "string",
+                    "example": "diak"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "403": {
+            "description": "Lejárt a cookie"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+
+    "/admin/modifyUser": {
+      "put": {
+        "description": "Megváltoztatja egy meglévő felhasználó adatai.",
+        "tags": ["Admin funkciók","Felhasználók kezelése"],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Egy objektum ami tartalmaz egy ID-t illetve minden egyéb attributumot amit megváltoztattunk. Külön utat jár be a különböző tipusú felhasználók esetében.",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "userSide": {
+                  "type": "integer",
+                  "example": 4
+                },
+                "userRole": {
+                  "type": "string",
+                  "example": "tanar"
+                },
+                "roleSide": {
+                  "type": "object",
+                  "properties": {
+                    "ID": {
+                      "type": "integer",
+                      "example": 2
+                    },
+                    "name": {
+                      "type": "string",
+                      "example": "aniko.eniko"
+                    },
+                    "phone": {
+                      "type": "string",
+                      "example": "4536546456456"
+                    },
+                    "email": {
+                      "type": "string",
+                      "example": "enikokovacsnevaleriatakacs@gmail.com"
+                    },
+                    "userId": {
+                      "type": "integer",
+                      "example": 4
+                    }
+                  },
+                  "required": ["ID", "name", "phone", "email", "userId"]
+                }
+              },
+              "required": ["userSide", "userRole", "roleSide"]
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Sikeres módosítás",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "ID": {
+                  "type": "integer",
+                  "example": 4
+                },
+                "username": {
+                  "type": "string",
+                  "example": "aniko.eniko"
+                },
+                "password": {
+                  "type": "string",
+                  "example": "$2b$10$VNNkLu/F6zul7suWcA6qAOmuDaLEVTYT.v/Ae8I4l04ad9Np0W8XO"
+                },
+                "role": {
+                  "type": "string",
+                  "example": "tanar"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "403": {
+            "description": "Lejárt a cookie"
+          },
+          "500": {
+            "description": "Foglalt OM azonosító, foglalt felhasználónév"
+          }
+        }
+      }
+    },
+
+    "/admin/deleteUser/{userID}": {
+      "delete": {
+        "description": "Kitöröl egy felhasználót. Nem lehet kitörölni a felhasználót amibe éppen be vagyunk jelentkezve",
+        "tags": ["Admin funkciók","Felhasználók kezelése"],
+        "parameters": [
+          {
+            "name": "userID",
+            "in": "path",
+            "description": "ID ami alapján törlünk",
+            "required": true,
+            "type": "integer",
+            "example": 14
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Sikeres törlés",
+            "schema": {
+              "type": "string",
+              "example": "törölve"
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "403": {
+            "description": "Lejárt a cookie"
+          },
+          "500": {
+            "description": "hiba ha megpróbálja kitörölni a felhasználót amivel be van jelentkezve"
+          }
+        }
+      }
+    },
+
+    "/admin/addStudentsToGuardian": {
+      "post": {
+        "description": "Diákok hozzáadása illetve eltávolítása egy adott szülőhöz",
+        "tags": ["Admin funkciók","Felhasználók kezelése"],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Egy tömb amiben a szülőhöz tartozó diákok OM azonosítió szerepelnek.",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "szuloID": {
+                  "type": "integer",
+                  "example": 1
+                },
+                "newOMIDs": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "example": "645235"
+                  }
+                }
+              },
+              "required": ["szuloID", "newOMIDs"]
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Sikeres módosítás",
+            "schema": {
+              "type": "string",
+              "example": "sikeres módosítás"
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "403": {
+            "description": "Lejárt a cookie"
+          },
+          "500": {
+            "description": "Érvénytelen OM azonosító szerepelt a listában."
+          }
+        }
+      }
+    },
+
+
+    "/admin/getAllGroupsWithStudents": {
+      "get": {
+        "description": "Lekéri az összes rendszerben lévő csoportot a bennük lévő diákokkal együtt",
+        "tags": ["Admin funkciók","Csoportok kezelése"],
+        "responses": {
+          "201": {
+            "description": "Siekers lekérés",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "group": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "integer",
+                        "example": 1
+                      },
+                      "name": {
+                        "type": "string",
+                        "example": "Group A"
+                      }
+                    },
+                    "description": "csoport adatai"
+                  },
+                  "students": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer",
+                          "example": 101
+                        },
+                        "name": {
+                          "type": "string",
+                          "example": "Student A"
+                        }
+                      },
+                      "description": "Diákok adatai"
+                    },
+                    "description": "List of students in the group"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "403": {
+            "description": "Lejárt a cookie"
+          }
+        }
+      }
+    },
+
+    "/admin/createGroup": {
+      "post": {
+        "description": "Létrehoz egy új csoportot a megadott névvel és a diákok OM azonosítóival.",
+        "tags": ["Admin funkciók","Csoportok kezelése"],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "A csoport adatai: a név és a diákok OM azonosítói",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "example": "4.a",
+                  "description": "A csoport neve"
+                },
+                "StudentOMIDs": {
+                  "type": "array",
+                  "items": {
+                    "type": "integer",
+                    "example": 8793815
+                  },
+                  "description": "A csoportba tartozó diákok OM azonosítói"
+                }
+              },
+              "required": ["name", "StudentOMIDs"]
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Csoport sikeresen létrehozva",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "example": "4.a"
+                },
+                "StudentOMIDs": {
+                  "type": "array",
+                  "items": {
+                    "type": "integer",
+                    "example": 8793815
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Hiba történt a csoport létrehozása során, például hiányzó vagy érvénytelen adatok, illetve ismétlődő csoportnév."
+          }
+        }
+      }
+    },
+
+    "/admin/addStudentsToGroup": {
+      "post": {
+        "description": "Diákok hozzáadása egy meglévő csoporthoz a megadott OM azonosítókkal.",
+        "tags": ["Admin funkciók","Csoportok kezelése"],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "A csoport azonosítója és a hozzáadni kívánt diákok OM azonosítói.",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "integer",
+                  "example": 5,
+                  "description": "A módosítandó csoport azonosítója."
+                },
+                "StudentOMIDs": {
+                  "type": "array",
+                  "items": {
+                    "type": "integer",
+                    "example": 6523175
+                  },
+                  "description": "A csoportba hozzáadni kívánt diákok OM azonosítói."
+                }
+              },
+              "required": ["id", "StudentOMIDs"]
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Diákok sikeresen hozzáadva a csoporthoz.",
+            "schema": {
+              "type": "string",
+              "example": "elérted"
+            }
+          },
+          "500": {
+            "description": "Hiba történt a csoport módosítása során, például hiányzó vagy érvénytelen OM azonosítók, vagy egy diák már tagja egy másik csoportnak."
+          }
+        }
+      }
+    },
+
+    "/admin/deleteStudentGroup/{ID}": {
+      "delete": {
+        "description": "Eltávolít egy diákot a megadott csoportból.",
+        "tags": ["Admin funkciók","Csoportok kezelése"],
+        "parameters": [
+          {
+            "name": "ID",
+            "in": "path",
+            "required": true,
+            "description": "A csoportból eltávolítani kívánt diák azonosítója.",
+            "type": "integer",
+            "example": 3
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Diák sikeresen eltávolítva a csoportból.",
+            "schema": {
+              "type": "string",
+              "example": "Diák eltávolítva a csoportból"
+            }
+          },
+          "400": {
+            "description": "Hibás kérés, pl. érvénytelen diákazonosító."
+          },
+          "403": {
+            "description": "Hozzáférés megtagadva (lejárt cookie)."
+          },
+          "500": {
+            "description": "Belső szerverhiba."
+          }
+        }
+      }
+    },
+
+    "/admin/getGroupAssignments/{GroupID}": {
+      "get": {
+        "description": "Lekéri egy adott csoporthoz tartozó házi feladatokat és az azokra adott válaszokat.",
+        "tags": ["Admin funkciók","Házifeladatok"],
+        "parameters": [
+          {
+            "name": "GroupID",
+            "in": "path",
+            "required": true,
+            "description": "A lekérdezni kívánt csoport azonosítója.",
+            "type": "integer",
+            "example": 1
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Sikeres lekérés",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "assignment": {
+                    "type": "object",
+                    "properties": {
+                      "ID": {
+                        "type": "integer",
+                        "example": 1
+                      },
+                      "teacherID": {
+                        "type": "integer",
+                        "example": 2
+                      },
+                      "desc": {
+                        "type": "string",
+                        "example": "Adjatok kaját"
+                      },
+                      "deadline": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2025-03-28T05:30:00.000Z"
+                      },
+                      "uploadDate": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2025-03-26T15:47:41.000Z"
+                      },
+                      "senderUserName": {
+                        "type": "string",
+                        "example": "aniko.eniko"
+                      }
+                    },
+                    "description": "A házi feladat adatai"
+                  },
+                  "answers": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "ID": {
+                          "type": "integer",
+                          "example": 101
+                        },
+                        "studentID": {
+                          "type": "integer",
+                          "example": 5
+                        },
+                        "answerText": {
+                          "type": "string",
+                          "example": "Elkészült a házim!"
+                        },
+                        "uploadDate": {
+                          "type": "string",
+                          "format": "date-time",
+                          "example": "2025-03-26T16:00:00.000Z"
+                        }
+                      }
+                    },
+                    "description": "A feladatra adott válaszok listája"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Hibás kérés, pl. érvénytelen csoportazonosító."
+          },
+          "403": {
+            "description": "Hozzáférés megtagadva (lejárt cookie)."
+          },
+          "500": {
+            "description": "Belső szerverhiba."
+          }
+        }
+      }
+    },
+
+    "/admin/allMessage": {
+      "get": {
+        "description": "Lekéri az összes üzenetet a rendszerből, beleértve a küldőt és a címzetteket.",
+        "tags": ["Admin funkciók", "Üzenetek"],
+        "responses": {
+          "201": {
+            "description": "Sikeres lekérés",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "ID": {
+                    "type": "integer",
+                    "example": 1,
+                    "description": "Az üzenet egyedi azonosítója."
+                  },
+                  "senderUserID": {
+                    "type": "integer",
+                    "example": 3,
+                    "description": "Az üzenetet küldő felhasználó azonosítója."
+                  },
+                  "message": {
+                    "type": "string",
+                    "example": "XY óra elmarad",
+                    "description": "Az üzenet szövege."
+                  },
+                  "date": {
+                    "type": "string",
+                    "format": "date-time",
+                    "example": "2025-02-04T00:00:00.000Z",
+                    "description": "Az üzenet küldésének dátuma és időpontja."
+                  },
+                  "sender": {
+                    "type": "object",
+                    "properties": {
+                      "ID": {
+                        "type": "integer",
+                        "example": 3
+                      },
+                      "name": {
+                        "type": "string",
+                        "example": "John Doe"
+                      }
+                    },
+                    "description": "Az üzenetet küldő felhasználó adatai."
+                  },
+                  "receivers": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "ID": {
+                          "type": "integer",
+                          "example": 5
+                        },
+                        "name": {
+                          "type": "string",
+                          "example": "Jane Doe"
+                        }
+                      }
+                    },
+                    "description": "Az üzenetet fogadó felhasználók listája."
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Hibás kérés."
+          },
+          "403": {
+            "description": "Hozzáférés megtagadva (lejárt cookie)."
+          },
+          "500": {
+            "description": "Belső szerverhiba a lekérdezés során."
+          }
+        }
+      }
+    },
+
+    "/admin/deleteMessage/{ID}": {
+      "delete": {
+        "description": "Törli az adott azonosítójú üzenetet az adatbázisból.",
+        "tags": ["Admin funkciók", "Üzenetek"],
+        "parameters": [
+          {
+            "name": "ID",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "A törlendő üzenet egyedi azonosítója.",
+            "example": 2
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Sikeres törlés",
+            "schema": {
+              "type": "string",
+              "example": "Sikeres törlés"
+            }
+          },
+          "400": {
+            "description": "Hibás kérés, pl. érvénytelen ID formátum."
+          },
+          "403": {
+            "description": "Hozzáférés megtagadva (lejárt cookie)."
+          },
+          "500": {
+            "description": "Belső szerverhiba a törlés során."
+          }
+        }
+      }
+    },
+
+    "/csoport/tanarcsoport": {
+      "get": {
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/csoport/csoporttag": {
+      "get": {
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/szulo/orarend/{id}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/szulo/jegy/{id}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/szulo/hianyzas/{id}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/tanar/tantargy": {
+      "get": {
+        "description": "",
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  },
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ]
+}
