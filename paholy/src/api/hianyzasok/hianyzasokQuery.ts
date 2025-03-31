@@ -11,7 +11,7 @@ import { useErrorHandler } from "@/stores/errorHandler";
 import type { Student, Teacher } from "../admin/admin";
 import { computed, type Ref } from "vue";
 
-const getHianyzasok = async (): Promise<Hianyzas|Error> => {
+const getHianyzasok = async (): Promise<Hianyzas[]> => {
     const cookieHandler= useCookieHandler()
     const vanE = cookieHandler.hasValidCookie()
     const route = useRoute()
