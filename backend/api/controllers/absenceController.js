@@ -3,14 +3,12 @@ const absenceService = require("../services/absenceService")
 exports.getAbsences = async (req, res, next) =>
 {
     const absences = await absenceService.getAbsencesStudent(req.decoded.role=="szulo"?req.params.id:req.decoded.ID)
-    console.log("a: ", absences)
     res.status(200).json(absences);
 }
 
 exports.getStudentsInGroup = async (req, res, next) => {
     const groupID = req.params.groupID;
     const students = await absenceService.getStudentsInGroup(groupID);
-
     res.status(200).json(students);
 }
 
@@ -21,7 +19,6 @@ exports.getAllAbsences = async (req, res, next) => {
 
 exports.postAbsence = async (req, res, next) => {
     let { studentID, teacherID, lessonID, date, excused } = req.body;
-
     date = new Date(date);
 
     try {
@@ -38,23 +35,14 @@ exports.postAbsence = async (req, res, next) => {
 
         const plainAbsences = absences.map(a => a.dataValues);
 
-
-        console.log("New Absence")
-        console.log(absence)
         const existingAbsence = await plainAbsences.find(a =>
             a.studentID == studentID &&
             a.lessonID == lessonID &&
             new Date(a.date).getTime() === date.getTime()
         );
-
-
-
         if (!existingAbsence ) {
-
-            console.log("beirlak")
             absence = await absenceService.postAbsence(absence);
         }
-
         res.status(201).json(absence);
     } catch (error) {
         next(error);

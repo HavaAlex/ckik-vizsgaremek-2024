@@ -1,5 +1,5 @@
 import axiosClient from "@/lib/axios"
-import type { MarkAttribute, Mark, NewMark, GroupMark, GroupMember, Lesson, GroupMembers } from "./jegyek"
+import type { MarkAttribute, Mark, NewMark, GroupMark, Lesson, GroupMembers } from "./jegyek"
 import { useMutation, useQuery } from "@tanstack/vue-query"
 import { useRoute, useRouter } from "vue-router"
 import { QUERY_KEYS } from "@/utils/QueryKeys"
@@ -95,8 +95,6 @@ const getGroupMembers = async () : Promise<GroupMembers[]> => {
         headers: { Authorization: `Bearer ${getCookie("alap")}` }
     };
     const response = await axiosClient.get(`http://localhost:3000/csoport/csoporttag`,config)
-    console.log("IIIT VVV")
-    console.log(response.data)
     return response.data
 }
 
@@ -145,7 +143,6 @@ export const useAddMark = () => {
             mutationFn: addMarks,
             onSuccess(data) {
                 queryClient.refetchQueries({queryKey:[QUERY_KEYS.getJegyek]})
-                console.log(data)
                 const {setStatus} = useStatusHandler()
                 setStatus("Sikeres jegy felvitel!")
             },

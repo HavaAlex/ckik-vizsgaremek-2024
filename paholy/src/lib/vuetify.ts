@@ -24,8 +24,8 @@ const paholy: ThemeDefinition = {
 
 const vuetify = createVuetify({
   components: {
-    ...components, // Spread existing components
-    VTimePicker,   // Add the VTimePicker separately
+    ...components,
+    VTimePicker,
   },
   directives,
   theme: {

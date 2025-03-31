@@ -119,7 +119,6 @@ class adminService {
         for (let i = 0; i < guardians.length; i++) {
             for (let j = 0; j < guardians[i].RelatedStudents.length; j++) {
                 const StudentID = await studentRepository.getStudentByOmId(guardians[i].RelatedStudents[j])
-                console.log(StudentID)
                 if(StudentID == null){
                     return -1
                 }
@@ -156,7 +155,6 @@ class adminService {
             newGuardian = await GuardianRepository.createGuardian(newGuardian)
             for (let j = 0; j < guardians[i].RelatedStudents.length; j++) {
                 const StudentID = await studentRepository.getStudentByOmId(guardians[i].RelatedStudents[j])
-                console.log(StudentID)
                 
                 const newGuardianStudent = {
                     GuardianID:newGuardian.ID,

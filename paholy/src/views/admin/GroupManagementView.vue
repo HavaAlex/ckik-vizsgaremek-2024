@@ -2,9 +2,7 @@
 import { ref, onMounted, onUnmounted, computed } from 'vue'
 import { usegetGroups, useCreateGroup, useAddUsersToGroup, usedeleteStudentGroup,usedeleteGroup } from '@/api/admin/adminQuery'
 import type { CreatedGroup } from '@/api/admin/admin'
-import * as XLSX from 'xlsx'
 import {useRouter} from 'vue-router'
-const Router = useRouter()
 
 const { mutate: CreateGroup } = useCreateGroup()
 const { mutate: AddUsers } = useAddUsersToGroup()
@@ -38,9 +36,6 @@ const openGroupDialog = (group: any) => {
     id: group.group.ID,
     StudentOMIDs: [] 
   };
-
-  console.log("Selected group ID:", selectedGroup.value.id);
-  console.log("Edited group ID:", editedGroup.value.id); 
 
   groupDialog.value = true;
 };

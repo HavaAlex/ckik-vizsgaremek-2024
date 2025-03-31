@@ -9,8 +9,6 @@ export const useErrorHandler = defineStore('errorHandler', () => {
   const showError = ref<boolean>(false)
 
   function setError(error:Error|unknown){
-    console.log("ERROR")
-    console.log(error)
     currentErrorStatus.value = error
     showError.value = true
   }

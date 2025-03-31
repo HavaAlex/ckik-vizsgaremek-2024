@@ -18,7 +18,6 @@
   width: 100%;
   height: 300vw;
   max-height: max-content;
-  /* overflow: auto; */
 }
 .timetable-container {
   display: flex;

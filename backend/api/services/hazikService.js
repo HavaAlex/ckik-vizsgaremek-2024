@@ -100,7 +100,6 @@ class HazikService {
             const teacher = await teacherRepository.getTeacherByID(item.feladat.teacherID);
             item.feladat.dataValues.senderUserName = teacher.name;
         }
-        console.log(responseArray)
         return responseArray;
     }
 
@@ -171,18 +170,14 @@ class HazikService {
         return updated;
     }
 
-    // ---------------------------------
-    //       Get Assignment Files
-    // ---------------------------------
+
     async getAssignmentFiles(assignmentID) {
         return await assignmentRepository.getAssignmentFiles(assignmentID);
     }
 
-    // ---------------------------------
-    //   Get Completed Assignment Files
-    // ---------------------------------
+
     async getCompletedAssignmentFiles(assignmentIDs) {
-        // assignmentIDs is presumably an array of CompletedAssignment IDs
+
         const files = [];
         for (const id of assignmentIDs) {
             const fileRows = await assignmentRepository.getCompletedAssignmentFilesByCompletedAssignmentID(id);
@@ -192,7 +187,6 @@ class HazikService {
     }
 
     async deleteAssignment(assignmentID) {
-        console.log("o alapján törlünk", assignmentID)
         await assignmentRepository.deleteCompletedAssignmentsByAssignmentID(assignmentID);
         //await assignmentRepository.deleteAssignmentFilesByAssignmentID(assignmentID);
         await assignmentRepository.deleteAssignmentByID(assignmentID);

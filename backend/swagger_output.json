@@ -825,31 +825,52 @@
         }
       }
     },
-    "/orarend/{id}": {
+
+  "/orarend/{id}": {
       "get": {
-        "description": "",
+        "summary": "Lekér az órarendjét egy diáknak vagy egy tanárnak",
+        "tags": ["Órarend"],
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "description": "Diák vagy tanár ID"
           },
           {
             "name": "weekStart",
             "in": "query",
-            "type": "string"
+            "type": "string",
+            "description": "A hét kezdete"
           }
         ],
         "responses": {
           "201": {
-            "description": "Created"
+            "description": "Siekers lekérés",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "ID": { "type": "integer" },
+                  "groupID": { "type": "integer" },
+                  "teacherID": { "type": "integer" },
+                  "start_Hour": { "type": "integer" },
+                  "start_Minute": { "type": "integer" },
+                  "length": { "type": "integer" },
+                  "day": { "type": "string" },
+                  "subjectName": { "type": "string" },
+                  "excused": { "type": "boolean" }
+                }
+              }
+            }
           },
           "400": {
             "description": "Bad Request"
           },
           "403": {
-            "description": "Forbidden"
+            "description": "Lejárt a cookie"
           }
         }
       }
@@ -956,32 +977,63 @@
         }
       }
     },
-    "/hianyzas/getAllAbsences": {
+  "/hianyzas/getAllAbsences": {
       "get": {
-        "description": "",
+        "description": "Lekéri az összes hiányzást",
+        "tags": ["Hiányzás","Admin funkciók"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": false,
+            "description": "Diák azonosító.",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Siekers lekérés",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "ID": { "type": "integer" },
+                      "studentID": { "type": "integer" },
+                      "teacherID": { "type": "integer" },
+                      "date": { "type": "string", "format": "date-time" },
+                      "excused": { "type": "boolean" },
+                      "lessonID": { "type": "integer" }
+                    }
+                  }
+                }
+              }
+            }
           },
           "400": {
-            "description": "Bad Request"
+            "description": "Bad Request - Invalid input or missing parameters."
           },
           "403": {
-            "description": "Forbidden"
+            "description": "Lejárt a cookie"
           }
         }
       }
     },
     "/hianyzas/getStudentsInGroup/{groupID}": {
       "get": {
-        "description": "Diákok leakérdezése egy csoportból",
+        "description": "Diákok lekérdezése egy csoportból",
+        "tags": ["Hiányzás"],
         "parameters": [
           {
             "name": "groupID",
             "in": "path",
             "required": true,
             "type": "integer",
-            "example" : 1
+            "example": 1
           }
         ],
         "responses": {
@@ -991,43 +1043,44 @@
               "type": "array",
               "items": {
                 "type": "object",
-                "properties":{
+                "properties": {
                   "ID": {
                     "type": "integer",
                     "example": 1,
                     "description": "Az óra egyedi azonosítója."
                   },
-                  "name:": {
+                  "name": {
                     "type": "string",
                     "example": "John Doe",
                     "description": "A diák neve."
                   },
-                  "DoB:": {
-                    "type": "datetime",
-                    "example": "1999-01-01 00:00:00",
-                    "description": "A diák születésének időpontja"
+                  "DoB": {
+                    "type": "string",
+                    "format": "date-time",
+                    "example": "1999-01-01T00:00:00.000Z",
+                    "description": "A diák születési ideje."
                   },
-                  "adress:": {
+                  "address": {
                     "type": "string",
                     "example": "1600 Pennsylvania Avenue NW, Washington, DC 20500, United States",
                     "description": "A diák lakcíme"
                   },
-                  "phone:": {
+                  "phone": {
                     "type": "string",
                     "example": "+36 123 1234",
                     "description": "A diák telefonszáma"
                   },
-                  "email:": {
+                  "email": {
                     "type": "string",
                     "example": "example@example.com",
                     "description": "A diák email címe"
                   },
-                  "userID:": {
+                  "userId": {
                     "type": "integer",
-                    "example": "1",
-                    "description": "Az diák egyedi user azonosítója."
+                    "example": 1,
+                    "description": "A diák egyedi felhasználói azonosítója."
                   },
-                  "OMID:": {
+                  "OMID": {
                     "type": "string",
                     "example": "123",
                     "description": "A diák oktatási azonosítója"
@@ -1045,48 +1098,89 @@
         }
       }
     },
+
     "/hianyzas/postAbsence": {
       "post": {
-        "description": "",
+        "description": "Hiányzás bejegyzése",
+        "tags": ["Hiányzás"],
         "parameters": [
           {
             "name": "body",
             "in": "body",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
                 "studentID": {
-                  "example": "any"
+                  "type": "integer",
+                  "example": 8
                 },
                 "teacherID": {
-                  "example": "any"
+                  "type": "integer",
+                  "example": 1
                 },
                 "lessonID": {
-                  "example": "any"
+                  "type": "integer",
+                  "example": 38
                 },
                 "date": {
-                  "example": "any"
+                  "type": "string",
+                  "format": "date-time",
+                  "example": "2025-04-01T22:00:00.000Z"
                 },
                 "excused": {
-                  "example": "any"
+                  "type": "boolean",
+                  "example": false
                 }
-              }
+              },
+              "required": ["studentID", "teacherID", "lessonID", "date"]
             }
           }
         ],
         "responses": {
           "201": {
-            "description": "Created"
+            "description": "Hiányzás sikeresen létrehozva",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "ID": {
+                  "type": "integer",
+                  "example": 5
+                },
+                "studentID": {
+                  "type": "integer",
+                  "example": 8
+                },
+                "teacherID": {
+                  "type": "integer",
+                  "example": 1
+                },
+                "lessonID": {
+                  "type": "integer",
+                  "example": 38
+                },
+                "date": {
+                  "type": "string",
+                  "format": "date-time",
+                  "example": "2025-04-01T22:00:00.000Z"
+                },
+                "excused": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
           },
           "400": {
-            "description": "Bad Request"
+            "description": "Hibás kérés."
           },
           "403": {
-            "description": "Forbidden"
+            "description": "Lejárt a cookie"
           }
         }
       }
     },
+
     "/hianyzas/{id}": {
       "get": {
         "description": "Egy hiányzás pontos lekérése",
@@ -2244,53 +2338,137 @@
     },
     "/jegy/": {
       "get": {
-        "description": "",
+        "description": "Lekérdezi a bejelentkezett tanárhoz tartozó összes jegyet.",
+        "tags": ["Jegyek"],
         "responses": {
-          "201": {
-            "description": "Created"
+          "200": {
+            "description": "Jegyek listája.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "ID": {
+                    "type": "integer",
+                    "example": 1
+                  },
+                  "teacherID": {
+                    "type": "integer",
+                    "example": 1
+                  },
+                  "studentID": {
+                    "type": "integer",
+                    "example": 1
+                  },
+                  "Value": {
+                    "type": "integer",
+                    "example": 5
+                  },
+                  "Multiplier": {
+                    "type": "integer",
+                    "example": 100
+                  },
+                  "subjectName": {
+                    "type": "string",
+                    "example": "Magyar nyelv és Irodalom"
+                  },
+                  "date": {
+                    "type": "string",
+                    "format": "date-time",
+                    "example": "2025-03-31T18:23:51.000Z"
+                  }
+                }
+              }
+            }
           },
           "400": {
             "description": "Bad Request"
           },
           "403": {
-            "description": "Forbidden"
+            "description": "Lejárt a cookie"
           }
         }
       },
       "post": {
-        "description": "",
+        "description": "Létrehoz egy új jegyet.",
+        "tags": ["Jegyek"],
         "parameters": [
           {
             "name": "body",
             "in": "body",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
                 "studentID": {
-                  "example": "any"
+                  "type": "integer",
+                  "example": 1
                 },
                 "Value": {
-                  "example": "any"
+                  "type": "integer",
+                  "example": 5
                 },
                 "Multiplier": {
-                  "example": "any"
+                  "type": "integer",
+                  "example": 100
                 },
                 "subjectName": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "Magyar nyelv és Irodalom"
                 }
-              }
+              },
+              "required": [
+                "studentID",
+                "Value",
+                "Multiplier",
+                "subjectName"
+              ]
             }
           }
         ],
         "responses": {
           "201": {
-            "description": "Created"
+            "description": "Új jegy sikeresen létrehozva.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "ID": {
+                  "type": "integer",
+                  "example": 1
+                },
+                "teacherID": {
+                  "type": "integer",
+                  "example": 1
+                },
+                "studentID": {
+                  "type": "integer",
+                  "example": 1
+                },
+                "Value": {
+                  "type": "integer",
+                  "example": 5
+                },
+                "Multiplier": {
+                  "type": "integer",
+                  "example": 100
+                },
+                "subjectName": {
+                  "type": "string",
+                  "example": "Magyar nyelv és Irodalom"
+                },
+                "date": {
+                  "type": "string",
+                  "format": "date-time",
+                  "example": "2025-03-31T18:23:51.000Z"
+                }
+              }
+            }
           },
           "400": {
             "description": "Bad Request"
           },
           "403": {
-            "description": "Forbidden"
+            "description": "Lejárt a cookie"
           }
         }
       }
@@ -2313,24 +2491,54 @@
     },
     "/jegy/{id}": {
       "get": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
-        ],
+        "description": "Lekérdezi szülő kiválasztott gyerekéhez tartozó összes jegyet",
+        "tags": ["Jegyek"],
         "responses": {
-          "201": {
-            "description": "Created"
+          "200": {
+            "description": "Jegyek listája.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "ID": {
+                    "type": "integer",
+                    "example": 1
+                  },
+                  "teacherID": {
+                    "type": "integer",
+                    "example": 1
+                  },
+                  "studentID": {
+                    "type": "integer",
+                    "example": 1
+                  },
+                  "Value": {
+                    "type": "integer",
+                    "example": 5
+                  },
+                  "Multiplier": {
+                    "type": "integer",
+                    "example": 100
+                  },
+                  "subjectName": {
+                    "type": "string",
+                    "example": "Magyar nyelv és Irodalom"
+                  },
+                  "date": {
+                    "type": "string",
+                    "format": "date-time",
+                    "example": "2025-03-31T18:23:51.000Z"
+                  }
+                }
+              }
+            }
           },
           "400": {
             "description": "Bad Request"
           },
           "403": {
-            "description": "Forbidden"
+            "description": "Lejárt a cookie"
           }
         }
       }
@@ -2841,20 +3049,55 @@
     },
     "/admin/getAbsences/": {
       "get": {
-        "description": "",
+        "description": "Lekérdezi az összes hiányzást.",
+        "tags": ["Admin funkciók","Hiányzás"],
         "responses": {
-          "201": {
-            "description": "Created"
+          "200": {
+            "description": "Hiányzások listája.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "ID": {
+                    "type": "integer",
+                    "example": 1
+                  },
+                  "studentID": {
+                    "type": "integer",
+                    "example": 1
+                  },
+                  "teacherID": {
+                    "type": "integer",
+                    "example": 1
+                  },
+                  "lessonID": {
+                    "type": "integer",
+                    "example": 7
+                  },
+                  "date": {
+                    "type": "string",
+                    "format": "date-time",
+                    "example": "2025-03-31T22:00:00.000Z"
+                  },
+                  "excused": {
+                    "type": "boolean",
+                    "example": false
+                  }
+                }
+              }
+            }
           },
           "400": {
-            "description": "Bad Request"
+            "description": "Hibás kérés."
           },
           "403": {
-            "description": "Forbidden"
+            "description": "Lejárt a cookie"
           }
         }
       }
     },
+
     "/admin/getAllGroupsWithStudents": {
       "get": {
         "description": "Lekéri az összes rendszerben lévő csoportot a bennük lévő diákokkal együtt",
@@ -2948,29 +3191,55 @@
     },
     "/admin/timetable/{id}": {
       "get": {
-        "description": "",
+        "description": "Lekérdezi egy adott csoport órarendjét egy adott hétre.",
+        "tags": ["Admin funkciók", "Órarend"],
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "description": "A csoport egyedi azonosítója."
           },
           {
             "name": "weekStart",
             "in": "query",
-            "type": "string"
+            "type": "string",
+            "description": "A hét kezdő dátuma (YYYY-MM-DD formátumban)."
           }
         ],
         "responses": {
-          "201": {
-            "description": "Created"
+          "200": {
+            "description": "Órarendi adatok sikeresen lekérve.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "ID": { "type": "integer", "example": 1 },
+                  "groupID": { "type": "integer", "example": 1 },
+                  "teacherID": { "type": "integer", "example": 2 },
+                  "start_Hour": { "type": "integer", "example": 0 },
+                  "start_Minute": { "type": "integer", "example": 480 },
+                  "length": { "type": "integer", "example": 45 },
+                  "day": { "type": "string", "example": "hetfo" },
+                  "subjectName": { "type": "string", "example": "Matematika" },
+                  "Teacher": {
+                    "type": "object",
+                    "properties": {
+                      "dataValues": { "type": "object" }
+                    }
+                  },
+                  "excused": { "type": "boolean", "example": false }
+                }
+              }
+            }
           },
           "400": {
-            "description": "Bad Request"
+            "description": "Hibás kérés (például rossz formátumú dátum)."
           },
           "403": {
-            "description": "Forbidden"
+            "description": "Lejárt a cookie"
           }
         }
       }
