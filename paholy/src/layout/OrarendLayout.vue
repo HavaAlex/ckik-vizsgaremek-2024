@@ -12,19 +12,42 @@
   color: #000;
 }
 
-.timetable-scrollable {
+
+@media (orientation: portrait) {
+  .timetable-scrollable {
   width: 100%;
-  height: 40vw;
+  height: 300vw;
   max-height: max-content;
   /* overflow: auto; */
 }
-
 .timetable-container {
   display: flex;
-  min-width: 1000px;
-  height: 100%;
+  min-width: 70vw;
+
   position: relative;
 }
+}
+
+
+@media (orientation: landscape) {
+  .timetable-scrollable {
+  width: 100%;
+  max-height: 70vw;
+  overflow-x: auto;
+  overflow-y: hidden; 
+}
+.timetable-container {
+  display: flex;
+  min-width: 60vw;
+
+  position: relative;
+}
+}
+
+
+
+
+
 
 .time-labels {
   width: 60px;

@@ -115,7 +115,7 @@ onUnmounted(() => {
     <div v-if="isPortrait">
       <v-card style="border-radius: 2%;">
         <v-card-title>Órarend</v-card-title>
-        <v-card-text style="height: 100vw !important; overflow-y: auto;">
+        <v-card-text style="max-height: 100vw !important; overflow-y: auto;">
           <div v-if="refs.lessons.value !== null">
             <div class="color-picker">
               <label for="lessonColor">Szín megváltoztatása:</label>
@@ -287,7 +287,7 @@ onUnmounted(() => {
     <div v-else>
       <v-card style="border-radius: 2%;">
         <v-card-title>Órarend</v-card-title>
-        <v-card-text style="height: 30vw !important; overflow-y: auto;">
+        <v-card-text style="max-height: 35vw; overflow-y: auto;">
           <div v-if="refs.lessons.value !== null">
             <div class="color-picker">
               <label for="lessonColor">Szín megváltoztatása:</label>
