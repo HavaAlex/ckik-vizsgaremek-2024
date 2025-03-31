@@ -42,7 +42,7 @@ export const fetchOrarend = async (weekStart: string): Promise<Lesson[]> => {
 }
 
 
-const getTeachers = async (): Promise<Teacher> =>{
+const getTeachers = async (): Promise<Teacher[]> =>{
     console.log("LEFUTOK: GetTeachers")
     const {getCookie} = useCookieHandler()
     const config = {

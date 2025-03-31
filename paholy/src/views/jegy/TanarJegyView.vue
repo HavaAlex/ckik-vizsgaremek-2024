@@ -11,7 +11,7 @@ const NewMarkRef = ref<NewMark>({
 })
 
 const {data} = useGetTeacherGroups()
-const groupMarks = usegetGroupMarks()
+const {data:groupMarks} = useGetGroupMarks()
 const {mutate} = useAddMark()
 
 const tab = ref<string>("one");
