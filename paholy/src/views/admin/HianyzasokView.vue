@@ -23,7 +23,7 @@ watch(
   { immediate: true }
 );
 
-console.log(absences)
+
 
 function formatExcused(excused: boolean): string {
   return excused ? 'Igazolva' : 'Igazolatlan';
@@ -47,19 +47,17 @@ function getTeacherName(teacherId: number): string {
 
 function getStudentOMID(studentID: number): string {
   const student = userList.value.find((student:any) => student.ID === studentID);
-  console.log(student);
   return student ? student.OMID : studentID.toString();
 }
 
 function getStudentName(studentID: number): string {
   const student = userList.value.find((student:any) => student.ID === studentID);
-  console.log(student);
   return student ? student.name : studentID.toString();
 }
 
 function formatDate(dateStr: string): string {
   const date = new Date(dateStr);
-  return date.toLocaleDateString(); // Group by day only
+  return date.toLocaleDateString();
 }
 
 function convertMinutesToTime(minutes: number): string {
@@ -125,11 +123,8 @@ async function fastdelete(absence: any) {
 }
 
 async function deleteAbsenceFunction() {
-
-  console.log(SelectedAbsence.value.ID)
   await deleteAbsence(SelectedAbsence.value.ID, {
     onSuccess: (response) => {
-      console.log("Deletion result:", response);
       absences.value = absences.value.filter(absence => absence.ID !== SelectedAbsence.value.ID);
       DeleteAbsenceDialog.value = false;
     }

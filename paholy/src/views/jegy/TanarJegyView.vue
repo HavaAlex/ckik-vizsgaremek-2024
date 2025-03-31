@@ -34,15 +34,11 @@ const csoportJegyek = computed(() => {
 
 const tantargyJegyek = computed(() => {
   if (!data.value) return [];
-  //console.log("DATA")
-  //console.log(data.value)
+
   if (!csoportJegyek.value) return [];
-  //console.log("JEGYEK")
-  //console.log(csoportJegyek.value)
+
   if (!selectedSubject.value) return [];
-  //console.log("SUBJECT")
-  //console.log(selectedSubject.value)
-  //console.log(csoportJegyek.value.tantargyak.indexOf(selectedSubject.value))
+
   return csoportJegyek.value?.marks[csoportJegyek.value.tantargyak.indexOf(selectedSubject.value)];
 });
 
@@ -84,7 +80,6 @@ function adatOsszeszedes(){
 
   for (let index = 0; index < osszTagComputed.value?.members.length; index++) {
     const element = osszTagComputed.value?.members[index];
-    console.log(element)
     if(newMarks.value[index] == undefined)
     {
       continue
@@ -107,7 +102,6 @@ const jegyFeltoltes = async () =>
 {
   const adatok = adatOsszeszedes()
   for(let index = 0; index < adatok.length; index++){
-      console.log(adatok[index].value)
       const valasz = mutate(adatok[index].value)
   }
   newMarks.value = ref<any>({});

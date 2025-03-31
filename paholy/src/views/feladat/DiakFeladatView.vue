@@ -19,12 +19,10 @@ const { mutate: uploadCompletedAssignmentFiles } = useuploadCompletedAssignmentF
 const { mutate: getCompletedAssignmentFiles } = usegetCompletedAssignmentFiles();
 const { mutate: deleteAnswerFile } = usedeleteAnswerFile();
 
-console.log("űűűűű ", assignmentStudentList);
 const cookieHandler = useCookieHandler();
 const role = ref<string>();
 cookieHandler.hasValidCookie();
 role.value = cookieHandler.utolsoDecoded?.userData.role;
-console.log(role.value);
 refetch();
 
 function formatDate(dateString: Date | string | null) {

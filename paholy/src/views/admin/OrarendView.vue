@@ -1,9 +1,6 @@
 <script setup lang="ts">
-import type { Disruption, Teacher } from '@/api/admin/admin';
 import { useGetAllGroups,useAddLessons, useGetAllTeachers, useModifyLesson, useAddDisruption, useDeleteLesson } from '@/api/admin/adminQuery';
-import type { NewMark, MarkAttribute, Mark } from '@/api/jegyek/jegyek';
-import { useAddMark, useGetGroupMembers, useGetSubjects, useGetTeacherGroups } from '@/api/jegyek/jegyekQuery';
-import type { Group, Lesson } from '@/api/orarend/orarend';
+import type { Lesson } from '@/api/orarend/orarend';
 import { useGetTeachers } from '@/api/orarend/orarendQuery';
 import queryClient from '@/lib/queryClient';
 import { useOrarendStore } from '@/stores/orarendStore';
@@ -11,9 +8,7 @@ import { QUERY_KEYS } from '@/utils/QueryKeys';
 import { addWeeks, format, startOfWeek } from 'date-fns';
 import { storeToRefs } from 'pinia';
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
 import * as XLSX from 'xlsx';
-const Router = useRouter()
 const {data:csoportok} = useGetAllGroups()
 const {data:tanarok} = useGetAllTeachers()
 const { mutate: addLessons, } = useAddLessons();

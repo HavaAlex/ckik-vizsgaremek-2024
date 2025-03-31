@@ -121,17 +121,12 @@ watch(studentsData, (newData) => {
 
 //copyright 3025-nem szabad megnézni
 async function openAttendance(lesson: Lesson) {
-  console.log(lesson,"ÓRA")
-  console.log(currentGroupID.value)
   selectedLesson.value = JSON.parse(JSON.stringify(lesson));
   currentGroupID.value = lesson.groupID;
-  console.log(currentGroupID.value)
-  console.log(currentGroupID.value)
 
   await refetch();
   await nextTick();
 
-  console.log("Students after refetch:", students.value);
 
   attendance.value = {};
 
@@ -140,7 +135,6 @@ async function openAttendance(lesson: Lesson) {
   let date = new Date(currentWeekStart.value);
   date.setDate(date.getDate() + dayKeys.indexOf(selectedLesson.value.day));
 
-  console.log(selectedLesson.value.ID,"KAKI")
   const existingAbsences = absences.value.filter(
     (a) => a.lessonID === selectedLesson.value.ID && new Date(a.date).getTime() === date.getTime()
   );
@@ -148,7 +142,6 @@ async function openAttendance(lesson: Lesson) {
   for (const student of students.value) {
     const isAutoAbsent = existingAbsences.some((a) => a.studentID === student.ID);
 
-    console.log(isAutoAbsent)
     attendance.value[student.ID] = {
       studentID: student.ID,
       absent: isAutoAbsent,
@@ -156,14 +149,9 @@ async function openAttendance(lesson: Lesson) {
     };
   }
 
-  console.log("Updated attendance:", attendance.value);
 }
 
 function submitAttendance() {
-
-  
-  console.log("Lesson:", selectedLesson.value);
-  console.log("Attendance:", attendance.value);
   
   const absencesToPost = students.value?.map((student) => {
     const isAbsent = attendance.value[student.ID]?.absent;
@@ -185,7 +173,6 @@ function submitAttendance() {
 
   absencesToPost?.forEach((absence) => {
     if (absence.absent === true) {
-      console.log(absence)
       const valasz = mutate(absence)
     }
   });
@@ -196,7 +183,6 @@ function submitAttendance() {
 function closeAttendance() {
   selectedLesson.value.ID =-1
   currentGroupID.value =-1
-  console.log(selectedLesson.value.ID,"!!!!!!!!!!!!!444")
   attendance.value = {};
 }
 
@@ -207,7 +193,6 @@ function showDay() {
 }
 
 function changeDay(direction: number) {
-  console.log(dayKeys[portraitDayIndex.value]);
   if (direction === 1) {
     if (portraitDayIndex.value === 6) {
       portraitDayIndex.value = 0;
@@ -441,7 +426,6 @@ onUnmounted(() => {
                       :value="true" 
                       v-model="attendance[student.ID].absent"
                       @change="() => {
-                        console.log('Marked as absent', student.ID);
                         attendance[student.ID].isAutoAbsent = false;
                       }"
                     />
@@ -653,7 +637,6 @@ onUnmounted(() => {
                       :value="true" 
                       v-model="attendance[student.ID].absent"
                       @change="() => {
-                        console.log('Marked as absent', student.ID);
                         attendance[student.ID].isAutoAbsent = false;
                       }"
                     />

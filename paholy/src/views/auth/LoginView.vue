@@ -25,7 +25,6 @@ onMounted(() => {
   window.matchMedia("(orientation: portrait)").addEventListener("change", updateOrientation);
   if(document.cookie != ''){
     const decoded = jwtDecode(getCookie("alap"))
-    console.log("KAKI")
     Router.push({path:'/orarend/'+decoded.userData.role+"orarend/"+(decoded.userData.role == "szulo"?`${decoded.userData.children[0].ID}`:'')})
   }
 });
@@ -77,8 +76,7 @@ onUnmounted(() => {
 <style lang="css" scoped>
 @media (orientation: portrait) {
   .telefonosnagyitas2 :deep(.v-field__input) {
-  font-size: 5vw !important; /* Adjusts text size based on viewport width */
- /* height: 5vw;  Adjusts input height */
+  font-size: 5vw !important;
 }
 
 }
@@ -144,8 +142,6 @@ html, body {
 
 }
 
-
-/* Landscape mode */
 @media (orientation: landscape) {
   main {
   width: 80vw;

@@ -22,9 +22,7 @@ const { mutate: modifyUser } = usemodifyUser();
 const { mutate: deleteUser } = usedeleteUser();
 const { mutate: AddStudentsToGuardians } = useAddStudentsToGuardians()
 const { data: userList } = usegetUsers();
-console.log("!!!!!!!!!!!!!!!!!!")
-console.log(userList)
-console.log("!!!!!!!!!!!!!!!!!!")
+
 // Rendezése és keresés
 const sortKey = ref<string>('username');
 const sortOrder = ref<'asc' | 'desc'>('asc');

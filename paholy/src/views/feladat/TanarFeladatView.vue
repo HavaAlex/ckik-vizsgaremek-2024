@@ -11,11 +11,11 @@ import {
   usedeleteAssignment
 } from '@/api/hazik/hazikQuery';
 
-// Dialogs and state
+
 const dialog = ref(false); // "Új feladat" dialog
 const successDialog = ref(false); // Sikeres feltöltés dialog
 
-// Data queries
+
 const { data } = usegetGroups(); // Csoportok
 const { mutate: addAssignment, isPending } = useaddAssignment();
 const { mutate: uploadAssignmentFiles } = useuploadAssignmentFiles();
@@ -24,7 +24,6 @@ const { mutate: getCompletedAssignmentFiles } = usegetCompletedAssignmentFiles()
 const { mutate: deleteAssignment } = usedeleteAssignment();
 const { data: assignmentTeacherList } = usegetAssignmentsTeacher();
 
-// Assignment creation form state
 const AssignmentDataRef = ref<Assignment>({
   Groups: [],
   Description: "",
@@ -52,7 +51,6 @@ const formattedDate = computed(() => {
   return `${date.value.toLocaleDateString()} ${String(hour.value).padStart(2, "0")}:${String(minute.value).padStart(2, "0")}`;
 });
 
-// When date, hour, or minute change, update the deadline
 watch([date, hour, minute], ([newDate, newHour, newMinute]) => {
   if (newDate && newHour !== null && newMinute !== null) {
     const deadline = new Date(newDate);
@@ -70,19 +68,15 @@ const handleTimeChange = (timeString: string) => {
 const hours = Array.from({ length: 24 }, (_, i) => i);
 const minutes = Array.from({ length: 60 }, (_, i) => i);
 
-// Files and submission handling
 const selectedFiles = ref<File[]>([]);
 const sendAssignment = async () => {
-  // Set the Groups field based on the selected radio button
   if (selectedGroup.value) {
     AssignmentDataRef.value.Groups = [selectedGroup.value];
   } else {
     AssignmentDataRef.value.Groups = [];
   }
-  // Submit assignment data
   await addAssignment(AssignmentDataRef.value, {
     onSuccess: async (assignmentResponse: any) => {
-      // Assert that assignmentResponse has an ID property.
       const assignmentId = assignmentResponse.ID;
       if (selectedFiles.value.length > 0) {
         await uploadAssignmentFiles({ files: selectedFiles.value, assignmentId }, {
@@ -115,19 +109,15 @@ function formatDate(dateString: Date | undefined) {
   return date.toISOString().slice(0, 19).replace("T", " ");
 }
 
-// Viewing answers state
 const selectedAssignmentForAnswers = ref<{ anwsers: any[]; feladat: OpenAssignment } | null>(null);
 const ViewAssignmentAnwserDialog = ref(false);
 
-// Answer file management
 const answerFiles = ref<Record<number, any[]>>({});
 const answerFilesIDs = ref<any[]>([]);
 
 const fetchAnswerFiles = async (ids: any[]) => {
-  console.log("Fetching answer files for answer id:", ids);
   await getCompletedAssignmentFiles(ids, {
     onSuccess: (response: any) => {
-      // Handle response that might be either an object with a data property or an array directly
       const filesArray = (response as any).data ?? response;
       const filesByAnswer: Record<number, any[]> = {};
       ids.forEach((id, index) => {
@@ -164,18 +154,15 @@ const openDeleteAssignmentDialog = async (id: number) => {
 
 const deleteThis = async () => {
   await deleteAssignment(DeleteAssignmentID.value, { 
-    onSuccess: (response) => { console.log("SIKER"); } 
+    onSuccess: (response) => {  } 
   });
   DeleteAssignmentDialog.value = false;
 };
 
-// Files for the assignment (for viewing)
 const assignmentFiles = ref<any[]>([]);
 const fetchAssignmentFiles = async (selectedAssignmentID: number) => {
-  console.log("Fetching files for assignment:", selectedAssignmentID);
   await getAssignmentFiles(selectedAssignmentID, {
     onSuccess: (response: any) => {
-      // Use the response data if it exists; otherwise use response directly.
       assignmentFiles.value = (response as any).data ?? response;
     } 
   });
@@ -203,7 +190,6 @@ const getStatusStyle = (status: string) => {
   return {};
 };
 
-// Orientation handling
 const isPortrait = ref(window.matchMedia("(orientation: portrait)").matches);
 const updateOrientation = () => {
   isPortrait.value = window.matchMedia("(orientation: portrait)").matches;
@@ -212,7 +198,6 @@ onMounted(() => {
   window.matchMedia("(orientation: portrait)").addEventListener("change", updateOrientation);
 });
 onUpdated(() => {
-  console.log(assignmentFiles.value);
 });
 onUnmounted(() => {
   window.matchMedia("(orientation: portrait)").removeEventListener("change", updateOrientation);
@@ -250,8 +235,7 @@ onUnmounted(() => {
           </v-card-actions>
         </v-card>
       </v-container>
-      
-      <!-- Answer view dialog -->
+
       <v-dialog v-model="ViewAssignmentAnwserDialog">
         <v-card>
           <v-card-title>Feladat:</v-card-title>
@@ -321,7 +305,6 @@ onUnmounted(() => {
         </v-card>
       </v-dialog>
       
-      <!-- Delete dialog -->
       <v-dialog v-model="DeleteAssignmentDialog" max-width="80vw" theme="dark">
         <v-card>
           <v-card-title>Biztos törölni akarja?</v-card-title>
@@ -335,7 +318,6 @@ onUnmounted(() => {
         </v-card>
       </v-dialog>
       
-      <!-- New assignment dialog -->
       <v-dialog v-model="dialog" style="max-width: 80vw;">
         <v-card>
           <v-card-title>Új feladat:</v-card-title>
@@ -422,7 +404,6 @@ onUnmounted(() => {
     </div>
     
     <div v-else>
-      <!-- Desktop view similar to mobile -->
       <v-container>
         <v-card>
           <v-card-title>
@@ -464,7 +445,6 @@ onUnmounted(() => {
           </v-card-actions>
         </v-card>
         
-        <!-- The desktop dialogs are similar to the mobile ones -->
         <v-dialog v-model="ViewAssignmentAnwserDialog" max-width="80vw">
           <v-card style="width:80vw; height:80vw">
             <v-card-title>Feladat:</v-card-title>

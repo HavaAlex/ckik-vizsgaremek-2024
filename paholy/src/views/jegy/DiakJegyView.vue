@@ -1,7 +1,4 @@
 <script setup lang="ts">
-import { useRoute, useRouter } from 'vue-router';
-import { getUserStatusFromLocalStorage} from '@/localstorage/localStorageManagment.ts';
-import { useGetMarks } from '@/api/jegyek/jegyekQuery';
 import { ref, computed, onMounted, onUnmounted } from 'vue';
 import { useJegyStore } from '@/stores/jegyStore';
 import { storeToRefs } from 'pinia';
@@ -98,7 +95,6 @@ onUnmounted(() => {
       </v-expansion-panels>
     </v-card-item>
     </v-card>
-      <!---->
     </div>
     <div v-else>
       <v-table  height="40vw" style="border-radius: 2%;" v-if="refs.marks.value != undefined">
@@ -144,7 +140,7 @@ onUnmounted(() => {
 </template>
 
 <style lang="css">
-/* Portrait mode */
+
 @media (orientation: portrait) {
   main {
   width: 95vw;
@@ -154,7 +150,6 @@ onUnmounted(() => {
   }
 }
 
-/* Landscape mode */
 @media (orientation: landscape) {
   main {
   width: 80vw;
