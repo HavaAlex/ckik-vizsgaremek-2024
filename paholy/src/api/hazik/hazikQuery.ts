@@ -97,9 +97,6 @@ const getCompletedAssignmentFiles = async (assignmentId: number[]) : Promise<any
         headers: { Authorization: `Bearer ${ cookieHandler.getCookie("alap")}` }
     };
     const response = await axiosClient.post(`http://localhost:3000/feladat/getCompletedAssignmentFiles`,assignmentId,config)
-    console.log("====================")
-    console.log(response)
-    console.log("====================")
     return response.data
 }
 export const usegetCompletedAssignmentFiles = () => {
@@ -196,7 +193,6 @@ const deleteAssignment = async (assignmentId: number) : Promise<number> =>{
     const config = {
         headers: { Authorization: `Bearer ${getCookie("alap")}` }
     };
-    console.log("BELE DELETE ", assignmentId)
     const response = await axiosClient.delete(`http://localhost:3000/feladat/deleteAssignment/${assignmentId}`,config) // ${document.cookie} //nem jó sajna delete csak 2 vel működik
     return response.data
 }
@@ -230,7 +226,6 @@ const deleteAnswerFile = async (fileId: number) : Promise<number> =>{
     const config = {
         headers: { Authorization: `Bearer ${getCookie("alap")}` }
     };
-    console.log("BELE DELETE fájl ", fileId)
     const response = await axiosClient.delete(`http://localhost:3000/feladat/deleteAnswerFile/${fileId}`,config)
     return response.data
 }
@@ -273,7 +268,6 @@ const uploadAssignmentFiles = async ({
     }
   };
   await axiosClient.post(`http://localhost:3000/feladat/uploadassignmentfiles`, formData, config);
-  console.log("siekr")
 }
 export const useuploadAssignmentFiles = () => {
     return useMutation( 

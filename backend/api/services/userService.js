@@ -52,7 +52,6 @@ class UserService
 
         for (let i = 0; i < StudentOMIDs.length; i++) {
             const StudentID = await studentRepository.getStudentByOmId(StudentOMIDs[i])
-            console.log(StudentID)
             if(StudentID == null){
 
                 return false

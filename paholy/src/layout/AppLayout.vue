@@ -2,12 +2,10 @@
 import { useRoute, useRouter } from 'vue-router';
 import { useCookieHandler } from '@/stores/cookieHandler';
 import { jwtDecode } from 'jwt-decode';
-import { ref ,onMounted, onUnmounted,onUpdated,watchEffect } from 'vue';
+import { ref ,onMounted, onUnmounted,onUpdated } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useErrorHandler } from '@/stores/errorHandler';
-import { AxiosError } from 'axios';
 import { useGyerekStore } from '@/stores/gyerekStore';
-import { useGetChildren } from '@/api/szulo/szuloQuery';
 import type { child } from '@/api/szulo/szulo'
 const Router = useRouter()
 
@@ -23,7 +21,6 @@ const cookieStatus = cookieHandler.hasValidCookie()
 let role: string = ''
 if (cookieStatus == true){
   const decoded = jwtDecode(document.cookie)
-  console.log(decoded)
   role = decoded.userData.role
   if(role == "szulo"){
     gyerekStore.clearChildren()
@@ -33,8 +30,6 @@ if (cookieStatus == true){
     });
     selectedChild.value = refs.children.value.length ? refs.children.value[0].ID : -1;
   }
-  console.log(decoded)
-  console.log(role)
   Router.push({path:'/orarend/'+decoded.userData.role+"/"+(decoded.userData.role == "szulo"?`${decoded.userData.children[0].ID}`:'')})
 }
 else{
@@ -76,7 +71,6 @@ const selectedChildKey = ref(-1); // Ez biztosítja a komponens újrarenderelés
     <v-layout>
       <v-app-bar flat class="appnavbar bg-secondary" density="compact">
         <v-container class="d-flex align-center justify-space-between">
-          <!-- Left Side -->
           <v-menu class="appnavbarmenubtn">
             <template v-slot:activator="{ props }">
               <v-btn v-bind="props" class="appnavbarmenubtn">
@@ -134,8 +128,6 @@ const selectedChildKey = ref(-1); // Ez biztosítja a komponens újrarenderelés
           <v-btn class="appnavbarmenubtn" @click="cookieHandler.deleteCookie('alap') ; Router.push({name:'login'})">
                 Kilépés
           </v-btn>
-              
-          <!-- Right Side -->
           
         </v-container>
       </v-app-bar>
@@ -194,17 +186,13 @@ const selectedChildKey = ref(-1); // Ez biztosítja a komponens újrarenderelés
         item-value="ID"
         :items="refs.children.value"
         @update:model-value="async (value) => { 
-          console.log(route.path)
           let pathSlice = route.path.split('/')
           let pathReconstructed = pathSlice.slice(0,pathSlice.length-1).join('/')
-          console.log(`${pathReconstructed}/${value}`)
           Router.push({ path: `${pathReconstructed}/${value}` }).then(()=>{
             selectedChildKey = value
-            console.log('futok')
           })
         }"
       ></v-select>
-      <!--{{ refs.selectedChild }}-->
       <v-spacer></v-spacer>
       <v-tooltip text="Ennyi idő múlva automatikusan kijelentkezel">
         <template v-slot:activator="{ props }">

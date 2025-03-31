@@ -3,17 +3,14 @@ import { defineStore } from 'pinia'
 import { jwtDecode, type JwtPayload } from 'jwt-decode'
 
 export const useCookieHandler = defineStore('cookieHandler', () => {
-  console.log(document.cookie)
   const utolsoDecoded = ref<JwtPayload>()
   function hasValidCookie() {
     if(document.cookie == undefined || document.cookie == null || document.cookie == ''){
-      console.log("Nincs cookie")
       return false
     }
     const decoded = jwtDecode(document.cookie.split(";")[0])
     if (decoded?.exp&& Date.now() >= decoded.exp * 1000)
     {
-      console.log("Cookie lejárt")
       return false
     }
     utolsoDecoded.value = decoded;
@@ -28,9 +25,6 @@ export const useCookieHandler = defineStore('cookieHandler', () => {
 
   function startTimer(){
     const decoded = jwtDecode(document.cookie.split(";")[0])
-    /*console.log("!!!!!!!!!!!!!!!!!!!!")
-    console.log(Date.now())
-    console.log(decoded.exp*1000)*/
     if(decoded.exp)
     {
       baseTime.value = Math.floor(Math.abs(Date.now() - (decoded.exp*1000))/1000)
@@ -38,7 +32,6 @@ export const useCookieHandler = defineStore('cookieHandler', () => {
     }
     if (!timer) {
       timer = setInterval(() => {
-        //console.log(timeValue.value)
         timeValue.value--;
 
         const perc = Math.floor(timeValue.value/60)
@@ -80,7 +73,6 @@ export const useCookieHandler = defineStore('cookieHandler', () => {
   };
 
   function setBaseTime(newTime:number){
-    console.log("SET")
     baseTime.value = newTime
   };
 

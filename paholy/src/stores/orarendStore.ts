@@ -10,7 +10,7 @@ export const useOrarendStore = defineStore('orarendStore', () => {
     
     const lessons = ref<Lesson[]>([]);
     
-    async function orarendfeltolt(weekStart: string) { //MÁSOLANDÓ
+    async function orarendfeltolt(weekStart: string) { 
         const cookieHandler = useCookieHandler()
         const valasz = cookieHandler.hasValidCookie()
         if(valasz == false)
@@ -27,7 +27,7 @@ export const useOrarendStore = defineStore('orarendStore', () => {
             lessons.value = await simaFetch(weekStart);
         }
     }
-    async function orarendfeltoltAdmin(weekStart: string,csoportID:number) { //MÁSOLANDÓ
+    async function orarendfeltoltAdmin(weekStart: string,csoportID:number) {
         const cookieHandler = useCookieHandler()
         const valasz = cookieHandler.hasValidCookie()
         if(valasz == false)

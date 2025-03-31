@@ -42,7 +42,6 @@ const getStudents = async () => {
         headers: { Authorization: `Bearer ${getCookie("alap")}` }
     };
     const response = await axiosClient.get(`http://localhost:3000/admin/getAllStudents`, config)
-    console.log(response.data)
     return response.data
 }
 
@@ -376,11 +375,8 @@ const getOrarend = async (weekStart: string,groupID:number): Promise<Lesson[]> =
     const config = {
         headers: { Authorization: `Bearer ${getCookie("alap")}` }
     };
-    console.log(`http://localhost:3000/admin/timetable/${groupID}?weekStart=${weekStart}`)
     const response = await axiosClient.get(`http://localhost:3000/admin/timetable/${groupID}?weekStart=${weekStart}`, config)
 
-
-    console.log("Orarend lekérdezve:", response.data)
     return response.data
 }
 
@@ -412,11 +408,9 @@ const getAllGroups = async (): Promise<Group[]> => {
     const config = {
         headers: { Authorization: `Bearer ${getCookie("alap")}` }
     };
-    console.log(`http://localhost:3000/admin/allgroups`)
+
     const response = await axiosClient.get(`http://localhost:3000/admin/allgroups`, config)
 
-
-    console.log("Groupok lekérdezve:", response.data)
     return response.data
 }
 
@@ -465,11 +459,8 @@ const getAllTeachers = async (): Promise<Teacher[]> => {
     const config = {
         headers: { Authorization: `Bearer ${getCookie("alap")}` }
     };
-    console.log(`http://localhost:3000/admin/allteachers`)
     const response = await axiosClient.get(`http://localhost:3000/admin/allteachers`, config)
 
-
-    console.log("Tanárok lekérdezve:", response.data)
     return response.data
 }
 
@@ -615,7 +606,6 @@ export const useDeleteAbsence = () => {
 
 
 const modifyAbsence = async (absenceToBeModified: any) => {
-    console.log(absenceToBeModified)
     const { getCookie } = useCookieHandler() 
     const config = {
         headers: { Authorization: `Bearer ${getCookie("alap")}` }
