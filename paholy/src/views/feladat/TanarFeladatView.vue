@@ -21,7 +21,7 @@ const { mutate: getCompletedAssignmentFiles } = usegetCompletedAssignmentFiles()
 const { mutate: deleteAssignment } = usedeleteAssignment();
 const { data: assignmentTeacherList } = usegetAssignmentsTeacher();
 
-// Store assignment data for adding an assignment
+
 const AssignmentDataRef = ref<Assignment>({
   Groups: [],
   Description: "",
@@ -29,20 +29,17 @@ const AssignmentDataRef = ref<Assignment>({
   UploadDate: new Date(0),
 });
 
-// New ref for selected group (radio buttons)
+
 const selectedGroup = ref(null);
 
-// Deadline selection:
+
 const date = ref<Date | null>(null);
 const hour = ref<number | null>(null);
 const minute = ref<number | null>(null);
 
-/**
- * minDate is a string in 'YYYY-MM-DD' format for the v-date-picker's :min prop.
- * This ensures the user cannot pick a date earlier than today's date.
- */
+
 const minDate = computed(() => {
-  // Create a new Date for today at midnight, convert to YYYY-MM-DD
+  
   const today = new Date();
   const yyyy = today.getFullYear();
   const mm = String(today.getMonth() + 1).padStart(2, '0');
@@ -74,10 +71,10 @@ const handleTimeChange = (timeString: string) => {
 const hours = Array.from({ length: 24 }, (_, i) => i);
 const minutes = Array.from({ length: 60 }, (_, i) => i);
 
-// Send assignment (first create assignment, then upload files if any)
+//Feladata feltöltése majd a fájloké is ha vannak
 const selectedFiles = ref<File[]>([]);
 const sendAssignment = async () => {
-  // Set the assignment's group using the selected radio button
+  // Radió buttonból szedi ki
   if (selectedGroup.value) {
     AssignmentDataRef.value.Groups = [selectedGroup.value];
   } else {
@@ -113,7 +110,7 @@ const resetForm = () => {
   dialog.value = false;
 };
 
-function formatDate(dateString: Date | string | null) {
+function formatDate(dateString: Date |  undefined) {
   if (!dateString) return "";
   const date = new Date(dateString);
   date.setHours(date.getHours() + 1); 
@@ -133,13 +130,16 @@ const fetchAnswerFiles = async (answerFilesIDs: any[]) => {
   console.log("Fetching answer files for answer id:", answerFilesIDs);
   await getCompletedAssignmentFiles(answerFilesIDs, {
     onSuccess: (response) => {
-      const filesArray = response.data || response;
-      const filesByAnswer: Record<number, any[]> = {};
-      // Map each answer ID to its corresponding file array from the response.
-      answerFilesIDs.forEach((id, index) => {
-        filesByAnswer[id] = filesArray[index];
-      });
-      answerFiles.value = filesByAnswer;
+      if(response.data != undefined){
+        const filesArray = response.data || response;
+        const filesByAnswer: Record<number, any[]> = {};
+        //válasz fájlok elrendezése
+        answerFilesIDs.forEach((id, index) => {
+          filesByAnswer[id] = filesArray[index];
+        });
+        answerFiles.value = filesByAnswer;
+      }
+
     }
   });
 };
@@ -174,10 +174,10 @@ const deleteThis = async () => {
   DeleteAssignmentDialog.value = false;
 };
 
-// Holds the files fetched for a given assignment
+//Fájlok az adott feladathoz. 
 const assignmentFiles = ref<any[]>([]);
 
-// Fetch assignment files (we expect an array of objects including { ID, buffer, filename, mimetype, ... })
+// Itt fetcheli a fájlokat az assingmenthez
 const fetchAssignmentFiles = async (selectedAssignmentID: number) => {
   console.log("Fetching files for assignment:", selectedAssignmentID);
   await getAssignmentFiles(selectedAssignmentID, {
@@ -188,7 +188,7 @@ const fetchAssignmentFiles = async (selectedAssignmentID: number) => {
   });
 };
 
-// Updated download function
+// Letöltés
 const downloadFile = (file: any) => {
   const byteArray = new Uint8Array(file.buffer.data);
   const blob = new Blob([byteArray], { type: file.mimetype || 'application/octet-stream' });
@@ -200,7 +200,7 @@ const downloadFile = (file: any) => {
   document.body.removeChild(link);
 };
 
-// New helper function to return status style based on the answer status
+// Státusz színező
 const getStatusStyle = (status: string) => {
   if (status === "Nincs leadva") {
     return { backgroundColor: "yellow", color: "black", padding: "4px", borderRadius: "4px", display: "inline-block" };
@@ -211,26 +211,6 @@ const getStatusStyle = (status: string) => {
   }
   return {};
 };
-
-
-
-// Responsive dialog width for viewing answers
-// Responsive dialog width for viewing answers
-const viewAssignmentDialogWidth = ref('50vw');
-// Responsive card height for viewing answers
-const viewAssignmentCardHeight = ref('auto');
-
-const updateDialogSize = () => {
-  // Check if in portrait mode (mobile)
-  if (window.innerHeight > window.innerWidth) {
-    viewAssignmentDialogWidth.value = '80vw';
-    viewAssignmentCardHeight.value = '80vh'; // Card height set to 60vw on mobile
-  } else {
-    viewAssignmentDialogWidth.value = '50vw';
-    viewAssignmentCardHeight.value = 'auto';
-  }
-};
-
 
 //itt kezdődik a forgatásnak a figyelése
 const isPortrait = ref(window.matchMedia("(orientation: portrait)").matches);
@@ -490,8 +470,8 @@ onUnmounted(() => {
             <v-btn @click="dialog = true">Feladat kitűzése</v-btn>
           </v-card-actions>
         </v-card>
-        <v-dialog v-model="ViewAssignmentAnwserDialog" :max-width="viewAssignmentDialogWidth">
-          <v-card :style="{ width: viewAssignmentDialogWidth, height: viewAssignmentCardHeight }">
+        <v-dialog v-model="ViewAssignmentAnwserDialog" max-width="80vw">
+          <v-card style=" width:80vw; height:80vw">
             <v-card-title>Feladat:</v-card-title>
             <v-card-text>
               <p>
@@ -507,7 +487,7 @@ onUnmounted(() => {
                 {{ selectedAssignmentForAnswers?.feladat.desc }}
               </p>
 
-              <!-- Assignment files -->
+              
               <div v-if="assignmentFiles.length">
                 <p><strong>Fájlok:</strong></p>
                 <v-list-item
@@ -578,7 +558,7 @@ onUnmounted(() => {
         </v-dialog>
 
         <!-- Új feladat -->
-        <v-dialog v-model="dialog" style="max-width: 70vw;">
+        <v-dialog v-model="dialog" style="max-width: 80vw;">
           <v-card>
             <v-card-title>Új feladat:</v-card-title>
             <v-container>

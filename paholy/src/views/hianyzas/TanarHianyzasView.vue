@@ -83,58 +83,59 @@ const attendance = ref<{ [studentId: number]: { studentID: number; absent: boole
 
 const students = ref<Students[]>([]);
 
-const currentGroupID = ref<number | null>(null);
+const currentGroupID = ref<number | null>(1);
 
 const { data: studentsData } = useGetStudentsInGroup(
   computed(() => currentGroupID.value),
   { enabled: computed(() => currentGroupID.value !== null) }
 );
 
-watch(studentsData, async (newData) => {
-  console.log(studentsData.value)
+watch(studentsData, (newData) => {
+  console.log("studentsData updated:", newData);
+  
   if (newData) {
-    students.value = newData;
-    if (selectedLesson.value) {
-      newData.forEach(student => {
-        if (!attendance.value[student.ID]) {
-          console.log(student)
-          attendance.value[student.ID] = { studentID: student.ID, absent: false };
-        }
-      });
-    }
+    students.value = newData; 
+    console.log("Updated students.value:", students.value);
   }
-});
+}, { immediate: true });
 
-function openAttendance(lesson: Lesson) {
+
+//copyright 3025-nem szabad megnézni
+async function openAttendance(lesson: Lesson) {
   selectedLesson.value = lesson;
   currentGroupID.value = lesson.groupID;
-  console.log(absences.value)
-  let date = new Date(currentWeekStart.value); 
 
-  date.setDate(date.getDate() + dayKeys.indexOf(selectedLesson.value.day));
+  watch(
+    students,
+    (newStudents) => {
+      console.log(newStudents);
+      if (!newStudents.length) return;
 
-  console.log(selectedLesson.value.ID);
+      let date = new Date(currentWeekStart.value);
+      date.setDate(date.getDate() + dayKeys.indexOf(selectedLesson.value.day));
 
-  const existingAbsence = absences.value.find(a =>
-            a.lessonID == selectedLesson.value.ID &&
-            new Date(a.date).getTime() === date.getTime()
+      // Get all absence records for this lesson and date.
+      const existingAbsences = absences.value.filter(
+        (a) => a.lessonID === selectedLesson.value?.ID && new Date(a.date).getTime() === date.getTime()
+      );
+
+      console.log("existingAbsences", existingAbsences);
+
+      for (const student of newStudents) {
+        const autoAbsent = existingAbsences.some(
+          (a) => a.studentID === student.ID
         );
-
-  console.log(students.value)
-
-  for (const student of students.value) {
-    console.log(existingAbsence.studentID +"   "+student.ID)
-    if (attendance.value[student.ID]) {
-      if(existingAbsence.studentID == student.ID){
-        attendance.value[student.ID] = { studentID: student.ID, absent: true };
+        attendance.value[student.ID] = {
+          studentID: student.ID,
+          absent: autoAbsent,
+          isAutoAbsent: autoAbsent,
+        };
       }
-      else{
-        attendance.value[student.ID] = { studentID: student.ID, absent: false };
-      }
-    }
-  }
 
-  console.log(attendance)
+      console.log("Updated attendance:", attendance.value);
+    },
+    { immediate: true, once: true }
+  );
 }
 
 function submitAttendance() {
@@ -164,10 +165,8 @@ function submitAttendance() {
 
   absencesToPost.forEach((absence) => {
     if (absence.absent === true) {
+      console.log(absence)
       const valasz = mutate(absence)
-
-      console.log("Valasz:", valasz);
-      // itt kell a post
     }
   });
 
@@ -176,8 +175,7 @@ function submitAttendance() {
 
 function closeAttendance() {
   selectedLesson.value = null;
-  attendance.value = [];
-  currentGroupID.value = null;
+  attendance.value = {};
 }
 
 function showDay() {
@@ -592,7 +590,7 @@ onUnmounted(() => {
         </v-card>
 
         <transition name="fade">
-          <div class="attendance-modal" v-if="selectedLesson" >
+          <div class="attendance-modal" v-if="selectedLesson">
             <div class="modal-content" style="width: 30vw;">
               <h2 class="modal-header">
                 Hiányzók beírása: {{ selectedLesson.subjectName }}
@@ -600,13 +598,14 @@ onUnmounted(() => {
 
               <div v-for="student in students" :key="student.ID" class="student-attendance">
                 <span class="student-name">{{ student.name }}</span>
-                <div class="attendance-options" v-if="attendance[student.ID]">
+                <div class="attendance-options">
                   <label>
                     <input 
                       type="radio" 
                       :name="'attendance-' + student.ID" 
                       :value="false" 
-                      v-model="attendance[student.ID].absent" 
+                      v-model="attendance[student.ID].absent"
+                      :disabled="attendance[student.ID].absent && attendance[student.ID].isAutoAbsent"
                     />
                     Jelen volt
                   </label>
@@ -615,7 +614,8 @@ onUnmounted(() => {
                       type="radio" 
                       :name="'attendance-' + student.ID" 
                       :value="true" 
-                      v-model="attendance[student.ID].absent" 
+                      v-model="attendance[student.ID].absent"
+                      @change="attendance[student.ID].isAutoAbsent = false"
                     />
                     Hiányzott
                   </label>
@@ -624,15 +624,12 @@ onUnmounted(() => {
 
               <div class="modal-buttons">
                 <v-btn color="primary" @click="submitAttendance">Hiányzók feltöltése</v-btn> <br>
-                <v-btn  @click="closeAttendance">Bezárás</v-btn>
+                <v-btn @click="closeAttendance">Bezárás</v-btn>
               </div>
             </div>
           </div>
         </transition>
         </v-card-text>
-        <v-card-actions>
-          
-        </v-card-actions>
       </v-card>
     </div>
     
