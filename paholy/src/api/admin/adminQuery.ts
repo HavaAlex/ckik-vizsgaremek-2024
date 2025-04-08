@@ -628,3 +628,54 @@ export const useModifyAbsence = () => {
         }
     })
 }
+
+export const getAllMarks = async () => {
+    const { getCookie } = useCookieHandler() 
+    const config = {
+        headers: { Authorization: `Bearer ${getCookie("alap")}` }
+    };
+    const response = await axiosClient.get(`http://localhost:3000/admin/allmarks`, config)
+    return response.data
+}
+
+export const useGetAllMarks = () => {
+    const { setError } = useErrorHandler()
+    const query = useQuery({
+        queryKey: [QUERY_KEYS.getAllMarks],
+        queryFn: getAllMarks,
+    })
+
+    if (query.error.value) {
+        console.error("Lekérdezési hiba:", query.error)
+        setError(query.error.value)
+    }
+    return query
+}
+
+export const deleteMark = async (markID: number) => {
+
+    const { getCookie } = useCookieHandler() 
+    const config = {
+        headers: { Authorization: `Bearer ${getCookie("alap")}` }
+    };
+    const response = await axiosClient.delete(`http://localhost:3000/admin/deleteMark/${markID}`, config)
+    console.log(response)
+    return response.data
+}
+
+export const useDeleteMark = () => {
+    return useMutation({
+        mutationFn: deleteMark,
+        mutationKey: [QUERY_KEYS.deleteMark],
+        onSuccess(data) {
+            console.log(data)
+            queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.getAllMarks] })
+            const {setStatus} = useStatusHandler()
+            setStatus("Sikeres jegy törlés!")
+        },
+        onError(error) {
+            const { setError } = useErrorHandler()
+            setError(error)
+        }
+    })
+}

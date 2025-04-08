@@ -82,7 +82,9 @@ const ADMIN_KEYS = {
     modifyLesson:'modifyLesson',
     addDisruption:'addDisruption',
     useDeleteAbsence:'useDeleteAbsence',
-    useModifyAbsence:'useModifyAbsence'
+    useModifyAbsence:'useModifyAbsence',
+    getAllMarks:'getAllMarks',
+    deleteMark:'deleteMark'
 
 }
 export const QUERY_KEYS = {

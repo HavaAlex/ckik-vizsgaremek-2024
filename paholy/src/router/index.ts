@@ -3,7 +3,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 // Admin komponens importálása
 import HazikViewAdmin from '../views/admin/HazikView.vue'
 import HianyzasokViewAdmin from '../views/admin/HianyzasokView.vue'
-import JegyekViewAdmin from '../views/admin/HazikView.vue'
+import JegyekViewAdmin from '../views/admin/JegyekView.vue'
 import OrarendViewAdmin from '../views/admin/OrarendView.vue'
 import UzenetekViewAdmin from '../views/admin/UzenetekView.vue'
 import UserManagementView from '@/views/admin/UserManagementView.vue'

@@ -49,7 +49,12 @@ class MarkRepository
         });
     }
     
-    
+    async deleteMark(ID){
+        await this.Marks.destroy({
+            where: {ID : ID}
+        })
+        return "Jegy eltávolítva"
+    }
 }
 
 module.exports = new MarkRepository(db);

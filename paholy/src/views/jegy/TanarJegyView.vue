@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { NewMark, MarkAttribute, Mark } from '@/api/jegyek/jegyek';
 import { useAddMark, useGetGroupMarks, useGetGroupMembers, useGetSubjects, useGetTeacherGroups } from '@/api/jegyek/jegyekQuery';
+import queryClient from '@/lib/queryClient';
 import { computed, onMounted, onUnmounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 const NewMarkRef = ref<NewMark>({

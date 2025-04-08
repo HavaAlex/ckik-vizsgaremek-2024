@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted } from 'vue';
+import { ref, computed, onMounted, onUnmounted, onUpdated } from 'vue';
 import { useJegyStore } from '@/stores/jegyStore';
 import { storeToRefs } from 'pinia';
 
@@ -21,6 +21,11 @@ const isPortrait = ref(window.matchMedia("(orientation: portrait)").matches);
 const updateOrientation = () => {
   isPortrait.value = window.matchMedia("(orientation: portrait)").matches;
 };
+
+onUpdated(()=>{
+  jegyStore.jegyFeltolt()
+})
+
 onMounted(() => {
   window.matchMedia("(orientation: portrait)").addEventListener("change", updateOrientation);
 });

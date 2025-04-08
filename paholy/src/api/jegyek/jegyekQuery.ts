@@ -142,7 +142,7 @@ export const useAddMark = () => {
         {
             mutationFn: addMarks,
             onSuccess(data) {
-                queryClient.refetchQueries({queryKey:[QUERY_KEYS.getJegyek]})
+                queryClient.invalidateQueries({queryKey:[QUERY_KEYS.getGroupMarks]})
                 const {setStatus} = useStatusHandler()
                 setStatus("Sikeres jegy felvitel!")
             },

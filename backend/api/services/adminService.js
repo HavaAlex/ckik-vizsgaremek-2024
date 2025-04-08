@@ -7,6 +7,7 @@ const UserRepository = require("../repositories/userRepository")
 const GuardianStudentRepository = require("../repositories/guardianStudentRepository")
 const GuardianRepository = require("../repositories/guardianRepository")
 const AbsenceRepository = require("../repositories/absenceRepository")
+const markRepository = require("../repositories/markRepository")
 
 const UserService = require("../services/userService")
 const GroupService = require("../services/csoportService")
@@ -376,6 +377,9 @@ class adminService {
 
     async deleteLesson(ID){
         return await lessonRepository.deleteLesson(ID)
+    }
+    async deleteMark(ID){
+        return await markRepository.deleteMark(ID)
     }
 }
 module.exports = new adminService(); 

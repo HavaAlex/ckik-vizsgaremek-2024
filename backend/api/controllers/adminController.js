@@ -5,6 +5,8 @@ const studentRepository = require("../repositories/studentRepository")
 const orarendService = require("../services/orarendService")
 const groupRepository = require("../repositories/groupRepository")
 
+const jegyService = require("../services/jegyService")
+
 exports.uploadTeachers = async (req,res,next) =>{
     const teachers = req.body
     if(teachers.length < 1){
@@ -324,6 +326,43 @@ exports.modifyLesson = async (req,res,next) => {
 exports.deleteLesson= async (req,res,next) => {
     const ID = JSON.parse(req.params.ID);
     const response = await adminService.deleteLesson(ID);
+    console.log(response)
+    res.status(201).json(response);
+}
+
+exports.getAllMarks = async (req, res, next) =>
+{
+    const csoportok = await adminService.getAllGroups();
+    const jegyek = [];
+    for (const element of csoportok) { //csoportok alapján vannak csoportosítva a jegyek, és azon belül tantárgyanként, majd dátum és személy alapján csak frontenden
+        const csoportJegyei = await jegyService.getJegyekCsoport(element.ID)
+        const targyak = new Set()
+        const targyAlapjan = []
+        csoportJegyei.forEach((jegy) => {
+            targyak.add(jegy.subjectName);
+    
+            if (targyAlapjan.length !== targyak.size) {
+                const beszurando = []
+                targyAlapjan.push(beszurando);
+            }
+            const ido = new Date(jegy.date)
+            targyAlapjan[[...targyak].indexOf(jegy.subjectName)].push(jegy);//[ido.getMonth()]
+        });
+    
+        const object = {
+            groupName: element.name,
+            marks: targyAlapjan,
+            tantargyak:[...targyak] //lista convert
+        };
+        jegyek.push(object);
+    }
+    res.status(201).json(jegyek);
+
+}
+
+exports.deleteMark= async (req,res,next) => {
+    const ID = JSON.parse(req.params.ID);
+    const response = await adminService.deleteMark(ID);
     console.log(response)
     res.status(201).json(response);
 }

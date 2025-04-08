@@ -43,5 +43,7 @@ router.get("/allteachers",adminHandler.checkRole,adminController.getAllTeachers)
 router.put("/addDisruption",adminHandler.checkRole,adminController.uploadDisruption)
 router.delete("/deleteLesson/:ID",adminHandler.checkRole,adminController.deleteLesson)
 router.post("/modifyLesson/",adminHandler.checkRole,adminController.modifyLesson)
+router.get("/allmarks",adminHandler.checkRole,adminController.getAllMarks);
+router.delete("/deleteMark/:ID",adminHandler.checkRole,adminController.deleteMark)
 
 module.exports = router;
