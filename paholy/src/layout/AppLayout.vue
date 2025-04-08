@@ -152,9 +152,7 @@ const selectedChildKey = ref(-1); // Ez biztosítja a komponens újrarenderelés
   </div>
   <div v-else>
   <v-layout class="rounded rounded-md">
-    <!-- Top App Bar -->
     <v-app-bar class="appnavbar bg-secondary" flat>
-      <!-- Wrapper for buttons with flex wrapping enabled -->
       <div class="d-flex flex-wrap">
         <v-btn @click="Router.push({ name: role + 'orarend' })">
           Órarend
@@ -179,7 +177,6 @@ const selectedChildKey = ref(-1); // Ez biztosítja a komponens újrarenderelés
         </v-btn>
       </div>
 
-      <!-- Other elements that stay in one row -->
       <v-select v-if="role==='szulo'" style="height: max-content;"
         label="Választott gyermek"
         density="compact"
@@ -209,14 +206,12 @@ const selectedChildKey = ref(-1); // Ez biztosítja a komponens újrarenderelés
       </v-btn>
     </v-app-bar>
 
-    <!-- Bottom App Bar -->
     <v-app-bar height="fit-content" location="bottom" flat>
       <v-col class="text-center mt-4" cols="12">
         {{ new Date().getFullYear() }} - <strong>Páholy</strong>
       </v-col>
     </v-app-bar>
 
-    <!-- Main content area -->
     <v-main class="d-flex align-center justify-center fill-height">
       <RouterView :key="selectedChildKey"></RouterView>
     </v-main>
