@@ -536,7 +536,6 @@ const newBelongingOMID = ref<string>('');
 
 function addBelongingOMID() {
   const omid = newBelongingOMID.value.trim();
-  console.log("aaaaaaaa",omid,"a")
   if (!omid) return;
   if(SelectedUserData.value.belongingStudents){
     SelectedUserData.value.belongingStudents.push({

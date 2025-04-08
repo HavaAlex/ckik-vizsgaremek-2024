@@ -31,6 +31,8 @@ onMounted(() => {
 onUnmounted(() => {
   window.matchMedia("(orientation: portrait)").removeEventListener("change", updateOrientation);
 });//itt ér véget
+
+const showPassword = ref(false);
 </script>
 <template>
 
@@ -38,15 +40,19 @@ onUnmounted(() => {
         <v-card class="logincard">
         <v-card-title class ="telefonosnagyitas" >Bejelentkezés a Páholy rendszerbe</v-card-title>
         <v-card-text>
-            <v-text-field class ="telefonosnagyitas2" v-model="LoginDataRef.username" placeholder="Felhasználónév" variant="outlined"></v-text-field>
-            <v-text-field class ="telefonosnagyitas2" v-model="LoginDataRef.password" placeholder="Jelszó" type="password" variant="outlined"></v-text-field>
-        </v-card-text>
-        <v-card-actions class="buttoncontainer">
-            <v-btn class="loginbtn" @click="() => {
+            <v-text-field class ="telefonosnagyitas2" v-model="LoginDataRef.username" placeholder="Felhasználónév" variant="outlined"></v-text-field><br>
+            <v-text-field class ="telefonosnagyitas2" v-model="LoginDataRef.password" placeholder="Jelszó" :type="showPassword ? 'text' : 'password'" variant="outlined" :append-icon="showPassword ? 'mdi-eye-off' : 'mdi-eye'" @click:append="showPassword = !showPassword"></v-text-field>
+            <br><v-btn class="loginbtn" @click="() => {
                 login(LoginDataRef)
             }" :loading="isPending"> 
                 Bejelentkezés
+            </v-btn><br><br>
+            <v-btn @click="Router.push({name:'changePassword'})">
+              Jelszó megváltoztatása
             </v-btn>
+        </v-card-text>
+        <v-card-actions class="buttoncontainer">
+
         </v-card-actions>
     </v-card>
     </div>
@@ -55,7 +61,7 @@ onUnmounted(() => {
         <v-card-title >Bejelentkezés a Páholy rendszerbe</v-card-title>
         <v-card-text>
             <v-text-field v-model="LoginDataRef.username" label="Felhasználónév" variant="outlined" ></v-text-field>
-            <v-text-field v-model="LoginDataRef.password" label="Jelszó" type="password" variant="outlined"></v-text-field>
+            <v-text-field v-model="LoginDataRef.password" label="Jelszó" :type="showPassword ? 'text' : 'password'" variant="outlined" :append-icon="showPassword ? 'mdi-eye-off' : 'mdi-eye'" @click:append="showPassword = !showPassword"></v-text-field>
         </v-card-text>
         <v-card-actions class="buttoncontainer">
             <v-btn class="loginbtn" @click="() => {
@@ -110,7 +116,7 @@ html, body {
 
   .logincard {
    width: 95vw !important;
-   height: 70vw !important;
+   height: 85vw !important;
    align-items: center !important;
 } 
   .loginbtn{

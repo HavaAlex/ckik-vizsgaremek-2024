@@ -205,7 +205,7 @@ onUnmounted(() => {
         <v-card-title>Feladat részletei</v-card-title>
         <v-card-text>
           <p><strong>Feladás dátuma:</strong> {{ formatDate(selectedAssignment?.uploadDate) }}</p>
-          <p><strong>Dátum:</strong> {{ formatDate(selectedAssignment?.deadline) }}</p>
+          <p><strong>Határidő:</strong> {{ formatDate(selectedAssignment?.deadline) }}</p>
           <p><strong>Leírás:</strong> {{ selectedAssignment?.desc }}</p>
           <div v-if="assignmentFiles.length">
             <p><strong>Fájlok:</strong></p>
@@ -330,7 +330,7 @@ onUnmounted(() => {
         <v-card-title>Feladat részletei</v-card-title>
         <v-card-text>
           <p><strong>Feladás dátuma:</strong> {{ formatDate(selectedAssignment?.uploadDate) }}</p>
-          <p><strong>Dátum:</strong> {{ formatDate(selectedAssignment?.deadline) }}</p>
+          <p><strong>Határidő:</strong> {{ formatDate(selectedAssignment?.deadline) }}</p>
           <p><strong>Leírás:</strong> {{ selectedAssignment?.desc }}</p>
           <div v-if="assignmentFiles.length">
             <p><strong>Fájlok:</strong></p>
