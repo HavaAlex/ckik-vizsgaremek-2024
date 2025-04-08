@@ -36,16 +36,36 @@ export const useGetUzenetek = () => {
 }
  
 const getAllUzenetek = async (): Promise<Message[]> => {
-
-    const {getCookie} = useCookieHandler()
+    const { getCookie } = useCookieHandler();
     const config = {
         headers: { Authorization: `Bearer ${getCookie("alap")}` }
     };
+    const decoded = jwtDecode(getCookie("alap"));
+    const role = decoded.userData.role;
 
-    const response = await axiosClient.get(`http://localhost:3000/admin/allMessage`,config) // ${document.cookie}
-    console.log("ECERY: ", response)
-    return response.data
-}
+    if (role === 'admin') {
+        const response = await axiosClient.get(`http://localhost:3000/admin/allMessage`, config);
+        return response.data;
+    } else {
+        // meglepi annak aki keménynek hiszi magát
+        const dummyMessage: Message = {
+            ID: 0,
+            date: new Date(),
+            message: "Ez egy példa üzenet. ",
+            sender: { ID: 0, username: "example_sender" },
+            senderUserID: 0,
+            senderUserName: { ID: 0, username: "example_sender" },
+            receivers: [
+                {
+                    ID: 1,
+                    username: "example_receiver"
+                }
+            ]
+        };
+        return [dummyMessage];
+    }
+};
+
 export const usegetAllUzenetek = () => {
     const { setError } = useErrorHandler()
 
