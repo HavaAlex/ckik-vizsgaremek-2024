@@ -283,7 +283,7 @@ function addLesson() {
   }
 }
 
-const drawer = ref<boolean>(true)
+const drawer = ref<boolean>(false)
 
 
 const selectedLesson = ref<Lesson>();
@@ -412,23 +412,33 @@ function showDay() {
           <v-tabs-window-item value="one">
 
               <!--ÓRAREND VIEW KEZDETE-->
+              <v-card-text style="max-height: 100vw !important; overflow-y: auto;">
+            <div v-if="refs.lessons.value !== null">
+              <div class="color-picker">
+                <label for="lessonColor">Szín megváltoztatása:</label>
+                <input type="color" id="lessonColor" v-model="lessonColor" />
+              </div>
 
-              <div v-if="refs.lessons.value !== null">
-                <div class="color-picker">
-                  <label for="lessonColor">Szín megváltoztatása:</label>
-                  <input type="color" id="lessonColor" v-model="lessonColor" />
-                </div>
-
+              
+              
                 <div class="week-navigation">
-                  <v-btn @click="changeWeek(-1)" color="primary">Előző hét</v-btn>
-                  <span>{{ format(currentWeekStart, 'yyyy-MM-dd') }}</span>
-                  <v-btn @click="changeWeek(1)" color="primary" >Következő hét</v-btn>
+                  <v-btn @click="changeDay(-1)" color="primary">Előző nap</v-btn>
+                  <span>{{ format(showDay(), 'yyyy-MM-dd') }}</span>
+                  <v-btn @click="changeDay(1)" color="primary">Következő nap</v-btn>
+                </div>
+              
+
+              
+
+              
+                <div class="day-header-portrait">
+                  {{ dayNames[ dayKeys[portraitDayIndex] ] }}
                 </div>
 
                 <div class="timetable-scrollable">
                   <div class="timetable-container">
                     <div class="time-labels">
-                      <div class="time-labels-header"></div>
+                      <div class="time-labels-header-portrait"></div>
                       <div class="time-labels-content">
                         <div
                           v-for="tick in timeTicks"
@@ -444,8 +454,6 @@ function showDay() {
                     </div>
 
                     <div class="days-container">
-                      <div v-for="day in dayKeys" :key="day" class="day-column">
-                        <div class="day-header">{{ dayNames[day] }}</div>
                         <div class="day-content">
                           <div class="grid-lines">
                             <div
@@ -457,7 +465,7 @@ function showDay() {
                           </div>
                           <div class="lessons-container">
                             <div
-                              v-for="lesson in refs.lessons.value.filter(l => l.day === day)"
+                              v-for="lesson in refs.lessons.value.filter(l => l.day === dayKeys[portraitDayIndex])"
                               :key="lesson.ID"
                               class="lesson-block"
                               :style="{
@@ -488,22 +496,23 @@ function showDay() {
                             </div>
                           </div>
                         </div>
-                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
+              
+            </div>
 
-              <v-card style="justify-content: center" v-else>
-                <v-progress-circular indeterminate :size="37"></v-progress-circular>
-              </v-card>
+          <v-card style="justify-content: center" v-else>
+            <v-progress-circular indeterminate :size="37"></v-progress-circular>
+          </v-card>
+        </v-card-text>
 
 
 
               <!--ÓRAREND VIEW VÉGE-->
 
               <template>
-                <v-dialog v-model="lessonDialog" max-width="500px">
+                <v-dialog v-model="lessonDialog" max-width="400px">
                   <v-card>
                     <v-card-title>
                       Óra elnaplózása: {{ lessonCopy?.subjectName }}
