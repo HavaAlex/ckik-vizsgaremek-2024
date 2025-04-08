@@ -9,8 +9,8 @@ INSERT INTO `users` (`ID`, `username`, `password`, `role`) VALUES (NULL, 'kamala
 INSERT INTO `groups` (`ID`, `name`) VALUES (NULL,'1.b');
 INSERT INTO `groups` (`ID`, `name`) VALUES (NULL,'2.b');
 INSERT INTO `students` ( `ID`, `name`, `DoB`, `address`, `phone`, `email`, `userID`, `OMID`) VALUES (null, 'laci','1999-01-01','Cegléd hörömbő u. 2','06424206969','lacikanagykuki@gmail.com',1,645235);
-INSERT INTO `students` ( `ID`, `name`, `DoB`, `address`, `phone`, `email`, `userID`, `OMID`) VALUES (null, 'rebeka','1492-01-01','Nagykáta cigánytelep 4.','493287','rebekababaxoxo@gmail.com',2,34135);
-INSERT INTO `students` ( `ID`, `name`, `DoB`, `address`, `phone`, `email`, `userID`, `OMID`) VALUES (null, 'kamala harris','1492-01-01','Debreceni Cigánytelep 4.','626531','kamala@gmail.com',7,6523175);
+INSERT INTO `students` ( `ID`, `name`, `DoB`, `address`, `phone`, `email`, `userID`, `OMID`) VALUES (null, 'rebeka','1492-01-01','Nagykáta 4.','493287','rebekababaxoxo@gmail.com',2,34135);
+INSERT INTO `students` ( `ID`, `name`, `DoB`, `address`, `phone`, `email`, `userID`, `OMID`) VALUES (null, 'kamala harris','1492-01-01','Debrecen 4.','626531','kamala@gmail.com',7,6523175);
 INSERT INTO `studentgroups` (`GroupID`, `StudentID`) VALUES (1,1);
 INSERT INTO `studentgroups` (`GroupID`, `StudentID`) VALUES (1,2);
 INSERT INTO `studentgroups` (`GroupID`, `StudentID`) VALUES (2,3);

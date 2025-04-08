@@ -78,24 +78,6 @@ const selectedChildKey = ref(-1); // Ez biztosítja a komponens újrarenderelés
               </v-btn>
             </template>
             <v-list>
-              <!--<div v-if="role=='szulo'">
-                <v-list-item class="appnavbarmenu">
-                  <v-btn @click="()=>{Router.push({name:role+'orarend'+`/${selectedChild}`});console.log(role+'orarend'+`/${selectedChild}`)}" class="appnavbarmenu">Órarend</v-btn>
-                </v-list-item>
-                <v-list-item v>
-                  <v-btn @click="()=>{Router.push({name:role+'feladatok'+role=='szulo'?`/${selectedChild}`:''})}" class="appnavbarmenu">Házifeladatok/beadandók</v-btn>
-                </v-list-item>
-                <v-list-item class="appnavbarmenu">
-                  <v-btn @click="Router.push({name:role+'jegyek'+role=='szulo'?`/${selectedChild}`:''})" class="appnavbarmenu">Osztályzatok</v-btn>
-                </v-list-item>
-                <v-list-item class="appnavbarmenu">
-                  <v-btn @click="Router.push({name:role+'hianyzasok'+role=='szulo'?`/${selectedChild}`:''})" class="appnavbarmenu">Mulasztások/Hiányzások</v-btn>
-                </v-list-item>
-                <v-list-item class="appnavbarmenu">
-                  <v-btn @click="Router.push({name:role+'uzenetek'+role=='szulo'?`/${selectedChild}`:''})" class="appnavbarmenu">Üzenetek</v-btn>
-                </v-list-item>
-              </div>
-              <div v-else>-->
                 <v-list-item class="appnavbarmenu">
                   <v-btn @click="Router.push({name:role+'orarend'})" class="appnavbarmenu">Órarend</v-btn>
                 </v-list-item>
@@ -194,7 +176,7 @@ const selectedChildKey = ref(-1); // Ez biztosítja a komponens újrarenderelés
                 Csoportok kezelése
       </v-btn>
 
-      <v-select v-if="role=='szulo'" style="height: max-content;"
+      <v-select v-if="role==='szulo'" style="height: max-content;"
         label="Választott gyermek"
         density="compact"
         v-model="selectedChild"
@@ -202,38 +184,39 @@ const selectedChildKey = ref(-1); // Ez biztosítja a komponens újrarenderelés
         item-value="ID"
         :items="refs.children.value"
         @update:model-value="async (value) => { 
-          let pathSlice = route.path.split('/')
-          let pathReconstructed = pathSlice.slice(0,pathSlice.length-1).join('/')
-          Router.push({ path: `${pathReconstructed}/${value}` }).then(()=>{
-            selectedChildKey = value
-          })
+          let pathSlice = route.path.split('/');
+          let pathReconstructed = pathSlice.slice(0, pathSlice.length - 1).join('/');
+          Router.push({ path: `${pathReconstructed}/${value}` }).then(() => {
+            selectedChildKey = value;
+          });
         }"
       ></v-select>
+      
       <v-spacer></v-spacer>
+
       <v-tooltip text="Ennyi idő múlva automatikusan kijelentkezel">
         <template v-slot:activator="{ props }">
           <v-btn v-bind="props">{{ time }}</v-btn>
         </template>
       </v-tooltip>
-      <v-btn @click="cookieHandler.deleteCookie('alap') ; Router.push({name:'login'})">
-                Kilépés
+
+      <v-btn @click="cookieHandler.deleteCookie('alap'); Router.push({ name: 'login' })">
+        Kilépés
       </v-btn>
     </v-app-bar>
-    <v-app-bar
-      height="fit-content"
-      location="bottom"
-      flat
-    >
-    
+
+    <v-app-bar height="fit-content" location="bottom" flat>
       <v-col class="text-center mt-4" cols="12">
         {{ new Date().getFullYear() }} - <strong>Páholy</strong>
       </v-col>
     </v-app-bar>
-      <v-main class="d-flex align-center justify-center fill-height">
-        <RouterView :key="selectedChildKey"></RouterView>
-      </v-main>
-    </v-layout>
-  </div>
+
+    <v-main class="d-flex align-center justify-center fill-height">
+      <RouterView :key="selectedChildKey"></RouterView>
+    </v-main>
+  </v-layout>
+</div>
+
 
 
   </template>
