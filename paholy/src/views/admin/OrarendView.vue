@@ -321,6 +321,35 @@ function closeDisruption() {
 
 const disruptionDate = ref<string>(new Date().toISOString().split("T")[0]);
 
+const portraitDayIndex = ref(0);
+let currentDay = new Date().getDay();
+currentDay = (currentDay === 0) ? 6 : currentDay - 1;
+portraitDayIndex.value = currentDay;
+
+function changeDay(direction: number) {
+  if (direction === 1) {
+    if (portraitDayIndex.value === 6) {
+      portraitDayIndex.value = 0;
+      changeWeek(1);
+    } else {
+      portraitDayIndex.value++;
+    }
+  } else {
+    if (portraitDayIndex.value === 0) {
+      portraitDayIndex.value = 6;
+      changeWeek(-1);
+    } else {
+      portraitDayIndex.value--;
+    }
+  }
+}
+
+function showDay() {
+  let date = new Date(currentWeekStart.value);
+  date.setDate(date.getDate() + portraitDayIndex.value);
+  return date;
+}
+
 </script>
 
 <template>
@@ -375,26 +404,241 @@ const disruptionDate = ref<string>(new Date().toISOString().split("T")[0]);
                 <br>
               </v-tabs-window-item>
           </v-tabs-window>
+
+          
         </v-card>
         </v-navigation-drawer>
         <v-tabs-window v-model="tab">
           <v-tabs-window-item value="one">
-            <v-card>
-            <v-card-item style="padding: 0; width: 100vw;">
-            </v-card-item>
-            </v-card>
-          </v-tabs-window-item>
-          <v-tabs-window-item value="two">
-            <v-card>
-            <v-card-item style="padding: 0; width: 100vw;">
-            </v-card-item>
-            </v-card>
-            <!---->
-            <br>
+
+              <!--ÓRAREND VIEW KEZDETE-->
+
+              <div v-if="refs.lessons.value !== null">
+                <div class="color-picker">
+                  <label for="lessonColor">Szín megváltoztatása:</label>
+                  <input type="color" id="lessonColor" v-model="lessonColor" />
+                </div>
+
+                <div class="week-navigation">
+                  <v-btn @click="changeWeek(-1)" color="primary">Előző hét</v-btn>
+                  <span>{{ format(currentWeekStart, 'yyyy-MM-dd') }}</span>
+                  <v-btn @click="changeWeek(1)" color="primary" >Következő hét</v-btn>
+                </div>
+
+                <div class="timetable-scrollable">
+                  <div class="timetable-container">
+                    <div class="time-labels">
+                      <div class="time-labels-header"></div>
+                      <div class="time-labels-content">
+                        <div
+                          v-for="tick in timeTicks"
+                          :key="tick"
+                          :class="['time-tick', { 'hour-tick': tick % 60 === 0 }]"
+                          :style="{ top: ((tick - startMinute) / totalMinutes * 100) + '%' }"
+                        >
+                          <span v-if="tick % 60 === 0" class="time-label-text">
+                            {{ Math.floor(tick / 60) }}:00
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="days-container">
+                      <div v-for="day in dayKeys" :key="day" class="day-column">
+                        <div class="day-header">{{ dayNames[day] }}</div>
+                        <div class="day-content">
+                          <div class="grid-lines">
+                            <div
+                              v-for="tick in timeTicks"
+                              :key="tick"
+                              :class="['grid-line', { 'grid-hour': tick % 60 === 0 }]"
+                              :style="{ top: ((tick - startMinute) / totalMinutes * 100) + '%' }"
+                            ></div>
+                          </div>
+                          <div class="lessons-container">
+                            <div
+                              v-for="lesson in refs.lessons.value.filter(l => l.day === day)"
+                              :key="lesson.ID"
+                              class="lesson-block"
+                              :style="{
+                                top: ((lesson.start_Minute - startMinute) / totalMinutes * 100) + '%',
+                                height: (lesson.length / totalMinutes * 100) + '%',
+                                backgroundColor: lesson.excused 
+                                  ? (lesson.teacherID !== null ? 'orange' : 'red') 
+                                  : lessonColor
+                              }"
+                              @click="openLesson(lesson)"
+                            >
+                              <div>
+                                <div>
+                                  <template v-if="lesson.teacherID === null">
+                                    <s>{{ lesson.subjectName }}</s>
+                                  </template>
+                                  <template v-else>
+                                    {{ lesson.subjectName }}
+                                  </template>
+                                </div>
+                                <div v-if="lesson.teacherID == null" style="font-size: 10px; margin-top: 4px;">
+                                  Elmarad
+                                </div>
+                                <div v-else-if="lesson.teacherID !== null" style="font-size: 10px; margin-top: 4px;">
+                                  Tanár: {{ lesson.Teacher.name }}
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <v-card style="justify-content: center" v-else>
+                <v-progress-circular indeterminate :size="37"></v-progress-circular>
+              </v-card>
+
+
+
+              <!--ÓRAREND VIEW VÉGE-->
+
+              <template>
+                <v-dialog v-model="lessonDialog" max-width="500px">
+                  <v-card>
+                    <v-card-title>
+                      Óra elnaplózása: {{ lessonCopy?.subjectName }}
+                    </v-card-title>
+                    <v-card-item>
+                      <v-row>
+                        <v-col cols="12">
+                          <v-select
+                            v-if="computedTanarok.length > 0"
+                            v-model="lessonCopy.teacherID"
+                            item-title="name"
+                            item-value="ID"
+                            :items="computedTanarok"
+                            label="Órát tartó tanár"
+                          ></v-select>
+                          <v-card v-else>
+                            "Nincsenek megjeleníthető tanárok!"
+                          </v-card>
+                        </v-col>
+                        <v-col cols="12">
+                          <v-select
+                            v-if="computedCsoportok.length > 0"
+                            v-model="lessonCopy.groupID"
+                            item-title="name"
+                            item-value="ID"
+                            :items="computedCsoportok"
+                            label="Csoport"
+                          ></v-select>
+                          <v-card v-else>
+                            "Nincsenek megjeleníthető csoportok!"
+                          </v-card>
+                        </v-col>
+                        <v-col cols="12">
+                          <v-text-field v-model="lessonCopy.start_Hour" label="Óra kezdete (óra)"></v-text-field>
+                        </v-col>
+                        <v-col cols="12">
+                          <v-text-field v-model="lessonCopy.start_Minute" label="Óra kezdete (perc)"></v-text-field>
+                        </v-col>
+                        <v-col cols="12">
+                          <v-text-field v-model="lessonCopy.length" label="Óra hossza (percben)"></v-text-field>
+                        </v-col>
+                        <v-col cols="12">
+                          <v-select
+                            v-model="lessonCopy.day"
+                            item-title="name"
+                            item-value="key"
+                            :items="days"
+                            label="Nap (héten melyik napon)"
+                          ></v-select>
+                        </v-col>
+                        <v-col cols="12">
+                          <v-text-field v-model="lessonCopy.subjectName" label="Tantárgy" required></v-text-field>
+                        </v-col>
+                      </v-row>
+                    </v-card-item>
+                    <v-card-actions class="d-flex flex-column">
+                      <v-btn color="yellow" block @click="()=>{openDisruption()}">Óra helyettesítése</v-btn>
+                      <v-btn color="yellow" block @click="()=>{modifyDialog = true}">Óra módosítása</v-btn>
+                      <v-btn color="red" block @click="()=>{deleteDialog = true}">Óra törlése</v-btn>
+                      <v-btn color="grey" block @click="()=>{closeLesson();}">Bezárás</v-btn>
+                    </v-card-actions>
+                  </v-card>
+                </v-dialog>
+              </template>
+
+              <template>
+                <v-dialog v-model="disruptionDialog" max-width="500px">
+                  <v-card>
+                    <v-card-title>
+                      Óra elnaplózása: {{ lessonCopy?.subjectName }}
+                    </v-card-title>
+                    <v-card-item>
+                      <v-row>
+                        <v-col cols="12">
+                          <v-text-field v-model="disruptionDate" label="Dátum(év,hónap,nap) vesszőkkel elválasztva"></v-text-field>
+                        </v-col>
+                      </v-row>
+                    </v-card-item>
+                    <v-card-actions class="d-flex flex-column">
+                      <v-btn color="yellow" block @click="()=>{addDisruption({
+                        ID:-1,
+                        date:new Date(disruptionDate),
+                        groupID: lessonCopy.groupID,
+                        teacherID: lessonCopy.teacherID,
+                        start_Hour: lessonCopy.start_Hour,
+                        start_Minute: lessonCopy.start_Minute, 
+                        length:lessonCopy.length,
+                        day:lessonCopy.day,
+                        subjectName:lessonCopy.subjectName
+                      });closeDisruption();closeLesson(); }">Óra helyettesítése</v-btn>
+                      <v-btn color="grey" block @click="closeDisruption">Bezárás</v-btn>
+                    </v-card-actions>
+                  </v-card>
+                </v-dialog>
+              </template>
+
+              <template>
+                <v-dialog v-model="deleteDialog" max-width="500px">
+                  <v-card>
+                    <v-card-title>
+                      Óra törlése: {{ lessonCopy?.subjectName }}
+                    </v-card-title>
+                    <v-card-text>
+                      Biztosan törölni akarod?
+                    </v-card-text>
+                    <v-card-actions class="d-flex flex-column">
+                      <v-btn color="red" block @click="()=>{deleteLesson(lessonCopy.ID);deleteDialog = false;closeLesson(); }">Óra törlése</v-btn>
+                      <v-btn color="grey" block @click="deleteDialog = false">Nem</v-btn>
+                    </v-card-actions>
+                  </v-card>
+                </v-dialog>
+              </template>
+
+              <template>
+                <v-dialog v-model="modifyDialog" max-width="500px">
+                  <v-card>
+                    <v-card-title>
+                      Óra módosítása: {{ lessonCopy?.subjectName }}
+                    </v-card-title>
+                    <v-card-text>
+                      Biztosan módosítani akarod?
+                    </v-card-text>
+                    <v-card-actions class="d-flex flex-column">
+                      <v-btn color="yellow" block @click="()=>{modifyLesson(lessonCopy);modifyDialog = false;closeLesson(); }">Óra módosítása</v-btn>
+                      <v-btn color="grey" block @click="modifyDialog = false">Nem</v-btn>
+                    </v-card-actions>
+                  </v-card>
+                </v-dialog>
+              </template>
           </v-tabs-window-item>
         </v-tabs-window>
         </v-card-text>
       </v-card>
+
+      
 
     </div>
     <div v-else>

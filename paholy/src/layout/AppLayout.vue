@@ -151,34 +151,36 @@ const selectedChildKey = ref(-1); // Ez biztosítja a komponens újrarenderelés
     </v-layout>
   </div>
   <div v-else>
-    <v-layout class="rounded rounded-md">
-      <v-app-bar class="appnavbar bg-secondary"
-        flat
-      >
-      
-      <v-btn @click="Router.push({name:role+'orarend'})">
-                Órarend
-      </v-btn>
-      <v-btn @click="Router.push({name:role+'feladatok'})">
-                Házifeladatok/beadandók
-      </v-btn>
-      <v-btn @click="Router.push({name:role+'jegyek'})" v-if="role!='admin'">
-                Osztályzatok
-      </v-btn>
-      <v-btn @click="Router.push({name:role+'hianyzasok'})">
-                Mulasztások/Hiányzások
-      </v-btn>
-      <v-btn @click="Router.push({name:role+'uzenetek'})">
-                Üzenetek
-      </v-btn>
-      <v-btn @click="Router.push({name:'UserManagementView'})" v-if="role=='admin'">
-                Felhasználók kezelése
-      </v-btn>
-      <v-btn @click="Router.push({name:'GroupManagementView'})" v-if="role=='admin'">
-                Csoportok kezelése
-      </v-btn>
+  <v-layout class="rounded rounded-md">
+    <!-- Top App Bar -->
+    <v-app-bar class="appnavbar bg-secondary" flat>
+      <!-- Wrapper for buttons with flex wrapping enabled -->
+      <div class="d-flex flex-wrap">
+        <v-btn @click="Router.push({ name: role + 'orarend' })">
+          Órarend
+        </v-btn>
+        <v-btn @click="Router.push({ name: role + 'feladatok' })">
+          Házifeladatok/beadandók
+        </v-btn>
+        <v-btn @click="Router.push({ name: role + 'jegyek' })" v-if="role !== 'admin'">
+          Osztályzatok
+        </v-btn>
+        <v-btn @click="Router.push({ name: role + 'hianyzasok' })">
+          Mulasztások/Hiányzások
+        </v-btn>
+        <v-btn @click="Router.push({ name: role + 'uzenetek' })">
+          Üzenetek
+        </v-btn>
+        <v-btn @click="Router.push({ name: 'UserManagementView' })" v-if="role === 'admin'">
+          Felhasználók kezelése
+        </v-btn>
+        <v-btn @click="Router.push({ name: 'GroupManagementView' })" v-if="role === 'admin'">
+          Csoportok kezelése
+        </v-btn>
+      </div>
 
-      <v-select v-if="role=='szulo'" style="height: max-content;"
+      <!-- Other elements that stay in one row -->
+      <v-select v-if="role==='szulo'" style="height: max-content;"
         label="Választott gyermek"
         density="compact"
         v-model="selectedChild"
@@ -186,38 +188,41 @@ const selectedChildKey = ref(-1); // Ez biztosítja a komponens újrarenderelés
         item-value="ID"
         :items="refs.children.value"
         @update:model-value="async (value) => { 
-          let pathSlice = route.path.split('/')
-          let pathReconstructed = pathSlice.slice(0,pathSlice.length-1).join('/')
-          Router.push({ path: `${pathReconstructed}/${value}` }).then(()=>{
-            selectedChildKey = value
-          })
+          let pathSlice = route.path.split('/');
+          let pathReconstructed = pathSlice.slice(0, pathSlice.length - 1).join('/');
+          Router.push({ path: `${pathReconstructed}/${value}` }).then(() => {
+            selectedChildKey = value;
+          });
         }"
       ></v-select>
+      
       <v-spacer></v-spacer>
+
       <v-tooltip text="Ennyi idő múlva automatikusan kijelentkezel">
         <template v-slot:activator="{ props }">
           <v-btn v-bind="props">{{ time }}</v-btn>
         </template>
       </v-tooltip>
-      <v-btn @click="cookieHandler.deleteCookie('alap') ; Router.push({name:'login'})">
-                Kilépés
+
+      <v-btn @click="cookieHandler.deleteCookie('alap'); Router.push({ name: 'login' })">
+        Kilépés
       </v-btn>
     </v-app-bar>
-    <v-app-bar
-      height="fit-content"
-      location="bottom"
-      flat
-    >
-    
+
+    <!-- Bottom App Bar -->
+    <v-app-bar height="fit-content" location="bottom" flat>
       <v-col class="text-center mt-4" cols="12">
         {{ new Date().getFullYear() }} - <strong>Páholy</strong>
       </v-col>
     </v-app-bar>
-      <v-main class="d-flex align-center justify-center fill-height">
-        <RouterView :key="selectedChildKey"></RouterView>
-      </v-main>
-    </v-layout>
-  </div>
+
+    <!-- Main content area -->
+    <v-main class="d-flex align-center justify-center fill-height">
+      <RouterView :key="selectedChildKey"></RouterView>
+    </v-main>
+  </v-layout>
+</div>
+
 
 
   </template>
