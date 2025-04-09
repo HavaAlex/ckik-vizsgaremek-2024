@@ -4139,6 +4139,100 @@
         }
       }
     },
+    "/admin/deleteMark/{markID}": {
+      "delete": {
+        "description": "Kitöröl egy jegyet a megadott azonosító alapján.",
+        "tags": ["Admin funkciók", "Jegyek kezelése"],
+        "parameters": [
+          {
+            "name": "markID",
+            "in": "path",
+            "description": "A törlendő jegy azonosítója",
+            "required": true,
+            "type": "integer",
+            "example": 14
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Jegy eltávolítva",
+            "schema": {
+              "type": "string",
+              "example": "Jegy eltávolítva"
+            }
+          },
+          "400": {
+            "description": "Hibás kérés (pl. hiányzó vagy érvénytelen azonosító)"
+          },
+          "403": {
+            "description": "Lejárt vagy érvénytelen hitelesítés (cookie)"
+          },
+          "500": {
+            "description": "Szerverhiba, például ha a bejelentkezett felhasználó saját jegyét próbálja törölni"
+          }
+        }
+      }
+    },
+    "/admin/allmarks": {
+      "get": {
+        "description": "Lekéri az összes jegyet csoportonként és tantárgyanként csoportosítva. A tantárgyak listája az adott csoport jegyeiben előforduló tantárgyak alapján készül.",
+        "tags": ["Admin funkciók", "Jegyek kezelése"],
+        "responses": {
+          "201": {
+            "description": "Sikeres lekérdezés. A válasz egy tömb, ahol minden elem egy csoport jegyeit tartalmazza tantárgyak szerint csoportosítva.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "groupName": {
+                    "type": "string",
+                    "example": "10.A"
+                  },
+                  "marks": {
+                    "type": "array",
+                    "description": "Tantárgyanként csoportosított jegyek tömbje.",
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "ID": { "type": "integer", "example": 1 },
+                          "teacherID": { "type": "integer", "example": 2 },
+                          "studentID": { "type": "integer", "example": 5 },
+                          "Value": { "type": "integer", "example": 4 },
+                          "Multiplier": { "type": "integer", "example": 2 },
+                          "subjectName": { "type": "string", "example": "Fizika" },
+                          "date": {
+                            "type": "string",
+                            "format": "date-time",
+                            "example": "2025-04-01T10:30:00.000Z"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "tantargyak": {
+                    "type": "array",
+                    "description": "Az adott csoport jegyeiben előforduló tantárgyak listája.",
+                    "items": {
+                      "type": "string",
+                      "example": "Fizika"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Lejárt vagy érvénytelen hitelesítés (cookie)"
+          },
+          "500": {
+            "description": "Szerverhiba a jegyek lekérdezése során"
+          }
+        }
+      }
+    },
     "/csoport/tanarcsoport": {
       "get": {
         "tags":["Jegyek"],
