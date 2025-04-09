@@ -1,5 +1,5 @@
 const request = require("supertest");
-const app = require("../app"); // adjust the path to where your Express app is exported
+const app = require("../app"); 
 const uzenetService = require("../api/services/uzenetService");
 const userRepository = require("../api/repositories/userRepository");
 const teacherRepository = require("../api/repositories/teacherRepository");
@@ -10,8 +10,6 @@ const messageReceiverRepository = require("../api/repositories/messageReceiverRe
 const MessageRepository = require("../api/repositories/messageRepository")
 const jwt = require("jsonwebtoken");
 
-// If you later decide to test group-related functionality, import the group repository as needed.
-// const groupRepository = require("../api/repositories/groupRepository");
 
 jest.mock("../api/db/dbContext", () => require("../__mocks__/db"));
 
@@ -19,10 +17,7 @@ describe("Üzenet funkciók tesztelése", () => {
   let user1, user2, user3,user4,user5,teacher1,teacher2,teacher3, newStudent1,newStudent2,newGroup1,newStudentGroups1,newStudentGroups2,token;
 
   beforeAll(async () => {
-    // Sync the in-memory (mock) database
     await require("../__mocks__/db").sequelize.sync({ force: true });
-
-    // Create some users that will act as sender and receivers
     
     user1 = { ID: 1, username: "sender", password: "pass", role: "tanar" };
     user2 = { ID: 2, username: "receiver1", password: "pass", role: "tanar" };
@@ -94,7 +89,6 @@ describe("Üzenet funkciók tesztelése", () => {
         StudentID:1,
     }
     token = jwt.sign({ userData:user1 }, process.env.JWT_KEY, { expiresIn: "20m" });
-    //console.log(process.env.JWT_KEY)
     
     await userRepository.createUser(user1);
     await teacherRepository.createTeacher(teacher1);
@@ -118,7 +112,6 @@ describe("Üzenet funkciók tesztelése", () => {
     
   });
 
-  // Helper to set the decoded user (simulate authentication)
   const setUserHeader = () => ({
     authorization: `Bearer ${token}`
 });
@@ -204,7 +197,6 @@ describe("Üzenet funkciók tesztelése", () => {
         .set(setUserHeader());
 
       expect(res.status).toBe(201);
-      // Expect an array or object based on your implementation
       expect(Array.isArray(res.body.kapott)).toBe(true);
       expect(Array.isArray(res.body.elkuldott)).toBe(true);
     });

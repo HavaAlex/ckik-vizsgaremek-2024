@@ -200,7 +200,7 @@ describe("Hazifeladatok tesztelése",()=>{
         })
         
         describe("POST uploadassignmentFiles",()=>{
-            test("sikeresen feltölti az új feladatot", async ()=>{
+            test("sikeresen feltölti az új feladatohoz a file-t", async ()=>{
                 
             const response = await request(app)
             .post('/feladat/uploadassignmentfiles')
@@ -278,15 +278,11 @@ describe("Hazifeladatok tesztelése",()=>{
             });
         })
         /describe("GET /feladat/hazikdiak",()=>{
-            test("leszedi ügyesen", async ()=>{
+            test("Leszedi egy tömbben a diák házifeladatait. Mindegyikben van egy valasz és egy feladat object", async ()=>{
                 const receivedAssignemnts = await request(app)
                 .get("/feladat/hazikdiak")
                 .set(setUserHeader())
-                console.log("ÁÁÁ")
                 expect(receivedAssignemnts.status).toBe(201)
-                console.log("ÁÁÁ")
-                console.log("ÓÓÓ: ", receivedAssignemnts)
-                console.log("III: ", receivedAssignemnts.data)
                 expect(receivedAssignemnts.body[0]).toHaveProperty("valasz")
                 expect(receivedAssignemnts.body[0]).toHaveProperty("feladat")
                 expect(receivedAssignemnts.body[0].valasz.studentID).toBe(newStudent2.ID)
@@ -341,18 +337,13 @@ describe("Hazifeladatok tesztelése",()=>{
             })
         })
          describe("DELETE deleteCompletedAssignmentFile",()=>{
-            test("Sikeres törlés", async ()=>{
+            test("Sikeresen kitöröl egy Válasz fájlt", async ()=>{
                 console.log("belefut")
                 const getRes = await request(app)
                 .post("/feladat/getCompletedAssignmentFiles/").send([2]).set("Authorization", `Bearer ${token}`);
                 expect(getRes.status).toBe(201)
                 expect(getRes.body[0].length).toBe(2)
-                //console.log("§0§: ",getRes.body[0])
-
-
                 const fileId = getRes.body[0][0].ID
-                console.log("törlendő ", fileId)
-
                 const deleteRes = await request(app).delete(`/feladat/deleteAnswerFile/${fileId}`).set("Authorization", `Bearer ${token}`);
                 expect(deleteRes.status).toBe(201)
                 expect(deleteRes.body).toBe("sikerült")
@@ -362,7 +353,6 @@ describe("Hazifeladatok tesztelése",()=>{
                 expect(getRes.status).toBe(201)
                 expect(getRes.body[0].length).toBe(2)
                 expect((getRes.body[0].length)-1).toBe(getRes2.body[0].length)
-                //console.log("ŰŰŰŰŰŰ ", deleteRes)
             })
         })
     })
