@@ -120,14 +120,14 @@ describe("Üzenet funkciók tesztelése", () => {
     
   });
 
-    // Helper to set the decoded user (simulate authentication)
+    
     let setUserHeader = () => ({
             authorization: `Bearer ${token}`
     });
 
       //Admin lekérdezések
     describe("GET allMessages", () => {
-        test("should return all messages", async () => {
+        test("Leszedi az összes üzenetet", async () => {
 
             //új üzenet először hogy legyen mit nézni
             const createRes = await request(app)
@@ -179,8 +179,7 @@ describe("Üzenet funkciók tesztelése", () => {
     });
 
     describe("DELETE /admin/deleteMessage/:ID", () => {
-        test("should delete a message by its ID", async () => {
-        // First, create a message that we can delete
+        test("Kitöröl egy üzentet az ID-ja alapján", async () => {
         const createRes = await request(app)
             .post("/uzenet")
             .set(setUserHeader())
