@@ -183,7 +183,7 @@ describe("Hazifeladatok tesztelése",()=>{
         })
 
         describe("GET haziktanar",()=>{ //korábban már töltötünk fel sikeresen ezért azzal most nem foglalkozunk
-            test("should return all uploaded assignments for this teacher and its answers",async()=>{
+            test("Visszadja a tanárnak a feladatait az arra érkezett válaszokkal együtt.",async()=>{
                 const sentAssignemnts = await request(app)
                 .get("/feladat/haziktanar")
                 .set(setUserHeader())
@@ -194,12 +194,13 @@ describe("Hazifeladatok tesztelése",()=>{
                 expect(sentAssignemnts.body[0].feladat.teacherID).toBe(teacher1.ID)
                 expect(sentAssignemnts.body[0].anwsers.length).toBe(2)
 
-                
+                console.log("tanarnak lejön e valasz kerdem en: ", sentAssignemnts)
+                console.log("tanarnak lejön e valasz kerdem en: ", sentAssignemnts.body[0].anwsers)
             })
         })
         
         describe("POST uploadassignmentFiles",()=>{
-            test("sikeresen feltölti", async ()=>{
+            test("sikeresen feltölti az új feladatot", async ()=>{
                 
             const response = await request(app)
             .post('/feladat/uploadassignmentfiles')
@@ -213,7 +214,7 @@ describe("Hazifeladatok tesztelése",()=>{
         })
 
         describe("GET getassignmentFiles",  ()=>{
-            test("sikeres lekérés",async()=>{
+            test("sikeresen lekéri a file-okat egy adott feladathoz annak ID-ja alapján",async()=>{
                 const response = await request(app)
                 .get("/feladat/getAssignmentFiles/").set("assignmentid", 1).set(setUserHeader())
                 
@@ -225,7 +226,7 @@ describe("Hazifeladatok tesztelése",()=>{
         })
 
         describe("DELETE /feladat/deleteAssignment/",()=>{
-            test("egyel kevesebb ház lesz miután töröltünk",async()=>{
+            test("Sikeres törlés esetén rövidebb a tömb hossza",async()=>{
                 const uploadres2 = await request(app)
                 .post("/feladat/newassignment")
                 .set(setUserHeader())
@@ -257,13 +258,10 @@ describe("Hazifeladatok tesztelése",()=>{
                 const deleteRes = await request(app).delete(`/feladat/deleteAssignment/${assignmentId}`).set("Authorization", `Bearer ${token}`);
                 expect(deleteRes.status).toBe(201)
                 expect(deleteRes.body).toBe("sikerült")
-
-
                 sentAssignemnts = await request(app)
                 .get("/feladat/haziktanar")
                 .set(setUserHeader())
                 const lengthAfterDelete = sentAssignemnts.body.length
- 
                 expect(lengthBeforeDelete-1).toBe(lengthAfterDelete)
 
             })
@@ -274,12 +272,12 @@ describe("Hazifeladatok tesztelése",()=>{
     })
     describe("Diák oldal tesztelése",()=>{
         beforeAll(async()=>{
-            token = jwt.sign({ userData:user3 }, process.env.JWT_KEY, { expiresIn: "20m" });
+            token = jwt.sign({ userData:user2 }, process.env.JWT_KEY, { expiresIn: "20m" });
             setUserHeader = () => ({
                 authorization: `Bearer ${token}`
             });
         })
-        describe("GET /feladat/hazikdiak",()=>{
+        /describe("GET /feladat/hazikdiak",()=>{
             test("leszedi ügyesen", async ()=>{
                 const receivedAssignemnts = await request(app)
                 .get("/feladat/hazikdiak")
@@ -287,7 +285,8 @@ describe("Hazifeladatok tesztelése",()=>{
                 console.log("ÁÁÁ")
                 expect(receivedAssignemnts.status).toBe(201)
                 console.log("ÁÁÁ")
-                console.log("ŰŰŰŰ ", receivedAssignemnts.body[0])
+                console.log("ÓÓÓ: ", receivedAssignemnts)
+                console.log("III: ", receivedAssignemnts.data)
                 expect(receivedAssignemnts.body[0]).toHaveProperty("valasz")
                 expect(receivedAssignemnts.body[0]).toHaveProperty("feladat")
                 expect(receivedAssignemnts.body[0].valasz.studentID).toBe(newStudent2.ID)
@@ -296,7 +295,7 @@ describe("Hazifeladatok tesztelése",()=>{
             })
         })
         describe("PATCH /feladat/modifycompletedassignment",()=>{
-            test("módosítás megtörténik",async()=>{
+            test("módosítás megtörténik sikeresen",async()=>{
                 const modifiedCompletedAssignment = await request(app)
                 .patch("/feladat/modifycompletedassignment")
                 .set(setUserHeader()).send({
@@ -308,16 +307,16 @@ describe("Hazifeladatok tesztelése",()=>{
                     textAnswer: "TestValasz"
                   });
 
-                //console.log("=========== ", modifiedCompletedAssignment)
                 expect(modifiedCompletedAssignment.body.assignmentID).toBe(goodtestAssignment.ID)
                 expect(modifiedCompletedAssignment.body.status).toBe("Leadva")
                 expect(modifiedCompletedAssignment.body.textAnswer).toBe("TestValasz")
+
 
             })
         })
 
         describe("POST uploadCompletedAssignmentFiles",()=>{
-            test("feltölti sikeresen",async ()=>{
+            test("feltölti az összes fájlt egy válaszhoz a megfelelő módon",async ()=>{
                 const response = await request(app)
                 .post('/feladat/uploadcompletedassignmentfiles')
                 .attach("files", Buffer.from("Dummy file content"), "testfile.txt")
@@ -367,5 +366,4 @@ describe("Hazifeladatok tesztelése",()=>{
             })
         })
     })
-    console.log("LEFUTR A TESZT")
 })

@@ -99,7 +99,7 @@ describe("Timetable test", () =>
     newTeacher1 =
     {
         ID: 1,
-        name:"Tótin Lóránt",
+        name:"Kakadú Zoltán",
         phone:"+36543984",
         email:"kreativemailcim4@email.hu",
         userId: 3
@@ -202,7 +202,7 @@ describe("Timetable test", () =>
                 day: 'hetfo',
                 subjectName: 'Majom Programozás',
                 Teacher: {
-                    name: "Tótin Lóránt",
+                    name: "Kakadú Zoltán",
                 },
                 excused: false
             });
@@ -226,7 +226,7 @@ describe("Timetable test", () =>
                 subjectName:"Majom Programozás csak menőbb",
                 excused: false,
                 Teacher: {
-                    name: "Tótin Lóránt",
+                    name: "Kakadú Zoltán",
                 },
             });
         });
@@ -249,7 +249,7 @@ describe("Timetable test", () =>
                     subjectName:"Majom Programozás csak menőbb",
                     excused: false,
                     Teacher: {
-                        name: "Tótin Lóránt",
+                        name: "Kakadú Zoltán",
                     },
                 });
             });

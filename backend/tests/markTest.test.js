@@ -89,7 +89,7 @@ describe("Mark Test", () =>
     newTeacher1 =
     {
         ID: 1,
-        name:"Tótin Lóránt",
+        name:"Kakadú Zoltán",
         phone:"+36543984",
         email:"kreativemailcim4@email.hu",
         userId: 3
@@ -105,7 +105,6 @@ describe("Mark Test", () =>
         date:"2025-03-24T09:10:46.626Z",
         subjectName:"Majom programozás",
     };
-
     newMark2 =
     {
         ID: 2,

@@ -63,6 +63,7 @@ class AssignmentRepository {
     }
 
     async getCompletedAssignmentsByStudentID(studentID) {
+        console.log("ő az a matyi: ", studentID)
         return await this.CompletedAssignment.findAll({
             where: {
                 [Op.or]: {
