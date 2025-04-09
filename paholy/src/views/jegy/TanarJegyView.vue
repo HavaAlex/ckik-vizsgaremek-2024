@@ -62,6 +62,7 @@ const osszTantargy = useGetSubjects()
 
 const osszTantargyComputed = computed(() => {
   if (!osszTantargy.data.value) return[];
+  if (osszTantargy.data.value.length == 0) return[];
   return [...new Set(osszTantargy.data.value?.map((lesson: any) => lesson.subjectName))];
 });
 
@@ -163,7 +164,7 @@ const drawer = ref<boolean>(false)
               <br>
               <h3>Tantárgyak:</h3>
               <v-select
-               v-if="csoportJegyek?.tantargyak"
+               v-if="csoportJegyek?.tantargyak&&csoportJegyek?.tantargyak.length>0"
               v-model="selectedSubject"
               :items="csoportJegyek?.tantargyak"
               label="Válasszon tantárgyat!"
@@ -335,7 +336,7 @@ const drawer = ref<boolean>(false)
               <br>
               <h3>Tantárgyak:</h3>
               <v-select
-               v-if="csoportJegyek?.tantargyak"
+               v-if="csoportJegyek?.tantargyak&&csoportJegyek?.tantargyak.length>0"
               v-model="selectedSubject"
               :items="csoportJegyek?.tantargyak"
               label="Válasszon tantárgyat!"
