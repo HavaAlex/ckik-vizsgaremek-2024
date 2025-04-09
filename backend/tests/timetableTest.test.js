@@ -201,6 +201,9 @@ describe("Timetable test", () =>
                 length: 45,
                 day: 'hetfo',
                 subjectName: 'Majom Programozás',
+                Teacher: {
+                    name: "Tótin Lóránt",
+                },
                 excused: false
             });
         });

@@ -43,10 +43,14 @@ exports.postAbsence = async (req, res, next) => {
         );
 
 
-
-        if (!existingAbsence ) {
+        console.log(existingAbsence)
+        if (!existingAbsence || existingAbsence == undefined ) {
 
             absence = await absenceService.postAbsence(absence);
+            console.log(absence)
+        }
+        else{
+            absence = existingAbsence
         }
         res.status(201).json(absence);
     } catch (error) {

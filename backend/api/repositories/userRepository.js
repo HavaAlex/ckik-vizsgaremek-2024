@@ -20,7 +20,7 @@ class UserRepository
 
     async createUser(user)
     {
-
+        console.log(user)
         const newUser = await this.Users.build(user);
 
         await newUser.save();

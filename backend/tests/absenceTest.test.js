@@ -11,8 +11,9 @@ const jwt = require("jsonwebtoken");
 const request = require("supertest");
 const app = require("../app"); // adjust the path to where your Express app is exported
 const lessonRepository = require("../api/repositories/lessonRepository");
+const absenceRepository = require("../api/repositories/absenceRepository");
 
-describe("Mark Test", () =>
+describe("Absence Test", () =>
 {
     let token_newUser1;
     let token_newUser2;
@@ -29,10 +30,10 @@ describe("Mark Test", () =>
     let newGroup2;
     let newStudentGroups1;
     let newStudentGroups2;
-    let newMark1;
-    let newMark2;
-    let newMark3;
-    let newMark4_rossz;
+    let newAbsence1;
+    let newAbsence2;
+    let newAbsence3;
+    let newAbsence4_rossz;
     let newLesson1;
     newUser1 =
     {
@@ -95,46 +96,41 @@ describe("Mark Test", () =>
         userId: 3
     };
 
-    newMark1 =
-    {
+    newAbsence1 = {
         ID: 1,
         teacherID: 1,
-        studentID:1,
-        Value:5,
-        Multiplier:100,
-        date:"2025-03-24T09:10:46.626Z",
-        subjectName:"Majom programozás",
+        studentID: 1,
+        lessonID: 1,
+        date: "2025-03-24T09:10:46.626Z",
+        excused: false,
     };
-
-    newMark2 =
-    {
+    
+    newAbsence2 = {
         ID: 2,
         teacherID: 1,
-        studentID:2,
-        Value:3,
-        Multiplier:100,
-        date:"2025-03-24T09:10:46.626Z",
-        subjectName:"Majom programozás",
+        studentID: 1,
+        lessonID: 1,
+        date: "2025-03-25T10:15:30.000Z",
+        excused: false,
     };
-    newMark3 =
-    {
+    
+    newAbsence3 = {
         ID: 3,
         teacherID: 1,
-        studentID:2,
-        Value:1,
-        Multiplier:200,
-        date:"2025-03-24T09:10:46.626Z",
-        subjectName:"Matematika",
+        studentID: 2,
+        lessonID: 1,
+        date: "2025-03-26T08:00:00.000Z",
+        excused: false,
     };
-    newMark4_rossz =
-    {
-        ID: 3,
-        teacherID: 4,
-        studentID:2,
-        Multiplier:200,
-        date:"2025-03-24T09:10:46.626Z",
-        subjectName:"Matematika",
+    
+    newAbsence4_rossz = {
+        ID: "rossz",
+        teacherID: 1,
+        lessonID: 1,
+        date: "2025-03-27T11:45:00.000Z",
+        excused: false,
     };
+    
 
 
     newGroup1 =
@@ -160,7 +156,7 @@ describe("Mark Test", () =>
     }
     newLesson1 =
     {
-        ID:null,
+        ID:1,
         groupID:1,
         teacherID:1,
         start_Hour:'5',
@@ -183,73 +179,77 @@ describe("Mark Test", () =>
         await groupRepository.createGroup(newGroup2);
         await studentGroupRepository.createStudentGroup(newStudentGroups1);
         await studentGroupRepository.createStudentGroup(newStudentGroups2);
-        await markRepository.createMark(newMark1);
-        await markRepository.createMark(newMark2);
         await lessonRepository.createLesson(newLesson1)
+        await absenceRepository.createAbsence(newAbsence1);
+        await absenceRepository.createAbsence(newAbsence2);
+        await absenceRepository.createAbsence(newAbsence3);
 
         token_newUser1 = jwt.sign({ userData:newUser1 }, process.env.JWT_KEY, { expiresIn: "20m" });
         token_newUser2 = jwt.sign({ userData:newUser2 }, process.env.JWT_KEY, { expiresIn: "20m" });
         token_newUser3 = jwt.sign({ userData:newUser3 }, process.env.JWT_KEY, { expiresIn: "20m" });
         token_newUser4 = jwt.sign({ userData:newUser4 }, process.env.JWT_KEY, { expiresIn: "20m" });
-            
+        
     });
 
-    describe("Mark controller get test", () => 
+    describe("Absence controller get test", () => 
     {
         const setUserHeader = (token) => ({
             authorization: `Bearer ${token}`
         });
 
-        test("GetJegyek vissza adja e a megfelelő jegyet (1-es ID diák lekéri a jegyeit)", async () => 
+        test("GetAbsences vissza adja e a megfelelő hányzásokat (1-es ID diák lekéri a hiányzásait)", async () => 
         {
             const res = await request(app)
-                .get("/jegy")
+                .get("/hianyzas")
                 .set(setUserHeader(token_newUser1))
             console.log(res.body)
-            expect(res.status).toBe(201);
+            expect(res.status).toBe(200);
             expect(res.body).toBeInstanceOf(Array);
-            expect(res.body[0]).toStrictEqual(newMark1);
+            expect(res.body.length).toBe(2)
+            expect(res.body[0]).toStrictEqual(newAbsence1);
+            expect(res.body[1]).toStrictEqual(newAbsence2);
         });
 
-        test("GetTanarJegyek vissza adja e a megfelelő jegyet (1-es ID tanár lekéri a jegyeit)", async () => 
+        test("GetAbsences vissza adja e a megfelelő hányzásokat (2-es ID diák lekéri a hiányzásait)", async () => 
         {
             const res = await request(app)
-                .get("/jegy/csoportjegy")
-                .set(setUserHeader(token_newUser3))
+                .get("/hianyzas")
+                .set(setUserHeader(token_newUser2))
             console.log(res.body)
-            expect(res.status).toBe(201);
+            expect(res.status).toBe(200);
             expect(res.body).toBeInstanceOf(Array);
-            expect(res.body).toStrictEqual([{"groupName": "13.C", "marks": [[{"ID": 2, "Multiplier": 100, "Student": {"name": "Károly Mátyás"}, "Value": 3, "date": "2025-03-24T09:10:46.626Z", "studentID": 2, "subjectName": "Majom programozás", "teacherID": 1}]], "tantargyak": ["Majom programozás"]}]);
+            expect(res.body.length).toBe(1)
+            expect(res.body[0]).toStrictEqual(newAbsence3);
         });
     })
-    describe("Mark controller post test", () => 
+    describe("Absence controller post test", () => 
         {
             const setUserHeader = (token) => ({
                 authorization: `Bearer ${token}`
             });
     
     
-            test("Sikeres jegy feltöltés", async () => 
+            test("Sikeres hiányzás feltöltés", async () => 
                 {
                     const res = await request(app)
-                        .post("/jegy")
+                        .post("/hianyzas/postAbsence")
                         .set(setUserHeader(token_newUser3))
-                        .send(newMark3)
+                        .send(newAbsence3)
                     expect(res.status).toBe(201);
                     expect(res.body).toBeInstanceOf(Object);
-                    expect(res.body.ID).toBe(newMark3.ID);
-                    expect(res.body.Multiplier).toBe(newMark3.Multiplier);
-                    expect(res.body.Value).toBe(newMark3.Value);
-                    expect(res.body.studentID).toBe(newMark3.studentID);
-                    expect(res.body.subjectName).toBe(newMark3.subjectName);
-                    expect(res.body.teacherID).toBe(newMark3.teacherID);
+                    console.log(res.body)
+                    expect(res.body.ID).toBe(newAbsence3.ID);
+                    expect(res.body.excused).toBe(newAbsence3.excused);
+                    expect(res.body.studentID).toBe(newAbsence3.studentID);
+                    expect(res.body.subjectName).toBe(newAbsence3.subjectName);
+                    expect(res.body.teacherID).toBe(newAbsence3.teacherID);
                 });
-            test("Sikertelen jegy feltöltés", async () => 
+            test("Sikertelen hiányzás feltöltés", async () => 
                 {
                     const res = await request(app)
-                        .post("/jegy")
+                        .post("/hianyzas/postAbsence")
                         .set(setUserHeader(token_newUser3))
-                        .send(newMark4_rossz)
+                        .send(newAbsence4_rossz)
                     expect(res.status).toBe(500);
                 });
         })
