@@ -221,7 +221,10 @@ describe("Timetable test", () =>
                 length:50,
                 day:'kedd',
                 subjectName:"Majom Programozás csak menőbb",
-                excused: false
+                excused: false,
+                Teacher: {
+                    name: "Tótin Lóránt",
+                },
             });
         });
         test("GetOrarend vissza adja e a megfelelő órákat (1-es ID tanár lekéri az óráit)", async () => 
@@ -241,7 +244,10 @@ describe("Timetable test", () =>
                     length:50,
                     day:'kedd',
                     subjectName:"Majom Programozás csak menőbb",
-                    excused: false
+                    excused: false,
+                    Teacher: {
+                        name: "Tótin Lóránt",
+                    },
                 });
             });
         test("GetTantargyak vissza adja e a megfelelő tantárgyakat (1-es ID tanár lekéri a tantrágyait)", async () => 
@@ -250,7 +256,7 @@ describe("Timetable test", () =>
                 .get("/tanar/tantargy")
                 .set(setUserHeader(token_newUser3))
             //console.log(res.body)
-            expect(res.status).toBe(201);
+            expect(res.status).toBe(200);
             expect(res.body).toBeInstanceOf(Array);
             expect(res.body).toEqual([{subjectName:'Majom Programozás'},{subjectName:"Majom Programozás csak menőbb"}]);
         });

@@ -164,7 +164,7 @@ describe("Hazifeladatok tesztelése",()=>{
                 //console.log("rezponze: ",uploadres)
                 expect(uploadres.status).toBe(200)
                 expect(uploadres.body.teacherID).toBe(teacher1.ID)
-                console.log("gandalsf_: ",uploadres.body)
+
                 goodtestAssignment = uploadres.body
                 
                 
@@ -284,8 +284,10 @@ describe("Hazifeladatok tesztelése",()=>{
                 const receivedAssignemnts = await request(app)
                 .get("/feladat/hazikdiak")
                 .set(setUserHeader())
-                
+                console.log("ÁÁÁ")
                 expect(receivedAssignemnts.status).toBe(201)
+                console.log("ÁÁÁ")
+                console.log("ŰŰŰŰ ", receivedAssignemnts.body[0])
                 expect(receivedAssignemnts.body[0]).toHaveProperty("valasz")
                 expect(receivedAssignemnts.body[0]).toHaveProperty("feladat")
                 expect(receivedAssignemnts.body[0].valasz.studentID).toBe(newStudent2.ID)
