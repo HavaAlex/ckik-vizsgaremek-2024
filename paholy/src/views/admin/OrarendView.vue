@@ -195,8 +195,10 @@ function processFile(file: File): Promise<Lesson[]> {
     if (extension === 'csv' || extension === 'txt') {
       reader.onload = () => {
         const text = reader.result as string;
+        console.log("text: ", text)
         const delimiter = extension === 'txt' ? '\t' : ';';
         const lines = text.split(/\r?\n/).filter(line => line.trim() !== '');
+        console.log("lines: ", lines)
         const rows = lines.map(line => line.split(delimiter));
         const validRows = rows.filter(cols => cols.length >= 4);
         const lessonsFromFile: Lesson[] = validRows.map(cols => ({
@@ -213,6 +215,7 @@ function processFile(file: File): Promise<Lesson[]> {
             name: ''
           }
         }));
+        console.log("CuCC: ", lessonsFromFile)
         resolve(lessonsFromFile);
       };
       reader.readAsText(file);
@@ -283,7 +286,7 @@ function addLesson() {
   }
 }
 
-const drawer = ref<boolean>(false)
+const drawer = ref<boolean>(true)
 
 
 const selectedLesson = ref<Lesson>();
@@ -515,7 +518,7 @@ function showDay() {
                 <v-dialog v-model="lessonDialog" max-width="400px">
                   <v-card>
                     <v-card-title>
-                      Óra elnaplózása: {{ lessonCopy?.subjectName }}
+                      Óra tulajdonságai: {{ lessonCopy?.subjectName }}
                     </v-card-title>
                     <v-card-item>
                       <v-row>
@@ -582,7 +585,7 @@ function showDay() {
                 <v-dialog v-model="disruptionDialog" max-width="500px">
                   <v-card>
                     <v-card-title>
-                      Óra elnaplózása: {{ lessonCopy?.subjectName }}
+                      Óra tulajdonságai: {{ lessonCopy?.subjectName }}
                     </v-card-title>
                     <v-card-item>
                       <v-row>
@@ -791,7 +794,7 @@ function showDay() {
                 <v-dialog v-model="lessonDialog" max-width="500px">
                   <v-card>
                     <v-card-title>
-                      Óra elnaplózása: {{ lessonCopy?.subjectName }}
+                      Óra tulajdonságai: {{ lessonCopy?.subjectName }}
                     </v-card-title>
                     <v-card-item>
                       <v-row>
@@ -858,7 +861,7 @@ function showDay() {
                 <v-dialog v-model="disruptionDialog" max-width="500px">
                   <v-card>
                     <v-card-title>
-                      Óra elnaplózása: {{ lessonCopy?.subjectName }}
+                      Óra tulajdonságai: {{ lessonCopy?.subjectName }}
                     </v-card-title>
                     <v-card-item>
                       <v-row>
