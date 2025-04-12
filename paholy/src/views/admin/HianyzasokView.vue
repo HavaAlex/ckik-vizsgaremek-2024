@@ -113,7 +113,6 @@ const SelectedAbsence = ref<any>(null);
 
 async function fastdelete(absence: any) {
   try {
-    // const data = await getUser(user.ID);
     SelectedAbsence.value = { ...absence };
     
     DeleteAbsenceDialog.value = true;
@@ -136,7 +135,6 @@ async function approval(absence: any) {
   
   modifyAbsence(newAbsence, {
     onSuccess: () => {
-      // Ensure reactivity by updating absences.value properly
       absences.value = absences.value.map(a => 
         a.ID === newAbsence.ID ? newAbsence : a
       );
@@ -227,8 +225,6 @@ async function approval(absence: any) {
         <v-card-title>Hiányzások</v-card-title>
         <v-card-text style="height: 40vw !important; overflow-y: auto;">
           <template v-if="Object.keys(groupedAbsences).length > 0">
-      
-            <!-- Wrap your expansion panels in v-expansion-panels -->
             <v-expansion-panels>
               <v-expansion-panel v-for="(absences, date) in groupedAbsences" :key="date">
                 <v-expansion-panel-title>
