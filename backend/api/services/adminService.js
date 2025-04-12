@@ -325,15 +325,30 @@ class adminService {
 
     async uploadLessons(lessons) {
         const uploaded = [];
-        lessons.forEach(element => {
+       /* lessons.forEach(element => {
             orarendService.validateLesson(element);
-        });
-    
+        });*/
         const lessonPromises = lessons.map(async element => {
+            let groupID
+            let teacherID
+            try{
+                groupID = await groupRepository.getGroupByName(element.groupName)
+            }
+            catch{
+                throw new Error(`Nem megfelelő csoport név (${element.groupName}`)
+            }
+            try{
+                teacherID = await teacherRepository.getTeacherByUsername(element.teacherName)
+            }
+            catch{
+                throw new Error(`Nem megfelelő tanár név (${element.teacherName}`)
+            }
+            console.log(groupID)
+            console.log(teacherID)
             let newLesson = {
                 ID: undefined,
-                groupID: element.groupID,
-                teacherID: element.teacherID,
+                groupID: groupID.ID,
+                teacherID: teacherID.ID,
                 start_Hour: element.start_Hour,
                 start_Minute: Number(element.start_Minute) + Number(element.start_Hour) * 60,
                 length: element.length,

@@ -49,6 +49,17 @@ class GroupRepository
         )
     }
 
+    async getGroupByName(name)//Megkeresi az összes csoportját az adott embernek
+    {
+        return await this.Groups.findOne
+        (
+            {
+                where: {name: name},
+            }
+        )
+    }
+
+
     async getAllGroups()
     {
         return await this.Groups.findAll({})

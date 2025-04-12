@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { NewLesson } from '@/api/admin/admin';
 import { useGetAllGroups,useAddLessons, useGetAllTeachers, useModifyLesson, useAddDisruption, useDeleteLesson } from '@/api/admin/adminQuery';
 import type { Lesson } from '@/api/orarend/orarend';
 import { useGetTeachers } from '@/api/orarend/orarendQuery';
@@ -21,7 +22,7 @@ const computedCsoportok = computed(() =>{
   if(csoportok?.value&&selectedCsoport.value==-1)
   {
     selectedCsoport.value = csoportok?.value[0].ID
-    NewLessonRef.value.groupID = csoportok?.value[0].ID
+    LessonRef.value.groupID = csoportok?.value[0].ID
     const newWeekStart = format(currentWeekStart.value, 'yyyy-MM-dd');
     queryClient.refetchQueries({ queryKey: [QUERY_KEYS.getTimetable,newWeekStart] })
     orarendStore.orarendfeltoltAdmin(newWeekStart,selectedCsoport.value);
@@ -30,16 +31,16 @@ const computedCsoportok = computed(() =>{
 });
 
 const computedTanarok = computed(() =>{
-  if(tanarok?.value&&NewLessonRef.value.teacherID==-1)
+  if(tanarok?.value&&LessonRef.value.teacherID==-1)
   {
-    NewLessonRef.value.teacherID = tanarok?.value[0].ID
+    LessonRef.value.teacherID = tanarok?.value[0].ID
   }
   return tanarok?.value?? []
 });
 
 const selectedCsoport= ref<number>(-1);
 
-const NewLessonRef = ref<Lesson>({
+const LessonRef = ref<Lesson>({
   ID: -1,
   groupID: -1,
   teacherID: -1,
@@ -52,6 +53,17 @@ const NewLessonRef = ref<Lesson>({
   Teacher: {
     name: ''
   }
+})
+
+const NewLessonRef = ref<NewLesson>({
+  ID: "",
+  groupName: "",
+  teacherName: "",
+  start_Hour: 0,
+  start_Minute: 0,
+  length: 0,
+  day: "hetfo",
+  subjectName: "",
 })
 
 const lessonCopy = ref<Lesson>({
@@ -159,7 +171,7 @@ watch(
 );
 //ÓRAREND VIEW VÉGE
 
-const lessons = ref<Lesson[]>([]);
+const lessons = ref<NewLesson[]>([]);
 
 const selectedFiles = ref<File[]>([]);
 
@@ -187,7 +199,7 @@ function submitLessons() {
   });
 }
 
-function processFile(file: File): Promise<Lesson[]> {
+function processFile(file: File): Promise<NewLesson[]> {
   return new Promise((resolve, reject) => {
     const extension = file.name.split('.').pop()?.toLowerCase();
     const reader = new FileReader();
@@ -201,19 +213,15 @@ function processFile(file: File): Promise<Lesson[]> {
         console.log("lines: ", lines)
         const rows = lines.map(line => line.split(delimiter));
         const validRows = rows.filter(cols => cols.length >= 4);
-        const lessonsFromFile: Lesson[] = validRows.map(cols => ({
-          ID:-1,
-          groupID: Number(cols[0].trim()),
-          teacherID: Number(cols[1].trim()),
+        const lessonsFromFile: NewLesson[] = validRows.map(cols => ({
+          ID:"",
+          groupName: cols[0].trim(),
+          teacherName: cols[1].trim(),
           start_Hour: Number(cols[2].trim()),
           start_Minute: Number(cols[3].trim()),
           length: Number(cols[4].trim()),
           day: cols[5].trim(),
           subjectName: cols[6].trim(),
-          excused:false,
-          Teacher: {
-            name: ''
-          }
         }));
         console.log("CuCC: ", lessonsFromFile)
         resolve(lessonsFromFile);
@@ -226,22 +234,18 @@ function processFile(file: File): Promise<Lesson[]> {
         const sheetName = workbook.SheetNames[0];
         const worksheet = workbook.Sheets[sheetName];
         const jsonData: any[][] = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
-        const lessonsFromFile: Lesson[] = [];
+        const lessonsFromFile: NewLesson[] = [];
         jsonData.forEach(row => {
           if (row && row.length >= 4) {
             lessonsFromFile.push({
-              ID:-1,
-              groupID: Number(String(row[0]).trim()),
-              teacherID: Number(String(row[1]).trim()),
+              ID:"",
+              groupName: String(row[0]).trim(),
+              teacherName: String(row[1]).trim(),
               start_Hour: Number(String(row[2]).trim()),
               start_Minute: Number(String(row[3]).trim()),
               length: Number(String(row[4]).trim()),
               day: String(row[5]).trim(),
               subjectName: String(row[6]).trim(),
-              excused:false,
-              Teacher: {
-                name: ''
-              }
             });
           }
         });
@@ -271,18 +275,14 @@ async function sendLessons() {
 function addLesson() {
   lessons.value.push(NewLessonRef.value);
   NewLessonRef.value = {
-      ID:-1,
-      groupID: computedCsoportok.value[0].ID,
-      teacherID: computedTanarok.value[0].ID,
-      start_Hour: 0,
-      start_Minute: 0, 
-      length:0,
-      day:"hetfo",
-      subjectName:"",
-      excused:false,
-      Teacher: {
-        name: ''
-      }
+    ID: "",
+    groupName: "",
+    teacherName: "",
+    start_Hour: 0,
+    start_Minute: 0,
+    length: 0,
+    day: "hetfo",
+    subjectName: "",
   }
 }
 
@@ -932,9 +932,9 @@ function showDay() {
                         <v-col cols="12">
                           <v-select required
                           v-if="computedTanarok.length>0"
-                          v-model="NewLessonRef.teacherID"
+                          v-model="NewLessonRef.teacherName"
                           item-title="name"
-                          item-value="ID"
+                          item-value="name"
                           :items="computedTanarok"
                           label="Órát tartó tanár"
                           ></v-select>
@@ -945,9 +945,9 @@ function showDay() {
                         <v-col cols="12">
                           <v-select required
                           v-if="computedCsoportok.length>0"
-                          v-model="NewLessonRef.groupID"
+                          v-model="NewLessonRef.groupName"
                           item-title="name"
-                          item-value="ID"
+                          item-value="name"
                           :items="computedCsoportok"
                           label="Csoport"
                           ></v-select>
@@ -1000,7 +1000,7 @@ function showDay() {
                     <h1>Bekerülő órák listája:</h1>
                     <v-list>
                       <v-list-item v-for="(lesson, index) in lessons" :key="index" @click="removeLesson(index)">
-                        <v-list-item-title>{{ lesson.subjectName }} - {{ lesson.groupID }} - {{ lesson.teacherID }}</v-list-item-title>
+                        <v-list-item-title>{{ lesson.subjectName }} - {{ lesson.groupName }} - {{ lesson.teacherName }}</v-list-item-title>
                       </v-list-item>
                     </v-list>
                   </v-card-text>

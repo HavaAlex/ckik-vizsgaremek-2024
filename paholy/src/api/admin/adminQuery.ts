@@ -1,7 +1,7 @@
 import axiosClient from "@/lib/axios"
 import { useMutation, useQuery } from "@tanstack/vue-query"
 import { QUERY_KEYS } from "@/utils/QueryKeys"
-import type { Teacher , Student, Guardian,CreatedGroup, Disruption, User,SelectedUser } from '@/api/admin/admin';
+import type { Teacher , Student, Guardian,CreatedGroup, Disruption, User,SelectedUser, NewLesson } from '@/api/admin/admin';
 import { useCookieHandler } from "@/stores/cookieHandler";
 
 //import type { Message,PotentialReceiver,newMessage } from "./uzenetek";
@@ -429,7 +429,7 @@ export const useGetAllGroups = () => {
 }
 
 //órák feltöltése
-const addLessons = async (lessons: Lesson[]) : Promise<Lesson[]> => {
+const addLessons = async (lessons: NewLesson[]) : Promise<NewLesson[]> => {
     const { getCookie } = useCookieHandler() 
     const config = {
         headers: { Authorization: `Bearer ${getCookie("alap")}` }

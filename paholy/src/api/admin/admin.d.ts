@@ -64,3 +64,14 @@ export type uploadedOMIDdata = {
     szuloID:string,
     newOMIDs: number[]
 }
+
+export type NewLesson = {
+    ID: string,
+    groupName: string,
+    teacherName: string,
+    start_Hour: number,
+    start_Minute: number,
+    length: number,
+    day: string,
+    subjectName: string,
+}

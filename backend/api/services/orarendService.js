@@ -74,19 +74,19 @@ async getTeacherLessons(teacherID, weekStart) {
         return combinedOrarend;
     }
 
-    async validateLesson(lesson)
+    /*async validateLesson(lesson)
     {
-        const responseTeacher = await teacherRepository.getTeacherByID(lesson.teacherID,"teacher")
+        const responseTeacher = await teacherRepository.getTeacher(lesson.teacherName,"teacher")
         if(responseTeacher.length == 0)
         {
-            throw new Error("Nincs ilyen tanár: "+lesson.teacherID)
+            throw new Error("Nincs ilyen tanár: "+lesson.teacherName)
         }
-        const responseGroup = await groupRepository.getGroupByID(lesson.groupID)
+        const responseGroup = await groupRepository.getGroupByID(lesson.groupName)
         if(responseGroup.length == 0)
         {
-            throw new Error("Nincs ilyen csoport: "+lesson.groupID)
+            throw new Error("Nincs ilyen csoport: "+lesson.groupName)
         }
-    }
+    }*/
 
     async getTeachers(){
         return await orarendRepository.getTeachers()

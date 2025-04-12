@@ -47,6 +47,23 @@ class TeacherRepository
             }
         )
     }
+
+    async getTeacherByUsername(username)
+    {
+        return await this.Teachers.findOne
+        (
+            {
+                include:{
+                    model:db.user,
+                    attributes:[],
+                    where:
+                    {
+                        username: username,
+                    }
+                }
+            }
+        )
+    }
     
     async modifyTeacher(ID,teacher){
         const changedTeacher = await this.Teachers.findOne({ where: { userId: ID } });
