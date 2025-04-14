@@ -25,7 +25,7 @@ function getTeacherName(teacherId: number): string {
 }
 function formatDate(dateStr: string): string {
   const date = new Date(dateStr);
-  return date.toLocaleDateString(); // Group by day only
+  return date.toLocaleDateString(); 
 }
 
 function convertMinutesToTime(minutes: number): string {

@@ -10,10 +10,8 @@ const successDialog = ref(false);
 const { mutate: addMessage, isPending } = useaddMessage();
 const { data } = usegetPotentialReceivers();
 
-// New reactive search text
 const searchText = ref('');
 
-// Computed property to filter single users by their name's first letters
 const filteredSingleUsers = computed(() => {
   if (!data.value || !data.value.singleUsers) return [];
   return data.value.singleUsers.filter(user =>
@@ -21,7 +19,6 @@ const filteredSingleUsers = computed(() => {
   );
 });
 
-// Computed property to filter groups by their name's first letters
 const filteredGroups = computed(() => {
   if (!data.value || !data.value.groups) return [];
   return data.value.groups.filter(group =>

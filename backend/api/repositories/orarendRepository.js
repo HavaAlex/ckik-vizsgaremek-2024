@@ -40,7 +40,7 @@ class OrarendRepository
 
     }
 
-    async getTeacherLessons(teacherID)//Megkeresi az összes óráját az adott embernek
+    async getTeacherLessons(teacherID)
     {
         return await this.Lesson.findAll
         (

@@ -60,7 +60,7 @@ const openCompletedAssignment = ref<OpenCompletedAssignment>({
 const ViewAssignmentDialog = ref(false);
 const openAssignmentViewDialog = (selected: OpenAssignment, complassignment: OpenCompletedAssignment) => {
   selectedAssignment.value = selected;
-  openCompletedAssignment.value = { ...complassignment }; // deep copy for editing
+  openCompletedAssignment.value = { ...complassignment };
   ViewAssignmentDialog.value = true;
 };
 
@@ -73,7 +73,6 @@ const resetForm = () => {
 const assignmentFiles = ref<any[]>([]);
 const completedAssignmentFiles = ref<any[]>([]);
 
-// Deadline checking
 const isDeadlinePast = computed(() => {
   return new Date(selectedAssignment.value.deadline) < new Date();
 });
@@ -81,7 +80,6 @@ const isDeadlinePast = computed(() => {
 function modositasmentese(){ 
   modifyCompletedAssignment(openCompletedAssignment.value, {
     onSuccess: async (assignmentResponse: any) => {
-      // Convert the returned ID to a string before passing it to uploadCompletedAssignmentFiles
       const completedAssignmentID = assignmentResponse.ID;
       if (completedAssignmentFiles.value.length > 0) {
         await uploadCompletedAssignmentFiles(
@@ -102,7 +100,6 @@ const fetchAssignmentFiles = async (selectedAssignmentID: number) => {
   await getAssignmentFiles(selectedAssignmentID, {
     onSuccess: async (response: any) => {
       console.log("Files fetched:", response);
-      // If response is an array, use it directly; otherwise, use response.data
       const res: any = response;
       assignmentFiles.value = res.data || res;
     }
@@ -149,7 +146,6 @@ const fetchAnswerFiles = async (answerFilesIDs: number[]) => {
   console.log("Fetching answer files for answer id:", answerFilesIDs);
   await getCompletedAssignmentFiles(answerFilesIDs, {
     onSuccess: (response: any) => {
-      // Cast response to any to safely access .data if available
       const res: any = response;
       const filesArray = res.data || res;
       const filesByAnswer: Record<number, any[]> = {};
@@ -167,7 +163,6 @@ const handleOpenAssignment = (selected: OpenAssignment, complassignment: OpenCom
   fetchAnswerFiles([complassignment.ID]);
 };
 
-// Orientation handling
 const isPortrait = ref(window.matchMedia("(orientation: portrait)").matches);
 const updateOrientation = () => {
   isPortrait.value = window.matchMedia("(orientation: portrait)").matches;

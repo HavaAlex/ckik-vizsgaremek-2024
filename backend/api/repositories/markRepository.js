@@ -34,14 +34,14 @@ class MarkRepository
                 {
                     model: db.student,
                     attributes:["name"],
-                    required: true, // INNER JOIN biztosítása
+                    required: true,
                     include: [
                         {
                             model: db.group,
                             attributes: [],
                             through: { attributes: [] },
                             where: { ID: groupID },
-                            required: true // INNER JOIN biztosítása
+                            required: true
                         }
                     ]
                 }
