@@ -252,7 +252,7 @@ onUnmounted(() => {
         </v-card-text>
         <v-card-actions>
           <v-btn color="primary" @click="ViewAssignmentDialog = false">Bezárás</v-btn>
-          <v-btn @click="modositasmentese" :disabled="isDeadlinePast || role=='szulo'">Módosítás</v-btn>
+          <v-btn @click="modositasmentese" :disabled="isDeadlinePast || role=='szulo'">Új válasz feltöltése</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>

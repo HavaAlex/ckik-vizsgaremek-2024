@@ -193,9 +193,6 @@ describe("Hazifeladatok tesztelése",()=>{
                 expect(sentAssignemnts.body[0]).toHaveProperty("anwsers")
                 expect(sentAssignemnts.body[0].feladat.teacherID).toBe(teacher1.ID)
                 expect(sentAssignemnts.body[0].anwsers.length).toBe(2)
-
-                console.log("tanarnak lejön e valasz kerdem en: ", sentAssignemnts)
-                console.log("tanarnak lejön e valasz kerdem en: ", sentAssignemnts.body[0].anwsers)
             })
         })
         
@@ -330,15 +327,12 @@ describe("Hazifeladatok tesztelése",()=>{
             test("lekéri a 2-es id-jú válasz 2 fájlját", async ()=>{
                 const getRes = await request(app)
                 .post("/feladat/getCompletedAssignmentFiles/").send([2]).set("Authorization", `Bearer ${token}`);
-
                 expect(getRes.status).toBe(201)
                 expect(getRes.body[0].length).toBe(2)
-                console.log("LEMEGY ")
             })
         })
          describe("DELETE deleteCompletedAssignmentFile",()=>{
             test("Sikeresen kitöröl egy Válasz fájlt", async ()=>{
-                console.log("belefut")
                 const getRes = await request(app)
                 .post("/feladat/getCompletedAssignmentFiles/").send([2]).set("Authorization", `Bearer ${token}`);
                 expect(getRes.status).toBe(201)

@@ -202,7 +202,6 @@ describe("Absence Test", () =>
             const res = await request(app)
                 .get("/hianyzas")
                 .set(setUserHeader(token_newUser1))
-            console.log(res.body)
             expect(res.status).toBe(200);
             expect(res.body).toBeInstanceOf(Array);
             expect(res.body.length).toBe(2)
@@ -215,7 +214,6 @@ describe("Absence Test", () =>
             const res = await request(app)
                 .get("/hianyzas")
                 .set(setUserHeader(token_newUser2))
-            console.log(res.body)
             expect(res.status).toBe(200);
             expect(res.body).toBeInstanceOf(Array);
             expect(res.body.length).toBe(1)
@@ -237,7 +235,6 @@ describe("Absence Test", () =>
                         .send(newAbsence3)
                     expect(res.status).toBe(201);
                     expect(res.body).toBeInstanceOf(Object);
-                    console.log(res.body)
                     expect(res.body.ID).toBe(newAbsence3.ID);
                     expect(res.body.excused).toBe(newAbsence3.excused);
                     expect(res.body.studentID).toBe(newAbsence3.studentID);

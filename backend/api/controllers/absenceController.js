@@ -41,9 +41,6 @@ exports.postAbsence = async (req, res, next) => {
             a.lessonID == lessonID &&
             new Date(a.date).getTime() === date.getTime()
         );
-
-
-        console.log(existingAbsence)
         if (!existingAbsence || existingAbsence == undefined ) {
 
             absence = await absenceService.postAbsence(absence);

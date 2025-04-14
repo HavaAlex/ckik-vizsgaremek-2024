@@ -204,7 +204,6 @@ describe("Mark Test", () =>
             const res = await request(app)
                 .get("/jegy")
                 .set(setUserHeader(token_newUser1))
-            console.log(res.body)
             expect(res.status).toBe(201);
             expect(res.body).toBeInstanceOf(Array);
             expect(res.body[0]).toStrictEqual(newMark1);
@@ -215,7 +214,6 @@ describe("Mark Test", () =>
             const res = await request(app)
                 .get("/jegy/csoportjegy")
                 .set(setUserHeader(token_newUser3))
-            console.log(res.body)
             expect(res.status).toBe(201);
             expect(res.body).toBeInstanceOf(Array);
             expect(res.body).toStrictEqual([{"groupName": "13.C", "marks": [[{"ID": 2, "Multiplier": 100, "Student": {"name": "Károly Mátyás"}, "Value": 3, "date": "2025-03-24T09:10:46.626Z", "studentID": 2, "subjectName": "Majom programozás", "teacherID": 1}]], "tantargyak": ["Majom programozás"]}]);

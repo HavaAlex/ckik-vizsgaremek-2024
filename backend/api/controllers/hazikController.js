@@ -67,10 +67,7 @@ exports.getsentAssignments = async (req,res,next) =>{
 }
 
 exports.getReceivedAssignments = async (req,res,next) => {
-      console.log("ő keresgél: ", req.decoded.ID)
       const hazik = await hazikService.getReceivedAssignments(req.decoded.role=="szulo"?req.params.id:req.decoded.ID)
-      console.log("ASDASD: ", hazik)
-      console.log("__________")
       res.status(201).json(
         hazik.map((item) => ({
           valasz: item.valasz?.toJSON?.(),
