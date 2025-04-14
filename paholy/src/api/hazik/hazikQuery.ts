@@ -294,7 +294,6 @@ const uploadCompletedAssignmentFiles = async ({
     completedAssignmentId: string | Blob;
   }): Promise<void> => {
     const formData = new FormData();
-  // Now we can loop over `files` directly
   files.forEach((file) => {
     formData.append('files', file);
   });

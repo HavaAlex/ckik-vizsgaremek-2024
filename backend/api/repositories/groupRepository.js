@@ -39,7 +39,7 @@ class GroupRepository
         )
     }
 
-    async getGroupByID(groupID)//Megkeresi az összes csoportját az adott embernek
+    async getGroupByID(groupID)
     {
         return await this.Groups.findOne
         (
@@ -49,7 +49,7 @@ class GroupRepository
         )
     }
 
-    async getGroupByName(name)//Megkeresi az összes csoportját az adott embernek
+    async getGroupByName(name)
     {
         return await this.Groups.findOne
         (

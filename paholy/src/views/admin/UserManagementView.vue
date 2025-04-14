@@ -799,7 +799,6 @@ onUnmounted(() => {
           </v-card-text>
           <v-card-actions>
             <v-btn color="secondary" @click="showTeacherDialog = false">Bezárás</v-btn>
-            <!-- Call submitTeachers() -->
             <v-btn color="primary" @click="submitTeachers">Feltöltés az adatbázisba</v-btn>
           </v-card-actions>
         </v-card>
@@ -861,13 +860,12 @@ onUnmounted(() => {
           </v-card-text>
           <v-card-actions>
             <v-btn color="secondary" @click="showStudentDialog = false">Bezárás</v-btn>
-            <!-- Call submitStudents() -->
             <v-btn color="primary" @click="submitStudents">Feltöltés az adatbázisba</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
 
-      <!-- Szülők (Guardians) dialog -->
+      <!-- Szülők dialog -->
       <v-dialog v-model="showParentDialog" max-width="600">
         <v-card>
           <v-card-title>Gondviselők hozzáadása</v-card-title>
@@ -891,7 +889,6 @@ onUnmounted(() => {
                   <v-text-field v-model="newGuardian.email" label="Email" required></v-text-field>
                 </v-col>
                 <v-col cols="12">
-                  <!-- Input for manually adding a related student's OM_ID -->
                   <v-text-field
                     v-model="newGuardianRelatedOMID"
                     label="Diák OM azonosító"
@@ -991,7 +988,6 @@ onUnmounted(() => {
                 </v-list-item>
               </v-list>
 
-              <!-- New text field and button for adding a new OMID -->
               <v-text-field 
                 v-model="newBelongingOMID" 
                 label="Új OMID hozzáadása" 

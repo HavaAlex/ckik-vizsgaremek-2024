@@ -119,7 +119,6 @@ watch(studentsData, (newData) => {
 }, { immediate: true });
 
 
-//copyright 3025-nem szabad megnézni
 async function openAttendance(lesson: Lesson) {
   selectedLesson.value = JSON.parse(JSON.stringify(lesson));
   currentGroupID.value = lesson.groupID;

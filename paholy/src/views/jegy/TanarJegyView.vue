@@ -43,7 +43,6 @@ const tantargyJegyek = computed(() => {
   return csoportJegyek.value?.marks[csoportJegyek.value.tantargyak.indexOf(selectedSubject.value)];
 });
 
-// stackoverflow sponzor
 const groupBy = <T, K extends keyof any>(arr: T[], key: (i: T) => K) =>
   arr.reduce((groups, item) => {
     (groups[key(item)] ||= []).push(item);
@@ -88,7 +87,7 @@ function adatOsszeszedes(){
     }
     const newMark = ref<Mark>({
       ID:-1,
-      studentID:Number(element.ID), // Helyes azonosító hozzárendelés
+      studentID:Number(element.ID),
       teacherID: -1,
       Value: newMarks.value[index],
       Multiplier: 100,

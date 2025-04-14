@@ -9,7 +9,7 @@ const teacherRepository = require("../api/repositories/teacherRepository");
 const jegyController = require("../api/controllers/jegyController")
 const jwt = require("jsonwebtoken");
 const request = require("supertest");
-const app = require("../app"); // adjust the path to where your Express app is exported
+const app = require("../app");
 const lessonRepository = require("../api/repositories/lessonRepository");
 const guardianRepository = require("../api/repositories/guardianRepository");
 

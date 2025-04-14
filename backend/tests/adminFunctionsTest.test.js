@@ -23,10 +23,7 @@ describe("Üzenet funkciók tesztelése", () => {
     let user1, user2, user3,user4,user5,admin,teacher1,teacher2, newStudent1,newStudent2,newGroup1,newStudentGroups1,newStudentGroups2,token;
 
   beforeAll(async () => {
-    // Sync the in-memory (mock) database
     await require("../__mocks__/db").sequelize.sync({ force: true });
-
-    // Create some users that will act as sender and receivers
     
     user1 = { ID: 1, username: "rendszergazda", password: "pass", role: "admin" };
     user2 = { ID: 2, username: "karcsiba", password: "pass", role: "tanar" };
