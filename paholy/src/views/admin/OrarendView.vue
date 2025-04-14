@@ -146,16 +146,10 @@ watch(
   { immediate: true }
 );
 
-function getTeacherName(teacherId: number): string {
-  const teacher = teachers.value.find(t => t.ID === teacherId);
-  return teacher ? teacher.name : teacherId.toString();
-}
 
 function changeWeek(weeks: number) {
   currentWeekStart.value = addWeeks(currentWeekStart.value, weeks);
-  //const newWeekStart = format(currentWeekStart.value, 'yyyy-MM-dd');
-  //queryClient.refetchQueries({ queryKey: [QUERY_KEYS.getTimetable,newWeekStart] })
-  //orarendStore.orarendfeltoltAdmin(newWeekStart,selectedCsoport.value);
+
 }
 
 watch(
